@@ -1,0 +1,26 @@
+<app-nav></app-nav>
+<div class="row">
+    <div class="col-3"><a class="btn" routerLink="/home"><i class="fa fa-arrow-left"></i></a></div>
+</div>
+<div class="container">
+    <div class="text-center"><h2>Chỉnh sửa tài khoản</h2></div>
+    <div class="row d-flex justify-content-center">
+            <mat-tab-group>
+                <mat-tab label="Chỉnh sửa hồ sơ">
+                    <app-setting-detail></app-setting-detail>
+                </mat-tab>
+                <mat-tab label="Cài đặt tài khoản">
+                    <app-account-setting-detail></app-account-setting-detail>
+                </mat-tab>
+                <mat-tab label="Thông báo">
+                    <app-notification-setting></app-notification-setting>
+                </mat-tab>
+                <mat-tab label="Bảo mật">
+                    <app-privacy-setting></app-privacy-setting>
+                </mat-tab>
+            </mat-tab-group>
+    </div>
+    <div>
+
+    </div>
+</div>
