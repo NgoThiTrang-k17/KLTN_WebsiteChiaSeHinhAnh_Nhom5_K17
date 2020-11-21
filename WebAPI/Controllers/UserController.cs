@@ -34,7 +34,9 @@ namespace WebAPI.Controllers
             var user = dc.Users.Where(r => r.Id == id);
             return Ok(user);
         }
-        [HttpPost("add")] //POST api/user/add?FirstName=value&Lastname=&Avatar=value&Email=value&Region=value&Gender=value&Self_introduce=value
+
+        //POST api/user/add?FirstName=value&Lastname=&Avatar=value&Email=value&Region=value&Gender=value&Self_introduce=value
+        [HttpPost("add")] 
         public async Task<IActionResult> AddUser(string FirstName,string Lastname,int Avatar,string Email,string Region,int Gender,string Self_introduce)
         {
             User user = new User
@@ -51,37 +53,25 @@ namespace WebAPI.Controllers
             await dc.SaveChangesAsync();
             return Ok(user);
         }
-        //public IActionResult AddUsers(User user)
-        //{
-        //    try
-        //    {
-        //        if (user == null)
-        //        {
-        //            return BadRequest("Owner object is null");
-        //        }
-        //        if (!ModelState.IsValid)
-        //        {
-        //            return BadRequest("Invalid model object");
-        //        }
+        
+        //POST api/user/addUser
+        [HttpPost("addUser")] 
+        public async Task<IActionResult> AddUser1(User user)
+        {
+            await dc.Users.AddAsync(user);
+            await dc.SaveChangesAsync();
+            return Ok(user);
+        }
 
-        //        dc.Users.Add(new User
-        //        {
+        //POST api/user/delete/value
+        [HttpDelete("delete/{id}")] 
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            var user = await dc.Users.FindAsync(id);
+            dc.Users.Remove(user);
+            await dc.SaveChangesAsync();
+            return Ok(id);
+        }
 
-        //            FirstName = "Hiep",
-        //            Lastname = "Huy",
-        //            Avatar = 01,
-        //            Email = "LeHuyHiep@gmail.com",
-        //            Region = "NA",
-        //            Gender = 0,
-        //            Self_introduce = ""
-        //        });
-        //        dc.SaveChanges();
-        //        return RedirectToAction("Index");
-        //    }
-        //    catch (Exception)
-        //    {
-        //        throw;
-        //    }
-        //}
     }
 }

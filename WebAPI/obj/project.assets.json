@@ -5680,11 +5680,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\acoun\\Desktop\\My ap\\Source\\WebAPI\\WebAPI.csproj",
+      "projectUniqueName": "C:\\Users\\acoun\\Desktop\\My ap\\Source\\TLCN_WebsiteChiaSeHinhAnh_Nhom1_K17\\WebAPI\\WebAPI.csproj",
       "projectName": "WebAPI",
-      "projectPath": "C:\\Users\\acoun\\Desktop\\My ap\\Source\\WebAPI\\WebAPI.csproj",
+      "projectPath": "C:\\Users\\acoun\\Desktop\\My ap\\Source\\TLCN_WebsiteChiaSeHinhAnh_Nhom1_K17\\WebAPI\\WebAPI.csproj",
       "packagesPath": "C:\\Users\\acoun\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\acoun\\Desktop\\My ap\\Source\\WebAPI\\obj\\",
+      "outputPath": "C:\\Users\\acoun\\Desktop\\My ap\\Source\\TLCN_WebsiteChiaSeHinhAnh_Nhom1_K17\\WebAPI\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
