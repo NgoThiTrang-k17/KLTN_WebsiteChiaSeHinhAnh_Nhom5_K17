@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "gJQnCMCe88wkHHs/877n7HIOlme1QNcMuNODpV9LqjTWhkLcv2IGgBnuUT/hA/qOB0anuV5wBMEecKeC0scx6w==",
+  "dgSpecHash": "yMPUDZeI3UMAzd8WSpmMhBenbBJLss6SFE6e7e2XwikNdEb1/WRfEEFCTdzZxQTB51+tJkNL9eqHTN/H1uLoYA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\acoun\\Desktop\\WebAPI\\WebAPI.csproj",
+  "projectFilePath": "C:\\Users\\acoun\\Desktop\\My ap\\Source\\WebAPI\\WebAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\acoun\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
     "C:\\Users\\acoun\\.nuget\\packages\\microsoft.bcl.hashcode\\1.1.0\\microsoft.bcl.hashcode.1.1.0.nupkg.sha512",
@@ -23,7 +23,7 @@
     "C:\\Users\\acoun\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\3.1.10\\microsoft.extensions.dependencyinjection.3.1.10.nupkg.sha512",
     "C:\\Users\\acoun\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\3.1.10\\microsoft.extensions.dependencyinjection.abstractions.3.1.10.nupkg.sha512",
     "C:\\Users\\acoun\\.nuget\\packages\\microsoft.extensions.logging\\3.1.10\\microsoft.extensions.logging.3.1.10.nupkg.sha512",
-    "C:\\Users\\acoun\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\3.1.10\\microsoft.extensions.logging.abstractions.3.1.10.nupkg.sha512",
+    "C:\\Users\\acoun\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\5.0.0\\microsoft.extensions.logging.abstractions.5.0.0.nupkg.sha512",
     "C:\\Users\\acoun\\.nuget\\packages\\microsoft.extensions.options\\3.1.10\\microsoft.extensions.options.3.1.10.nupkg.sha512",
     "C:\\Users\\acoun\\.nuget\\packages\\microsoft.extensions.primitives\\3.1.10\\microsoft.extensions.primitives.3.1.10.nupkg.sha512",
     "C:\\Users\\acoun\\.nuget\\packages\\microsoft.identity.client\\3.0.8\\microsoft.identity.client.3.0.8.nupkg.sha512",

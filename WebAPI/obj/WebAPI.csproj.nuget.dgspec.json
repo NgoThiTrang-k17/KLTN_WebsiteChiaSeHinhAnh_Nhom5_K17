@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\acoun\\Desktop\\WebAPI\\WebAPI.csproj": {}
+    "C:\\Users\\acoun\\Desktop\\My ap\\Source\\WebAPI\\WebAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\acoun\\Desktop\\WebAPI\\WebAPI.csproj": {
+    "C:\\Users\\acoun\\Desktop\\My ap\\Source\\WebAPI\\WebAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\acoun\\Desktop\\WebAPI\\WebAPI.csproj",
+        "projectUniqueName": "C:\\Users\\acoun\\Desktop\\My ap\\Source\\WebAPI\\WebAPI.csproj",
         "projectName": "WebAPI",
-        "projectPath": "C:\\Users\\acoun\\Desktop\\WebAPI\\WebAPI.csproj",
+        "projectPath": "C:\\Users\\acoun\\Desktop\\My ap\\Source\\WebAPI\\WebAPI.csproj",
         "packagesPath": "C:\\Users\\acoun\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\acoun\\Desktop\\WebAPI\\obj\\",
+        "outputPath": "C:\\Users\\acoun\\Desktop\\My ap\\Source\\WebAPI\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -54,6 +54,10 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[3.1.10, )"
+            },
+            "Microsoft.Extensions.Logging.Abstractions": {
+              "target": "Package",
+              "version": "[5.0.0, )"
             }
           },
           "imports": [
