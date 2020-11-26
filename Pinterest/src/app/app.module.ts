@@ -6,8 +6,9 @@ import { NgModule } from '@angular/core';
 import { RouterModule, RouterEvent  } from '@angular/router';
 import { MatTabsModule } from '@angular/material/tabs';
 
+import { ShowHidePasswordModule} from 'ngx-show-hide-password';
 import { AppComponent } from './app.component';
-import { NavComponent } from './nav/nav.component';
+import { NavComponent } from './share/nav/nav.component';
 import { HomeComponent } from './home/home.component';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
@@ -20,6 +21,9 @@ import { AccountSettingDetailComponent } from './settings/account-setting-detail
 import { NotificationSettingComponent } from './settings/notification-setting/notification-setting.component';
 import { PrivacySettingComponent } from './settings/privacy-setting/privacy-setting.component';
 import { CardColumnsImageComponent } from './card-columns-image/card-columns-image.component';
+import { UserRegisterComponent } from './user/user-register/user-register.component';
+import { UserLoginComponent } from './user/user-login/user-login.component';
+import { NavHomeComponent } from './share/nav-home/nav-home.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -33,6 +37,9 @@ import { CardColumnsImageComponent } from './card-columns-image/card-columns-ima
     NotificationSettingComponent,
     PrivacySettingComponent,
     CardColumnsImageComponent,
+    UserRegisterComponent,
+    UserLoginComponent,
+    NavHomeComponent,
   ],
   imports: [
     BrowserModule,
@@ -41,7 +48,8 @@ import { CardColumnsImageComponent } from './card-columns-image/card-columns-ima
     RouterModule.forRoot(routes),
     CarouselModule.forRoot(),
     TabsModule.forRoot(),
-    MatTabsModule
+    MatTabsModule,
+    ShowHidePasswordModule
   ],
   providers: [
     AuthService
