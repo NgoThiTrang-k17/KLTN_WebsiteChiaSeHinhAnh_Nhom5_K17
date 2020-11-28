@@ -242,3 +242,6 @@ C:\Users\Huy Hiep\Desktop\TLCN\WebAPI\obj\Debug\netcoreapp3.1\WebAPI.csproj.Copy
 C:\Users\Huy Hiep\Desktop\TLCN\WebAPI\obj\Debug\netcoreapp3.1\WebAPI.dll
 C:\Users\Huy Hiep\Desktop\TLCN\WebAPI\obj\Debug\netcoreapp3.1\WebAPI.pdb
 C:\Users\Huy Hiep\Desktop\TLCN\WebAPI\obj\Debug\netcoreapp3.1\WebAPI.genruntimeconfig.cache
+C:\Users\Huy Hiep\Desktop\TLCN\WebAPI\bin\Debug\netcoreapp3.1\AutoMapper.dll
+C:\Users\Huy Hiep\Desktop\TLCN\WebAPI\bin\Debug\netcoreapp3.1\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+C:\Users\Huy Hiep\Desktop\TLCN\WebAPI\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Authentication.JwtBearer.dll
