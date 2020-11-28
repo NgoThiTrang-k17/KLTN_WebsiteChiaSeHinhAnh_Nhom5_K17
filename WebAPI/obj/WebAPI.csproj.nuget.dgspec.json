@@ -1,23 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\acoun\\Desktop\\My ap\\Source\\TLCN_WebsiteChiaSeHinhAnh_Nhom1_K17\\WebAPI\\WebAPI.csproj": {}
+    "C:\\Users\\Admin\\Documents\\GitHub\\TLCN_WebsiteChiaSeHinhAnh_Nhom1_K17\\WebAPI\\WebAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\acoun\\Desktop\\My ap\\Source\\TLCN_WebsiteChiaSeHinhAnh_Nhom1_K17\\WebAPI\\WebAPI.csproj": {
+    "C:\\Users\\Admin\\Documents\\GitHub\\TLCN_WebsiteChiaSeHinhAnh_Nhom1_K17\\WebAPI\\WebAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\acoun\\Desktop\\My ap\\Source\\TLCN_WebsiteChiaSeHinhAnh_Nhom1_K17\\WebAPI\\WebAPI.csproj",
+        "projectUniqueName": "C:\\Users\\Admin\\Documents\\GitHub\\TLCN_WebsiteChiaSeHinhAnh_Nhom1_K17\\WebAPI\\WebAPI.csproj",
         "projectName": "WebAPI",
-        "projectPath": "C:\\Users\\acoun\\Desktop\\My ap\\Source\\TLCN_WebsiteChiaSeHinhAnh_Nhom1_K17\\WebAPI\\WebAPI.csproj",
-        "packagesPath": "C:\\Users\\acoun\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\acoun\\Desktop\\My ap\\Source\\TLCN_WebsiteChiaSeHinhAnh_Nhom1_K17\\WebAPI\\obj\\",
+        "projectPath": "C:\\Users\\Admin\\Documents\\GitHub\\TLCN_WebsiteChiaSeHinhAnh_Nhom1_K17\\WebAPI\\WebAPI.csproj",
+        "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Admin\\Documents\\GitHub\\TLCN_WebsiteChiaSeHinhAnh_Nhom1_K17\\WebAPI\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\acoun\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [

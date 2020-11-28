@@ -1,10 +1,12 @@
 import { AuthService } from './_services/_auth.service';
+import { UserServiceService } from './_services/user-service.service';
 import { routes } from './../routes';
 import { BrowserModule } from '@angular/platform-browser';
-import {BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { RouterModule, RouterEvent  } from '@angular/router';
 import { MatTabsModule } from '@angular/material/tabs';
+import { ReactiveFormsModule } from '@angular/forms'
 
 import { ShowHidePasswordModule} from 'ngx-show-hide-password';
 import { AppComponent } from './app.component';
@@ -49,10 +51,12 @@ import { NavHomeComponent } from './share/nav-home/nav-home.component';
     CarouselModule.forRoot(),
     TabsModule.forRoot(),
     MatTabsModule,
-    ShowHidePasswordModule
+    ShowHidePasswordModule,
+    ReactiveFormsModule,
   ],
   providers: [
-    AuthService
+    AuthService,
+    UserServiceService
   ],
   bootstrap: [AppComponent]
 })

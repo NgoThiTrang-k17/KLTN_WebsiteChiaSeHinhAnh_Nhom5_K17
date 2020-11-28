@@ -4,34 +4,48 @@
         <i class="fa fa-pinterest fa-4x text-danger"></i>
         <p class="mt-4" style="font-size: 40px;">Chào mừng bạn đến với</p>
         <p class="mt-4" style="font-size: 40px;">Pinterest</p>
-
+    
     </div>
     
-    <div class="row mt-5">      
-        <div class="col-4 m-auto">
+    <div class="row m-auto col-4">   
+        <form [formGroup]="registerationForm" (ngSubmit)="onSubmit()" class="mt-4">
             <div class="form-group">
-                <input for="email" type="text" class="rounded form-control" placeholder="Email" value="">
+                <input formControlName="email" type="text" class="form-control rounded" placeholder="Email" value="">
+                <span *ngIf="!email.valid && (email.touched || userSubmitted)" class="error-block">
+                    <span *ngIf="email.hasError('required')">
+                        Bạn chưa nhập email. Vui lòng nhập!
+                    </span>
+                    <span *ngIf="email.hasError('email')">
+                        Vui lòng nhập email hợp lệ!
+                    </span>
+                </span>
             </div>
-            <form>
-                <div class="form-group">
-                    <div class="input-group">
-                        <input id="mysecretpassword" class="rounded form-control" type="password" placeholder="Tạo mật khẩu" matInput showHideInput>
-                        <div class="input-group-prepend">
-                            <div class="input-group-text">
-                                <i matSuffix
-                                class="material-icons"
-                                showHideTrigger="mysecretpassword"
-                                [showHideStatus]="{ materialIcon: true, id: 'mysecretpassword' }"
-                                aria-hidden="true"
-                                ></i>
-                            </div>
+            
+            <div class="form-group">
+                <div class="input-group">
+                    <input formControlName="password" id="mysecretpassword" class="form-control rounded" type="password" placeholder="Tạo mật khẩu" matInput showHideInput>
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <i matSuffix
+                            class="material-icons"
+                            showHideTrigger="mysecretpassword"
+                            [showHideStatus]="{ materialIcon: true, id: 'mysecretpassword' }"
+                            aria-hidden="true"
+                            ></i>
                         </div>
                     </div>
-                    <!-- <input for="password" type="text" class="rounded form-control" placeholder="Tạo mật khẩu" value=""> -->
+                    <span *ngIf="!password.valid && (password.touched || userSubmitted)" class="error-block">
+                        <span *ngIf="password.hasError('required')">
+                            Bạn chưa nhập password. Vui lòng nhập!
+                        </span>
+                        <span *ngIf="password.errors.minlength">
+                            Vui lòng nhập tối thiểu 8 kí tự!
+                        </span>
+                    </span>
                 </div>
-            </form>
+            </div>
             <div class="text-center mt-4" style="font-weight: bold;">
-                <button type="button" class="btn btn-danger rounded-pill bold" style="font-size: 16px; width: 100%">Đăng ký</button>
+                <button type="submit" class="btn btn-danger rounded-pill bold" style="font-size: 16px; width: 100%">Đăng ký</button>
                 <p class="mt-3">Hoặc</p>
                 <button type="button" class="btn btn-primary rounded-pill" style="font-size: 16px; width: 100%"><span><i class="fa fa-facebook fa-2 text-white mr-2"></i></span>Đăng ký bằng Facebook</button>
                 <button type="button" class="btn btn-light rounded-pill mt-2" style="font-size: 16px; width: 100%"><span><i class="fa fa-google fa-2 mr-2"></i></span>Đăng ký bằng Google</button>
@@ -40,7 +54,41 @@
             <div class="text-center mt-5">
                 <a href="" routerLink="/user-login">Bạn đã là thành viên? Đăng nhập</a>
             </div>
-        </div>
+        </form>   
+        Form Values: {{registerationForm.value | json}} <br/>
+        Form Status: {{registerationForm.valid}}
     </div>
-</div>
+</div> 
 
+<!-- <div class="row">
+    <div class="col-6 m-auto">
+    <div class="card m-auto">
+      <div class="card-header">
+        Register
+      </div>
+      <div class="card-body">
+        <form [formGroup]="registerationForm" (ngSubmit)="onSubmit()">
+          
+  
+          <div class="form-group col-12">
+            <label for="email" class="form-label">Email</label>
+            <input type="text" class="form-control" formControlName="email">
+          </div>
+  
+          <div class="form-group col-12">
+            <label for="password" class="form-label">Password</label>
+            <input type="text" class="form-control" formControlName="password">
+          </div>
+  
+          <div class="form-group col-12">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="reset" class="btn btn-secondary ml-2">Cancel</button>
+          </div>
+        </form>
+        Form Values: {{registerationForm.value | json}} <br/>
+        Form Status: {{registerationForm.valid}}
+      </div>
+    </div>
+    </div>
+  </div> -->
+  
