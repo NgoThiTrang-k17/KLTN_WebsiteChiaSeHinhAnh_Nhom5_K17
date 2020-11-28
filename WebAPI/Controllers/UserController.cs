@@ -28,21 +28,17 @@ namespace WebAPI.Controllers
             var users = await dc.Users.ToListAsync();
             return Ok(users);
         }
-        [HttpGet("{id}")] //GET api/user/id
-        public async Task<IActionResult> GetUser(int id)
-        {
-            var user = dc.Users.Where(r => r.Id == id);
-            return Ok(user);
-        }
+        
 
         //POST api/user/add?FirstName=value&Lastname=&Avatar=value&Email=value&Region=value&Gender=value&Self_introduce=value
         [HttpPost("add")] 
-        public async Task<IActionResult> AddUser(string FirstName,string Lastname,int Avatar,string Email,string Region,int Gender,string Self_introduce)
+        public async Task<IActionResult> AddUser(string FirstName,string Lastname, string Password, int Avatar, string Email,string Region,int Gender,string Self_introduce)
         {
             User user = new User
             {
                 FirstName = FirstName,
                 Lastname = Lastname,
+                Password = Password,
                 Avatar = Avatar,
                 Email = Email,
                 Region = Region,
@@ -54,8 +50,8 @@ namespace WebAPI.Controllers
             return Ok(user);
         }
         
-        //POST api/user/addUser
-        [HttpPost("addUser")] 
+        //POST api/user/registerUser
+        [HttpPost("registerUser")] 
         public async Task<IActionResult> AddUser1(User user)
         {
             await dc.Users.AddAsync(user);
