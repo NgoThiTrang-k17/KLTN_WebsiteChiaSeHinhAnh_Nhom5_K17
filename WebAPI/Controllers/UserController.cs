@@ -28,11 +28,11 @@ namespace WebAPI.Controllers
             var users = await dc.Users.ToListAsync();
             return Ok(users);
         }
-        
+
 
         //POST api/user/add?FirstName=value&Lastname=&Avatar=value&Email=value&Region=value&Gender=value&Self_introduce=value
-        [HttpPost("add")] 
-        public async Task<IActionResult> AddUser(string FirstName,string Lastname, string Password, int Avatar, string Email,string Region,int Gender,string Self_introduce)
+        [HttpPost("add")]
+        public async Task<IActionResult> AddUser(string FirstName, string Lastname, string Password, int Avatar, string Email, string Region, int Gender, string Self_introduce)
         {
             User user = new User
             {
@@ -49,13 +49,22 @@ namespace WebAPI.Controllers
             await dc.SaveChangesAsync();
             return Ok(user);
         }
-        
+
         //POST api/user/registerUser
-        [HttpPost("registerUser")] 
+        [HttpPost("registerUser")]
         public async Task<IActionResult> AddUser1(User user)
         {
             await dc.Users.AddAsync(user);
             await dc.SaveChangesAsync();
+            return Ok(user);
+        }
+
+        //GET api/user
+        [HttpGet("getPassword/{email}")]
+        public async Task<IActionResult> GetUserPassword(string email)
+        {
+            var user = dc.Users.Where(r => r.Email == email);
+            
             return Ok(user);
         }
 
