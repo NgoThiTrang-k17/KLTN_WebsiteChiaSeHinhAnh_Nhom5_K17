@@ -1,6 +1,7 @@
 using AutoMapper;
 using WebApi.Entities;
 using WebApi.Models.Accounts;
+using WebApi.Models.Posts;
 
 namespace WebApi.Helpers
 {
@@ -9,6 +10,10 @@ namespace WebApi.Helpers
         // mappings between model and entity objects
         public AutoMapperProfile()
         {
+            CreateMap<Post , PostResponse>();
+
+            CreateMap<CreatePostRequest, Post>();
+            //
             CreateMap<Account, AccountResponse>();
 
             CreateMap<Account, AuthenticateResponse>();

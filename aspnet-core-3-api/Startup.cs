@@ -33,6 +33,7 @@ namespace WebApi
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
             // configure DI for application services
+            services.AddScoped<IPostService, PostService>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IEmailService, EmailService>();
         }

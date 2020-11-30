@@ -8,6 +8,8 @@ namespace WebApi.Helpers
     {
         public DbSet<Account> Accounts { get; set; }
         
+        public DbSet<Post> Posts { get; set; }
+
         private readonly IConfiguration Configuration;
 
         public DataContext(IConfiguration configuration)
@@ -18,7 +20,7 @@ namespace WebApi.Helpers
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
             // connect to sqlite database
-             options.UseSqlServer(Configuration.GetConnectionString("Default"));
+             options.UseSqlServer(Configuration.GetConnectionString("DefaultLaptop"));
         }
     }
 }

@@ -73,6 +73,27 @@ namespace WebApi.Migrations
                     b.ToTable("Accounts");
                 });
 
+            modelBuilder.Entity("WebApi.Entities.Post", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("OwnerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Path")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Posts");
+                });
+
             modelBuilder.Entity("WebApi.Entities.Account", b =>
                 {
                     b.OwnsMany("WebApi.Entities.RefreshToken", "RefreshTokens", b1 =>
