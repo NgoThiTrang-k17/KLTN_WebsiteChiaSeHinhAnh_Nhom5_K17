@@ -1,0 +1,46 @@
+<app-nav-home></app-nav-home>
+<div class="container">
+    <div class="col-6 m-auto text-center">
+        <i class="fa fa-pinterest fa-4x text-danger"></i>
+        <p class="mt-4" style="font-size: 40px;">Chào mừng bạn đến với</p>
+        <p class="mt-4" style="font-size: 40px;">Pinterest</p>
+
+    </div>
+    
+    <div class="row mt-5">      
+        <div class="col-4 m-auto">
+            <div class="form-group">
+                <input for="email" type="text" class="rounded form-control" placeholder="Email" value="">
+            </div>
+            <form>
+                <div class="form-group">
+                    <div class="input-group">
+                        <input id="mysecretpassword" class="rounded form-control" type="password" placeholder="Tạo mật khẩu" matInput showHideInput>
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <i matSuffix
+                                class="material-icons"
+                                showHideTrigger="mysecretpassword"
+                                [showHideStatus]="{ materialIcon: true, id: 'mysecretpassword' }"
+                                aria-hidden="true"
+                                ></i>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <input for="password" type="text" class="rounded form-control" placeholder="Tạo mật khẩu" value=""> -->
+                </div>
+            </form>
+            <div class="text-center mt-4" style="font-weight: bold;">
+                <button type="button" class="btn btn-danger rounded-pill bold" style="font-size: 16px; width: 100%">Đăng ký</button>
+                <p class="mt-3">Hoặc</p>
+                <button type="button" class="btn btn-primary rounded-pill" style="font-size: 16px; width: 100%"><span><i class="fa fa-facebook fa-2 text-white mr-2"></i></span>Đăng ký bằng Facebook</button>
+                <button type="button" class="btn btn-light rounded-pill mt-2" style="font-size: 16px; width: 100%"><span><i class="fa fa-google fa-2 mr-2"></i></span>Đăng ký bằng Google</button>
+                
+            </div>
+            <div class="text-center mt-5">
+                <a href="" routerLink="/user-login">Bạn đã là thành viên? Đăng nhập</a>
+            </div>
+        </div>
+    </div>
+</div>
+

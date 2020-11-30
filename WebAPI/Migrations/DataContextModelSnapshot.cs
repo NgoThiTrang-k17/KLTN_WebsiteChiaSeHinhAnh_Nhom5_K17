@@ -40,6 +40,9 @@ namespace WebAPI.Migrations
                     b.Property<string>("Lastname")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Password")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Region")
                         .HasColumnType("nvarchar(max)");
 
