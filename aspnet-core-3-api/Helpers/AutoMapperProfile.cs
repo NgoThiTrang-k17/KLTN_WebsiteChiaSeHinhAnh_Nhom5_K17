@@ -1,6 +1,7 @@
 using AutoMapper;
 using WebApi.Entities;
 using WebApi.Models.Accounts;
+using WebApi.Models.Comments;
 using WebApi.Models.Posts;
 
 namespace WebApi.Helpers
@@ -13,6 +14,12 @@ namespace WebApi.Helpers
             CreateMap<Post , PostResponse>();
 
             CreateMap<CreatePostRequest, Post>();
+
+            CreateMap<UpdatePostRequest, Post>();
+            //
+            CreateMap<Comment, CommentResponse>();
+
+            CreateMap<CreateCommentRequest, Comment>();
             //
             CreateMap<Account, AccountResponse>();
 

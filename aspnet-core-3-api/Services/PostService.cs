@@ -15,6 +15,7 @@ namespace WebApi.Services
     {
         IEnumerable<PostResponse> GetAll();
         PostResponse CreatePost(CreatePostRequest model);
+        PostResponse UpdatePost(int id, UpdatePostRequest model);
     }
     public class PostService : IPostService
     {
@@ -42,6 +43,23 @@ namespace WebApi.Services
             _context.SaveChanges();
             return _mapper.Map<PostResponse>(post);
         }
+        public PostResponse UpdatePost(int id, UpdatePostRequest model) 
+        {
+            var post = GetPost(id);
+            _mapper.Map(model, post);
+            _context.Posts.Update(post);
+            _context.SaveChanges();
+
+            return _mapper.Map<PostResponse>(post);
+        }
+
+        private Post GetPost(int id)
+        {
+            var post = _context.Posts.Find(id);
+            if (post == null) throw new KeyNotFoundException("Post not found");
+            return post; throw new NotImplementedException();
+        }
+
     }
 
 }

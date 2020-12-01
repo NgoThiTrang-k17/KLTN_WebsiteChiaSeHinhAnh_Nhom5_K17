@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System;
 using WebApi.Entities;
 
 namespace WebApi.Helpers
@@ -9,6 +10,8 @@ namespace WebApi.Helpers
         public DbSet<Account> Accounts { get; set; }
         
         public DbSet<Post> Posts { get; set; }
+
+        public  DbSet<Comment> Comment { get;  set; }
 
         private readonly IConfiguration Configuration;
 
@@ -21,6 +24,11 @@ namespace WebApi.Helpers
         {
             // connect to sqlite database
              options.UseSqlServer(Configuration.GetConnectionString("DefaultLaptop"));
+        }
+
+        internal object Map<T>(object comments)
+        {
+            throw new NotImplementedException();
         }
     }
 }

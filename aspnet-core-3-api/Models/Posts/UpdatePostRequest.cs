@@ -1,9 +1,9 @@
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace WebApi.Models.Posts
 {
-    public class CreatePostRequest
+    public class UpdatePostRequest
     {
         [Required]
         public int Id { get; set; }
@@ -14,7 +14,7 @@ namespace WebApi.Models.Posts
         [Required]
         public string Path { get; set; }
         [Required]
-        public int OwnerId {get; set;}
+        public int OwnerId { get; set; }
 
     }
 }
