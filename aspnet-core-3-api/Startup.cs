@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using WebApi.Helpers;
+using WebApi.Hubs;
 using WebApi.Middleware;
 using WebApi.Services;
 
@@ -28,6 +29,8 @@ namespace WebApi
             services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.IgnoreNullValues = true);
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddSwaggerGen();
+            //for notification service
+            services.AddSignalR();
 
             // configure strongly typed settings object
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
@@ -63,7 +66,22 @@ namespace WebApi
             // custom jwt auth middleware
             app.UseMiddleware<JwtMiddleware>();
 
-            app.UseEndpoints(x => x.MapControllers());
+            //app.UseEndpoints(x => x.MapControllers(),
+            //    endpoints =>
+            //    {
+            //        endpoints.MapHub(/ NotificationHub);
+            //    });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                //endpoints.MapControllerRoute(
+                //                   name: "default",
+                //                   pattern: "{controller=Home}/{action=Index}/{id?}");
+
+                //endpoints.MapHub<NotificationHub>("/NotificationHub");
+                //endpoints.MapHub<NotificationUserHub>("/NotificationUserHub");
+            });
+
         }
     }
 }

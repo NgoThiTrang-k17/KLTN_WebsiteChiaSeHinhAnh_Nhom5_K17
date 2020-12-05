@@ -52,12 +52,19 @@ namespace WebApi.Services
 
             return _mapper.Map<PostResponse>(post);
         }
+        public void DeletePost(int id)
+        {
+            var post = GetPost(id);
+            _context.Remove(post);
+            _context.SaveChanges();
+        }
 
+        //helper
         private Post GetPost(int id)
         {
             var post = _context.Posts.Find(id);
             if (post == null) throw new KeyNotFoundException("Post not found");
-            return post; throw new NotImplementedException();
+            return post; 
         }
 
     }
