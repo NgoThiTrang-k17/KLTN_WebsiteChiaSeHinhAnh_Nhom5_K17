@@ -3,7 +3,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using WebApi.Entities;
 using WebApi.Hubs;
@@ -20,20 +23,18 @@ namespace WebApi.Controllers
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IPostService _postService;
         private readonly IMapper _mapper;
-        private readonly IUserConnectionManager _userConnectionManager;
-        private readonly IHubContext<NotificationHub> _notificationHubContext;
-        private readonly IHubContext<NotificationUserHub> _notificationUserHubContext;
+        //private readonly IUserConnectionManager _userConnectionManager;
+        //private readonly IHubContext<NotificationHub> _notificationHubContext;
+        //private readonly IHubContext<NotificationUserHub> _notificationUserHubContext;
 
 
         public PostsController(
             IWebHostEnvironment webHostEnvironment,
             IPostService postService,
-            IMapper mapper,
-            IUserConnectionManager userConnectionManager) {
+            IMapper mapper) {
             _webHostEnvironment = webHostEnvironment;
             _postService = postService;
             _mapper = mapper;
-            _userConnectionManager = userConnectionManager;
         }
         [HttpGet]
         public ActionResult<IEnumerable<PostResponse>> GetAll()
@@ -42,14 +43,77 @@ namespace WebApi.Controllers
             return Ok(posts);
 
         }
-        [HttpPost]
-        public ActionResult<PostResponse> Create (CreatePostRequest model)
-        {
-            var post = _postService.CreatePost(model);
-            post.OwnerId = Account.Id;
+        //[HttpPost]
+        //public ActionResult<PostResponse> Create (CreatePostRequest model)
+        //{
+        //    var post = _postService.CreatePost(model);
+        //    post.OwnerId = Account.Id;
+        //
+        //    return Ok(post);
+        //}
 
-            return Ok(post);
+        //[HttpPost]
+        //public ActionResult<PostResponse> Create(CreatePostRequest model)
+        //{
+        //    // Getting Name
+        //    //string name = std.Name;
+        //    // Getting Image
+        //    var image = model.Image;
+        //    // Saving Image on Server
+        //
+        //    if (image.Length > 0)
+        //    {
+        //        using (var fileStream = new FileStream(image.FileName, FileMode.Create))
+        //        {
+        //            image.CopyTo(fileStream);
+        //        }
+        //    }
+        //    var post = _postService.CreatePost(model);
+        //    return Ok(post);
+        //}
+
+        [HttpPost, DisableRequestSizeLimit]
+        public IActionResult CreatePost(string postTitle)
+        {
+            try
+            {
+                var file = Request.Form.Files[0];
+                var folderName = Path.Combine("Resources", "Images");
+                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+
+                if (file.Length > 0)
+                {
+                    var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                    var fullPath = Path.Combine(pathToSave, fileName);
+                    var dbPath = Path.Combine(folderName, fileName);
+
+                    using (var stream = new FileStream(fullPath, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
+                    var model = new CreatePostRequest
+                    {
+                        PostTitle = postTitle,
+                        Created = DateTime.Now,
+                        ImagePath = dbPath,
+                        OwnerId = 1
+                    };
+
+                    var post = _postService.CreatePost(model);
+
+                    return Ok(new { dbPath });
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
         }
+
         [Authorize]
         [HttpPut("{id:int}")]
         public ActionResult<PostResponse> Update(int id, UpdatePostRequest model)
