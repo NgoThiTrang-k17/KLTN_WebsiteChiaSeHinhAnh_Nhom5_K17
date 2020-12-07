@@ -43,6 +43,12 @@ namespace WebApi.Controllers
             return Ok(posts);
 
         }
+        [HttpGet("{id:int}")]
+        public ActionResult<IEnumerable<PostResponse>> GetAllById(int id)
+        {
+            var posts = _postService.GetAllById(id);
+            return Ok(posts);
+        }
         //[HttpPost]
         //public ActionResult<PostResponse> Create (CreatePostRequest model)
         //{
