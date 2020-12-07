@@ -31,7 +31,8 @@ namespace WebApi.Controllers
         public PostsController(
             IWebHostEnvironment webHostEnvironment,
             IPostService postService,
-            IMapper mapper) {
+            IMapper mapper)
+        {
             _webHostEnvironment = webHostEnvironment;
             _postService = postService;
             _mapper = mapper;
@@ -42,12 +43,6 @@ namespace WebApi.Controllers
             var posts = _postService.GetAll();
             return Ok(posts);
 
-        }
-        [HttpGet("{id:int}")]
-        public ActionResult<IEnumerable<PostResponse>> GetAllById(int id)
-        {
-            var posts = _postService.GetAllById(id);
-            return Ok(posts);
         }
         //[HttpPost]
         //public ActionResult<PostResponse> Create (CreatePostRequest model)
@@ -79,7 +74,7 @@ namespace WebApi.Controllers
         //}
 
         [HttpPost, DisableRequestSizeLimit]
-        public IActionResult CreatePost(string postTitle)
+        public IActionResult CreatePost([FromForm] CreatePostRequest post)
         {
             try
             {
@@ -99,13 +94,13 @@ namespace WebApi.Controllers
                     }
                     var model = new CreatePostRequest
                     {
-                        PostTitle = postTitle,
+                        PostTitle = post.PostTitle,
                         Created = DateTime.Now,
                         ImagePath = dbPath,
                         OwnerId = 1
                     };
 
-                    var post = _postService.CreatePost(model);
+                    var temp = _postService.CreatePost(model);
 
                     return Ok(new { dbPath });
                 }
@@ -124,7 +119,7 @@ namespace WebApi.Controllers
         [HttpPut("{id:int}")]
         public ActionResult<PostResponse> Update(int id, UpdatePostRequest model)
         {
-            
+
             var post = _postService.UpdatePost(id, model);
 
             return Ok(post);
@@ -148,7 +143,7 @@ namespace WebApi.Controllers
         //             _notificationUserHubContext.Clients.Client(connectionId.SendAsync("sendToUser", model.Title, model.OwnerId));
         //        }
         //    }
-            
+
         //}
 
     }
