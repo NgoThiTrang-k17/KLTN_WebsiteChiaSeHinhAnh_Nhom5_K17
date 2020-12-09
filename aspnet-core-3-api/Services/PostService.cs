@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace WebApi.Services
     public interface IPostService
     {
         IEnumerable<PostResponse> GetAll();
-        IEnumerable<PostResponse> GetPostById(int postId);
+        PostResponse GetPostById(int postId);
         IEnumerable<PostResponse> GetAllByUserId(int ownerId);
         PostResponse CreatePost(CreatePostRequest model);
         PostResponse UpdatePost(int id, UpdatePostRequest model);
@@ -39,10 +40,10 @@ namespace WebApi.Services
             return _mapper.Map<IList<PostResponse>>(posts);
         }
 
-        public IEnumerable<PostResponse> GetPostById(int postId)
+        public PostResponse GetPostById(int postId)
         {
             var post = GetPost(postId);
-            return _mapper.Map<IList<PostResponse>>(post);
+            return _mapper.Map<PostResponse>(post);
         }
 
         public IEnumerable<PostResponse> GetAllByUserId(int ownerId)

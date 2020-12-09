@@ -45,7 +45,7 @@ namespace WebApi.Controllers
 
         }
         [HttpGet("GetPostById/{id:int}")]
-        public ActionResult<IEnumerable<PostResponse>> GetPostById(int id)
+        public ActionResult<PostResponse> GetPostById(int id)
         {
             var post = _postService.GetPostById(id);
             return Ok(post);
