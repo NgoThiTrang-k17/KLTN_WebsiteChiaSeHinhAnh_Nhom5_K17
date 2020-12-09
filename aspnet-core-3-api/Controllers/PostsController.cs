@@ -44,6 +44,19 @@ namespace WebApi.Controllers
             return Ok(posts);
 
         }
+        [HttpGet("GetPostById/{id:int}")]
+        public ActionResult<IEnumerable<PostResponse>> GetPostById(int id)
+        {
+            var post = _postService.GetPostById(id);
+            return Ok(post);
+        }
+
+        [HttpGet("GetAllByUserId/{id:int}")]
+        public ActionResult<IEnumerable<PostResponse>> GetAllByUserId(int id)
+        {
+            var posts = _postService.GetAllByUserId(id);
+            return Ok(posts);
+        }
         //[HttpPost]
         //public ActionResult<PostResponse> Create (CreatePostRequest model)
         //{
