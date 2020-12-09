@@ -14,7 +14,8 @@ namespace WebApi.Services
     public interface IPostService
     {
         IEnumerable<PostResponse> GetAll();
-        IEnumerable<PostResponse> GetAllById(int id);
+        IEnumerable<PostResponse> GetPostById(int postId);
+        IEnumerable<PostResponse> GetAllByUserId(int ownerId);
         PostResponse CreatePost(CreatePostRequest model);
         PostResponse UpdatePost(int id, UpdatePostRequest model);
     }
@@ -38,11 +39,18 @@ namespace WebApi.Services
             return _mapper.Map<IList<PostResponse>>(posts);
         }
 
-        public IEnumerable<PostResponse> GetAllById(int id)
+        public IEnumerable<PostResponse> GetPostById(int postId)
         {
-            var posts = _context.Posts.Where(post => post.Id == id);
+            var post = GetPost(postId);
+            return _mapper.Map<IList<PostResponse>>(post);
+        }
+
+        public IEnumerable<PostResponse> GetAllByUserId(int ownerId)
+        {
+            var posts = _context.Posts.Where(post => post.OwnerId == ownerId);
             return _mapper.Map<IList<PostResponse>>(posts);
         }
+
         public PostResponse CreatePost(CreatePostRequest model)
         {
             var post = _mapper.Map<Post>(model);

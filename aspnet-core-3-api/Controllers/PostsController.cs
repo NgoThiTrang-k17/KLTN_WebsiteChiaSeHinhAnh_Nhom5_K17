@@ -27,7 +27,6 @@ namespace WebApi.Controllers
         //private readonly IHubContext<NotificationHub> _notificationHubContext;
         //private readonly IHubContext<NotificationUserHub> _notificationUserHubContext;
 
-
         public PostsController(
             IWebHostEnvironment webHostEnvironment,
             IPostService postService,
@@ -36,6 +35,7 @@ namespace WebApi.Controllers
             _postService = postService;
             _mapper = mapper;
         }
+
         [HttpGet]
         public ActionResult<IEnumerable<PostResponse>> GetAll()
         {
@@ -43,10 +43,18 @@ namespace WebApi.Controllers
             return Ok(posts);
 
         }
-        [HttpGet("{id:int}")]
-        public ActionResult<IEnumerable<PostResponse>> GetAllById(int id)
+
+        [HttpGet("GetPostById/{id:int}")]
+        public ActionResult<IEnumerable<PostResponse>> GetPostById(int id)
         {
-            var posts = _postService.GetAllById(id);
+            var post = _postService.GetPostById(id);
+            return Ok(post);
+        }
+
+        [HttpGet("GetAllByUserId/{id:int}")]
+        public ActionResult<IEnumerable<PostResponse>> GetAllByUserId(int id)
+        {
+            var posts = _postService.GetAllByUserId(id);
             return Ok(posts);
         }
         //[HttpPost]
@@ -129,13 +137,13 @@ namespace WebApi.Controllers
 
             return Ok(post);
         }
+
         [HttpGet]
         private ActionResult<IEnumerable<PostResponse>> GetPath()
         {
             string path = _webHostEnvironment.ContentRootPath;
             return Ok(path);
         }
-
 
         //[HttpPost]
         //public void SendToSpecificUser(Post model)

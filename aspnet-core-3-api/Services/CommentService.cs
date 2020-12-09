@@ -13,6 +13,7 @@ namespace WebApi.Services
     public interface ICommentService
     {
         IEnumerable<CommentResponse> GetAll();
+        IEnumerable<CommentResponse> GetAllByPostId(int postId);
         CommentResponse CreateComment(CreateCommentRequest model);
     }
     public class CommentService:ICommentService
@@ -33,6 +34,13 @@ namespace WebApi.Services
             var comments = _context.Comment;
                 return _mapper.Map<List<CommentResponse>>(comments);
         }
+
+        public IEnumerable<CommentResponse> GetAllByPostId(int postId)
+        {
+            var comments = _context.Comment.Where(comment => comment.PostId == postId);
+            return _mapper.Map<List<CommentResponse>>(comments);
+        }
+
         public CommentResponse CreateComment(CreateCommentRequest model)
         {
             var comment = _mapper.Map<Comment>(model);

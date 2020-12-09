@@ -24,17 +24,20 @@ namespace WebApi.Controllers
             _commentService = commentService;
             _mapper = mapper;
         }
+
         [HttpGet]
         public ActionResult<IEnumerable<CommentResponse>> GetAll()
         {
             var comments = _commentService.GetAll();
             return Ok(comments);
         }
+
         [HttpPost]
         public ActionResult<CommentResponse> Create(CreateCommentRequest model)
         {
+            model.OwnerId = Account.Id;
+            model.PostId = Post.Id;
             var comment = _commentService.CreateComment(model);
-            comment.OwnerId = Account.Id;
             return Ok(comment);
         }
     }
