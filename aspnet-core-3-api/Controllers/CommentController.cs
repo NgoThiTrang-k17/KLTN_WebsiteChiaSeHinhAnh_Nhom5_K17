@@ -41,8 +41,8 @@ namespace WebApi.Controllers
                 DateCreated = DateTime.Now,
                 OwnerId = //Account.Id, 
                 comment.OwnerId, 
-                PostId = //Post.Id
-                comment.PostId
+                PostId = comment.PostId
+                
             };
             _commentService.CreateComment(model);
             return Ok(new { message = "Adding comment succesful!" });
