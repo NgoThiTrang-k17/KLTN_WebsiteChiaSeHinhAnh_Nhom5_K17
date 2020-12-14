@@ -38,6 +38,7 @@ namespace WebApi.Controllers
             var comments = _commentService.GetAllByPostId(id);
             return Ok(comments);
         }
+
         [HttpPost]
         public IActionResult Create(CreateCommentRequest comment)
         {

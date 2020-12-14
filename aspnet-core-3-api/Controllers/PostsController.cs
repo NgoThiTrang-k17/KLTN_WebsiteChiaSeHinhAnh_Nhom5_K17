@@ -1,16 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http.Headers;
-using System.Threading.Tasks;
 using WebApi.Entities;
-using WebApi.Hubs;
-using WebApi.Interface;
 using WebApi.Models.Posts;
 using WebApi.Services;
 
@@ -23,10 +18,6 @@ namespace WebApi.Controllers
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IPostService _postService;
         private readonly IMapper _mapper;
-        //private readonly IUserConnectionManager _userConnectionManager;
-        //private readonly IHubContext<NotificationHub> _notificationHubContext;
-        //private readonly IHubContext<NotificationUserHub> _notificationUserHubContext;
-
 
         public PostsController(
             IWebHostEnvironment webHostEnvironment,
@@ -54,37 +45,16 @@ namespace WebApi.Controllers
         [HttpGet("GetAllByUserId/{id:int}")]
         public ActionResult<IEnumerable<PostResponse>> GetAllByUserId(int id)
         {
-            var posts = _postService.GetAllByUserId(id);
-            return Ok(posts);
+            try
+            {
+                var posts = _postService.GetAllByUserId(id);
+                return Ok(posts);
+            }catch(Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
         }
-        //[HttpPost]
-        //public ActionResult<PostResponse> Create (CreatePostRequest model)
-        //{
-        //    var post = _postService.CreatePost(model);
-        //    post.OwnerId = Account.Id;
-        //
-        //    return Ok(post);
-        //}
-
-        //[HttpPost]
-        //public ActionResult<PostResponse> Create(CreatePostRequest model)
-        //{
-        //    // Getting Name
-        //    //string name = std.Name;
-        //    // Getting Image
-        //    var image = model.Image;
-        //    // Saving Image on Server
-        //
-        //    if (image.Length > 0)
-        //    {
-        //        using (var fileStream = new FileStream(image.FileName, FileMode.Create))
-        //        {
-        //            image.CopyTo(fileStream);
-        //        }
-        //    }
-        //    var post = _postService.CreatePost(model);
-        //    return Ok(post);
-        //}
+ 
 
         [HttpPost, DisableRequestSizeLimit]
         public IActionResult CreatePost([FromForm] CreatePostRequest post)
@@ -110,7 +80,7 @@ namespace WebApi.Controllers
                         PostTitle = post.PostTitle,
                         Created = DateTime.Now,
                         ImagePath = dbPath,
-                        OwnerId = 1
+                        OwnerId = Account.Id
                     };
 
                     var temp = _postService.CreatePost(model);
