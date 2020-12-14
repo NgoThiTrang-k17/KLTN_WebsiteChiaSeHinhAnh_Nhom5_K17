@@ -12,8 +12,7 @@ namespace WebApi.Models.Accounts
 
         public string AvatarPath { get; set; }
         public string Title { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public string Name { get; set; }
 
         [EnumDataType(typeof(Role))]
         public string Role

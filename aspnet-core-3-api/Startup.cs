@@ -40,6 +40,7 @@ namespace WebApi
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
             // configure DI for application services
+            services.AddScoped<ISearchService, SearchService>();
             services.AddScoped<IPostService, PostService>();
             services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<IAccountService, AccountService>();
