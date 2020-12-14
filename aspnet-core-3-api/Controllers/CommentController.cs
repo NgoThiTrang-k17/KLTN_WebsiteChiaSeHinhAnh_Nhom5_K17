@@ -33,15 +33,16 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(CreateCommentRequest comment)
+        public IActionResult Create([FromForm] CreateCommentRequest comment)
         {
             var model = new CreateCommentRequest
             {
                 Content = comment.Content,
                 DateCreated = DateTime.Now,
-                OwnerId = //Account.Id, 
-                comment.OwnerId, 
-                PostId = comment.PostId
+                OwnerId = Account.Id, 
+                //comment.OwnerId, 
+                PostId = //Post.Id
+                comment.PostId,
                 
             };
             _commentService.CreateComment(model);

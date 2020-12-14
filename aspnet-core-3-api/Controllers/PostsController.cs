@@ -110,7 +110,7 @@ namespace WebApi.Controllers
                         PostTitle = post.PostTitle,
                         Created = DateTime.Now,
                         ImagePath = dbPath,
-                        OwnerId = 1
+                        OwnerId = Account.Id,
                     };
 
                     var temp = _postService.CreatePost(model);
