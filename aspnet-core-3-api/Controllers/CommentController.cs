@@ -32,6 +32,13 @@ namespace WebApi.Controllers
             return Ok(comments);
         }
 
+        [HttpGet("{id:int}")]
+        public ActionResult<IEnumerable<CommentResponse>> GetAllByPostId(int id)
+        {
+            var comments = _commentService.GetAllByPostId(id);
+            return Ok(comments);
+        }
+
         [HttpPost]
         public IActionResult Create([FromForm] CreateCommentRequest comment)
         {

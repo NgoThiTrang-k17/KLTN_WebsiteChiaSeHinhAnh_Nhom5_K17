@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using Nest;
 using System;
 using System.IO;
 using WebApi.Helpers;
@@ -34,11 +35,12 @@ namespace WebApi
             services.AddSwaggerGen();
             //for notification service
             services.AddSignalR();
-
+            //services.AddElasticsearch(Configuration);
             // configure strongly typed settings object
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
             // configure DI for application services
+            services.AddScoped<ISearchService, SearchService>();
             services.AddScoped<IPostService, PostService>();
             services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<IAccountService, AccountService>();
