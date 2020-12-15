@@ -22,7 +22,7 @@ namespace WebApi.Helpers
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            // connect to sqlite database
+            // connect to sqlserver database
              options.UseSqlServer(Configuration.GetConnectionString("DefaultDesktop"));
         }
 
