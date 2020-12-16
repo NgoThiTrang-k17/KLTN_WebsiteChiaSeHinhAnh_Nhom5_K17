@@ -9,7 +9,6 @@ using System.IO;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using WebApi.Entities;
-using WebApi.Hubs;
 using WebApi.Interface;
 using WebApi.Models.Posts;
 using WebApi.Services;

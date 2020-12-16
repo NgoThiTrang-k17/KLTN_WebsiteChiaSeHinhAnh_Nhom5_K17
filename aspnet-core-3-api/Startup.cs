@@ -6,11 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
-using Nest;
 using System;
 using System.IO;
 using WebApi.Helpers;
-using WebApi.Hubs;
 using WebApi.Middleware;
 using WebApi.Services;
 

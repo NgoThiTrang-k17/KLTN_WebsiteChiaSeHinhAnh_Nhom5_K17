@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Nest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +9,6 @@ using WebApi.Entities;
 using WebApi.Helpers;
 using WebApi.Models.Accounts;
 using WebApi.Models.Posts;
-using static WebApi.Helpers.ElasticsearchExtensions;
 
 namespace WebApi.Services
 {
