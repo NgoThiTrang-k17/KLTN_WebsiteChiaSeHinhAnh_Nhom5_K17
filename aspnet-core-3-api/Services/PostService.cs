@@ -19,6 +19,7 @@ namespace WebApi.Services
         IEnumerable<PostResponse> GetAllByUserId(int ownerId);
         PostResponse CreatePost(CreatePostRequest model);
         PostResponse UpdatePost(int id, UpdatePostRequest model);
+        public void DeletePost(int id);
     }
     public class PostService : IPostService
     {

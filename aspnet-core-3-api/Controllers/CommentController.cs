@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApi.Entities;
 using WebApi.Models.Comments;
 using WebApi.Services;
 
@@ -40,20 +41,42 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromForm] CreateCommentRequest comment)
+        public ActionResult<CommentResponse> Create(CreateCommentRequest comment)
         {
             var model = new CreateCommentRequest
             {
                 Content = comment.Content,
                 DateCreated = DateTime.Now,
-                OwnerId = Account.Id, 
-                //comment.OwnerId, 
+                OwnerId =// Account.Id, 
+                comment.OwnerId, 
                 PostId = //Post.Id
                 comment.PostId,
                 
             };
             _commentService.CreateComment(model);
             return Ok(new { message = "Adding comment succesful!" });
+        }
+
+        [Authorize]
+        [HttpPut("{id:int}")]
+        public ActionResult<CommentResponse> Update(int id, CommentResponse model)
+        {
+
+            var post = _commentService.UpdateComment(id, model);
+
+            return Ok(post);
+        }
+
+        [Authorize]
+        [HttpDelete("{id:int}")]
+        public IActionResult Delete(int id)
+        {
+            // users can delete their own comment and admins can delete any comment
+            if (id != Account.Id && Account.Role != Role.Admin)
+                return Unauthorized(new { message = "Unauthorized" });
+
+            _commentService.DeleteComment(id);
+            return Ok(new { message = "Account deleted successfully" });
         }
     }
 }

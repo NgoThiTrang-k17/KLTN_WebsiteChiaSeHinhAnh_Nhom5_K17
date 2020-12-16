@@ -2,6 +2,7 @@ using AutoMapper;
 using WebApi.Entities;
 using WebApi.Models.Accounts;
 using WebApi.Models.Comments;
+using WebApi.Models.Notification;
 using WebApi.Models.Posts;
 
 namespace WebApi.Helpers
@@ -11,6 +12,10 @@ namespace WebApi.Helpers
         // mappings between model and entity objects
         public AutoMapperProfile()
         {
+            //
+            CreateMap<Notification, NotificationResponse>();
+            CreateMap<CreateNotificationRequest, Notification>();
+            //
             CreateMap<Post , PostResponse>();
 
             CreateMap<CreatePostRequest, Post>();
