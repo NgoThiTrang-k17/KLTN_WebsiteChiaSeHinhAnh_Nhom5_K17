@@ -1,0 +1,11 @@
+﻿<nav class="admin-nav navbar navbar-expand navbar-light">
+    <div class="navbar-nav">
+        <a routerLink="accounts" routerLinkActive="active" class="nav-item nav-link">Accounts</a>
+        <a (click)="logout()" class="dropdown-item nav-link">Đăng xuất</a>
+    </div>
+</nav>
+<div class="p-4">
+    <div class="container">
+        <router-outlet></router-outlet>
+    </div>
+</div>

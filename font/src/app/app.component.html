@@ -1,0 +1,69 @@
+﻿<!-- <div class="app-container" style="background-color: #e8e9ea;" [ngClass]="{ 'bg-light': account }">
+    
+    <nav *ngIf="account.role == 0" class="navbar navbar-expand navbar-light bg-white">
+        <div class="navbar-brand"><i class="fa fa-pinterest fa-2x text-danger"></i></div>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link bold btn btn-dark text-white nav-btn" href="#">Trang chủ<span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link bold btn nav-btn" href="#">Người bạn đang theo dõi</a>
+                </li>
+                <li class="ml-3 mr-3 nav-item mt-1">
+                    <div id="search-box" class="input-group">
+                        <div class="input-group-prepend">
+                            <span id="search"><i class="fa fa-search" aria-hidden="false"></i></span>
+                        </div>
+                        <input id="search-form" class="form-control" style="width:800px" type="text" placeholder="Tìm kiếm" aria-label="Search">
+                    </div>
+                </li>
+                
+            </ul>
+            <div class="d-flex justify-content-end">
+                <div class="navbar-nav" dropdown [insideClick]="true">
+                    <div class="nav-item dropdown br-xam "> <a class="nav-link dropdown-toggle" data-toggle="dropdown"
+                            dropdownToggle><i class="fa fa-bell fa-2x"></i></a>
+                        <ul class="dropdown-menu dropdown-menu-right shadow-sm rounded-lg" *dropdownMenu>
+                            <li class="text-center"><strong>Thông báo</strong></li>
+                            <hr>
+                            <li class="dropdown-item align-content-center">Ai đó tiếp tục thích bạn</li>
+                            <li class="dropdown-item">Ai đó lại thích bạn</li>
+                            <li class="dropdown-item">Ai đó đã thích bạn</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="nav-item">
+                <a routerLink="/profile" routerLinkActive="active" class="nav-item">
+                    <img routerLink="/profile" class="rounded-circle" style="height: 30px; width: 30px;" src="../../assets/images/taking photos for next issue vol_019 -1- _ JOURNAL _ 25 January 2018.jpg">
+                </a>
+            </div>
+            <div class="nav-item mr-4">
+                <div class="navbar-nav" dropdown [insideClick]="true">
+                    <div class="nav-item dropdown br-xam "> <a class="nav-link dropdown-toggle" data-toggle="dropdown"
+                        dropdownToggle><i class="fa fa-angle-down img-thumbnail rounded-circle"></i></a>
+                        <ul class="dropdown-menu dropdown-menu-right" *dropdownMenu>
+                            <li routerLink="/account-setting" class="dropdown-item nav-link">Cài đặt</li>
+                            <li (click)="logout()" class="dropdown-item nav-link">Đăng xuất</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>  
+
+    <nav *ngIf="account.role == 1" routerLink="admin" class="admin-nav navbar navbar-expand navbar-light">
+        <div class="navbar-nav">
+            <a routerLink="account" routerLinkActive="active" class="nav-item nav-link">Accounts</a>
+        </div>
+    </nav>
+     
+    <router-outlet name="subnav"></router-outlet>
+   
+    <alert></alert>
+
+    <router-outlet></router-outlet>
+</div> -->
+<router-outlet></router-outlet>
