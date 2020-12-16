@@ -1,16 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http.Headers;
-using System.Threading.Tasks;
 using WebApi.Entities;
-using WebApi.Hubs;
-using WebApi.Interface;
 using WebApi.Models.Posts;
 using WebApi.Services;
 
@@ -87,7 +82,7 @@ namespace WebApi.Controllers
         //}
 
         [HttpPost, DisableRequestSizeLimit]
-        public IActionResult CreatePost([FromForm] CreatePostRequest post)
+        public IActionResult Create([FromForm] CreatePostRequest post)
         {
             try
             {
@@ -137,14 +132,24 @@ namespace WebApi.Controllers
 
             return Ok(post);
         }
+        
+        [Authorize]
+        [HttpDelete("{id:int}")]
+        public IActionResult Delete(int id)
+        {
+            // users can delete their own post and admins can delete any post
+            if (id != Account.Id && Account.Role != Role.Admin)
+                return Unauthorized(new { message = "Unauthorized" });
+
+            _postService.DeletePost(id);
+            return Ok(new { message = "Account deleted successfully" });
+        }
         [HttpGet]
         private ActionResult<IEnumerable<PostResponse>> GetPath()
         {
             string path = _webHostEnvironment.ContentRootPath;
             return Ok(path);
         }
-
-
         //[HttpPost]
         //public void SendToSpecificUser(Post model)
         //{

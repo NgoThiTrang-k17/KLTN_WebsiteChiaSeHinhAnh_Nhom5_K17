@@ -6,11 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
-using Nest;
 using System;
 using System.IO;
 using WebApi.Helpers;
-using WebApi.Hubs;
 using WebApi.Middleware;
 using WebApi.Services;
 
@@ -40,6 +38,7 @@ namespace WebApi
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
             // configure DI for application services
+            services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<ISearchService, SearchService>();
             services.AddScoped<IPostService, PostService>();
             services.AddScoped<ICommentService, CommentService>();
@@ -66,6 +65,7 @@ namespace WebApi
 
             // global cors policy
             app.UseCors(x => x
+                   .WithOrigins("http://localhost:4200")
                 .SetIsOriginAllowed(origin => true)
                 .AllowAnyMethod()
                 .AllowAnyHeader()
@@ -77,20 +77,11 @@ namespace WebApi
             // custom jwt auth middleware
             app.UseMiddleware<JwtMiddleware>();
 
-            //app.UseEndpoints(x => x.MapControllers(),
-            //    endpoints =>
-            //    {
-            //        endpoints.MapHub(/ NotificationHub);
-            //    });
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                //endpoints.MapControllerRoute(
-                //                   name: "default",
-                //                   pattern: "{controller=Home}/{action=Index}/{id?}");
-
-                //endpoints.MapHub<NotificationHub>("/NotificationHub");
-                //endpoints.MapHub<NotificationUserHub>("/NotificationUserHub");
+                
             });
 
         }

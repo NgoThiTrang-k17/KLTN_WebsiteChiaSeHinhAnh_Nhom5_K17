@@ -11,7 +11,9 @@ namespace WebApi.Helpers
         
         public DbSet<Post> Posts { get; set; }
 
-        public  DbSet<Comment> Comment { get;  set; }
+        public DbSet<Comment> Comment { get;  set; }
+
+        public DbSet<Notification> Notifications { get; internal set; }
 
         private readonly IConfiguration Configuration;
 
