@@ -136,17 +136,7 @@ namespace WebApi.Controllers
             return Ok(path);
         }
 
-        [Authorize]
-        [HttpDelete("{id:int}")]
-        public IActionResult Delete(int id)
-        {
-            // users can delete their own Post and admins can delete any Post
-            if (id != Account.Id && Account.Role != Role.Admin)
-                return Unauthorized(new { message = "Unauthorized" });
 
-            _postService.DeletePost(id);
-            return Ok(new { message = "Post deleted successfully" });
-        }
 
 
     }

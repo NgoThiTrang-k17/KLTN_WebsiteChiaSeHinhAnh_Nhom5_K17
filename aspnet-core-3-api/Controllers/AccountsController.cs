@@ -94,6 +94,18 @@ namespace WebApi.Controllers
             return Ok(new { message = "Password reset successful, you can now login" });
         }
 
+
+        [Authorize]
+        [HttpPut("SetAvatar/{id:int}")]
+        public ActionResult<AccountResponse> Update(int id, string avatarPath)
+        {
+            // users can update their own account and admins can update any account
+            if (id != Account.Id && Account.Role != Role.Admin)
+                return Unauthorized(new { message = "Unauthorized" });
+            var account = _accountService.SetAvatar(id, avatarPath);
+            return Ok(account);
+        }
+
         [Authorize(Role.Admin)]
         [HttpGet]
         public ActionResult<IEnumerable<AccountResponse>> GetAll()
