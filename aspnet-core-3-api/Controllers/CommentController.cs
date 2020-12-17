@@ -16,13 +16,16 @@ namespace WebApi.Controllers
     public class CommentController : BaseController
     {
         private readonly ICommentService _commentService;
+        private readonly IAccountService _accountService;
         private readonly IMapper _mapper;
 
         public CommentController(
             ICommentService commentService,
+            IAccountService accountService,
             IMapper mapper)
         {
             _commentService = commentService;
+            _accountService = accountService;
             _mapper = mapper;
         }
 
@@ -33,10 +36,16 @@ namespace WebApi.Controllers
             return Ok(comments);
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("GetAllByPostId/{id:int}")]
         public ActionResult<IEnumerable<CommentResponse>> GetAllByPostId(int id)
         {
             var comments = _commentService.GetAllByPostId(id);
+            foreach (CommentResponse comment in  comments)
+            {
+                var owner = _accountService.GetById(comment.OwnerId);
+                comment.OwnerName = owner.Name;
+                comment.OwnerAvatar = owner.AvatarPath;
+            }
             return Ok(comments);
         }
 

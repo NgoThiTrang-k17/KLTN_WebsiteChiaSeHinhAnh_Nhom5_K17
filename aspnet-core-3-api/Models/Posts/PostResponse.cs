@@ -11,5 +11,7 @@ namespace WebApi.Models.Posts
         public DateTime Created { get; set; }
         public string ImagePath { get; set; }
         public int OwnerId { get; set; }
+        public string OwnerName { get; set; }
+        public string OwnerAvatar { get; set; }
     }
 }

@@ -114,17 +114,6 @@ namespace WebApi.Controllers
             return Ok(account);
         }
         
-        [HttpGet("GetNameById/{id:int}")]
-        public ActionResult<AccountResponse> GetNameById(int id)
-        {
-            var model = _accountService.GetById(id);
-            var account = new AccountResponse
-            {
-                Name = model.Name
-            };
-            return Ok(account);
-        }
-
         [Authorize(Role.Admin)]
         [HttpPost]
         public ActionResult<AccountResponse> Create(CreateRequest model)

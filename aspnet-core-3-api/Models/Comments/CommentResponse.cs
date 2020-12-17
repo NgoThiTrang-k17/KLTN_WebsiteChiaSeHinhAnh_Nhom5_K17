@@ -11,6 +11,9 @@ namespace WebApi.Models.Comments
         public string Content { get; set; }
         public DateTime DateCreated { get; set; }
         public int OwnerId { get; set; }
+        public string OwnerName { get; set; }
+        public string OwnerAvatar { get; set; }
         public int PostId { get; set; }
+
     }
 }
