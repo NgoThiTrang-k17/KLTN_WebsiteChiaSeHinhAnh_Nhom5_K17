@@ -13,6 +13,7 @@ export class UpdateComponent implements OnInit {
     loading = false;
     submitted = false;
     deleting = false;
+    imageSrc: string;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -24,6 +25,7 @@ export class UpdateComponent implements OnInit {
 
     ngOnInit() {
         this.form = this.formBuilder.group({
+            file: [this.account.avatarPath, Validators.required],
             title: [this.account.title, Validators.required],
             name: [this.account.name, Validators.required],
             email: [this.account.email, [Validators.required, Validators.email]],
@@ -36,6 +38,18 @@ export class UpdateComponent implements OnInit {
 
     // convenience getter for easy access to form fields
     get f() { return this.form.controls; }
+
+    onFileChange(event) {
+        const reader = new FileReader();
+        if (event.target.files && event.target.files.length) {
+            const [file] = event.target.files;               
+            //this.testForm.append("file",file);
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                this.imageSrc = reader.result as string;
+            };
+        }
+      }
 
     onSubmit() {
         this.submitted = true;
@@ -64,7 +78,7 @@ export class UpdateComponent implements OnInit {
     }
 
     onDelete() {
-        if (confirm('Are you sure?')) {
+        if (confirm('Are you sure you want to delete this account?')) {
             this.deleting = true;
             this.accountService.delete(this.account.id)
                 .pipe(first())
@@ -72,5 +86,9 @@ export class UpdateComponent implements OnInit {
                     this.alertService.success('Account deleted successfully', { keepAfterRouteChange: true });
                 });
         }
+    }
+
+    public createImgPath = (serverPath: string) => {
+        return `http://localhost:5000/${serverPath}`;
     }
 }

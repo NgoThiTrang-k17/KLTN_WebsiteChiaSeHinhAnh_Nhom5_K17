@@ -31,6 +31,10 @@ export class DetailPostComponent {
   ngOnInit(): void {
     this.getRoute(this.route.snapshot.params['id']);
     this.getComment(this.route.snapshot.params['id']);
+    this.accountService.getInfoId(this.route.snapshot.params['ownerId'])
+    .subscribe((res:any)=>{
+      this.account = res;
+    })
     this.myForm = this.formBuilder.group({
       content: ['', Validators.required],
     });
@@ -38,16 +42,6 @@ export class DetailPostComponent {
     this.testForm.set('postId', this.post.id);
     this.testForm.set('content', this.myForm.get('content').value);
     
-    this.accountService.getById(this.post.ownerId)
-    .subscribe((res:any)=>{
-      this.account = res;
-    })
-
-    // this.commentService.getAllByPostId(this.post.id)
-    //   .subscribe(res => {
-    //     this.comments = res as Comment[];
-    //     console.log(res);
-    // });
             
   }
 

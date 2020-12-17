@@ -12,6 +12,7 @@ import { LayoutComponent } from './layout.component';
 import { HomeComponent } from './home.component';
 import { AddEditPostComponent } from './add-edit-post/add-edit-post.component';
 import { DetailPostComponent } from './detail-post/detail-post.component';
+import { ProfileModule } from './profile/profile.module';
 
 @NgModule({
     imports: [
@@ -23,6 +24,7 @@ import { DetailPostComponent } from './detail-post/detail-post.component';
         BsDropdownModule.forRoot(),
         MatTabsModule,
         TabsModule.forRoot(),
+        ProfileModule,
     ],
     declarations: [
         HomeComponent,

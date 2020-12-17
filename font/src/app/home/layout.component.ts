@@ -18,4 +18,8 @@ export class LayoutComponent {
     logout() {
         this.accountService.logout();
     }
+
+    public createImgPath = (serverPath: string) => {
+        return `http://localhost:5000/${serverPath}`;
+    }
 }

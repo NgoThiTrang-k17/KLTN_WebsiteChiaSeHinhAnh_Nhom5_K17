@@ -36,8 +36,8 @@
             </div>
         </div>
         <div class="nav-item">
-            <a routerLink="/profile" routerLinkActive="active" class="nav-item">
-                <img routerLink="/profile" class="rounded-circle" style="height: 30px; width: 30px;" src="../../assets/images/taking photos for next issue vol_019 -1- _ JOURNAL _ 25 January 2018.jpg">
+            <a routerLink="profile" routerLinkActive="active" class="nav-item">
+                <img class="rounded-circle" style="height: 30px; width: 30px;" [src]="createImgPath(account.avatarPath)">
             </a>
         </div>
         <!-- <div class="nav-item"> <a routerLink="/profile" routerLinkActive="active" class="nav-item"><i class="fa fa-user fa-2x"></i></a></div> -->

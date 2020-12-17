@@ -1,6 +1,6 @@
 ﻿<div class="p-4 row">
     <div class="col-6 m-auto text-center">
-        <img class="rounded-circle" style="height: 120px; width: 120px;" src="../../assets/images/taking photos for next issue vol_019 -1- _ JOURNAL _ 25 January 2018.jpg">
+        <img class="rounded-circle" style="height: 120px; width: 120px;" [src]="createImgPath(account.avatarPath)">
         <h1 class="m-3" style="font-weight: bold;">{{account.name}}</h1>
         <p>
             <!-- <strong>Name: </strong> {{account.title}} {{account.firstName}} {{account.lastName}}<br /> -->
