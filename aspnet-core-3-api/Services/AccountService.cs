@@ -25,6 +25,7 @@ namespace WebApi.Services
         void ForgotPassword(ForgotPasswordRequest model, string origin);
         void ValidateResetToken(ValidateResetTokenRequest model);
         void ResetPassword(ResetPasswordRequest model);
+        public AccountResponse SetAvatar(int id, string AvatarPath);
         IEnumerable<AccountResponse> GetAll();
         AccountResponse GetById(int id);
         AccountResponse Create(CreateRequest model);
@@ -200,6 +201,15 @@ namespace WebApi.Services
 
             _context.Accounts.Update(account);
             _context.SaveChanges();
+        }
+
+        public AccountResponse SetAvatar(int id, string AvatarPath)
+        {
+            var account = getAccount(id);
+            account.AvatarPath = AvatarPath;
+            _context.Accounts.Update(account);
+            _context.SaveChanges();
+            return _mapper.Map<AccountResponse>(account);
         }
 
         public IEnumerable<AccountResponse> GetAll()

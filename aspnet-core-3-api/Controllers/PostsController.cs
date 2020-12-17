@@ -9,7 +9,6 @@ using System.IO;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using WebApi.Entities;
-using WebApi.Interface;
 using WebApi.Models.Posts;
 using WebApi.Services;
 
@@ -21,6 +20,7 @@ namespace WebApi.Controllers
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IPostService _postService;
+        private readonly IAccountService _accountService;
         private readonly IMapper _mapper;
         //private readonly IUserConnectionManager _userConnectionManager;
         //private readonly IHubContext<NotificationHub> _notificationHubContext;
@@ -30,10 +30,12 @@ namespace WebApi.Controllers
         public PostsController(
             IWebHostEnvironment webHostEnvironment,
             IPostService postService,
+             IAccountService accountService,
             IMapper mapper)
         {
             _webHostEnvironment = webHostEnvironment;
             _postService = postService;
+            _accountService = accountService;
             _mapper = mapper;
         }
         [HttpGet]
@@ -47,6 +49,11 @@ namespace WebApi.Controllers
         public ActionResult<PostResponse> GetPostById(int id)
         {
             var post = _postService.GetPostById(id);
+
+            var owner = _accountService.GetById(post.OwnerId);
+            post.OwnerName = owner.Name;
+            post.OwnerAvatar = owner.AvatarPath;
+
             return Ok(post);
         }
 
@@ -118,17 +125,7 @@ namespace WebApi.Controllers
             return Ok(path);
         }
 
-        [Authorize]
-        [HttpDelete("{id:int}")]
-        public IActionResult Delete(int id)
-        {
-            // users can delete their own Post and admins can delete any Post
-            if (id != Account.Id && Account.Role != Role.Admin)
-                return Unauthorized(new { message = "Unauthorized" });
 
-            _postService.DeletePost(id);
-            return Ok(new { message = "Post deleted successfully" });
-        }
 
 
     }
