@@ -21,9 +21,9 @@
                     <td>{{comment.dateCreated | date:'dd/MM/yyyy HH:mm:ss'}}</td>
                     <td style="white-space: nowrap">
                         <!-- <a routerLink="edit/{{account.id}}" class="btn btn-sm btn-primary mr-1"><span><i class="fa fa-edit"></i></span></a> -->
-                        <button (click)="deleteAccount(account.id)" class="btn btn-sm btn-danger" [disabled]="account.isDeleting">
-                            <span *ngIf="account.isDeleting" class="spinner-border spinner-border-sm"></span>
-                            <span *ngIf="!account.isDeleting"><i class="fa fa-trash"></i></span>
+                        <button (click)="deleteComment(comment.id)" class="btn btn-sm btn-danger" [disabled]="comment.isDeleting">
+                            <span *ngIf="comment.isDeleting" class="spinner-border spinner-border-sm"></span>
+                            <span *ngIf="!comment.isDeleting"><i class="fa fa-trash"></i></span>
                         </button>
                     </td>
                 </tr>

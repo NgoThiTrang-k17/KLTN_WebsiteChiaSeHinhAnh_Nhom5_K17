@@ -42,6 +42,9 @@ export class PostService {
         return this.http.post(baseUrl, params);
     }
 
+    delete(id: number) {
+        return this.http.delete(`${baseUrl}/${id}`)
+    }
 
     // createPost(posts) {
     //     const formData: FormData = new FormData();

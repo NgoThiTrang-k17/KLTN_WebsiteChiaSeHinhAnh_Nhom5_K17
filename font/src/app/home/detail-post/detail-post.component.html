@@ -68,10 +68,27 @@
                     </div>
                     <br>
                     <br>
-                    <div class="offset-1">
+                    <div class="offset-1 mb-3">
                         <mat-tab-group>
                             <mat-tab label="Nhận xét">
                                 <p>Chia sẻ phản hồi, đặt câu hỏi hoặc để lại cảm nghĩ</p>
+                                <div id="1" *ngFor="let comment of comments" class="mb-4">
+                                    <div class="form-inline" id="1">
+                                        <div class="col-2"><img
+                                            src="../../assets/images/taking photos for next issue vol_019 -1- _ JOURNAL _ 25 January 2018.jpg"
+                                            style="height: 40px; width: 40px;" class="img-fluid rounded-circle" alt="">
+                                        </div>
+                                        <div class="col-10">
+                                            <div class="card" style="width: 90%;">
+                                                <div class="ml-3 mt-2 mr-3">
+                                                    <span><strong>Trang</strong></span>
+                                                    <p style="font-size: 15px;">{{comment.content}}</p>
+                                                </div>
+                                            </div>
+                                        </div> 
+                                    </div>
+                                </div>
+                                
                                 <form [formGroup]="myForm" (ngSubmit)="submit()">
                                     <div class="form-inline">
                                         <div class="col-2"><img
@@ -118,24 +135,3 @@
         </div>
     </div>
 </div>
-<script>
-    /* When the user clicks on the button, 
-    toggle between hiding and showing the dropdown content */
-    function myFunction() {
-      document.getElementById("myDropdown").classList.toggle("show");
-    }
-    
-    // Close the dropdown if the user clicks outside of it
-    window.onclick = function(event) {
-      if (!event.target.matches('.dropbtn')) {
-        var dropdowns = document.getElementsByClassName("dropdown-content");
-        var i;
-        for (i = 0; i < dropdowns.length; i++) {
-          var openDropdown = dropdowns[i];
-          if (openDropdown.classList.contains('show')) {
-            openDropdown.classList.remove('show');
-          }
-        }
-      }
-    }
-</script>
