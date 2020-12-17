@@ -27,22 +27,22 @@ export class ListComponent implements OnInit {
         return `http://localhost:5000/${serverPath}`;
     }
 
-    // deletePost(id: number) {
-    //     var r = confirm("Are you sure you want to delete this account?");
-    //     if(r)
-    //     {
-    //         try {
-    //             const post = this.posts.find(x => x.id === id);
-    //             post.isDeleting = true;
-    //             this.postService.delete(id)
-    //                 .pipe(first())
-    //                 .subscribe(() => {
-    //                     this.posts = this.posts.filter(x => x.id !== id) 
-    //                 });
-    //         } catch (e) {
-    //             console.log(e);
-    //         }
-    //     }
+    deleteComment(id: number) {
+        var r = confirm("Are you sure you want to delete this comment?");
+        if(r)
+        {
+            try {
+                const comment = this.comments.find(x => x.id === id);
+                comment.isDeleting = true;
+                this.commentService.delete(id)
+                    .pipe(first())
+                    .subscribe(() => {
+                        this.comments = this.comments.filter(x => x.id !== id) 
+                    });
+            } catch (e) {
+                console.log(e);
+            }
+        }
         
-    // }
+    }
 }

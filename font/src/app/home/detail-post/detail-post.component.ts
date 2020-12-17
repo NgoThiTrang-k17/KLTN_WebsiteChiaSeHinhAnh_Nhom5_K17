@@ -13,6 +13,8 @@ export class DetailPostComponent {
 
   myForm: FormGroup;
   testForm: any;
+  id:number;
+  public comments: Comment[] = [];
 
   account = this.accountService.accountValue;
   comment = this.commentService.commentValue;
@@ -28,16 +30,32 @@ export class DetailPostComponent {
 
   ngOnInit(): void {
     this.getRoute(this.route.snapshot.params['id']);
-    this.accountService.getById(this.post.ownerId)
-    .subscribe((res:any)=>{
-      this.account = res;
-    })
+    this.getComment(this.route.snapshot.params['id']);
     this.myForm = this.formBuilder.group({
       content: ['', Validators.required],
     });
     this.testForm = new FormData();  
     this.testForm.set('postId', this.post.id);
-    this.testForm.set('content', this.myForm.get('content').value); 
+    this.testForm.set('content', this.myForm.get('content').value);
+    
+    this.accountService.getById(this.post.ownerId)
+    .subscribe((res:any)=>{
+      this.account = res;
+    })
+
+    // this.commentService.getAllByPostId(this.post.id)
+    //   .subscribe(res => {
+    //     this.comments = res as Comment[];
+    //     console.log(res);
+    // });
+            
+  }
+
+  getComment(id:any){
+    this.commentService.getAllByPostId(id)
+    .subscribe((res:any)=>{
+      this.comments = res as Comment[];
+    })
   }
 
   getRoute(id:any){
@@ -62,11 +80,16 @@ export class DetailPostComponent {
         .subscribe(res => {
             console.log(res);
             alert('Comment Successfully.');
+            this.commentService.getAllByPostId(this.post.id)
+              .subscribe((res:any)=>{
+                this.comments = res as Comment[];
+              })
             // this.router.navigate(['../'], { relativeTo: this.route });
         }, error => {
             console.log(error);               
-        })
+        }) 
   }
+
 
   public createImgPath = (serverPath: string) => {
     return `http://localhost:5000/${serverPath}`;
