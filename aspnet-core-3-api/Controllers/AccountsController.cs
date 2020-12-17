@@ -113,6 +113,17 @@ namespace WebApi.Controllers
             var account = _accountService.GetById(id);
             return Ok(account);
         }
+        
+        [HttpGet("GetNameById/{id:int}")]
+        public ActionResult<AccountResponse> GetNameById(int id)
+        {
+            var model = _accountService.GetById(id);
+            var account = new AccountResponse
+            {
+                Name = model.Name
+            };
+            return Ok(account);
+        }
 
         [Authorize(Role.Admin)]
         [HttpPost]
