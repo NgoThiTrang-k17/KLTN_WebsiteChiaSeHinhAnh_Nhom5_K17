@@ -41,17 +41,16 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public ActionResult<CommentResponse> Create([FromForm] CreateCommentRequest comment)
+        public ActionResult<CommentResponse> Create(CreateCommentRequest comment)
         {
             var model = new CreateCommentRequest
             {
                 Content = comment.Content,
                 DateCreated = DateTime.Now,
-                OwnerId = Account.Id,
-                //comment.OwnerId, 
+                OwnerId = //Account.Id,
+                comment.OwnerId, 
                 PostId = //Post.Id
-                comment.PostId,
-                
+                comment.PostId
             };
             _commentService.CreateComment(model);
             return Ok(new { message = "Adding comment succesful!" });
@@ -64,7 +63,7 @@ namespace WebApi.Controllers
 
             var post = _commentService.UpdateComment(id, model);
 
-            return Ok(post);
+            return Ok(new { message = "Updating comment succesful!" });
         }
 
         [Authorize]
