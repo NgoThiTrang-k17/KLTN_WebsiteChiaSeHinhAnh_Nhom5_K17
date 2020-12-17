@@ -3,5 +3,5 @@ export class Post {
     postTitle: string;
     created: string;
     imagePath: string;
-    ownerId: number
+    ownerId: number;
 }

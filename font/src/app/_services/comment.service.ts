@@ -26,7 +26,11 @@ export class CommentService {
         return this.commentSubject.value;
     }
 
-    createComment(params) {
+    getAll():Observable<Comment[]> {
+        return this.http.get<Comment[]>(baseUrl);
+    }
+
+    create(params) {
         return this.http.post(baseUrl, params);
     }
 }

@@ -30,12 +30,14 @@ export class DetailPostComponent {
     this.getRoute(this.route.snapshot.params['id']);
     this.accountService.getById(this.post.ownerId)
     .subscribe((res:any)=>{
-      this.post = res;
+      this.account = res;
     })
     this.myForm = this.formBuilder.group({
       content: ['', Validators.required],
     });
-    this.testForm = new FormData();   
+    this.testForm = new FormData();  
+    this.testForm.set('postId', this.post.id);
+    this.testForm.set('content', this.myForm.get('content').value); 
   }
 
   getRoute(id:any){
@@ -51,12 +53,12 @@ export class DetailPostComponent {
     }
     this.testForm.set('postId', this.post.id);
     this.testForm.set('content', this.myForm.get('content').value);
-    //this.testForm.append("postId", this.post.id);
+    // this.testForm.append("postId", this.post.id);
     
     console.log(this.myForm.get('content').value);
-    console.log(this.post.id)
+    console.log(this.post.id);
     console.log(this.testForm);
-    this.commentService.createComment(this.testForm)
+    this.commentService.create(this.testForm)
         .subscribe(res => {
             console.log(res);
             alert('Comment Successfully.');

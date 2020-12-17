@@ -41,14 +41,14 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public ActionResult<CommentResponse> Create(CreateCommentRequest comment)
+        public ActionResult<CommentResponse> Create([FromForm] CreateCommentRequest comment)
         {
             var model = new CreateCommentRequest
             {
                 Content = comment.Content,
                 DateCreated = DateTime.Now,
-                OwnerId =// Account.Id, 
-                comment.OwnerId, 
+                OwnerId = Account.Id,
+                //comment.OwnerId, 
                 PostId = //Post.Id
                 comment.PostId,
                 
