@@ -56,34 +56,7 @@ namespace WebApi.Controllers
             var posts = _postService.GetAllByUserId(id);
             return Ok(posts);
         }
-        //[HttpPost]
-        //public ActionResult<PostResponse> Create (CreatePostRequest model)
-        //{
-        //    var post = _postService.CreatePost(model);
-        //    post.OwnerId = Account.Id;
-        //
-        //    return Ok(post);
-        //}
-
-        //[HttpPost]
-        //public ActionResult<PostResponse> Create(CreatePostRequest model)
-        //{
-        //    // Getting Name
-        //    //string name = std.Name;
-        //    // Getting Image
-        //    var image = model.Image;
-        //    // Saving Image on Server
-        //
-        //    if (image.Length > 0)
-        //    {
-        //        using (var fileStream = new FileStream(image.FileName, FileMode.Create))
-        //        {
-        //            image.CopyTo(fileStream);
-        //        }
-        //    }
-        //    var post = _postService.CreatePost(model);
-        //    return Ok(post);
-        //}
+  
 
         [HttpPost, DisableRequestSizeLimit]
         public IActionResult CreatePost([FromForm] CreatePostRequest post)
@@ -143,20 +116,18 @@ namespace WebApi.Controllers
             return Ok(path);
         }
 
+        [Authorize]
+        [HttpDelete("{id:int}")]
+        public IActionResult Delete(int id)
+        {
+            // users can delete their own Post and admins can delete any Post
+            if (id != Account.Id && Account.Role != Role.Admin)
+                return Unauthorized(new { message = "Unauthorized" });
 
-        //[HttpPost]
-        //public void SendToSpecificUser(Post model)
-        //{
-        //    var connections = _userConnectionManager.GetUserConnections(model.OwnerId);
-        //    if (connections != null && connections.Count > 0)
-        //    {
-        //        foreach (var connectionId in connections)
-        //        {
-        //             _notificationUserHubContext.Clients.Client(connectionId.SendAsync("sendToUser", model.Title, model.OwnerId));
-        //        }
-        //    }
+            _postService.DeletePost(id);
+            return Ok(new { message = "Post deleted successfully" });
+        }
 
-        //}
 
     }
 }
