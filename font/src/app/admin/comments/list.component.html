@@ -1,31 +1,33 @@
-﻿<div class="p-4 row">
+<div class="p-4 row">
     <div class="col-10 m-auto">
-        <h1 class="text-center">Accounts</h1>
+        <h1 class="text-center">Comments</h1>
         <!-- <p>All accounts from secure (admin only) api end point:</p> -->
-        <a routerLink="add" class="btn btn-sm btn-success mb-2 pull-right mr-2"><span><i class="fa fa-plus"></i></span> Create Account</a>
+        <!-- <a routerLink="add" class="btn btn-sm btn-success mb-2 pull-right mr-2"><span><i class="fa fa-plus"></i></span> Create Comment</a> -->
         <table class="table table-striped">
             <thead class="thead-light text-center">
                 <tr>
-                    <th style="width:30%">Name</th>
-                    <th style="width:40%">Email</th>
-                    <th style="width:20%">Role</th>
+                    <th style="width:15%">Post Id</th>
+                    <th style="width:15%">Owner Id</th>
+                    <th style="width:40%">Content</th>
+                    <th style="width:20%">Created Date</th>
                     <th style="width:10%"></th>
                 </tr>
             </thead>
             <tbody class="text-center">
-                <tr *ngFor="let account of accounts">
-                    <td>{{account.title}} {{account.name}}</td>
-                    <td>{{account.email}}</td>
-                    <td>{{account.role}}</td>
+                <tr *ngFor="let comment of comments">
+                    <td>{{comment.postId}}</td>
+                    <td>{{comment.ownerId}}</td>
+                    <td>{{comment.content}}</td>
+                    <td>{{comment.dateCreated | date:'dd/MM/yyyy HH:mm:ss'}}</td>
                     <td style="white-space: nowrap">
-                        <a routerLink="edit/{{account.id}}" class="btn btn-sm btn-primary mr-1"><span><i class="fa fa-edit"></i></span></a>
+                        <!-- <a routerLink="edit/{{account.id}}" class="btn btn-sm btn-primary mr-1"><span><i class="fa fa-edit"></i></span></a> -->
                         <button (click)="deleteAccount(account.id)" class="btn btn-sm btn-danger" [disabled]="account.isDeleting">
                             <span *ngIf="account.isDeleting" class="spinner-border spinner-border-sm"></span>
                             <span *ngIf="!account.isDeleting"><i class="fa fa-trash"></i></span>
                         </button>
                     </td>
                 </tr>
-                <tr *ngIf="!accounts">
+                <tr *ngIf="!comments">
                     <td colspan="4" class="text-center">
                         <span class="spinner-border spinner-border-lg align-center"></span>
                     </td>

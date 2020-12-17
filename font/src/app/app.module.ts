@@ -5,6 +5,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { DataTablesModule } from 'angular-datatables';
 // used to create fake backend
 // import { fakeBackendProvider } from './_helpers';
 
@@ -23,6 +24,7 @@ import { AlertComponent } from './_components';;
         BrowserAnimationsModule,
         BsDropdownModule.forRoot(),
         TabsModule,
+        DataTablesModule,
     ],
     declarations: [
         AppComponent,
