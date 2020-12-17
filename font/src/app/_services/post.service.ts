@@ -42,6 +42,7 @@ export class PostService {
         return this.http.post(baseUrl, params);
     }
 
+
     // createPost(posts) {
     //     const formData: FormData = new FormData();
     //     formData.append('postTitle', posts.postTitle)

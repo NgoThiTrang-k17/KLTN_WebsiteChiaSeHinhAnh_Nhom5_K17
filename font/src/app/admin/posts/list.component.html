@@ -1,0 +1,38 @@
+<div class="p-4 row">
+    <div class="col-10 m-auto">
+        <h1 class="text-center">Posts</h1>
+        <!-- <p>All accounts from secure (admin only) api end point:</p> -->
+        <a routerLink="add" class="btn btn-sm btn-success mb-2 pull-right mr-2"><span><i class="fa fa-plus"></i></span> Create Account</a>
+        <table class="table table-striped">
+            <thead class="thead-light text-center">
+                <tr>
+                    <th style="width:15%">Account Id</th>
+                    <th style="width:30%">Post Title</th>
+                    <th style="width:30%">Image</th>
+                    <th style="width:15%">Created Date</th>
+                    <th style="width:10%"></th>
+                </tr>
+            </thead>
+            <tbody class="text-center">
+                <tr *ngFor="let post of posts">
+                    <td>{{post.ownerId}}</td>
+                    <td>{{post.postTitle}}</td>
+                    <td><img *ngIf="post.imagePath!= null" [src]="createImgPath(post.imagePath)" class="title-image" style="width:170px;height:170px;"></td>
+                    <td>{{post.created | date:'dd/MM/yyyy'}}</td>
+                    <td style="white-space: nowrap">
+                        <!-- <a routerLink="edit/{{post.id}}" class="btn btn-sm btn-primary mr-1">Edit</a> -->
+                        <button (click)="deletePost(post.id)" class="btn btn-sm btn-danger btn-delete-post" [disabled]="post.isDeleting">
+                            <span *ngIf="post.isDeleting" class="spinner-border spinner-border-sm"></span>
+                            <span *ngIf="!post.isDeleting"><i class="fa fa-trash"></i></span>
+                        </button>
+                    </td>
+                </tr>
+                <tr *ngIf="!posts">
+                    <td colspan="4" class="text-center">
+                        <span class="spinner-border spinner-border-lg align-center"></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
