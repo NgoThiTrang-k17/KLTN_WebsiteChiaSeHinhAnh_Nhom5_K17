@@ -78,6 +78,10 @@ export class AccountService {
     getById(id) {
         return this.http.get<Account>(`${baseUrl}/${id}`);
     }
+
+    getInfoId(id) {
+        return this.http.get<Account>(`${baseUrl}/GetNameById/${id}`);
+    }
     
     create(params) {
         return this.http.post(baseUrl, params);
