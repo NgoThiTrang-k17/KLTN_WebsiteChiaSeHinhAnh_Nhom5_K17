@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using System;
+using WebApi.Entities;
 
 namespace WebApi.Models.Posts
 {

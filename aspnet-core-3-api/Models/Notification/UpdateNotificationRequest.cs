@@ -2,27 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApi.Entities;
 
-namespace WebApi.Entities
+namespace WebApi.Models.Notification
 {
-    public enum NotificationType
-    {
-        Posted,
-        Reacted,
-        Commented,
-        FollowRequest,
-        FollowRequestAwser
-    }
-    public enum Status
-    {
-        Created,
-        Seen,
-        Opened,
-        Sent,
-        Accepted,
-        Declined
-    }
-    public class Notification
+    public class UpdateNotificationRequest
     {
         public int Id { get; set; }
         public int ActionOwnerId { get; set; }
@@ -30,6 +14,6 @@ namespace WebApi.Entities
         public int? PostId { get; set; }
         public int ReiceiverId { get; set; }
         public DateTime Created { get; set; }
-        public Status  Status { get; set; }
+        public Status Status { get; set; }
     }
 }

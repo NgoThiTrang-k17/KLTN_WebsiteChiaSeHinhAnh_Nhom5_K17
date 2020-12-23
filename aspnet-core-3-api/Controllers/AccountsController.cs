@@ -14,14 +14,11 @@ namespace WebApi.Controllers
     public class AccountsController : BaseController
     {
         private readonly IAccountService _accountService;
-        private readonly IMapper _mapper;
-
         public AccountsController(
-            IAccountService accountService,
-            IMapper mapper)
+            IAccountService accountService
+            )
         {
             _accountService = accountService;
-            _mapper = mapper;
         }
 
         [HttpPost("authenticate")]
@@ -97,7 +94,7 @@ namespace WebApi.Controllers
 
         [Authorize]
         [HttpPut("SetAvatar/{id:int}")]
-        public ActionResult<AccountResponse> Update(int id, string avatarPath)
+        public ActionResult<AccountResponse> SetAvatar(int id, string avatarPath)
         {
             // users can update their own account and admins can update any account
             if (id != Account.Id && Account.Role != Role.Admin)
@@ -125,10 +122,10 @@ namespace WebApi.Controllers
             var account = _accountService.GetById(id);
             return Ok(account);
         }
-        
+
         [Authorize(Role.Admin)]
         [HttpPost]
-        public ActionResult<AccountResponse> Create(CreateRequest model)
+        public ActionResult<AccountResponse> Create(CreateAccountRequest model)
         {
             var account = _accountService.Create(model);
             return Ok(account);
@@ -136,7 +133,7 @@ namespace WebApi.Controllers
 
         [Authorize]
         [HttpPut("{id:int}")]
-        public ActionResult<AccountResponse> Update(int id, UpdateRequest model)
+        public ActionResult<AccountResponse> Update(int id, UpdateAccountRequest model)
         {
             // users can update their own account and admins can update any account
             if (id != Account.Id && Account.Role != Role.Admin)
@@ -154,10 +151,12 @@ namespace WebApi.Controllers
         [HttpDelete("{id:int}")]
         public IActionResult Delete(int id)
         {
-            // users can delete their own account and admins can delete any account
-            if (id != Account.Id && Account.Role != Role.Admin)
-                return Unauthorized(new { message = "Unauthorized" });
-
+            // users cant delete their own account and admins can delete any account
+            if (id == Account.Id)
+            {
+                if (Account.Role != Role.Admin)
+                    return Unauthorized(new { message = "Unauthorized" });
+            }
             _accountService.Delete(id);
             return Ok(new { message = "Account deleted successfully" });
         }

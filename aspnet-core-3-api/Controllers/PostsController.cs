@@ -21,30 +21,34 @@ namespace WebApi.Controllers
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IPostService _postService;
         private readonly IAccountService _accountService;
-        private readonly IMapper _mapper;
-        //private readonly IUserConnectionManager _userConnectionManager;
-        //private readonly IHubContext<NotificationHub> _notificationHubContext;
-        //private readonly IHubContext<NotificationUserHub> _notificationUserHubContext;
-
 
         public PostsController(
             IWebHostEnvironment webHostEnvironment,
             IPostService postService,
-             IAccountService accountService,
-            IMapper mapper)
+            IAccountService accountService
+            )
         {
             _webHostEnvironment = webHostEnvironment;
             _postService = postService;
             _accountService = accountService;
-            _mapper = mapper;
         }
         [HttpGet]
         public ActionResult<IEnumerable<PostResponse>> GetAll()
         {
             var posts = _postService.GetAll();
+            
+            foreach (PostResponse post in posts)
+            {
+                var owner = _accountService.GetById(post.OwnerId);
+                post.OwnerId = owner.Id;
+                post.OwnerName = owner.Name;
+                bool path = owner.AvatarPath==null;
+                post.OwnerAvatar = path ? "" : owner.AvatarPath;
+            }
             return Ok(posts);
 
         }
+
         [HttpGet("GetPostById/{id:int}")]
         public ActionResult<PostResponse> GetPostById(int id)
         {

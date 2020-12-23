@@ -16,20 +16,14 @@ namespace WebApi.Controllers
     public class CommentController : BaseController
     {
         private readonly ICommentService _commentService;
-        private readonly IAccountService _accountService;
-        private readonly IMapper _mapper;
-
         public CommentController(
-            ICommentService commentService,
-            IAccountService accountService,
-            IMapper mapper)
+            ICommentService commentService
+            )
         {
             _commentService = commentService;
-            _accountService = accountService;
-            _mapper = mapper;
         }
 
-        [HttpGet]
+        [HttpGet("GetAll")]
         public ActionResult<IEnumerable<CommentResponse>> GetAll()
         {
             var comments = _commentService.GetAll();
@@ -40,12 +34,6 @@ namespace WebApi.Controllers
         public ActionResult<IEnumerable<CommentResponse>> GetAllByPostId(int id)
         {
             var comments = _commentService.GetAllByPostId(id);
-            foreach (CommentResponse comment in  comments)
-            {
-                var owner = _accountService.GetById(comment.OwnerId);
-                comment.OwnerName = owner.Name;
-                comment.OwnerAvatar = owner.AvatarPath;
-            }
             return Ok(comments);
         }
 
@@ -62,7 +50,7 @@ namespace WebApi.Controllers
                 comment.PostId
             };
             _commentService.CreateComment(model);
-            return Ok(new { message = "Adding comment succesful!" });
+            return Ok(model);
         }
 
         [Authorize]
@@ -72,15 +60,15 @@ namespace WebApi.Controllers
 
             var post = _commentService.UpdateComment(id, model);
 
-            return Ok(new { message = "Updating comment succesful!" });
+            return Ok(model);
         }
 
         [Authorize]
         [HttpDelete("{id:int}")]
         public IActionResult Delete(int id)
         {
-            // users can delete their own Comment and admins can delete any Comment
-            if (id != Account.Id && Account.Role != Role.Admin)
+            // users cant delete their own Comment and admins can delete any Comment
+            if (id == Account.Id && Account.Role != Role.Admin)
                 return Unauthorized(new { message = "Unauthorized" });
 
             _commentService.DeleteComment(id);

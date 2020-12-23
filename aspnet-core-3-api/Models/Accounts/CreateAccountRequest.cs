@@ -3,7 +3,7 @@ using WebApi.Entities;
 
 namespace WebApi.Models.Accounts
 {
-    public class CreateRequest
+    public class CreateAccountRequest
     {
         [Required]
         public string Title { get; set; }

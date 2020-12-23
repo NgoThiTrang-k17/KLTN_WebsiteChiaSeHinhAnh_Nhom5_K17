@@ -3,7 +3,7 @@ using WebApi.Entities;
 
 namespace WebApi.Models.Accounts
 {
-    public class UpdateRequest
+    public class UpdateAccountRequest
     {
         private string _password;
         private string _confirmPassword;

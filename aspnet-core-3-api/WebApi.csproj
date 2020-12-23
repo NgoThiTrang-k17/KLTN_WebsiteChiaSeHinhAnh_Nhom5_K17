@@ -1,7 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>c78d0ea3-a99c-448f-b619-a74f50b828f1</UserSecretsId>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Migrations\20201215170023_1.cs" />
+    <Compile Remove="Migrations\20201215170023_1.Designer.cs" />
+    <Compile Remove="Migrations\20201216101300_2.cs" />
+    <Compile Remove="Migrations\20201216101300_2.Designer.cs" />
+    <Compile Remove="Migrations\20201216113523_3.cs" />
+    <Compile Remove="Migrations\20201216113523_3.Designer.cs" />
+    <Compile Remove="Migrations\20201219032124_4.cs" />
+    <Compile Remove="Migrations\20201219032124_4.Designer.cs" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Abp" Version="5.10.0" />
     <PackageReference Include="AutoMapper" Version="10.0.0" />
@@ -13,12 +24,13 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.10">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
     <PackageReference Include="NEST" Version="7.10.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.1" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.7.1" />

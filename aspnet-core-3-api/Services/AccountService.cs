@@ -28,8 +28,8 @@ namespace WebApi.Services
         public AccountResponse SetAvatar(int id, string AvatarPath);
         IEnumerable<AccountResponse> GetAll();
         AccountResponse GetById(int id);
-        AccountResponse Create(CreateRequest model);
-        AccountResponse Update(int id, UpdateRequest model);
+        AccountResponse Create(CreateAccountRequest model);
+        AccountResponse Update(int id, UpdateAccountRequest model);
         void Delete(int id);
     }
 
@@ -224,7 +224,7 @@ namespace WebApi.Services
             return _mapper.Map<AccountResponse>(account);
         }
 
-        public AccountResponse Create(CreateRequest model)
+        public AccountResponse Create(CreateAccountRequest model)
         {
             // validate
             if (_context.Accounts.Any(x => x.Email == model.Email))
@@ -245,7 +245,7 @@ namespace WebApi.Services
             return _mapper.Map<AccountResponse>(account);
         }
 
-        public AccountResponse Update(int id, UpdateRequest model)
+        public AccountResponse Update(int id, UpdateAccountRequest model)
         {
             var account = getAccount(id);
 

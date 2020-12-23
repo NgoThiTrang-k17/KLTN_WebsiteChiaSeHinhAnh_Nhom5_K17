@@ -38,6 +38,8 @@ namespace WebApi
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
             // configure DI for application services
+            services.AddScoped<IReactionService, ReactionService>();
+            services.AddScoped<IFollowService, FollowService>();
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<ISearchService, SearchService>();
             services.AddScoped<IPostService, PostService>();
@@ -54,7 +56,7 @@ namespace WebApi
 
             // generated swagger json and swagger ui middleware
             app.UseSwagger();
-            app.UseSwaggerUI(x => x.SwaggerEndpoint("/swagger/v1/swagger.json", "ASP.NET Core Sign-up and Verification API"));
+            app.UseSwaggerUI(x => x.SwaggerEndpoint("/swagger/v1/swagger.json", "ASP.NET Core WebAPI"));
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions()
             {

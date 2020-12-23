@@ -23,64 +23,48 @@ namespace WebApi.Services
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
-        private readonly AppSettings _appSettings;
+        private readonly IAccountService _accountService;
+        private readonly IPostService _postService;
         private readonly INotificationService _notificationService;
         public CommentService(DataContext context,
             IMapper mapper,
-            IOptions<AppSettings> appSettings,
+            IAccountService accountService,
+            IPostService postService,
             INotificationService notificationService)
         {
             _context = context;
             _mapper = mapper;
-            _appSettings = appSettings.Value;
+            _accountService = accountService;
+            _postService = postService;
             _notificationService = notificationService;
         }
-        public IEnumerable<CommentResponse> GetAll()
-        {
-            var comments = _context.Comment;
-            return _mapper.Map<List<CommentResponse>>(comments);
-        }
 
-        public IEnumerable<CommentResponse> GetAllByPostId(int postId)
-        {
-            var comments = _context.Comment.Where(comment => comment.PostId == postId);
-            return _mapper.Map<List<CommentResponse>>(comments);
-        }
-
+        //Create
         public CommentResponse CreateComment(CreateCommentRequest model)
         {
             var comment = _mapper.Map<Comment>(model);
-            _context.Comment.Add(comment);
+            if (comment == null) throw new AppException("Create comment failed");
+            //Get post by postId then map it to new Post model
+            var post = _mapper.Map<Post>(_postService.GetPostById(model.PostId));
+            _context.Comments.Add(comment);
             _context.SaveChanges();
-            SendComentNotification(comment.OwnerId);
-          
-           
+            SendNotification(comment.OwnerId, post);
             return _mapper.Map<CommentResponse>(comment);
         }
-        private void SendComentNotification(int ownerId)
-        {
-            var notification = new CreateNotificationRequest
-            {
-                ActionOwnerId = 1,
-                NotificationType = NotificationType.Commented,
-                PostId = 1,
-                ReiceiverId = ownerId,
-                Created = DateTime.Now,
-                Status = Status.Created
-            };
-            _notificationService.AddNotification(notification);
-        }
-
+        
+        //Update
         public CommentResponse UpdateComment(int id, CommentResponse model)
         {
             var comment = GetComment(id);
+            if (comment == null) throw new AppException("Update comment failed");
             _mapper.Map(model, comment);
-            _context.Comment.Update(comment);
+            _context.Comments.Update(comment);
             _context.SaveChanges();
 
             return _mapper.Map<CommentResponse>(comment); ;
         }
 
+        //Delete
         public void DeleteComment(int id)
         {
             var comment = GetComment(id);
@@ -88,11 +72,47 @@ namespace WebApi.Services
             _context.SaveChanges();
         }
 
+        //Get all comments
+        public IEnumerable<CommentResponse> GetAll()
+        {
+            var comments = _context.Comments;
+            return _mapper.Map<List<CommentResponse>>(comments);
+        }
+        
+        //Get all comments for each post
+        public IEnumerable<CommentResponse> GetAllByPostId(int postId)
+        {
+            var comments = _context.Comments.Where(comment => comment.PostId == postId);
+            var commentResponses = _mapper.Map<List<CommentResponse>>(comments);
+            foreach (CommentResponse commentResponse in commentResponses)
+            {
+                var owner = _accountService.GetById(commentResponse.OwnerId);
+                commentResponse.OwnerName = owner.Name;
+                commentResponse.OwnerAvatar = owner.AvatarPath;
+            }
+            return _mapper.Map<List<CommentResponse>>(commentResponses);
+        }
+
+        //helper
         private Comment GetComment(int id)
         {
-            var comment = _context.Comment.Find(id);
+            var comment = _context.Comments.Find(id);
             if (comment == null) throw new KeyNotFoundException("Post not found");
             return comment;
+        }
+
+        private void SendNotification(int commentOwnerId,Post model)
+        {
+            var notification = new CreateNotificationRequest
+            {
+                ActionOwnerId = commentOwnerId,
+                NotificationType = NotificationType.Commented,
+                PostId = model.Id,
+                ReiceiverId = model.OwnerId,
+                Created = DateTime.Now,
+                Status = Status.Created
+            };
+            _notificationService.CreateNotification(notification);
         }
     }
 }
