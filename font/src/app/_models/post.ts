@@ -4,4 +4,6 @@ export class Post {
     created: string;
     imagePath: string;
     ownerId: number;
+    ownerName: string;
+    ownerAvatar: string;
 }

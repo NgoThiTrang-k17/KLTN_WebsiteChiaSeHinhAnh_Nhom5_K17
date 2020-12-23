@@ -57,14 +57,11 @@ export class AddEditPostComponent implements OnInit {
     this.postService.createPost(this.testForm)
         .subscribe(res => {
             console.log(res);
-            // this.alertService.success('Image created successfully', { keepAfterRouteChange: true });
-            // this.getPosts();
-            alert('Uploaded Successfully.');
+            alert('Tải ảnh lên thành công!');
             this.router.navigate(['../'], { relativeTo: this.route });
         }, error => {
             console.log(error);               
-        })
-    
+        })  
   }
 
 }

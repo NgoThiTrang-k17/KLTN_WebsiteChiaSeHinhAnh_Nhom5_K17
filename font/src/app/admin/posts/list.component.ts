@@ -36,7 +36,7 @@ export class ListComponent implements OnInit {
     }
 
     deletePost(id: number) {
-        var r = confirm("Are you sure you want to delete this account?");
+        var r = confirm("Are you sure you want to delete this post?");
         if(r)
         {
             try {

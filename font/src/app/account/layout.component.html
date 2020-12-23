@@ -1,50 +1,58 @@
 ﻿<app-nav></app-nav>
-<div class="container m-auto">
-    <div class="row">
-        <div class="col-7">
-            <div id="banner" class="carousel slide mb-5 rounded" data-ride="carousel">
-                <!-- Indicators -->
-                <!-- The slideshow -->
-                <carousel [isAnimated]="true">
-                    <slide class="carousel-item active">
-                        <img src="../../assets/images/banner1.jpg" class="rounded" alt="banner1">
-                        <div class="carousel-caption mx-auto mt-5">
-                            <h1 class="text-uppercase text1 dh-tieude text-dark">Chia sẻ hình ảnh của bạn</h1>
-                            <button class="btn btn-primary mt-5 dh-btn">Tham gia ngay</button>
-                        </div>
-                    </slide>
-                    <slide class="carousel-item"> <img src="../../assets/images/banner2.jpg" class="rounded" alt="banner2">
-                        <div class="carousel-caption mx-auto">
-                            <h1 class="text-uppercase dh-tieude2 text-dark">Blah blah</h1>
-                            <button class="btn btn-primary mt-3 dh-btn2">Tham gia ngay</button>
-                        </div>
-                    </slide>
-                    <slide class="carousel-item"> <img src="../../assets/images/banner3.jpg" class="rounded" alt="banner3">
-                        <div class="carousel-caption mx-auto">
-                            <h1 class="text-uppercase dh-tieude3 text-dark">Blah blah</h1>
-                            <button class="btn btn-primary mt-3 dh-btn3">Tham gia ngay</button>
-                        </div>
-                    </slide>
-                </carousel>
-                <!-- Left and right controls -->
+<div class="p-4">
+    <div class="container" style="margin-top: 5%;">
+        <div class="row">
+            <div class="col-7">
+                <div id="banner" class="carousel slide mb-5 rounded" data-ride="carousel">
+                    <!-- Indicators -->
+                    <!-- The slideshow -->
+                    <carousel [isAnimated]="true" >
+                        <slide class="carousel-item active" style="height: 500px; width: 150px;"> <img src="../../assets/images/hinh1.png" class="rounded" alt="banner1">
+                            <!-- <div class="carousel-caption mx-auto mt-5">
+                                <h1 class="text-uppercase text1 dh-tieude text-dark">Chia sẻ hình ảnh của bạn</h1>
+                                <button class="btn btn-primary mt-5 dh-btn">Tham gia ngay</button>
+                            </div> -->
+                        </slide>
+                        <slide class="carousel-item" style="height: 500px; width: 150px;"> <img src="../../assets/images/hinh2.png" class="rounded" alt="banner2">
+                            <!-- <div class="carousel-caption mx-auto">
+                                <h1 class="text-uppercase dh-tieude2 text-dark">Blah blah</h1>
+                                <button class="btn btn-primary mt-3 dh-btn2">Tham gia ngay</button>
+                            </div> -->
+                        </slide>
+                        <slide class="carousel-item" style="height: 500px; width: 150px;"> <img src="../../assets/images/hinh3.png" class="rounded" alt="banner3">
+                            <!-- <div class="carousel-caption mx-auto">
+                                <h1 class="text-uppercase dh-tieude3 text-dark">Blah blah</h1>
+                                <button class="btn btn-primary mt-3 dh-btn3">Tham gia ngay</button>
+                            </div> -->
+                        </slide>
+                        <slide class="carousel-item" style="height: 500px; width: 150px;"> <img src="../../assets/images/hinh5.png" class="rounded" alt="banner3">
+                            <!-- <div class="carousel-caption mx-auto">
+                                <h1 class="text-uppercase dh-tieude3 text-dark">Blah blah</h1>
+                                <button class="btn btn-primary mt-3 dh-btn3">Tham gia ngay</button>
+                            </div> -->
+                        </slide>
+                    </carousel>
+                    <!-- Left and right controls -->
+                </div>
             </div>
-        </div>
-        <div class="col-5">
-            <div class="card">
-                <router-outlet></router-outlet>       
-            </div>
-            
-            <!-- <div class="container">
-                <div class="row">
-                    <div class="col-sm-8 offset-sm-2 mt-5">
-                        <div class="card m-3">
-                            
+            <div class="col-5">
+                <div class="card">
+                    <router-outlet></router-outlet>       
+                </div>
+                
+                <!-- <div class="container">
+                    <div class="row">
+                        <div class="col-sm-8 offset-sm-2 mt-5">
+                            <div class="card m-3">
+                                
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div> -->
+                </div> -->
+            </div>
         </div>
+        
     </div>
     
+    
 </div>
-

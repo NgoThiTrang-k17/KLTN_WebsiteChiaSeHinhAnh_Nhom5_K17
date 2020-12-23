@@ -3,4 +3,6 @@ export class Comment {
     dateCreated: string;
     ownerId: number;
     postId: number;
+    ownerName: string;
+    ownerAvatar: string;
 }

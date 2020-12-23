@@ -1,5 +1,8 @@
 <nav class="admin-nav navbar navbar-expand navbar-light">
-    <div class="navbar-nav">
-        <a routerLink="accounts" routerLinkActive="active" class="nav-item nav-link">Accounts</a>
+    <div class="navbar-nav pull-right">
+        <a routerLink="accounts" routerLinkActive="active" class="nav-item nav-link"><strong>Accounts</strong></a>
+        <a routerLink="posts" routerLinkActive="active" class="nav-item nav-link"><strong>Posts</strong></a>
+        <a routerLink="comments" routerLinkActive="active" class="nav-item nav-link"><strong>Comments</strong></a>
+        <a (click)="logout()" class="nav-item nav-link"><strong>Log out</strong></a>
     </div>
 </nav>

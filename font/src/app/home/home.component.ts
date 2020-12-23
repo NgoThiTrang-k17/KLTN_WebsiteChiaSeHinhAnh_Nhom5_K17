@@ -53,7 +53,9 @@ export class HomeComponent implements OnInit {
     }
 
     get f() { return this.myForm.controls; }
+
     public onUploadFinished = new EventEmitter();
+    
     onFileChange(event) {
         const reader = new FileReader();
 
@@ -67,9 +69,6 @@ export class HomeComponent implements OnInit {
             reader.readAsDataURL(file);
             reader.onload = () => {
                 this.imageSrc = reader.result as string;
-                // this.testForm.patchValue({
-                //     fileSource: reader.result
-                // });
                 console.log(this.myForm.value); 
             };
             
@@ -77,41 +76,14 @@ export class HomeComponent implements OnInit {
     }
 
     submit() {
-        // this.submitted = true;
-
-        // // reset alerts on submit
-        // this.alertService.clear();
-
-        // this.loading = true;
-
-        // this.post = {
-        //     postTitle: this.postTitle,
-        //     imagePath: this.response.dbPath
-        // }
-
         console.log(this.testForm);
         this.postService.createPost(this.testForm)
             .subscribe(res => {
                 console.log(res);
-                this.alertService.success('Image created successfully', { keepAfterRouteChange: true });
-                // this.getPosts();
-                // alert('Uploaded Successfully.');
+                this.alertService.success('Đăng hình thành công!', { keepAfterRouteChange: true });
             }, error => {
                 console.log(error);               
             })
-        // this.postService.createPost(this.testForm)
-        //     .pipe(first())
-        //     .subscribe({
-        //         next: () => {                    
-        //             this.alertService.success('Image created successfully', { keepAfterRouteChange: true });
-        //             // this.getPosts();
-        //             // this.router.navigate(['../'], { relativeTo: this.route });
-        //         },
-        //         error: error => {
-        //             this.alertService.error(error);
-        //             this.loading = false;
-        //         }
-        // });
     }
 
     // onCreate() {
