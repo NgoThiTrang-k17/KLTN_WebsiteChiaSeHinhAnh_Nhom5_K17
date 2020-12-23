@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using WebApi.Entities;
 using WebApi.Helpers;
 using WebApi.Models.Comments;
 using WebApi.Models.Notification;
@@ -17,7 +18,6 @@ namespace WebApi.Controllers
     public class NotificationController : ControllerBase
     {
         private readonly INotificationService _notificationService;
-        //private IHubContext<ChartHub> _hub;
         public NotificationController(
              INotificationService notificationService
              )
@@ -31,20 +31,34 @@ namespace WebApi.Controllers
             var notifications = _notificationService.GetAll();
             return Ok(notifications);
         }
-        [HttpGet("{id:int}")]
-        public ActionResult<IEnumerable<NotificationResponse>> GetByUserId(int id)
+        [HttpGet("GetAllByUserId/{id:int}")]
+        public ActionResult<IEnumerable<NotificationResponse>> GetAllByUserId(int id)
         {
-            var notifications = _notificationService.GetByUserId(id);
+            var notifications = _notificationService.GetAllByUserId(id);
             return Ok(notifications);
         }
-        //public IActionResult Get()
-        //{
-        //    List<CommentResponse> respones = DataManager.GetData();
-        //    var timerManager = new TimerManager(() => _hub.Clients.All.SendAsync("transferchartdata", respones));
-        //    if (timerManager!=null)
-        //    return Ok(respones);
-        //    else
-        //        return Ok(new { Message = "Request Failed" });
-        //}
+
+        [HttpPost]
+        public ActionResult<NotificationResponse> Create(CreateNotificationRequest model)
+        {
+            var notification = _notificationService.CreateNotification(model);
+            return Ok(notification);
+        }
+
+
+        [HttpPut("{id:int}")]
+        public ActionResult<NotificationResponse> Update(int id, UpdateNotificationRequest model)
+        {
+            var notification = _notificationService.UpdateNotification(id, model);
+            return Ok(notification);
+        }
+
+        [Authorize]
+        [HttpDelete("{id:int}")]
+        public IActionResult Delete(int id)
+        {
+            _notificationService.DeleteNotification(id);
+            return Ok(new { message = "Notification deleted successfully" });
+        }
     }
 }

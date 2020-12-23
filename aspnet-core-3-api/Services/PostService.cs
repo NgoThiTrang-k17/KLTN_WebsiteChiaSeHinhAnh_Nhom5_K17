@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebApi.Entities;
 using WebApi.Helpers;
+using WebApi.Models.Notification;
 using WebApi.Models.Posts;
 
 namespace WebApi.Services
@@ -14,61 +15,62 @@ namespace WebApi.Services
 
     public interface IPostService
     {
-        IEnumerable<PostResponse> GetAll();
         PostResponse GetPostById(int postId);
-        IEnumerable<PostResponse> GetAllByUserId(int ownerId);
         PostResponse CreatePost(CreatePostRequest model);
         PostResponse UpdatePost(int id, UpdatePostRequest model);
-        public void DeletePost(int id);
+        void DeletePost(int id);
+        IEnumerable<PostResponse> GetAll();
+        IEnumerable<PostResponse> GetAllByUserId(int ownerId);
     }
     public class PostService : IPostService
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
-        private readonly AppSettings _appSettings;
-        public PostService(DataContext context,
+        private readonly INotificationService _notificationService;
+        private readonly IFollowService _followService;
+        public PostService(
+            DataContext context,
             IMapper mapper,
-            IOptions<AppSettings> appSettings)
+            INotificationService notificationService,
+            IFollowService followService)
         {
             _context = context;
             _mapper = mapper;
-            _appSettings = appSettings.Value;
-        }
+            _notificationService = notificationService;
+            _followService = followService;
 
-        public IEnumerable<PostResponse> GetAll()
-        {
-            var posts = _context.Posts;
-            return _mapper.Map<IList<PostResponse>>(posts);
         }
-
+        //Get specific post by its Id
         public PostResponse GetPostById(int postId)
         {
             var post = GetPost(postId);
             return _mapper.Map<PostResponse>(post);
         }
 
-        public IEnumerable<PostResponse> GetAllByUserId(int ownerId)
-        {
-            var posts = _context.Posts.Where(post => post.OwnerId == ownerId);
-            return _mapper.Map<IList<PostResponse>>(posts);
-        }
-
+        //Create
         public PostResponse CreatePost(CreatePostRequest model)
         {
             var post = _mapper.Map<Post>(model);
+            if (post == null) throw new AppException("Create Post failed");
             _context.Posts.Add(post);
             _context.SaveChanges();
+            SendNotification(post);
             return _mapper.Map<PostResponse>(post);
         }
-        public PostResponse UpdatePost(int id, UpdatePostRequest model) 
+
+        //Update
+        public PostResponse UpdatePost(int id, UpdatePostRequest model)
         {
             var post = GetPost(id);
+            if (post == null) throw new AppException("Update Post failed");
             _mapper.Map(model, post);
             _context.Posts.Update(post);
             _context.SaveChanges();
 
             return _mapper.Map<PostResponse>(post);
         }
+
+        //Delete
         public void DeletePost(int id)
         {
             var post = GetPost(id);
@@ -76,14 +78,47 @@ namespace WebApi.Services
             _context.SaveChanges();
         }
 
+        //Get all posts
+        public IEnumerable<PostResponse> GetAll()
+        {
+            var posts = _context.Posts;
+
+            return _mapper.Map<IList<PostResponse>>(posts);
+        }
+
+        //Get posts for each user
+        public IEnumerable<PostResponse> GetAllByUserId(int ownerId)
+        {
+            var posts = _context.Posts.Where(post => post.OwnerId == ownerId);
+            return _mapper.Map<IList<PostResponse>>(posts);
+        }
         //helper
         private Post GetPost(int id)
         {
             var post = _context.Posts.Find(id);
             if (post == null) throw new KeyNotFoundException("Post not found");
-            return post; 
+            return post;
         }
 
+        //Create Notification for posting
+        private void SendNotification(Post post)
+        {
+            var followers = _followService.GetAllByUserId(post.OwnerId);
+            //Create notification for each follower of Post owner
+            foreach (FollowResponse follower in followers)
+            {
+                var notification = new CreateNotificationRequest
+                {
+                    //Post Owner
+                    ActionOwnerId = post.OwnerId, 
+                    NotificationType = NotificationType.Posted,
+                    PostId = post.Id,
+                    ReiceiverId = follower.Id,
+                    Created = DateTime.Now,
+                    Status = Status.Created
+                };
+                _notificationService.CreateNotification(notification);
+            }
+        }
     }
-
 }

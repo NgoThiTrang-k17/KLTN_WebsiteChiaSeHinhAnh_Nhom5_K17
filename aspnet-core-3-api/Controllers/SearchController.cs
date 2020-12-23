@@ -19,9 +19,6 @@ namespace WebApi.Controllers
     public class SearchController : ControllerBase
     {
         private readonly ISearchService _searchService;
-        //private readonly IElasticClient _elasticClient;
-       // private readonly IOptionsSnapshot<ProductSettings> _settings;
-        //private readonly ILogger _logger;
 
         public SearchController(
             ISearchService searchService)

@@ -5,50 +5,82 @@ using System.Collections.Generic;
 using System.Linq;
 using WebApi.Entities;
 using WebApi.Helpers;
+using WebApi.Models.Comments;
 using WebApi.Models.Notification;
 
 namespace WebApi.Services
 {
     public interface INotificationService
     {
-        public void AddNotification(CreateNotificationRequest model);
+        public NotificationResponse CreateNotification(CreateNotificationRequest model);
+        public NotificationResponse UpdateNotification(int id, UpdateNotificationRequest model);
+        public void DeleteNotification(int id);
         IEnumerable<NotificationResponse> GetAll();
-        IEnumerable<NotificationResponse> GetByUserId(int id);
+        IEnumerable<NotificationResponse> GetAllByUserId(int id);
     }
     public class NotificationService : INotificationService
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
-        private readonly AppSettings _appSettings;
-        private readonly IEmailService _emailService;
         public NotificationService(DataContext context,
-            IMapper mapper,
-            IOptions<AppSettings> appSettings,
-            IEmailService emailService)
+            IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
-            _appSettings = appSettings.Value;
-            _emailService = emailService;
-        }
-        public void AddNotification(CreateNotificationRequest model)
-        {
-            var comment = _mapper.Map<Notification>(model);
-            _context.Notifications.Add(comment);
-            _context.SaveChanges();
         }
 
+        //Create
+        public NotificationResponse CreateNotification(CreateNotificationRequest model)
+        {
+            var notification = _mapper.Map<Notification>(model);
+            if (notification == null) throw new AppException("Create Notification failed");
+            _context.Notifications.Add(notification);
+            _context.SaveChanges();
+            return _mapper.Map<NotificationResponse>(notification);
+        }
+
+        //Update
+        public NotificationResponse UpdateNotification(int id, UpdateNotificationRequest model)
+        {
+            var notification = getNotification(id);
+            if (notification == null) throw new AppException("Update Notification failed");
+            _mapper.Map(model, notification);
+            _context.Notifications.Update(notification);
+            _context.SaveChanges();
+            return _mapper.Map<NotificationResponse>(notification);
+        }
+
+        //Delete
+        public void DeleteNotification(int id)
+        {
+            var notification = getNotification(id);
+            _context.Notifications.Remove(notification);
+            _context.SaveChanges();
+
+        }
+
+        //Get all notification
         public IEnumerable<NotificationResponse> GetAll()
         {
 
             var notifications = _context.Notifications;
             return _mapper.Map<IList<NotificationResponse>>(notifications);
         }
-        public IEnumerable<NotificationResponse> GetByUserId(int id)
+
+        //Get notifications for each user
+        public IEnumerable<NotificationResponse> GetAllByUserId(int id)
         {
 
             var notifications = _context.Notifications.Where(p => p.ReiceiverId == id);
             return _mapper.Map<IList<NotificationResponse>>(notifications);
+        }
+
+        //Helper methods
+        private Notification getNotification(int id)
+        {
+            var notification = _context.Notifications.Find(id);
+            if (notification == null) throw new KeyNotFoundException("Notification not found");
+            return notification;
         }
 
     }
