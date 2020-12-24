@@ -22,12 +22,17 @@
             </div>
             <img [src]="imageSrc" *ngIf="imageSrc" style="height: auto; width:500px">
             <!-- <app-upload (onUploadFinished)="uploadFinished($event)"></app-upload> -->
-            <div class="form-group">
-                <button [disabled]="loading" class="btn btn-primary pull-right mr-3">
+            <div class="row">
+                <div class="offset-md-5 col-md-2">
+                <button type="submit" class="btn btn-primary">Đăng</button>
+                </div>
+            </div>
+            <!-- <div class="form-group">
+                <button type="submit" [disabled]="loading" class="btn btn-primary pull-right mr-3">
                     <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
                     Save
                 </button>
-            </div>
+            </div> -->
         </form>   
     </div>
 </div>
