@@ -129,7 +129,14 @@ namespace WebApi.Controllers
             return Ok(path);
         }
 
+        [HttpDelete("{id:int}")]
+        public IActionResult Delete(int id)
+        {
+            _postService.DeletePost(id);
+            return Ok(new { message = "Post deleted successfully" });
 
+
+        }
 
 
     }

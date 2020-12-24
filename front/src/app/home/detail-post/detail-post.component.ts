@@ -31,18 +31,17 @@ export class DetailPostComponent {
   ngOnInit(): void {
     this.getRoute(this.route.snapshot.params['id']);
     this.getComment(this.route.snapshot.params['id']);
-    this.accountService.getInfoId(this.route.snapshot.params['ownerId'])
-    .subscribe((res:any)=>{
-      this.account = res;
-    })
+    this.accountService.getById(this.account.id)
+        .subscribe((res:any)=>{
+            this.account = res;
+        })
     this.myForm = this.formBuilder.group({
       content: ['', Validators.required],
     });
     this.testForm = new FormData();  
     this.testForm.set('postId', this.post.id);
     this.testForm.set('content', this.myForm.get('content').value);
-    
-            
+       
   }
 
   getComment(id:any){
