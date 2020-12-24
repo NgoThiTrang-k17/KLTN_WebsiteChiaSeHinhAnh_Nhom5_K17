@@ -2,3 +2,4 @@
 aspnet-core-3-api/.vs/WebApi/v16/.suo
 aspnet-core-3-api/.vs/WebApi/v16/.suo
 node_modules
+aspnet-core-3-api/Helpers/DataContext.cs

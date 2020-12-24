@@ -58,9 +58,9 @@ namespace WebApi.Controllers
         public ActionResult<CommentResponse> Update(int id, CommentResponse model)
         {
 
-            var post = _commentService.UpdateComment(id, model);
+            var comment = _commentService.UpdateComment(id, model);
 
-            return Ok(model);
+            return Ok(comment);
         }
 
         [Authorize]
