@@ -28,6 +28,8 @@ namespace WebApi.Helpers
             //Post
             CreateMap<Post , PostResponse>();
 
+            CreateMap<PostResponse, Post>();
+
             CreateMap<CreatePostRequest, Post>();
 
             CreateMap<UpdatePostRequest, Post>();
