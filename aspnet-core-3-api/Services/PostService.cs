@@ -43,17 +43,6 @@ namespace WebApi.Services
             _followService = followService;
 
         }
-        //Get specific post by its Id
-        public PostResponse GetPostById(int postId)
-        {
-            var post = GetPost(postId);
-            var owner = _accountService.GetById(post.OwnerId);
-            var postResponse = _mapper.Map<PostResponse>(post);
-            postResponse.OwnerName = owner.Name;
-            postResponse.OwnerAvatar = owner.AvatarPath;
-            return postResponse;
-        }
-
         //Create
         public PostResponse CreatePost(CreatePostRequest model)
         {
@@ -95,6 +84,10 @@ namespace WebApi.Services
                 var owner = _accountService.GetById(postResponse.OwnerId);
                 postResponse.OwnerId = owner.Id;
                 postResponse.OwnerName = owner.Name;
+
+                bool IsOwnerNameNull = owner.Name == null;
+                postResponse.OwnerName = IsOwnerNameNull ? "" : owner.Name;
+
                 bool path = owner.AvatarPath == null;
                 postResponse.OwnerAvatar = path ? "" : owner.AvatarPath;
                 (postResponse.CommentCount, postResponse.ReactionCount) = GetPostInfor(postResponse.Id);
@@ -102,11 +95,41 @@ namespace WebApi.Services
             return postResponses;
         }
 
+        //Get specific post by its Id
+        public PostResponse GetPostById(int postId)
+        {
+            var post = GetPost(postId);
+            var owner = _accountService.GetById(post.OwnerId);
+            var postResponse = _mapper.Map<PostResponse>(post);
+            bool IsOwnerNameNull = owner.Name == null;
+            postResponse.OwnerName = IsOwnerNameNull ? "" : owner.Name;
+
+            bool IsAvatarPathNull = owner.AvatarPath == null;
+            postResponse.OwnerAvatar = IsAvatarPathNull ? "" : owner.AvatarPath;
+
+            (postResponse.CommentCount, postResponse.ReactionCount) = GetPostInfor(postResponse.Id);
+            return postResponse;
+        }
+
         //Get posts for each user
         public IEnumerable<PostResponse> GetAllByUserId(int ownerId)
         {
             var posts = _context.Posts.Where(post => post.OwnerId == ownerId);
-            return _mapper.Map<IList<PostResponse>>(posts);
+            var postResponses = _mapper.Map<IList<PostResponse>>(posts);
+            foreach (PostResponse postResponse in postResponses)
+            {
+                var owner = _accountService.GetById(postResponse.OwnerId);
+                postResponse.OwnerId = owner.Id;
+
+                bool IsOwnerNameNull = owner.Name == null;
+                postResponse.OwnerName = IsOwnerNameNull ? "" : owner.Name;
+
+                bool IsAvatarPathNull = owner.AvatarPath == null;
+                postResponse.OwnerAvatar = IsAvatarPathNull ? "" : owner.AvatarPath;
+
+                (postResponse.CommentCount, postResponse.ReactionCount) = GetPostInfor(postResponse.Id);
+            }
+            return postResponses;
         }
         //helper
         private Post GetPost(int id)
