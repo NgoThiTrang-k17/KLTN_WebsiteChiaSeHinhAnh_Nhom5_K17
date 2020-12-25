@@ -20,31 +20,19 @@ namespace WebApi.Controllers
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IPostService _postService;
-        private readonly IAccountService _accountService;
 
         public PostsController(
             IWebHostEnvironment webHostEnvironment,
-            IPostService postService,
-            IAccountService accountService
+            IPostService postService
             )
         {
             _webHostEnvironment = webHostEnvironment;
             _postService = postService;
-            _accountService = accountService;
         }
         [HttpGet]
         public ActionResult<IEnumerable<PostResponse>> GetAll()
         {
             var posts = _postService.GetAll();
-            
-            foreach (PostResponse post in posts)
-            {
-                var owner = _accountService.GetById(post.OwnerId);
-                post.OwnerId = owner.Id;
-                post.OwnerName = owner.Name;
-                bool path = owner.AvatarPath==null;
-                post.OwnerAvatar = path ? "" : owner.AvatarPath;
-            }
             return Ok(posts);
 
         }
@@ -53,11 +41,6 @@ namespace WebApi.Controllers
         public ActionResult<PostResponse> GetPostById(int id)
         {
             var post = _postService.GetPostById(id);
-
-            var owner = _accountService.GetById(post.OwnerId);
-            post.OwnerName = owner.Name;
-            post.OwnerAvatar = owner.AvatarPath;
-
             return Ok(post);
         }
 

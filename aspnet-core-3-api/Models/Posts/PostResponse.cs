@@ -14,5 +14,7 @@ namespace WebApi.Models.Posts
         public int OwnerId { get; set; }
         public string OwnerName { get; set; }
         public string OwnerAvatar { get; set; }
+        public int CommentCount { get; set; }
+        public int ReactionCount { get; set; }
     }
 }
