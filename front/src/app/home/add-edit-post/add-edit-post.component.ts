@@ -1,6 +1,7 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import { first } from 'rxjs/operators';
 
 import { AccountService, PostService, AlertService } from '@app/_services';
 import { Post, PostToCreate } from '@app/_models';
@@ -15,6 +16,12 @@ export class AddEditPostComponent implements OnInit {
   myForm: FormGroup;
   testForm: any;
   imageSrc: string;
+  id: number;
+  isAddMode: boolean;
+  loading = false;
+  submitted = false;
+
+  post = new Post;
 
   constructor(
     private postService: PostService,
@@ -25,12 +32,24 @@ export class AddEditPostComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.id = this.route.snapshot.params['id'];
+    this.isAddMode = !this.id;
+
     this.myForm = this.formBuilder.group({
       postTitle: ['', Validators.required],
-      file: ['', Validators.required],
-      fileSource: ['', Validators.required]
+      file: ['', this.isAddMode ? Validators.required : Validators.nullValidator],
+      fileSource: ['', this.isAddMode ? Validators.required : Validators.nullValidator]
     });
+
+    if (!this.isAddMode) {
+      this.postService.getPostById(this.id)
+        .subscribe((res:any)=>{
+          this.post = res;
+        })
+    }
     this.testForm = new FormData();
+    
+    this.testForm.set("postTitle", this.myForm.get("postTitle").value);
   }
 
   get f() { return this.myForm.controls; }
@@ -40,9 +59,9 @@ export class AddEditPostComponent implements OnInit {
     if (event.target.files && event.target.files.length) {
         const [file] = event.target.files;
         console.log('1');
-              
         this.testForm.append("file",file);
-        this.testForm.append("postTitle", this.myForm.get("postTitle").value);
+        this.testForm.append("postTitle", this.myForm.get("postTitle").value);     
+        
         reader.readAsDataURL(file);
         reader.onload = () => {
             this.imageSrc = reader.result as string;
@@ -53,18 +72,36 @@ export class AddEditPostComponent implements OnInit {
   }
 
   submit() {
+    this.submitted = true;
     console.log(this.testForm);
-    this.postService.createPost(this.testForm)
+    console.log(this.myForm.get('postTitle').value);
+    if (this.isAddMode) {
+      this.postService.createPost(this.testForm)
+      .subscribe(res => {
+          console.log(res);
+          // this.alertService.success('Image created successfully', { keepAfterRouteChange: true });
+          // this.getPosts();
+          alert('Tạo bài viết thành công!');
+          this.router.navigate(['../'], { relativeTo: this.route });
+      }, error => {
+          console.log(error);               
+      })
+    } else if (!this.isAddMode) {
+      this.testForm.set("postTitle", this.myForm.get("postTitle").value);
+      this.postService.update(this.id, this.testForm)
         .subscribe(res => {
-            console.log(res);
-            // this.alertService.success('Image created successfully', { keepAfterRouteChange: true });
-            // this.getPosts();
-            alert('Uploaded Successfully.');
-            this.router.navigate(['../'], { relativeTo: this.route });
-        }, error => {
-            console.log(error);               
-        })
-    
+          console.log(res);
+          // this.alertService.success('Image created successfully', { keepAfterRouteChange: true });
+          // this.getPosts();
+          alert('Chỉnh sửa thành công!');
+          this.router.navigate(['../../'], { relativeTo: this.route });
+      }, error => {
+          console.log(error);               
+      })
+    }   
   }
 
+  public createImgPath = (serverPath: string) => {
+    return `http://localhost:5000/${serverPath}`;
+  }
 }

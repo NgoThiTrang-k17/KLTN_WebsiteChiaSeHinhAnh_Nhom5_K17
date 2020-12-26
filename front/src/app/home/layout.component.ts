@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { AccountService } from '../_services';
-import { Account, Role } from '../_models';
+import { AccountService, NotificationService } from '../_services';
+import { Account, Notification } from '../_models';
 
 @Component({ templateUrl: 'layout.component.html' })
 export class LayoutComponent implements OnInit { 
@@ -11,7 +11,9 @@ export class LayoutComponent implements OnInit {
     temp: any;
     login: boolean;
 
-    constructor(private accountService: AccountService, private activatedRoute: ActivatedRoute) {
+    public notifications: Notification[] = [];
+
+    constructor(private accountService: AccountService, private notificationService: NotificationService ,private activatedRoute: ActivatedRoute) {
         this.accountService.account.subscribe(x => this.account = x);
     }
 
@@ -20,6 +22,11 @@ export class LayoutComponent implements OnInit {
         .subscribe((res:any)=>{
             this.account = res;
         })
+
+        this.notificationService.getAll()
+            .subscribe(res => {
+                this.notifications = res as Notification[];
+        });
     }
 
     logout() {

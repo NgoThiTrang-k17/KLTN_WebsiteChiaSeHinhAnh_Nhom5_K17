@@ -94,9 +94,9 @@ namespace WebApi.Controllers
             }
         }
 
-        [Authorize]
+        //uthorize]
         [HttpPut("{id:int}")]
-        public ActionResult<PostResponse> Update(int id, UpdatePostRequest model)
+        public ActionResult<PostResponse> Update(int id,[FromForm]UpdatePostRequest model)
         {
 
             var post = _postService.UpdatePost(id, model);

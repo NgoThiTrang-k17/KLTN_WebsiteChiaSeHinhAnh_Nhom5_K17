@@ -38,7 +38,15 @@
                                 </path>
                             </svg>
                         </div> -->
-                        <div class="offset-6 col-1"><a *ngIf="post.ownerId==account.id" href="" class="btn btn-danger rounded-pill">Chỉnh sửa</a></div>
+                        <!-- <div class="offset-7 col-1"><a *ngIf="post.ownerId==account.id" routerLink="edit/{{post.id}}" href="" class="btn btn-danger rounded-pill">Chỉnh sửa</a></div> -->
+                        <div class="offset-6 col-3 btn-group" *ngIf="post.ownerId==account.id" style="justify-content: center; align-items: center; display: flex;">
+                            <button routerLink="../../../edit/{{post.id}}" routerLinkActive="router-link-active"  data-toggle="tooltip" data-placement="left" title="Chỉnh sửa thông tin" class="btn btn-outline-white rounded-circle text-center ml-4" style="height: 48px; width: 48px;" type="button">
+                                <svg class="gUZ pBj U9O kVc" height="18" width="18" viewBox="0 0 24 24" aria-hidden="true" aria-label="" role="img">
+                                    <path d="M13.386 6.018l4.596 4.596L7.097 21.499 1 22.999l1.501-6.096L13.386 6.018zm8.662-4.066a3.248 3.248 0 0 1 0 4.596L19.75 8.848 15.154 4.25l2.298-2.299a3.248 3.248 0 0 1 4.596 0z"></path>
+                                </svg>
+                            </button>
+                            <button (click)="deletePost(post.id)" class="btn btn-danger rounded-pill ml-2" style="height: 80%;">Xoá</button>
+                        </div>
                     </div>
                     <!-- <div class="row">
                         <div class="offset-1 col-3 p-0"><a href="" class="dark-link">facebook.com</a></div>
@@ -50,19 +58,20 @@
                             <h3 class="mb-1"><strong>{{post.postTitle}}</strong></h3>
                         </div>
                     </div>
+                    <a class="btn btn-sm ml-4" (click)="onCreateReaction()" ><span style="font-size:x-large;">{{post.reactionCount}}  <i class="fa fa-heart" style=" color: rgb(219, 219, 219);"></i></span></a>
                     <div class="row mt-3">
                         <div class="offset-1 col-5 p-0 mt-1">
                             <img *ngIf="account.avatarPath==null" class="img-fluid rounded-circle" style="height: 40px; width: 40px;" src="../../assets/images/taking photos for next issue vol_019 -1- _ JOURNAL _ 25 January 2018.jpg">
                             <img *ngIf="account.avatarPath!=null" class="img-fluid rounded-circle" style="height: 40px; width: 40px;" [src]="createImgPath(account.avatarPath)">
                             <!-- <img src="../../assets/images/fc1cbe7b52ebf837e53383b9d24e1bf2.jpg"
                                 class="img-fluid w-25 rounded-circle" alt=""> -->
-                            <span class="ml-3"><a href="" class="btn" routerLink="profile">{{account.name}} </a><svg class="gUZ lZJ U9O kVc text-danger" height="12" width="12"
+                            <span class="ml-3"><a href="" class="btn" routerLink="../../../detail/{{account.id}}">{{account.name}} </a><svg class="gUZ lZJ U9O kVc text-danger" height="12" width="12"
                                     viewBox="0 0 24 24" aria-label="Biểu tượng xác minh miền" role="img">
                                     <path
                                         d="M12 0a12 12 0 100 24 12 12 0 000-24zM6.37 11.61a1.25 1.25 0 011.76 0l2.37 2.36 5.37-5.35a1.25 1.25 0 011.76 1.76L10.5 17.5l-4.13-4.13a1.25 1.25 0 010-1.76z">
                                     </path>
                                 </svg>
-                            <br><p style="font-size: small; margin-left: 25%;">9tr người theo dõi</p></span>
+                            <br><p style="font-size: small; margin-left: 25%;">{{post.reactionCount}} người theo dõi</p></span>
                         </div>
                         <div class="offset-3 col-2 p-0 mt-2">
                             <a href="" class="btn btn-light rounded-pill">Theo dõi</a>
@@ -77,14 +86,14 @@
                                 <div id="1" *ngFor="let comment of comments" class="mb-4">
                                     <div class="form-inline" id="1">
                                         <div class="col-2">
-                                        <img
-                                            *ngIf="comment.ownerAvatar==null"
-                                            src="../../assets/images/taking photos for next issue vol_019 -1- _ JOURNAL _ 25 January 2018.jpg"
-                                            style="height: 40px; width: 40px;" class="img-fluid rounded-circle" alt="">
-                                        <img
-                                            *ngIf="comment.ownerAvatar!=null"
-                                            [src]="createImgPath(comment.ownerAvatar)"
-                                            style="height: 40px; width: 40px;" class="img-fluid rounded-circle" alt="">
+                                            <img
+                                                *ngIf="comment.ownerAvatar==null"
+                                                src="../../assets/images/taking photos for next issue vol_019 -1- _ JOURNAL _ 25 January 2018.jpg"
+                                                style="height: 40px; width: 40px;" class="img-fluid rounded-circle" alt="">
+                                            <img
+                                                *ngIf="comment.ownerAvatar!=null"
+                                                [src]="createImgPath(comment.ownerAvatar)"
+                                                style="height: 40px; width: 40px;" class="img-fluid rounded-circle" alt="">
                                         </div>
                                         <div class="col-10">
                                             <div class="card" style="width: 90%;">

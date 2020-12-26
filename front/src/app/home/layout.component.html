@@ -26,17 +26,18 @@
                 <div class="nav-item dropdown br-xam "> <a class="nav-link dropdown-toggle" data-toggle="dropdown"
                         dropdownToggle><i class="fa fa-bell fa-2x"></i></a>
                     <ul class="dropdown-menu dropdown-menu-right shadow-sm rounded-lg" *dropdownMenu>
-                        <li class="text-center"><strong>Thông báo</strong></li>
+                        <!-- <li class="text-center"><strong>Thông báo</strong></li>
                         <hr>
-                        <li class="dropdown-item align-content-center">Ai đó tiếp tục thích bạn</li>
-                        <li class="dropdown-item">Ai đó lại thích bạn</li>
-                        <li class="dropdown-item">Ai đó đã thích bạn</li>
+                        <li class="dropdown-item align-content-center">Ai đó tiếp tục thích bạn</li> -->
+                        <div id="1" *ngFor="let notification of notifications">
+                            <li id="1" class="dropdown-item">{{notification.actionOwnerId}} thích bạn</li>
+                        </div>                        
                     </ul>
                 </div>
             </div>
         </div>
         <div class="nav-item">
-            <a routerLink="profile" routerLinkActive="active" class="nav-item">
+            <a routerLink="detail/{{account.id}}" routerLinkActive="active" class="nav-item">
                 <img *ngIf="account.avatarPath==null" class="rounded-circle" style="height: 30px; width: 30px;" src="../../assets/images/taking photos for next issue vol_019 -1- _ JOURNAL _ 25 January 2018.jpg">
                 <img *ngIf="account.avatarPath!=null" class="rounded-circle" style="height: 30px; width: 30px;" [src]="createImgPath(account.avatarPath)">
             </a>

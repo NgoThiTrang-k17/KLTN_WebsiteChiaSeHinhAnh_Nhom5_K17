@@ -59,7 +59,8 @@ namespace WebApi.Services
         {
             var post = GetPost(id);
             if (post == null) throw new AppException("Update Post failed");
-            _mapper.Map(model, post);
+            post.PostTitle = model.Title;
+           //mapper.Map(model, post);
             _context.Posts.Update(post);
             _context.SaveChanges();
 

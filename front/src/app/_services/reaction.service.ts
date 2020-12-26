@@ -5,40 +5,40 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map, finalize } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
-import { Post, PostToCreate } from '@app/_models';
+import { Reaction } from '@app/_models';
 
-const baseUrl = `${environment.apiUrl}/posts`;
+const baseUrl = `${environment.apiUrl}/reactions`;
 
 @Injectable({ providedIn: 'root' })
-export class PostService {
-    private postSubject: BehaviorSubject<Post>;
-    public post: Observable<Post>;
+export class ReactionService {
+    private postSubject: BehaviorSubject<Reaction>;
+    public post: Observable<Reaction>;
 
     constructor(
         private router: Router,
         private http: HttpClient
     ) {
-        this.postSubject = new BehaviorSubject<Post>(null);
+        this.postSubject = new BehaviorSubject<Reaction>(null);
         this.post = this.postSubject.asObservable();
     }
 
-    public get postValue(): Post {
+    public get reactionValue(): Reaction {
         return this.postSubject.value;
     }
 
-    getAll():Observable<Post[]> {
-        return this.http.get<Post[]>(baseUrl);
+    getAll():Observable<Reaction[]> {
+        return this.http.get<Reaction[]>(baseUrl);
     }
 
-    getPostById(id):Observable<Post[]> {
-        return this.http.get<Post[]>(`${baseUrl}/GetPostById/${id}`);
+    getPostById(id):Observable<Reaction[]> {
+        return this.http.get<Reaction[]>(`${baseUrl}/GetPostById/${id}`);
     }
 
-    getAllByUserId(id:number):Observable<Post[]> {
-        return this.http.get<Post[]>(`${baseUrl}/GetAllByUserId/${id}`);
+    getAllByUserId(id:number):Observable<Reaction[]> {
+        return this.http.get<Reaction[]>(`${baseUrl}/GetAllByUserId/${id}`);
     }
 
-    createPost(params) {
+    createReaction(params) {
         return this.http.post(baseUrl, params);
     }
 

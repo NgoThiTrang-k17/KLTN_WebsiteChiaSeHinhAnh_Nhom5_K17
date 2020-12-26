@@ -4,4 +4,5 @@ export class Post {
     created: string;
     imagePath: string;
     ownerId: number;
+    reactionCount: number;
 }
