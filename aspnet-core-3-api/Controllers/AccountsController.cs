@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Net.Http.Headers;
 using WebApi.Entities;
 using WebApi.Models.Accounts;
 using WebApi.Services;
@@ -101,7 +103,50 @@ namespace WebApi.Controllers
                 return Unauthorized(new { message = "Unauthorized" });
             var account = _accountService.SetAvatar(id, avatarPath);
             return Ok(account);
+        } 
+        
+        [Authorize]
+        [HttpPut("UploadAvatar/{id:int}")]
+        public IActionResult UploadAvatar(int id, [FromForm] UpdateAccountRequest model)
+        {
+            try
+            {
+                var file = Request.Form.Files[0];
+                var folderName = Path.Combine("Resources", "Images");
+                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+
+                if (file.Length > 0)
+                {
+                    var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                    var fullPath = Path.Combine(pathToSave, fileName);
+                    var dbPath = Path.Combine(folderName, fileName);
+
+                    using (var stream = new FileStream(fullPath, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
+                    var account = new UpdateAccountRequest
+                    {
+                        AvatarPath = dbPath,
+                    };
+
+                    var temp = _accountService.Update(id,model);
+
+                    return Ok(account);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
+
+
         }
+
 
         [Authorize(Role.Admin)]
         [HttpGet]
