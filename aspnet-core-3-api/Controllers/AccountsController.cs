@@ -125,14 +125,12 @@ namespace WebApi.Controllers
                     {
                         file.CopyTo(stream);
                     }
-                    var account = new UpdateAccountRequest
-                    {
-                        AvatarPath = dbPath,
-                    };
+
+                    model.AvatarPath = dbPath;
 
                     var temp = _accountService.Update(id,model);
 
-                    return Ok(account);
+                    return Ok(temp);
                 }
                 else
                 {

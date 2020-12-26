@@ -7,10 +7,23 @@ namespace WebApi.Models.Comments
 {
     public class UpdateCommentRequest
     {
-        public int Id { get; set; }
-        public string Content { get; set; }
-        public DateTime DateCreated { get; set; }
-        public int OwnerId { get; set; }
-        public int PostId { get; set; }
+        private string _content;
+ 
+
+        public string Content
+        {
+            get => _content;
+            set => _content = replaceEmptyWithNull(value);
+        }
+        
+
+        // helpers
+
+        private string replaceEmptyWithNull(string value)
+        {
+            // replace empty string with null to make field optional
+            return string.IsNullOrEmpty(value) ? null : value;
+        }
+
     }
 }
