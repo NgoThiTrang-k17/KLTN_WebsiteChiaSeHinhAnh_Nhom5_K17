@@ -21,6 +21,11 @@ export class DetailsComponent {
                 console.log(res);
             });
         
+        this.accountService.getById(this.account.id)
+            .subscribe((res:any)=>{
+                this.account = res;
+            })
+        
     }
 
     public createImgPath = (serverPath: string) => {
