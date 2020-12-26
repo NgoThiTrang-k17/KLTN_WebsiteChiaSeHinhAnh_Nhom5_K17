@@ -14,7 +14,7 @@ namespace WebApi.Helpers
         public AutoMapperProfile()
         {
             //Reaction
-            CreateMap<Reaction, AccountResponse>();
+            CreateMap<Reaction, ReactionResponse>();
 
             CreateMap<CreateReactionRequest, Reaction>();
 
