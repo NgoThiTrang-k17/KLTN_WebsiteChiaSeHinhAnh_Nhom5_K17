@@ -90,6 +90,10 @@ namespace WebApi.Services
 
                 bool path = owner.AvatarPath == null;
                 postResponse.OwnerAvatar = path ? "" : owner.AvatarPath;
+
+                postResponse.FollowerCount = _context.Follows.Count(f => f.AccountId == owner.Id);
+
+
                 (postResponse.CommentCount, postResponse.ReactionCount) = GetPostInfor(postResponse.Id);
             }
             return postResponses;
@@ -106,6 +110,9 @@ namespace WebApi.Services
 
             bool IsAvatarPathNull = owner.AvatarPath == null;
             postResponse.OwnerAvatar = IsAvatarPathNull ? "" : owner.AvatarPath;
+
+            postResponse.FollowerCount = _context.Follows.Count(f => f.AccountId == owner.Id);
+
 
             (postResponse.CommentCount, postResponse.ReactionCount) = GetPostInfor(postResponse.Id);
             return postResponse;
@@ -126,6 +133,8 @@ namespace WebApi.Services
 
                 bool IsAvatarPathNull = owner.AvatarPath == null;
                 postResponse.OwnerAvatar = IsAvatarPathNull ? "" : owner.AvatarPath;
+
+                postResponse.FollowerCount = _context.Follows.Count(f => f.AccountId == owner.Id);
 
                 (postResponse.CommentCount, postResponse.ReactionCount) = GetPostInfor(postResponse.Id);
             }
