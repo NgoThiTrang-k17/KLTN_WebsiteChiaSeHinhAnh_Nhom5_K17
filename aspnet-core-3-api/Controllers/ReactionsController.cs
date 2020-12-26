@@ -7,7 +7,7 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ReactionsController : ControllerBase
+    public class ReactionsController : BaseController
     {
         private readonly IReactionService _reactionService;
         public ReactionsController(
@@ -33,6 +33,7 @@ namespace WebApi.Controllers
         [HttpPost]
         public ActionResult<ReactionResponse> Create(CreateReactionRequest model)
         {
+            model.OwnerId = Account.Id;
             var reaction = _reactionService.CreateReaction(model);
             return Ok(reaction);
         }

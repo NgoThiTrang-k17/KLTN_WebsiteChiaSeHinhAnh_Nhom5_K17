@@ -36,11 +36,15 @@ namespace WebApi.Helpers
             //Comment
             CreateMap<Comment, CommentResponse>();
 
+            CreateMap<CommentResponse, Comment>();
+
             CreateMap<CreateCommentRequest, Comment>();
 
             CreateMap<UpdateCommentRequest, Comment>();
             //Account
             CreateMap<Account, AccountResponse>();
+
+            CreateMap<AccountResponse, Account>();
 
             CreateMap<Account, AuthenticateResponse>();
 

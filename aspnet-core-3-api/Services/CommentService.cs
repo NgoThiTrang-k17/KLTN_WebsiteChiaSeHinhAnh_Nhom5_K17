@@ -16,7 +16,7 @@ namespace WebApi.Services
         IEnumerable<CommentResponse> GetAll();
         IEnumerable<CommentResponse> GetAllByPostId(int postId);
         CommentResponse CreateComment(CreateCommentRequest model);
-        CommentResponse UpdateComment(int id, CommentResponse model);
+        CommentResponse UpdateComment(int id, UpdateCommentRequest model);
         void DeleteComment(int id);
     }
     public class CommentService : ICommentService
@@ -54,10 +54,11 @@ namespace WebApi.Services
         }
         
         //Update
-        public CommentResponse UpdateComment(int id, CommentResponse model)
+        public CommentResponse UpdateComment(int id, UpdateCommentRequest model)
         {
             var comment = GetComment(id);
             if (comment == null) throw new AppException("Update comment failed");
+            comment.Content = model.Content;
             _mapper.Map(model, comment);
             _context.Comments.Update(comment);
             _context.SaveChanges();

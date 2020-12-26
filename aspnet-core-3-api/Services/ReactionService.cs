@@ -36,11 +36,13 @@ namespace WebApi.Services
 
         public ReactionResponse CreateReaction(CreateReactionRequest model)
         {
-            var reaction = _mapper.Map<Comment>(model);
+            var reaction = _mapper.Map<Reaction>(model);
             if (reaction == null) throw new AppException("Create reaction failed");
             //Get post by postId then map it to new Post model
             var post = _mapper.Map<Post>(_postService.GetPostById(model.PostId));
-            _context.Comments.Add(reaction);
+
+           
+            _context.Reactions.Add(reaction);
             _context.SaveChanges();
             SendNotification(reaction.OwnerId, post);
             return _mapper.Map<ReactionResponse>(reaction);

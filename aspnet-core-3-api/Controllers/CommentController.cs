@@ -57,7 +57,7 @@ namespace WebApi.Controllers
 
         [Authorize]
         [HttpPut("{id:int}")]
-        public ActionResult<CommentResponse> Update(int id, CommentResponse model)
+        public ActionResult<CommentResponse> Update(int id, UpdateCommentRequest model)
         {
 
             var comment = _commentService.UpdateComment(id, model);

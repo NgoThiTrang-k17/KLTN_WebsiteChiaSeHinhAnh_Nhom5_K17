@@ -38,17 +38,20 @@ namespace WebApi.Services
         private readonly DataContext _context;
         private readonly IMapper _mapper;
         private readonly AppSettings _appSettings;
+        private readonly IFollowService _followService;
         private readonly IEmailService _emailService;
 
         public AccountService(
             DataContext context,
             IMapper mapper,
             IOptions<AppSettings> appSettings,
+            IFollowService followService,
             IEmailService emailService)
         {
             _context = context;
             _mapper = mapper;
             _appSettings = appSettings.Value;
+            _followService = followService;
             _emailService = emailService;
         }
 
@@ -215,13 +218,24 @@ namespace WebApi.Services
         public IEnumerable<AccountResponse> GetAll()
         {
             var accounts = _context.Accounts;
-            return _mapper.Map<IList<AccountResponse>>(accounts);
+            var accountResponses = _mapper.Map<IList<AccountResponse>>(accounts);
+            foreach (AccountResponse accountResponse in accountResponses) 
+            {
+                accountResponse.FollowerCount = _context.Follows.Count(f => f.AccountId == accountResponse.Id); 
+            };
+           
+            return accountResponses;
         }
 
         public AccountResponse GetById(int id)
         {
             var account = getAccount(id);
-            return _mapper.Map<AccountResponse>(account);
+            var accountResponse = _mapper.Map<AccountResponse>(account);
+
+                accountResponse.FollowerCount = _context.Follows.Count(f => f.AccountId == accountResponse.Id);
+   
+
+            return accountResponse;
         }
 
         public AccountResponse Create(CreateAccountRequest model)

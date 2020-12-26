@@ -16,7 +16,7 @@ namespace WebApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class SearchController : ControllerBase
+    public class SearchController : BaseController
     {
         private readonly ISearchService _searchService;
 
