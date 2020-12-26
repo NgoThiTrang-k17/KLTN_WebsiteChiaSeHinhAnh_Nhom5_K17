@@ -41,6 +41,7 @@ namespace WebApi.Services
             //Get post by postId then map it to new Post model
             var post = _mapper.Map<Post>(_postService.GetPostById(model.PostId));
 
+           
             _context.Reactions.Add(reaction);
             _context.SaveChanges();
             SendNotification(reaction.OwnerId, post);
