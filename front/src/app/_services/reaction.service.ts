@@ -30,20 +30,8 @@ export class ReactionService {
         return this.http.get<Reaction[]>(baseUrl);
     }
 
-    getPostById(id):Observable<Reaction[]> {
-        return this.http.get<Reaction[]>(`${baseUrl}/GetPostById/${id}`);
-    }
-
-    getAllByUserId(id:number):Observable<Reaction[]> {
-        return this.http.get<Reaction[]>(`${baseUrl}/GetAllByUserId/${id}`);
-    }
-
     createReaction(params) {
         return this.http.post(baseUrl, params);
-    }
-
-    delete(id: number) {
-        return this.http.delete(`${baseUrl}/${id}`)
     }
 
     update(id, params) {

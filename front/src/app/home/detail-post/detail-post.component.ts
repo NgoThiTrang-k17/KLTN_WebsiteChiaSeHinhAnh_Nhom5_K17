@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
 import { AccountService, PostService, AlertService, CommentService, ReactionService } from '@app/_services';
-import { Post, Comment, Reaction, ReactionToCreate } from '@app/_models';
+import { Post, Comment, Reaction, ReactionToCreate, Account } from '@app/_models';
 
 @Component({
   selector: 'app-detail-post',
@@ -17,8 +17,9 @@ export class DetailPostComponent {
   public comments: Comment[] = [];
   public reaction: ReactionToCreate;
   public reactionType: number;
+  account: Account;
 
-  account = this.accountService.accountValue;
+  maccount = this.accountService.accountValue;
   comment = this.commentService.commentValue;
   post = new Post;
   constructor(
@@ -37,6 +38,10 @@ export class DetailPostComponent {
     this.accountService.getById(this.route.snapshot.params['ownerId'])
         .subscribe((res:any)=>{
             this.account = res;
+        })
+    this.accountService.getById(this.maccount.id)
+        .subscribe((res:any)=>{
+            this.maccount = res;
         })
     this.myForm = this.formBuilder.group({
       content: ['', Validators.required],

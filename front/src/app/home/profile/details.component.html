@@ -8,13 +8,13 @@
             <!-- {{account.email}} -->
         </p>
         <div class="row">
-            <div class="container text-center">
+            <div *ngIf="maccount.id==id || id==null" class="container text-center">
                 <button routerLink="update" routerLinkActive="router-link-active"  data-toggle="tooltip" data-placement="left" title="Chỉnh sửa thông tin" class="btn btn-light btn-outline-white rounded-circle text-center" style="height: 48px; width: 48px;" type="button">
                     <svg class="gUZ pBj U9O kVc" height="18" width="18" viewBox="0 0 24 24" aria-hidden="true" aria-label="" role="img">
                         <path d="M13.386 6.018l4.596 4.596L7.097 21.499 1 22.999l1.501-6.096L13.386 6.018zm8.662-4.066a3.248 3.248 0 0 1 0 4.596L19.75 8.848 15.154 4.25l2.298-2.299a3.248 3.248 0 0 1 4.596 0z"></path>
                     </svg>
                 </button>
-                <button routerLink="add-post" routerLinkActive="router-link-active"  data-toggle="tooltip" data-placement="left" title="Thêm hình" class="btn btn-light btn-outline-white rounded-circle text-center" style="height: 48px; width: 48px;" type="button">
+                <button routerLink="add-post" routerLinkActive="router-link-active"  data-toggle="tooltip" data-placement="left" title="Thêm bài viết" class="btn btn-light btn-outline-white rounded-circle text-center" style="height: 48px; width: 48px;" type="button">
                     <svg class="gUZ pBj U9O kVc" height="18" width="18" viewBox="0 0 24 24" aria-hidden="true" aria-label="" role="img">
                       <path d="M22 10h-8V2a2 2 0 0 0-4 0v8H2a2 2 0 0 0 0 4h8v8a2 2 0 0 0 4 0v-8h8a2 2 0 0 0 0-4"></path>
                     </svg>
@@ -24,12 +24,25 @@
     </div>
     <div class="item card-columns mt-4">
         <div id="1" *ngFor="let post of posts">
-          <a routerLink="detail-post/{{post.id}}" class="text-dark card-link" id="1">
+          <a routerLink="../../detail-post/{{post.id}}/{{post.ownerId}}" class="text-dark card-link" id="1">
             <div class="card btn-outline-white">
               <img class="card-img-top img-fluid" [src]="createImgPath(post.imagePath)" alt="Card image cap">
               <p class="card-title" style="margin: 5px 5px 5px 5px; font-size:15px; font-family: Noto Serif;">{{post.postTitle}}</p>
             </div> 
           </a>
+          <!-- <a *ngIf="id" routerLink="../../detail-post/{{post.id}}/{{post.ownerId}}" class="text-dark card-link" id="1">
+            <div class="card btn-outline-white">
+              <img class="card-img-top img-fluid" [src]="createImgPath(post.imagePath)" alt="Card image cap">
+              <p class="card-title" style="margin: 5px 5px 5px 5px; font-size:15px; font-family: Noto Serif;">{{post.postTitle}}</p>
+            </div> 
+          </a> -->
         </div>  
       </div>
+</div>
+<div *ngIf="maccount.id==id || id==null" class="btn btn-fixed" >
+  <button routerLink="add-post" routerLinkActive="router-link-active"  data-toggle="tooltip" data-placement="left" title="Thêm bài viết" class="btn btn-outline-white rounded-circle" style="height: 50px; width: 50px; background-color: rgb(238, 237, 237); box-shadow: 0px 8px 8px -6px black;" type="button">
+    <svg class="gUZ pBj U9O kVc" height="16" width="16" viewBox="0 0 24 24" aria-hidden="true" aria-label="" role="img">
+      <path d="M22 10h-8V2a2 2 0 0 0-4 0v8H2a2 2 0 0 0 0 4h8v8a2 2 0 0 0 4 0v-8h8a2 2 0 0 0 0-4"></path>
+    </svg>
+  </button>
 </div>

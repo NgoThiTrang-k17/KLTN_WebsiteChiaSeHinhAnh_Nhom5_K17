@@ -13,6 +13,7 @@ import { HomeComponent } from './home.component';
 import { AddEditPostComponent } from './add-edit-post/add-edit-post.component';
 import { DetailPostComponent } from './detail-post/detail-post.component';
 import { ProfileModule } from './profile/profile.module';
+import { SearchComponent } from './search/search.component';
 
 @NgModule({
     imports: [
@@ -31,7 +32,8 @@ import { ProfileModule } from './profile/profile.module';
         NavHomeComponent,
         LayoutComponent,
         AddEditPostComponent,
-        DetailPostComponent
+        DetailPostComponent,
+        SearchComponent
     ]
 })
 export class UserModule { }

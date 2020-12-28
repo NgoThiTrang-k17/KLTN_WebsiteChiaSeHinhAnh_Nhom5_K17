@@ -48,8 +48,6 @@ export class AddEditPostComponent implements OnInit {
         })
     }
     this.testForm = new FormData();
-    
-    this.testForm.set("postTitle", this.myForm.get("postTitle").value);
   }
 
   get f() { return this.myForm.controls; }
@@ -73,9 +71,13 @@ export class AddEditPostComponent implements OnInit {
 
   submit() {
     this.submitted = true;
+    if (this.myForm.invalid) {
+      return;
+    }
     console.log(this.testForm);
-    console.log(this.myForm.get('postTitle').value);
+    console.log(this.myForm.get('postTitle').value);   
     if (this.isAddMode) {
+      this.testForm.set("postTitle", this.myForm.get("postTitle").value); 
       this.postService.createPost(this.testForm)
       .subscribe(res => {
           console.log(res);
@@ -87,7 +89,7 @@ export class AddEditPostComponent implements OnInit {
           console.log(error);               
       })
     } else if (!this.isAddMode) {
-      this.testForm.set("postTitle", this.myForm.get("postTitle").value);
+      this.testForm.set("title", this.myForm.get("postTitle").value); 
       this.postService.update(this.id, this.testForm)
         .subscribe(res => {
           console.log(res);

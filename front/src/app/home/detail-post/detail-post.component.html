@@ -39,7 +39,7 @@
                             </svg>
                         </div> -->
                         <!-- <div class="offset-7 col-1"><a *ngIf="post.ownerId==account.id" routerLink="edit/{{post.id}}" href="" class="btn btn-danger rounded-pill">Chỉnh sửa</a></div> -->
-                        <div class="offset-6 col-3 btn-group" *ngIf="post.ownerId==account.id" style="justify-content: center; align-items: center; display: flex;">
+                        <div class="offset-6 col-3 btn-group" *ngIf="post.ownerId==maccount.id" style="justify-content: center; align-items: center; display: flex;">
                             <button routerLink="../../../edit/{{post.id}}" routerLinkActive="router-link-active"  data-toggle="tooltip" data-placement="left" title="Chỉnh sửa thông tin" class="btn btn-outline-white rounded-circle text-center ml-4" style="height: 48px; width: 48px;" type="button">
                                 <svg class="gUZ pBj U9O kVc" height="18" width="18" viewBox="0 0 24 24" aria-hidden="true" aria-label="" role="img">
                                     <path d="M13.386 6.018l4.596 4.596L7.097 21.499 1 22.999l1.501-6.096L13.386 6.018zm8.662-4.066a3.248 3.248 0 0 1 0 4.596L19.75 8.848 15.154 4.25l2.298-2.299a3.248 3.248 0 0 1 4.596 0z"></path>
@@ -98,7 +98,7 @@
                                         <div class="col-10">
                                             <div class="card" style="width: 90%;">
                                                 <div class="ml-3 mt-2 mr-3">
-                                                    <span><strong>{{comment.ownerName}}</strong></span>
+                                                    <span><a href="" class="btn" routerLink="../../../detail/{{comment.ownerId}}"><strong>{{comment.ownerName}}</strong></a></span>
                                                     <p style="font-size: 15px;">{{comment.content}}</p>
                                                 </div>
                                             </div>
@@ -110,12 +110,12 @@
                                     <div class="form-inline">
                                         <div class="col-2">
                                         <img
-                                            *ngIf="account.avatarPath==null"
+                                            *ngIf="maccount.avatarPath==null"
                                             src="../../assets/images/taking photos for next issue vol_019 -1- _ JOURNAL _ 25 January 2018.jpg"
                                             style="height: 40px; width: 40px;" class="img-fluid rounded-circle" alt="">
                                         <img
-                                            *ngIf="account.avatarPath!=null"
-                                            [src]="createImgPath(account.avatarPath)"
+                                            *ngIf="maccount.avatarPath!=null"
+                                            [src]="createImgPath(maccount.avatarPath)"
                                             style="height: 40px; width: 40px;" class="img-fluid rounded-circle" alt="">
                                         </div>
                                         <div class="col-10 form-group"> <input style="width: 90%;" type="text" class="form-control rounded-pill"
