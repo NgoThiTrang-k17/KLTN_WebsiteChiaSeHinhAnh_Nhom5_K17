@@ -14,8 +14,10 @@ namespace WebApi.Services
         ReactionResponse CreateReaction(CreateReactionRequest model);
         ReactionResponse UpdateReaction(int id, UpdateReactionRequest model);
         void DeleteReaction(int id);
+        void DeleteByPostId(int postId, int ownerId);
         IEnumerable<ReactionResponse> GetAll();
         IEnumerable<ReactionResponse> GetAllByPostId(int postId);
+        ReactionState GetState(int postId, int ownerId);
     }
     public class ReactionService : IReactionService
     {
@@ -67,6 +69,15 @@ namespace WebApi.Services
             _context.SaveChanges();
         }
 
+        public void DeleteByPostId(int postId, int ownerId)
+        {
+            var model = _context.Reactions.Where(reaction => reaction.PostId == postId && reaction.OwnerId == ownerId);
+            
+            var reaction = getReaction(model.FirstOrDefault().Id);
+            _context.Remove(reaction);
+            _context.SaveChanges();
+        }
+
 
         public IEnumerable<ReactionResponse> GetAll()
         {
@@ -79,7 +90,23 @@ namespace WebApi.Services
             var reactions = _context.Reactions.Where(reaction => reaction.PostId == postId);
             return _mapper.Map<List<ReactionResponse>>(reactions);
         }
+        public ReactionState GetState(int postId, int ownerId)
+        {
+            
+            var reaction = _context.Reactions.Where(reaction => reaction.PostId == postId && reaction.OwnerId == ownerId);
+            var reactionState = new ReactionState
+            {
+                IsCreated = 0
+            };
+            if (reaction != null)
+            {
+                reactionState.IsCreated = 1;
+                return reactionState;
+            }
+            else
 
+                return reactionState;
+        }
         //Helper methods
         private Reaction getReaction(int id)
         {

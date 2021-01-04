@@ -105,12 +105,7 @@ namespace WebApi.Controllers
         }
 
 
-        [HttpGet]
-        private ActionResult<IEnumerable<PostResponse>> GetPath()
-        {
-            string path = _webHostEnvironment.ContentRootPath;
-            return Ok(path);
-        }
+
 
         [HttpDelete("{id:int}")]
         public IActionResult Delete(int id)

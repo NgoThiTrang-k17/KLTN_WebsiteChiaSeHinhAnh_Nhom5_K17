@@ -30,6 +30,14 @@ namespace WebApi.Controllers
             return Ok(reactions);
         }
 
+        [HttpGet("GetState/{postId:int}")]
+        public ActionResult<ReactionState> GetState(int postId)
+        {
+
+            var state = _reactionService.GetState(postId, /*Account.Id*/1);
+            return Ok(state);
+        }
+
         [HttpPost]
         public ActionResult<ReactionResponse> Create(CreateReactionRequest model)
         {
@@ -46,11 +54,16 @@ namespace WebApi.Controllers
             return Ok(reaction);
         }
 
-        [Authorize]
         [HttpDelete("{id:int}")]
         public IActionResult Delete(int id)
         {
             _reactionService.DeleteReaction(id);
+            return Ok(new { message = "Reaction deleted successfully" });
+        }
+        [HttpDelete("DeleteByPostId{id:int}")]
+        public IActionResult DeleteByPostId(int id)
+        {
+            _reactionService.DeleteByPostId(id, /*Account.Id*/1);
             return Ok(new { message = "Reaction deleted successfully" });
         }
     }

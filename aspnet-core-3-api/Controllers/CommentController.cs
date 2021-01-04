@@ -69,9 +69,6 @@ namespace WebApi.Controllers
         [HttpDelete("{id:int}")]
         public IActionResult Delete(int id)
         {
-            // users cant delete their own Comment and admins can delete any Comment
-            if (id == Account.Id && Account.Role != Role.Admin)
-                return Unauthorized(new { message = "Unauthorized" });
 
             _commentService.DeleteComment(id);
             return Ok(new { message = "Comment deleted successfully" });
