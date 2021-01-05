@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using WebApi.Helpers;
 using WebApi.Entities;
-using WebApi.Models.Notification;
+using WebApi.Models.Notifications;
 using WebApi.Models.Reactions;
 
 namespace WebApi.Services
@@ -107,6 +107,7 @@ namespace WebApi.Services
 
                 return reactionState;
         }
+
         //Helper methods
         private Reaction getReaction(int id)
         {

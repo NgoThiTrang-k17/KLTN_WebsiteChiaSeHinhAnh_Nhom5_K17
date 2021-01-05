@@ -38,20 +38,17 @@ namespace WebApi.Services
         private readonly DataContext _context;
         private readonly IMapper _mapper;
         private readonly AppSettings _appSettings;
-        private readonly IFollowService _followService;
         private readonly IEmailService _emailService;
 
         public AccountService(
             DataContext context,
             IMapper mapper,
             IOptions<AppSettings> appSettings,
-            IFollowService followService,
             IEmailService emailService)
         {
             _context = context;
             _mapper = mapper;
             _appSettings = appSettings.Value;
-            _followService = followService;
             _emailService = emailService;
         }
 

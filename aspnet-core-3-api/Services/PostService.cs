@@ -1,13 +1,11 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using WebApi.Entities;
 using WebApi.Helpers;
-using WebApi.Models.Notification;
+using WebApi.Models.Follows;
+using WebApi.Models.Notifications;
 using WebApi.Models.Posts;
 
 namespace WebApi.Services

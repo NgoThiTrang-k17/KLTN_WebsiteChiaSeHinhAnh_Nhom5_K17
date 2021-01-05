@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebApi.Entities;
 
-namespace WebApi.Models.Notification
+namespace WebApi.Models.Notifications
 {
-    public class NotificationResponse
+    public class UpdateNotificationRequest
     {
         public int Id { get; set; }
         public int ActionOwnerId { get; set; }

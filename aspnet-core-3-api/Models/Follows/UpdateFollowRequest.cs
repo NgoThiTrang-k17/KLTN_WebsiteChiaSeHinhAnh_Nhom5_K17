@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebApi.Entities;
 
-namespace WebApi.Models.Follow
+namespace WebApi.Models.Follows
 {
     public class UpdateFollowRequest
     {
