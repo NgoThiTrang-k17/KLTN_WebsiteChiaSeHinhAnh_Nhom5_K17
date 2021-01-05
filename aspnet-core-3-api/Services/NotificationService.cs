@@ -1,12 +1,10 @@
 ﻿using AutoMapper;
-using Microsoft.Extensions.Options;
 
 using System.Collections.Generic;
 using System.Linq;
 using WebApi.Entities;
 using WebApi.Helpers;
-using WebApi.Models.Comments;
-using WebApi.Models.Notification;
+using WebApi.Models.Notifications;
 
 namespace WebApi.Services
 {
@@ -22,11 +20,15 @@ namespace WebApi.Services
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
+
+        private readonly IAccountService _accountService;
         public NotificationService(DataContext context,
-            IMapper mapper)
+            IMapper mapper,
+            IAccountService accountService)
         {
             _context = context;
             _mapper = mapper;
+            _accountService = accountService;
         }
 
         //Create
@@ -64,7 +66,18 @@ namespace WebApi.Services
         {
 
             var notifications = _context.Notifications;
-            return _mapper.Map<IList<NotificationResponse>>(notifications);
+            var notificationResponses = _mapper.Map<IList<NotificationResponse>>(notifications);
+            foreach (NotificationResponse notificationResponse in notificationResponses)
+            {
+                var actionOwner = _accountService.GetById(notificationResponse.ActionOwnerId);
+                bool IsActionOwnerNameNull = actionOwner.Name == null;
+                notificationResponse.ActionOwnerName = IsActionOwnerNameNull ? "" : actionOwner.Name;
+
+                var receiver = _accountService.GetById(notificationResponse.ReiceiverId);
+                bool IsReceiverNull = receiver.Name == null;
+                notificationResponse.ReiceiverName = IsReceiverNull ? "" : receiver.Name;
+            }
+            return _mapper.Map<IList<NotificationResponse>>(notificationResponses);
         }
 
         //Get notifications for each user
@@ -72,7 +85,18 @@ namespace WebApi.Services
         {
 
             var notifications = _context.Notifications.Where(p => p.ReiceiverId == id);
-            return _mapper.Map<IList<NotificationResponse>>(notifications);
+            var notificationResponses = _mapper.Map<IList<NotificationResponse>>(notifications);
+            foreach (NotificationResponse notificationResponse in notificationResponses)
+            {
+                var actionOwner = _accountService.GetById(notificationResponse.ActionOwnerId);
+                bool IsActionOwnerNameNull = actionOwner.Name == null;
+                notificationResponse.ActionOwnerName = IsActionOwnerNameNull ? "" : actionOwner.Name;
+
+                var receiver = _accountService.GetById(notificationResponse.ReiceiverId);
+                bool IsReceiverNull = receiver.Name == null;
+                notificationResponse.ReiceiverName = IsReceiverNull ? "" : receiver.Name;
+            }
+            return _mapper.Map<IList<NotificationResponse>>(notificationResponses);
         }
 
         //Helper methods

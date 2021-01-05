@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
-using WebApi.Entities;
-using WebApi.Helpers;
-using WebApi.Models.Comments;
-using WebApi.Models.Notification;
+using WebApi.Models.Notifications;
 using WebApi.Services;
 
 namespace WebApi.Controllers

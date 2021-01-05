@@ -2,7 +2,7 @@ using AutoMapper;
 using WebApi.Entities;
 using WebApi.Models.Accounts;
 using WebApi.Models.Comments;
-using WebApi.Models.Notification;
+using WebApi.Models.Notifications;
 using WebApi.Models.Posts;
 using WebApi.Models.Reactions;
 

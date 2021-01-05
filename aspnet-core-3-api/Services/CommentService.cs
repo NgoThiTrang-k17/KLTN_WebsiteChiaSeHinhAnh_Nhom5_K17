@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using WebApi.Entities;
 using WebApi.Helpers;
 using WebApi.Models.Comments;
-using WebApi.Models.Notification;
+using WebApi.Models.Notifications;
 
 namespace WebApi.Services
 {

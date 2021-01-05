@@ -1,6 +1,6 @@
 ﻿using WebApi.Entities;
 
-namespace WebApi.Services
+namespace WebApi.Models.Follows
 {
     public class FollowResponse
     {

@@ -146,7 +146,7 @@ namespace WebApi.Controllers
         }
 
 
-        [Authorize(Role.Admin)]
+        //[Authorize(Role.Admin)]
         [HttpGet]
         public ActionResult<IEnumerable<AccountResponse>> GetAll()
         {

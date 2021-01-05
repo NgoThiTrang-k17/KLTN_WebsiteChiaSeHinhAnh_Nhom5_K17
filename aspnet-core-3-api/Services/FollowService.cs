@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
-using Microsoft.Extensions.Options;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using WebApi.Entities;
 using WebApi.Helpers;
+using WebApi.Models.Follows;
 
 namespace WebApi.Services
 {
@@ -16,6 +14,7 @@ namespace WebApi.Services
         void DeleteFollow(int id);
         IEnumerable<FollowResponse> GetAll();
         IEnumerable<FollowResponse> GetAllByUserId(int userId);
+        FollowState GetState(int accountId, int followerId);
     }
     public class FollowService : IFollowService
     {
@@ -73,6 +72,24 @@ namespace WebApi.Services
         {
             var follows = _context.Follows.Where(follow => follow.AccountId == userId); ;
             return _mapper.Map<List<FollowResponse>>(follows);
+        }
+
+        public FollowState GetState(int accountId, int followerId)
+        {
+
+            var follow = _context.Follows.Where(follow => follow.AccountId == accountId && follow.FollowerId == followerId).Count();
+            var followState = new FollowState
+            {
+                IsCreated = 0
+            };
+            if (follow != 0)
+            {
+                followState.IsCreated = 1;
+                return followState;
+            }
+            else
+
+                return followState;
         }
 
         //Helper methods

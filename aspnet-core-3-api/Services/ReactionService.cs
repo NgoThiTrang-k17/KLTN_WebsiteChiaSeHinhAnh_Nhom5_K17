@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using WebApi.Helpers;
 using WebApi.Entities;
-using WebApi.Models.Notification;
+using WebApi.Models.Notifications;
 using WebApi.Models.Reactions;
 
 namespace WebApi.Services
@@ -42,7 +42,7 @@ namespace WebApi.Services
             if (reaction == null) throw new AppException("Create reaction failed");
             //Get post by postId then map it to new Post model
             var post = _mapper.Map<Post>(_postService.GetPostById(model.PostId));
-
+            reaction.DateCreated = DateTime.Now;
            
             _context.Reactions.Add(reaction);
             _context.SaveChanges();
@@ -93,12 +93,12 @@ namespace WebApi.Services
         public ReactionState GetState(int postId, int ownerId)
         {
             
-            var reaction = _context.Reactions.Where(reaction => reaction.PostId == postId && reaction.OwnerId == ownerId);
+            var reaction = _context.Reactions.Where(reaction => reaction.PostId == postId && reaction.OwnerId == ownerId).Count();
             var reactionState = new ReactionState
             {
                 IsCreated = 0
             };
-            if (reaction != null)
+            if (reaction != 0)
             {
                 reactionState.IsCreated = 1;
                 return reactionState;
@@ -107,6 +107,7 @@ namespace WebApi.Services
 
                 return reactionState;
         }
+
         //Helper methods
         private Reaction getReaction(int id)
         {
