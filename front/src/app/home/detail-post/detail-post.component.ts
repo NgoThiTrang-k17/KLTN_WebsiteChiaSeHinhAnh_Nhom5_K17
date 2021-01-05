@@ -16,6 +16,7 @@ export class DetailPostComponent {
   id:number;
   public comments: Comment[] = [];
   public reaction: ReactionToCreate;
+  public mreaction: Reaction;
   public reactionType: number;
   account: Account;
 
@@ -35,6 +36,7 @@ export class DetailPostComponent {
   ngOnInit(): void {
     this.getRoute(this.route.snapshot.params['id']);
     this.getComment(this.route.snapshot.params['id']);
+    this.getReaction(this.route.snapshot.params['id']);
     this.accountService.getById(this.route.snapshot.params['ownerId'])
         .subscribe((res:any)=>{
             this.account = res;
@@ -50,6 +52,13 @@ export class DetailPostComponent {
     this.testForm.set('postId', this.post.id);
     this.testForm.set('content', this.myForm.get('content').value);
        
+  }
+
+  getReaction(id:any){
+    this.reactionService.getReaction(id)
+        .subscribe((res:any)=>{
+            this.mreaction = res;
+        })
   }
 
   getComment(id:any){
@@ -98,15 +107,15 @@ export class DetailPostComponent {
 
   onCreateReaction() {
         this.reaction = {
-          reactionType: 0,
           postId: this.post.id,
         }
         console.log(this.reaction);
         this.reactionService.createReaction(this.reaction)
         .subscribe(res => {
           console.log(res);
-          alert('Tim thành công!');
-          // this.isCreate = false;
+          //alert('Tim thành công!');
+          this.getRoute(this.post.id);
+          this.getReaction(this.post.id);
         });
   }
 

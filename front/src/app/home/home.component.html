@@ -38,7 +38,7 @@
     <a routerLink="detail-post/{{post.id}}/{{post.ownerId}}" class="text-dark card-link" id="1">
       <div class="card btn-outline-white">
         <img class="card-img-top img-fluid" [src]="createImgPath(post.imagePath)" alt="Card image cap">
-        <p class="card-title" style="margin: 5px 5px 5px 5px; font-size:15px; font-family: Noto Serif;">{{post.postTitle}}</p>
+        <p class="card-title" style="margin: 5px 5px 5px 5px; font-size:15px"><strong>{{post.postTitle}}</strong></p>
       </div> 
     </a>
   </div>  

@@ -174,7 +174,7 @@ namespace WebApi.Services
         {
             var commentcount = _context.Comments.Count(c => c.PostId == id);
             var reactioncount = _context.Reactions.Count(r => r.PostId == id);
-            return (reactioncount, commentcount);
+            return (commentcount, reactioncount);
         }
     }
 }
