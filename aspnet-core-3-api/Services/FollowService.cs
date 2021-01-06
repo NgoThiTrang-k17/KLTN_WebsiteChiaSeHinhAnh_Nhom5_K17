@@ -12,8 +12,11 @@ namespace WebApi.Services
         FollowResponse CreateFollow(CreateFollowRequest model);
         FollowResponse UpdateFollow(int id, UpdateFollowRequest model);
         void DeleteFollow(int id);
+        void DeleteFollowByAccountId(int accountId, int followerId);
+
         IEnumerable<FollowResponse> GetAll();
         IEnumerable<FollowResponse> GetAllByUserId(int userId);
+
         FollowState GetState(int accountId, int followerId);
     }
     public class FollowService : IFollowService
@@ -32,7 +35,7 @@ namespace WebApi.Services
 
         //Create
         public FollowResponse CreateFollow(CreateFollowRequest model)
-        { 
+        {
             var follow = _mapper.Map<Follow>(model);
             if (follow == null) throw new AppException("Create follow failed");
             _context.Follows.Add(follow);
@@ -60,13 +63,19 @@ namespace WebApi.Services
             _context.SaveChanges();
         }
 
+        public void DeleteFollowByAccountId(int accountId, int followerId)
+        {
+            var follow = _context.Follows.Where(follow => follow.AccountId == accountId && follow.FollowerId == followerId).FirstOrDefault();
+            _context.Remove(follow);
+            _context.SaveChanges();
+        }
         //Get all Follow
         public IEnumerable<FollowResponse> GetAll()
         {
             var follows = _context.Follows;
             return _mapper.Map<List<FollowResponse>>(follows);
         }
-        
+
         //Get all Follow of each user
         public IEnumerable<FollowResponse> GetAllByUserId(int userId)
         {

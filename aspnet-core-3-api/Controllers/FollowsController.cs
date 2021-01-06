@@ -30,7 +30,6 @@ namespace WebApi.Controllers
             return Ok(follow);
         }
 
-
         [HttpPut("{id:int}")]
         public ActionResult<FollowResponse> Update(int id, UpdateFollowRequest model)
         {
@@ -43,6 +42,27 @@ namespace WebApi.Controllers
         {
             _followService.DeleteFollow(id);
             return Ok(new { message = "Follow deleted successfully" });
+        }
+
+        [HttpDelete("DeleteByAccountId/{id:int}")]
+        public IActionResult DeleteByAccountId(int accountId)
+        {
+            _followService.DeleteFollowByAccountId(accountId, Account.Id);
+            return Ok(new { message = "Follow deleted successfully" });
+        }
+
+
+        [HttpGet("GetAll")]
+        public ActionResult<IEnumerable<FollowResponse>> GetAll()
+        {
+            var follows = _followService.GetAll();
+            return Ok(follows);
+        }
+        [HttpGet("GetAllByPostId/{id:int}")]
+        public ActionResult<IEnumerable<FollowResponse>> GetAllByPostId(int id)
+        {
+            var follows = _followService.GetAllByUserId(id);
+            return Ok(follows);
         }
 
         [HttpGet("GetState/{accountId:int}")]
