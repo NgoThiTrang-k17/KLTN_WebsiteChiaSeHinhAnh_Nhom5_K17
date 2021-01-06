@@ -24,7 +24,7 @@ namespace WebApi.Controllers
         [HttpPost]
         public ActionResult<FollowResponse> Create(CreateFollowRequest model)
         {
-            model.FollowerId = Account.Id;
+            model.FollowerId = 2;//Account.Id;
             model.Status = Entities.Status.Created;
             var follow = _followService.CreateFollow(model);
             return Ok(follow);

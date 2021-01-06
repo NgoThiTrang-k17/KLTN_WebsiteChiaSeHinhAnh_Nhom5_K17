@@ -14,7 +14,7 @@
                     <div class="input-group-prepend">
                         <span id="search"><i class="fa fa-search" aria-hidden="false"></i></span>
                     </div>
-                    <input id="search-form" (keyup.enter)="save($event)" class="form-control" style="width:800px" type="text" placeholder="Tìm kiếm" aria-label="Search">
+                    <input id="search-form" (keyup.enter)="save($event)" class="form-control" style="width:850px" type="text" placeholder="Tìm kiếm" aria-label="Search">
                 </div>
             </li>
             <!-- <li class="nav-item">
@@ -24,7 +24,7 @@
         <div class="d-flex justify-content-end">
             <div class="navbar-nav" dropdown [insideClick]="true">
                 <div class="nav-item dropdown br-xam "> <a class="nav-link dropdown-toggle" data-toggle="dropdown"
-                        dropdownToggle><i class="fa fa-bell fa-2x"></i></a>
+                        dropdownToggle><i class="fa fa-bell mt-1" style="font-size:x-large;"></i></a>
                     <ul class="dropdown-menu dropdown-menu-right shadow-sm rounded-lg" *dropdownMenu>
                         <!-- <li class="text-center"><strong>Thông báo</strong></li>
                         <hr>
@@ -36,19 +36,22 @@
                 </div>
             </div>
         </div>
-        <div class="nav-item">
+        <!-- <div class="nav-item">
             <a routerLink="profile" routerLinkActive="active" class="nav-item">
-                <img *ngIf="account.avatarPath==null" class="rounded-circle" style="height: 30px; width: 30px;" src="../../assets/images/taking photos for next issue vol_019 -1- _ JOURNAL _ 25 January 2018.jpg">
-                <img *ngIf="account.avatarPath!=null" class="rounded-circle" style="height: 30px; width: 30px;" [src]="createImgPath(account.avatarPath)">
+                <img *ngIf="account.avatarPath==null" class="card rounded-circle" style="height: 30px; width: 30px;" src="../../assets/images/default-profile.png">
+                <img *ngIf="account.avatarPath!=null" class="card rounded-circle" style="height: 30px; width: 30px;" [src]="createImgPath(account.avatarPath)">
             </a>
-        </div>
+        </div> -->
         <!-- <div class="nav-item"> <a routerLink="/profile" routerLinkActive="active" class="nav-item"><i class="fa fa-user fa-2x"></i></a></div> -->
         <div class="nav-item mr-4">
             <div class="navbar-nav" dropdown [insideClick]="true">
-                <div class="nav-item dropdown br-xam "> <a class="nav-link dropdown-toggle" data-toggle="dropdown"
-                    dropdownToggle><i class="fa fa-angle-down img-thumbnail rounded-circle"></i></a>
+                <div class="nav-item dropdown br-xam "> 
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" dropdownToggle>
+                        <img *ngIf="account.avatarPath==null" class="card rounded-circle" style="height: 35px; width: 36px;" src="../../assets/images/default-profile.png">
+                        <img *ngIf="account.avatarPath!=null" class="card rounded-circle" style="height: 35px; width: 36px;" [src]="createImgPath(account.avatarPath)">        
+                    </a>
                     <ul class="dropdown-menu dropdown-menu-right" *dropdownMenu>
-                        <li routerLink="/account-setting" class="dropdown-item nav-link">Cài đặt <!--<i class="fa fa-cogs"></i>--></li>
+                        <li routerLink="profile" class="dropdown-item nav-link btn" style="text-align: left;">Trang cá nhân <!--<i class="fa fa-cogs"></i>--></li>
                         <!-- <li *ngIf="account.role === admin" ></li> -->
                         <li (click)="logout()" class="dropdown-item nav-link">Đăng xuất</li>
                     </ul>
@@ -75,6 +78,36 @@
                 </div> 
               </a>
             </div>  
+        </div>
+        <div *ngIf="searchAccount">
+            <div id="1" *ngFor="let account of accounts">
+                <div class="container mt-3" style="width: 60%;">
+                    <div class="card shadow-lg mb-3" style="width: 90%;" id="1">
+                        <div class="row ml-3 mr-3 mt-3 mb-3" style="justify-content: center; align-items: center; display: flex;">
+                            <div class="col-lg-2 text-center">
+                                <img
+                                    *ngIf="account.avatarPath==null"
+                                    src="../../assets/images/default-profile.png"
+                                    style="height: 60px; width: 61px;" class="img-fluid rounded-circle" alt="">
+                                <img
+                                    *ngIf="account.avatarPath!=null"
+                                    [src]="createImgPath(account.avatarPath)"
+                                    style="height: 60px; width: 61px;" class="img-fluid rounded-circle" alt="">
+                            </div>
+                            <div class="col-lg-7">
+                                <a href="" class="btn" routerLink="detail/{{account.id}}"><strong>{{account.name}}</strong></a>
+                                <p style="font-size: small; margin-left: 4%;">0 người theo dõi</p>
+                            </div> 
+                            <div class="col-lg-3">
+                                <a href="" class="btn btn-light rounded-pill">Theo dõi</a>
+                            </div>
+                        </div>              
+                    </div>
+                </div>               
+            </div>          
+        </div>
+        <div *ngIf="accounts==0 || posts==0">
+            <p>Không có kết quả phù hợp.</p>
         </div>
     </div>
 </div>

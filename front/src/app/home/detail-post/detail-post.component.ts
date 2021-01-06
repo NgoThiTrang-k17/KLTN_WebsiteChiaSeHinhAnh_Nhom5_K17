@@ -119,6 +119,15 @@ export class DetailPostComponent {
         });
   }
 
+  unReaction() {
+    this.reactionService.delete(this.post.id)
+    .subscribe(() => {
+      //alert('Bỏ tim thành công!');
+      this.getRoute(this.post.id);
+      this.getReaction(this.post.id);
+    });
+  }
+
   deletePost(id: number) {
     var r = confirm("Bạn có chắc chắn muốn xoá bài viết này?");
     if(r)

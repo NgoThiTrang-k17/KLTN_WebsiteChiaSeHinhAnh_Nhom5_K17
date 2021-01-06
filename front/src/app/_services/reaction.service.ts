@@ -39,7 +39,11 @@ export class ReactionService {
     }
 
     update(id, params) {
-        return this.http.put(`${baseUrl}/${id}`, params)
+        return this.http.put(`${baseUrl}/${id}`, params);
+    }
+
+    delete(id){
+        return this.http.delete(`${baseUrl}/DeleteByPostId${id}`);
     }
 
     // createPost(posts) {
