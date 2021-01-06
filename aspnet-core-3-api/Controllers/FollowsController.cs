@@ -24,7 +24,7 @@ namespace WebApi.Controllers
         [HttpPost]
         public ActionResult<FollowResponse> Create(CreateFollowRequest model)
         {
-            model.FollowerId = 2;//Account.Id;
+            model.FollowerId = Account.Id;
             model.Status = Entities.Status.Created;
             var follow = _followService.CreateFollow(model);
             return Ok(follow);
@@ -45,9 +45,9 @@ namespace WebApi.Controllers
         }
 
         [HttpDelete("DeleteByAccountId/{id:int}")]
-        public IActionResult DeleteByAccountId(int accountId)
+        public IActionResult DeleteByAccountId(int id)
         {
-            _followService.DeleteFollowByAccountId(accountId, Account.Id);
+            _followService.DeleteFollowByAccountId(id, Account.Id);
             return Ok(new { message = "Follow deleted successfully" });
         }
 

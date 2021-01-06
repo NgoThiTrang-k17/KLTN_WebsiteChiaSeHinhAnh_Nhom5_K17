@@ -14,7 +14,7 @@
                     <div class="input-group-prepend">
                         <span id="search"><i class="fa fa-search" aria-hidden="false"></i></span>
                     </div>
-                    <input id="search-form" (keyup.enter)="save($event)" class="form-control" style="width:850px" type="text" placeholder="Tìm kiếm" aria-label="Search">
+                    <input id="search-form" (keydown.enter)="save($event)" class="form-control" style="width:850px" type="text" placeholder="Tìm kiếm" aria-label="Search">
                 </div>
             </li>
             <!-- <li class="nav-item">
@@ -77,7 +77,10 @@
                   <p class="card-title" style="margin: 5px 5px 5px 5px; font-size:15px; font-family: Noto Serif;">{{post.postTitle}}</p>
                 </div> 
               </a>
-            </div>  
+            </div> 
+            <div *ngIf="posts==0">
+                <p>Không có kết quả phù hợp.</p>
+            </div> 
         </div>
         <div *ngIf="searchAccount">
             <div id="1" *ngFor="let account of accounts">
@@ -104,10 +107,10 @@
                         </div>              
                     </div>
                 </div>               
-            </div>          
-        </div>
-        <div *ngIf="accounts==0 || posts==0">
-            <p>Không có kết quả phù hợp.</p>
+            </div> 
+            <div *ngIf="accounts==0">
+                <p>Không có kết quả phù hợp.</p>
+            </div>         
         </div>
     </div>
 </div>

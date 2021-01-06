@@ -62,8 +62,8 @@
                     <a *ngIf="mreaction.isCreated != 0" class="btn btn-sm ml-4 mt-3" (click)="unReaction()"><span style="font-size:medium;">{{post.reactionCount}}  <i class="fa fa-heart unheart" style=" color: rgba(212, 10, 10, 0.76);"></i></span></a>
                     <div class="row mt-3">
                         <div class="offset-1 p-0 mt-1">
-                            <img *ngIf="account.avatarPath==null" class="img-fluid card rounded-circle" style="height: 45px; width: 46px;" src="../../assets/images/default-profile.png">
-                            <img *ngIf="account.avatarPath!=null" class="img-fluid card rounded-circle" style="height: 45px; width: 46px;" [src]="createImgPath(account.avatarPath)">
+                            <img *ngIf="account.avatarPath==null" class="img-fluid rounded-circle" style="height: 45px; width: 46px;" src="../../assets/images/default-profile.png">
+                            <img *ngIf="account.avatarPath!=null" class="img-fluid rounded-circle" style="height: 45px; width: 46px;" [src]="createImgPath(account.avatarPath)">
                             <!-- <img src="../../assets/images/fc1cbe7b52ebf837e53383b9d24e1bf2.jpg"
                                 class="img-fluid w-25 rounded-circle" alt=""> -->
                             
@@ -78,8 +78,9 @@
                             </span>
                             <p style="font-size: small; margin-left: 8%;">{{post.reactionCount}} người theo dõi</p>
                         </div>
-                        <div class="col-2 p-0 mt-2">
-                            <a href="" class="btn btn-light rounded-pill">Theo dõi</a>
+                        <div *ngIf="maccount.id!=post.ownerId" class="col-2 p-0 mt-2">
+                            <button *ngIf="mfollow.isCreated==0" (click)="onCreateFollow()" class="btn btn-light rounded-pill">Theo dõi</button>
+                            <button *ngIf="mfollow.isCreated!=0" (click)="unFollow()" class="btn btn-danger rounded-pill">Đã theo dõi</button>
                         </div>
                     </div>
                     <br>
@@ -101,11 +102,47 @@
                                                 style="height: 40px; width: 41px;" class="img-fluid card rounded-circle" alt="">
                                         </div>
                                         <div class="col-10">
-                                            <div class="card" style="width: 90%;">
+                                            <div *ngIf="!editCmt || comment.id!=editCmtId" class="card" style="width: 90%;">
                                                 <div class="ml-3 mt-2 mr-3">
-                                                    <span><a href="" class="btn" routerLink="../../../detail/{{comment.ownerId}}"><strong>{{comment.ownerName}}</strong></a></span>
+                                                    <div class="row mr-3">
+                                                        <div class="col-sm-9">
+                                                            <span><a href="" class="btn" routerLink="../../../detail/{{comment.ownerId}}"><strong>{{comment.ownerName}}</strong></a></span>
+                                                        </div>
+                                                        <div *ngIf="maccount.id==comment.ownerId" class="col-sm-2">
+                                                            <div class="dropdown no-arrow ml-4" dropdown>
+                                                                <button class="dropdown-toggle card-link btn btn-ouline-light rounded-circle" role="button"
+                                                                    id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                                                    dropdownToggle>
+                                                                    <svg class="gUZ pBj" height="20" width="20" viewBox="0 0 24 24"
+                                                                        aria-label="Thêm tùy chọn" role="img">
+                                                                        <path
+                                                                            d="M12 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3M3 9c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm18 0c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3z">
+                                                                        </path>
+                                                                    </svg>
+                                                                </button>
+                                                                <div id="myDropdown" class="dropdown-menu dropdown-menu-left shadow animated--fade-in"
+                                                                    aria-labelledby="dropdownMenuLink" *dropdownMenu>
+                                                                    <a class="dropdown-item" routerLink="../../../detail-post/{{post.id}}/{{post.ownerId}}/{{comment.id}}" (click)="editComment()">Chỉnh sửa</a>
+                                                                    <a class="dropdown-item">Xoá</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                     <p style="font-size: 15px; margin-left: 4%;">{{comment.content}}</p>
-                                                </div>
+                                                </div>                                             
+                                            </div>
+                                            <div *ngIf="editCmt && comment.id==editCmtId">
+                                                <form [formGroup]="myForm" (ngSubmit)="submit()">
+                                                    <div class="form-inline">
+                                                        <div class="form-group" style="width: 90%;"> 
+                                                            <input type="text" class="form-control rounded-pill" formControlName="content" id="content" value="{{comment.content}}">
+                                                        </div>
+                                                    </div>
+                                                    <div class="btn-group mt-1" style="float: right; margin-right: 15%;">
+                                                        <input type="button" class="btn btn-light rounded-pill mr-2" value="Hủy">
+                                                        <input type="submit" class="btn btn-danger rounded-pill" value="Đã xong">
+                                                    </div>
+                                                </form>   
                                             </div>
                                         </div> 
                                     </div>

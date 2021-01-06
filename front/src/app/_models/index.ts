@@ -7,3 +7,5 @@ export * from './comment';
 export * from './reaction';
 export * from './reactionToCreate';
 export * from './notification';
+export * from './follow';
+export * from './followToCreate';
