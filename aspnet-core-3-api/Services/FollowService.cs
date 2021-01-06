@@ -10,7 +10,7 @@ namespace WebApi.Services
     public interface IFollowService
     {
         FollowResponse CreateFollow(CreateFollowRequest model);
-        FollowResponse UpdateFollow(int id, FollowResponse model);
+        FollowResponse UpdateFollow(int id, UpdateFollowRequest model);
         void DeleteFollow(int id);
         IEnumerable<FollowResponse> GetAll();
         IEnumerable<FollowResponse> GetAllByUserId(int userId);
@@ -41,7 +41,7 @@ namespace WebApi.Services
         }
 
         //Update
-        public FollowResponse UpdateFollow(int id, FollowResponse model)
+        public FollowResponse UpdateFollow(int id, UpdateFollowRequest model)
         {
             var follow = getFollow(id);
             if (follow == null) throw new AppException("Update follow failed");
