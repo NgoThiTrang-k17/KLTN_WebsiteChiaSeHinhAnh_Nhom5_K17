@@ -39,6 +39,6 @@ export class CommentService {
     }
 
     delete(id: number) {
-        return this.http.delete(`${baseUrl}/${id}`)
+        return this.http.delete(`${baseUrl}/${id}`);
     }
 }

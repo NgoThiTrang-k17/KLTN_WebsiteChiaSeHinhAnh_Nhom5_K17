@@ -14,6 +14,7 @@ export class LayoutComponent implements OnInit {
     login: boolean;
     search: boolean;
     searchAccount = false;
+    null = false;
     returnURL: any;
 
     public accounts: Account[] = [];

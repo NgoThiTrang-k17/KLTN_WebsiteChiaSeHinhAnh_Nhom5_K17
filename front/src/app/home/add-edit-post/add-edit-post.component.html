@@ -18,7 +18,7 @@
                             <div class="form-group">
                                 <label for="postTitle">Tiêu đề</label>
                                 <input *ngIf="isAddMode" type="text" class="form-control" formControlName="postTitle" id="postTitle" placeholder="Nhập tiêu đề" [ngClass]="{ 'is-invalid': submitted && f.postTitle.errors }">
-                                <input *ngIf="!isAddMode" type="text" class="form-control" formControlName="postTitle" id="postTitle" placeholder="{{post.postTitle}}" [ngClass]="{ 'is-invalid': submitted && f.postTitle.errors }">
+                                <input *ngIf="!isAddMode" type="text" class="form-control" formControlName="postTitle" id="postTitle" value="{{post.postTitle}}" [ngClass]="{ 'is-invalid': submitted && f.postTitle.errors }">
                                 <div *ngIf="submitted && f.postTitle.errors" class="invalid-feedback">
                                     <div *ngIf="f.postTitle.errors.required">Vui lòng nhập tiêu đề</div>
                                 </div>
