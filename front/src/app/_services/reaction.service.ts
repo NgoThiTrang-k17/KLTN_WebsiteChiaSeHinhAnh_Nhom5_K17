@@ -34,6 +34,10 @@ export class ReactionService {
         return this.http.post(baseUrl, params);
     }
 
+    getReaction(postId){
+        return this.http.get<Reaction>(`${baseUrl}/GetState/${postId}`);
+    }
+
     update(id, params) {
         return this.http.put(`${baseUrl}/${id}`, params)
     }

@@ -4,4 +4,5 @@ export class Reaction {
     created: string;
     ownerId: number;
     postId: number;
+    isCreated: number;
 }

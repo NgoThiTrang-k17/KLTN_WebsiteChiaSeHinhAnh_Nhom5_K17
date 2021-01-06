@@ -58,7 +58,8 @@
                             <h3 class="mb-1"><strong>{{post.postTitle}}</strong></h3>
                         </div>
                     </div>
-                    <a class="btn btn-sm ml-4" (click)="onCreateReaction()" ><span style="font-size:x-large;">{{post.reactionCount}}  <i class="fa fa-heart" style=" color: rgb(219, 219, 219);"></i></span></a>
+                    <a *ngIf="mreaction.isCreated == 0" class="btn btn-sm ml-4 heart" (click)="onCreateReaction()" ><span style="font-size:x-large;">{{post.reactionCount}}  <i class="fa fa-heart heart" style=" color: rgb(219, 219, 219);"></i></span></a>
+                    <a *ngIf="mreaction.isCreated != 0" class="btn btn-sm ml-4 unheart" ><span style="font-size:x-large;">{{post.reactionCount}}  <i class="fa fa-heart unheart" style=" color: rgba(212, 10, 10, 0.76);"></i></span></a>
                     <div class="row mt-3">
                         <div class="offset-1 col-5 p-0 mt-1">
                             <img *ngIf="account.avatarPath==null" class="img-fluid rounded-circle" style="height: 40px; width: 40px;" src="../../assets/images/taking photos for next issue vol_019 -1- _ JOURNAL _ 25 January 2018.jpg">

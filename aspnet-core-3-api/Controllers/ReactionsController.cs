@@ -34,7 +34,7 @@ namespace WebApi.Controllers
         public ActionResult<ReactionState> GetState(int postId)
         {
 
-            var state = _reactionService.GetState(postId, /*Account.Id*/1);
+            var state = _reactionService.GetState(postId, /*Account.Id*/2);
             return Ok(state);
         }
 
