@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using WebApi.Entities;
 using WebApi.Helpers;
 using WebApi.Models.Follows;
+using WebApi.Models.Notifications;
 
 namespace WebApi.Services
 {
@@ -40,6 +42,7 @@ namespace WebApi.Services
             if (follow == null) throw new AppException("Create follow failed");
             _context.Follows.Add(follow);
             _context.SaveChanges();
+            SendNotification(follow);
             return _mapper.Map<FollowResponse>(follow);
         }
 
@@ -102,6 +105,21 @@ namespace WebApi.Services
         }
 
         //Helper methods
+
+        private void SendNotification(Follow model)
+        {
+            var notification = new CreateNotificationRequest
+            {
+                ActionOwnerId = model.FollowerId,
+                NotificationType = NotificationType.FollowRequest,
+                PostId = 0,
+                ReiceiverId = model.AccountId,
+                Created = DateTime.Now,
+                Status = Status.Created
+            };
+            _notificationService.CreateNotification(notification);
+        }
+
         private Follow getFollow(int id)
         {
             var follow = _context.Follows.Find(id);

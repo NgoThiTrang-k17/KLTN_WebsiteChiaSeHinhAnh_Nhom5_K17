@@ -30,6 +30,14 @@ namespace WebApi.Controllers
             return Ok(comments);
         }
 
+        [HttpGet("GetById/{id:int}")]
+        public ActionResult<CommentResponse> GetById(int id)
+        {
+            var comment = _commentService.GetById(id);
+            return Ok(comment);
+        }
+
+
         [HttpGet("GetAllByPostId/{id:int}")]
         public ActionResult<IEnumerable<CommentResponse>> GetAllByPostId(int id)
         {

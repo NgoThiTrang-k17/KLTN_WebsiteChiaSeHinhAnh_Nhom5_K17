@@ -13,6 +13,7 @@ namespace WebApi.Services
 {
     public interface ICommentService
     {
+        CommentResponse GetById(int id);
         IEnumerable<CommentResponse> GetAll();
         IEnumerable<CommentResponse> GetAllByPostId(int postId);
         CommentResponse CreateComment(CreateCommentRequest model);
@@ -80,7 +81,14 @@ namespace WebApi.Services
             var comments = _context.Comments;
             return _mapper.Map<List<CommentResponse>>(comments);
         }
-        
+
+        public CommentResponse GetById(int id)
+        {
+            var comment = GetComment(id);
+            return _mapper.Map<CommentResponse>(comment);
+        }
+
+
         //Get all comments for each post
         public IEnumerable<CommentResponse> GetAllByPostId(int postId)
         {
