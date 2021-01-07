@@ -13,6 +13,8 @@ export class DetailPostComponent {
 
   myForm: FormGroup;
   testForm: any;
+  cmtForm: FormGroup;
+  cmtFormData: any;
   id:number;
   editCmt: boolean;
   editCmtId: any;
@@ -27,6 +29,7 @@ export class DetailPostComponent {
   maccount = this.accountService.accountValue;
   comment = this.commentService.commentValue;
   post = new Post;
+  commentEdit = new Comment;
   constructor(
     private postService: PostService,
     private route: ActivatedRoute,
@@ -48,6 +51,10 @@ export class DetailPostComponent {
         return false;
       }
       this.editCmt = true;
+      this.commentService.getById(this.editCmtId)
+      .subscribe((res:any)=>{
+        this.commentEdit = res;
+      })
     }
     this.getRoute(this.route.snapshot.params['id']);
     this.getComment(this.route.snapshot.params['id']);
@@ -64,11 +71,12 @@ export class DetailPostComponent {
     this.myForm = this.formBuilder.group({
       content: ['', Validators.required],
     });
+    this.cmtForm = this.formBuilder.group({
+      contentEdit: ['', Validators.required],
+    });
 
-    this.testForm = new FormData();  
-    this.testForm.set('postId', this.post.id);
-    this.testForm.set('content', this.myForm.get('content').value);
-       
+    this.testForm = new FormData(); 
+    this.cmtFormData = new FormData();
   }
 
   getComment(id:any){
@@ -113,15 +121,27 @@ export class DetailPostComponent {
     this.commentService.create(this.testForm)
         .subscribe(res => {
             console.log(res);
-            alert('Comment Successfully.');
+            alert('Bình luận thành công.');
+            this.myForm.reset();
             this.commentService.getAllByPostId(this.post.id)
               .subscribe((res:any)=>{
                 this.comments = res as Comment[];
               })
-            // this.router.navigate(['../'], { relativeTo: this.route });
         }, error => {
             console.log(error);               
         }) 
+  }
+
+  submitEdit(){
+    this.cmtFormData.set('content', this.cmtForm.get('contentEdit').value);
+    this.commentService.update(this.editCmtId ,this.cmtFormData)
+        .subscribe(res => {
+            console.log(res);
+            alert('Chỉnh sửa bình luận thành công.');
+            this.router.navigate(['../'], { relativeTo: this.route });
+        }, error => {
+            console.log(error);               
+        })
   }
 
   editComment(){
@@ -189,6 +209,32 @@ export class DetailPostComponent {
             console.log(e);
         }
     }   
+  }
+
+  deleteComment(id: number) {
+    var r = confirm("Bạn có chắc chắn muốn xoá bình luận này?");
+    if(r)
+    {
+        try {
+            this.commentService.delete(id)
+                .subscribe(() => {
+                  this.commentService.getAllByPostId(this.post.id)
+                  .subscribe((res:any)=>{
+                    this.comments = res as Comment[];
+                  })
+                });
+        } catch (e) {
+            console.log(e);
+        }
+    }   
+  }
+
+  clearForm(){
+    this.myForm.reset();
+  }
+
+  closeEdit(){
+    this.router.navigate(['../'], { relativeTo: this.route });
   }
 
   public createImgPath = (serverPath: string) => {

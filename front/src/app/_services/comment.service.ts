@@ -34,8 +34,16 @@ export class CommentService {
         return this.http.get<Comment[]>(`${baseUrl}/GetAllByPostId/${id}`);
     }
 
+    getById(id:number):Observable<Comment[]> {
+        return this.http.get<Comment[]>(`${baseUrl}/GetById/${id}`);
+    }
+
     create(params) {
         return this.http.post(baseUrl, params);
+    }
+
+    update(id, params) {
+        return this.http.put(`${baseUrl}/${id}`, params)
     }
 
     delete(id: number) {

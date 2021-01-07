@@ -123,7 +123,7 @@
                                                                 <div id="myDropdown" class="dropdown-menu dropdown-menu-left shadow animated--fade-in"
                                                                     aria-labelledby="dropdownMenuLink" *dropdownMenu>
                                                                     <a class="dropdown-item" routerLink="../../../detail-post/{{post.id}}/{{post.ownerId}}/{{comment.id}}" (click)="editComment()">Chỉnh sửa</a>
-                                                                    <a class="dropdown-item">Xoá</a>
+                                                                    <a class="dropdown-item" (click)="deleteComment()">Xoá</a>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -132,14 +132,14 @@
                                                 </div>                                             
                                             </div>
                                             <div *ngIf="editCmt && comment.id==editCmtId">
-                                                <form [formGroup]="myForm" (ngSubmit)="submit()">
+                                                <form [formGroup]="cmtForm" (ngSubmit)="submitEdit()">
                                                     <div class="form-inline">
                                                         <div class="form-group" style="width: 90%;"> 
-                                                            <input type="text" class="form-control rounded-pill" formControlName="content" id="content" value="{{comment.content}}">
+                                                            <input type="text" class="form-control rounded-pill col-12" formControlName="contentEdit" id="contentEdit" value="{{commentEdit.content}}">
                                                         </div>
                                                     </div>
                                                     <div class="btn-group mt-1" style="float: right; margin-right: 15%;">
-                                                        <input type="button" class="btn btn-light rounded-pill mr-2" value="Hủy">
+                                                        <input type="button" (click)="closeEdit()" class="btn btn-light rounded-pill mr-2" value="Hủy">
                                                         <input type="submit" class="btn btn-danger rounded-pill" value="Đã xong">
                                                     </div>
                                                 </form>   
@@ -164,7 +164,7 @@
                                             formControlName="content" id="content" placeholder="Viết nhận xét"></div>
                                     </div>
                                     <div class="btn-group mt-1" style="float: right; margin-right: 15%;">
-                                        <input type="button" class="btn btn-light rounded-pill mr-2" value="Hủy">
+                                        <input type="button" (click)="clearForm()" class="btn btn-light rounded-pill mr-2" value="Hủy">
                                         <input type="submit" class="btn btn-danger rounded-pill" value="Đã xong">
                                     </div>
                                 </form>                              
