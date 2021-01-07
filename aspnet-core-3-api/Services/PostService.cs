@@ -150,9 +150,9 @@ namespace WebApi.Services
         //Create Notification for posting
         private void SendNotification(Post post)
         {
-            var followers = _followService.GetAllByUserId(post.OwnerId);
+            var follows = _followService.GetAllByUserId(post.OwnerId);
             //Create notification for each follower of Post owner
-            foreach (FollowResponse follower in followers)
+            foreach (FollowResponse follow in follows)
             {
                 var notification = new CreateNotificationRequest
                 {
@@ -160,7 +160,7 @@ namespace WebApi.Services
                     ActionOwnerId = post.OwnerId, 
                     NotificationType = NotificationType.Posted,
                     PostId = post.Id,
-                    ReiceiverId = follower.Id,
+                    ReiceiverId = follow.FollowerId,
                     Created = DateTime.Now,
                     Status = Status.Created
                 };
