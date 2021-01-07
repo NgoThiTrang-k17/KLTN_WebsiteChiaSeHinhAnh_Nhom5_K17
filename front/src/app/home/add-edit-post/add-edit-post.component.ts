@@ -37,8 +37,7 @@ export class AddEditPostComponent implements OnInit {
 
     this.myForm = this.formBuilder.group({
       postTitle: ['', Validators.required],
-      file: ['', this.isAddMode ? Validators.required : Validators.nullValidator],
-      fileSource: ['', this.isAddMode ? Validators.required : Validators.nullValidator]
+      file: ['', this.isAddMode ? Validators.required : Validators.nullValidator]
     });
 
     if (!this.isAddMode) {
@@ -58,7 +57,7 @@ export class AddEditPostComponent implements OnInit {
         const [file] = event.target.files;
         console.log('1');
         this.testForm.append("file",file);
-        this.testForm.append("postTitle", this.myForm.get("postTitle").value);     
+        //this.testForm.append("postTitle", this.myForm.get("postTitle").value);     
         
         reader.readAsDataURL(file);
         reader.onload = () => {
