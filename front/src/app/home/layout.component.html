@@ -22,7 +22,7 @@
             </li> -->
         </ul>
         <div class="d-flex justify-content-end">
-            <div class="navbar-nav" dropdown [insideClick]="true">
+            <div class="navbar-nav" dropdown [insideClick]="true" size="5">
                 <div class="nav-item dropdown br-xam "> <a class="nav-link dropdown-toggle" data-toggle="dropdown"
                         dropdownToggle><i class="fa fa-bell mt-1" style="font-size:x-large;"></i></a>
                     <ul class="dropdown-menu dropdown-menu-right shadow-sm rounded-lg" *dropdownMenu>
@@ -30,7 +30,7 @@
                         <hr>
                         <li class="dropdown-item align-content-center">Ai đó tiếp tục thích bạn</li> -->
                         <div id="1" *ngFor="let notification of notifications">
-                            <li id="1" class="dropdown-item">{{notification.actionOwnerId}} thích bạn</li>
+                            <li id="1" class="dropdown-item">{{notification.actionOwnerName}} thích bạn</li>
                         </div>                        
                     </ul>
                 </div>
