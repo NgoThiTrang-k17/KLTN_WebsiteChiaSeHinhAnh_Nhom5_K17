@@ -32,7 +32,7 @@ namespace WebApi.Controllers
             if (query.StartsWith('@'))
             {
                 query = query.Substring(1);
-                var posts = _searchService.SearchForAccounts(query);
+                var posts = _searchService.SearchForAccounts(Account.Id, query);
                 return Ok(posts);
             }
             else

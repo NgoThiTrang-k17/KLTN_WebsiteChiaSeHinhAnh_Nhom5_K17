@@ -218,7 +218,8 @@ namespace WebApi.Services
             var accountResponses = _mapper.Map<IList<AccountResponse>>(accounts);
             foreach (AccountResponse accountResponse in accountResponses) 
             {
-                accountResponse.FollowerCount = _context.Follows.Count(f => f.AccountId == accountResponse.Id); 
+                accountResponse.FollowerCount = _context.Follows.Count(f => f.AccountId == accountResponse.Id);
+                accountResponse.FollowingCount = _context.Follows.Count(f => f.FollowerId == accountResponse.Id);
             };
            
             return accountResponses;
@@ -229,8 +230,9 @@ namespace WebApi.Services
             var account = getAccount(id);
             var accountResponse = _mapper.Map<AccountResponse>(account);
 
-                accountResponse.FollowerCount = _context.Follows.Count(f => f.AccountId == accountResponse.Id);
-   
+            accountResponse.FollowerCount = _context.Follows.Count(f => f.AccountId == accountResponse.Id);
+            accountResponse.FollowingCount = _context.Follows.Count(f => f.FollowerId == accountResponse.Id);
+
 
             return accountResponse;
         }

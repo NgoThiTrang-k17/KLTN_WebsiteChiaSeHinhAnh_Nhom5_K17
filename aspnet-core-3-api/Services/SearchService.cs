@@ -56,7 +56,10 @@ namespace WebApi.Services
             var accountResponses = _mapper.Map<IList<AccountResponse>>(accounts);
             foreach (AccountResponse accountResponse in accountResponses)
             {
-                if (_context.Follows.Where(f => f.AccountId == accountResponse.Id && f.FollowerId == id).Count() == 1)
+                accountResponse.FollowerCount = _context.Follows.Count(f => f.AccountId == accountResponse.Id);
+                accountResponse.FollowingCount = _context.Follows.Count(f => f.FollowerId == accountResponse.Id);
+
+                if (_context.Follows.Count(f => f.AccountId == accountResponse.Id && f.FollowerId == id) == 1)
                     accountResponse.IsFollowedByCurrentUser = 1;
                 else
                     accountResponse.IsFollowedByCurrentUser = 0;
