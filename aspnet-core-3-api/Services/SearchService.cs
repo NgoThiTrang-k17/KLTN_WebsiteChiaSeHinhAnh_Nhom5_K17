@@ -26,7 +26,7 @@ namespace WebApi.Services
 
         //T Get(string id);
         IEnumerable<PostResponse> SearchForPosts(string query);
-        IEnumerable<AccountResponse> SearchForAccounts(string query);
+        IEnumerable<AccountResponse> SearchForAccounts(int id, string query);
     }
     public class SearchService : ISearchService
     {
@@ -43,15 +43,25 @@ namespace WebApi.Services
             _appSettings = appSettings.Value;
         }
 
-        public IEnumerable<PostResponse> SearchForPosts(string query)
+        public IEnumerable<PostResponse> SearchForPosts( string query)
         {
             var posts = _context.Posts.Where(p=>p.PostTitle.Contains(query));
             return _mapper.Map<IList<PostResponse>>(posts);
         }
-        public IEnumerable<AccountResponse> SearchForAccounts(string query)
+
+
+        public IEnumerable<AccountResponse> SearchForAccounts(int id, string query)
         {
             var accounts = _context.Accounts.Where(p => p.Name.Contains(query));
-            return _mapper.Map<IList<AccountResponse>>(accounts);
+            var accountResponses = _mapper.Map<IList<AccountResponse>>(accounts);
+            foreach (AccountResponse accountResponse in accountResponses)
+            {
+                if (_context.Follows.Where(f => f.AccountId == accountResponse.Id && f.FollowerId == id).Count() == 1)
+                    accountResponse.IsFollowedByCurrentUser = 1;
+                else
+                    accountResponse.IsFollowedByCurrentUser = 0;
+            }    
+            return accountResponses;
         }
 
     }

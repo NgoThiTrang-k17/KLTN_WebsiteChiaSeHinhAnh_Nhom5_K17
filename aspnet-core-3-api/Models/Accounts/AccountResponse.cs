@@ -15,5 +15,6 @@ namespace WebApi.Models.Accounts
         public bool IsVerified { get; set; }
 
         public int FollowerCount { get;  set; }
+        public int IsFollowedByCurrentUser { get; set; }
     }
 }
