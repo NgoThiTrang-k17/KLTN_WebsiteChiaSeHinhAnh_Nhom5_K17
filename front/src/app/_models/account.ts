@@ -8,4 +8,5 @@ export class Account {
     email: string;
     role: string;
     jwtToken?: string;
+    followerCount: number;
 }

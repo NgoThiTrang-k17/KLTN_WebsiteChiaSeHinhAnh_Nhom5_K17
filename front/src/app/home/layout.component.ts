@@ -4,7 +4,7 @@ import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms'
 import { first } from 'rxjs/operators';
 
 import { AccountService, NotificationService, SearchService } from '../_services';
-import { Account, Notification, Post } from '../_models';
+import { Account, Notification, Post, Follow, FollowToCreate } from '../_models';
 
 @Component({ templateUrl: 'layout.component.html' })
 export class LayoutComponent implements OnInit { 
@@ -16,6 +16,8 @@ export class LayoutComponent implements OnInit {
     searchAccount = false;
     null = false;
     returnURL: any;
+    public follow: FollowToCreate;
+    public mfollow: Follow;
 
     public accounts: Account[] = [];
     public posts: Post[] = [];
@@ -40,7 +42,7 @@ export class LayoutComponent implements OnInit {
             this.account = res;
         })
 
-        this.notificationService.getAll()
+        this.notificationService.getAllByUserId(this.account.id)
             .subscribe(res => {
                 this.notifications = res as Notification[];
         });

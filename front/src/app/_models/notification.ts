@@ -5,4 +5,7 @@ export class Notification {
     postId: number;
     reiceiverId: number;
     status: string;
+    actionOwnerName: string;
+    actionOwnerAvatarPath: string;
+    reiceiverName: string;
 }

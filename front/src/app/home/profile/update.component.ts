@@ -44,7 +44,8 @@ export class UpdateComponent implements OnInit {
     onFileChange(event) {
         const reader = new FileReader();
         if (event.target.files && event.target.files.length) {
-            const [file] = event.target.files;               
+            const [file] = event.target.files;
+            console.log('1');               
             this.updateData.append("file",file);
             reader.readAsDataURL(file);
             reader.onload = () => {
@@ -52,7 +53,7 @@ export class UpdateComponent implements OnInit {
                 console.log(this.form.value);
             };
         }
-      }
+    }
 
     onSubmit() {
         this.submitted = true;
@@ -72,7 +73,7 @@ export class UpdateComponent implements OnInit {
         console.log(this.updateData);
 
         this.loading = true;
-        this.accountService.update(this.account.id, this.updateData.value)
+        this.accountService.update(this.account.id, this.updateData)
             .pipe(first())
             .subscribe({
                 next: () => {
