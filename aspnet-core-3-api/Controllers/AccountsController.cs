@@ -106,7 +106,7 @@ namespace WebApi.Controllers
         } 
         
         [Authorize]
-        [HttpPut("UploadAvatar/{id:int}")]
+        [HttpPut("UploadAvatar/{id:int}"), DisableRequestSizeLimit]
         public ActionResult<AccountResponse> UploadAvatar([FromForm] UpdateAvatarRequest model)
         {
             try
@@ -128,7 +128,7 @@ namespace WebApi.Controllers
 
                     model.AvatarPath = dbPath;
 
-                    var temp = _accountService.s(Account.Id, model.AvatarPath);
+                    var temp = _accountService.SetAvatar(Account.Id, model.AvatarPath);
 
                     return Ok(temp);
                 }
