@@ -6,4 +6,5 @@ export class Post {
     ownerId: number;
     reactionCount: number;
     commentCount: number;
+    followerCount: number;
 }

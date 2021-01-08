@@ -34,7 +34,7 @@ namespace WebApi.Controllers
         public ActionResult<ReactionState> GetState(int postId)
         {
 
-            var state = _reactionService.GetState(postId, /*Account.Id*/2);
+            var state = _reactionService.GetState(postId, Account.Id);
             return Ok(state);
         }
 
@@ -63,7 +63,7 @@ namespace WebApi.Controllers
         [HttpDelete("DeleteByPostId{id:int}")]
         public IActionResult DeleteByPostId(int id)
         {
-            _reactionService.DeleteByPostId(id, /*Account.Id)*/ 2);
+            _reactionService.DeleteByPostId(id, Account.Id);
             return Ok(new { message = "Reaction deleted successfully" });
         }
     }

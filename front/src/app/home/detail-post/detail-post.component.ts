@@ -47,10 +47,10 @@ export class DetailPostComponent {
       this.editCmt = false;
     }
     else if(this.editCmtId != null){
+      this.editCmt = true;
       this.router.routeReuseStrategy.shouldReuseRoute = () =>{
         return false;
       }
-      this.editCmt = true;
       this.commentService.getById(this.editCmtId)
       .subscribe((res:any)=>{
         this.commentEdit = res;
@@ -69,10 +69,10 @@ export class DetailPostComponent {
             this.maccount = res;
         })
     this.myForm = this.formBuilder.group({
-      content: ['', Validators.required],
+      contentCreate: ['', Validators.required],
     });
     this.cmtForm = this.formBuilder.group({
-      contentEdit: ['', Validators.required],
+      content: ['', Validators.required],
     });
 
     this.testForm = new FormData(); 
@@ -112,10 +112,10 @@ export class DetailPostComponent {
       return;
     }
     this.testForm.set('postId', this.post.id);
-    this.testForm.set('content', this.myForm.get('content').value);
+    this.testForm.set('content', this.myForm.get('contentCreate').value);
     // this.testForm.append("postId", this.post.id);
     
-    console.log(this.myForm.get('content').value);
+    console.log(this.myForm.get('contentCreate').value);
     console.log(this.post.id);
     console.log(this.testForm);
     this.commentService.create(this.testForm)
@@ -133,7 +133,7 @@ export class DetailPostComponent {
   }
 
   submitEdit(){
-    this.cmtFormData.set('content', this.cmtForm.get('contentEdit').value);
+    this.cmtFormData.set('content', this.cmtForm.get('content').value);
     this.commentService.update(this.editCmtId ,this.cmtFormData)
         .subscribe(res => {
             console.log(res);
@@ -146,7 +146,6 @@ export class DetailPostComponent {
 
   editComment(){
     this.editCmt = true;
-    console.log('editCmtId',this.editCmtId);
   }
 
   onCreateReaction() {
@@ -203,7 +202,7 @@ export class DetailPostComponent {
         try {
             this.postService.delete(id)
                 .subscribe(() => {
-                  this.router.navigate(['../'], { relativeTo: this.route });
+                  this.router.navigate(['../../../profile'], { relativeTo: this.route });
                 });
         } catch (e) {
             console.log(e);

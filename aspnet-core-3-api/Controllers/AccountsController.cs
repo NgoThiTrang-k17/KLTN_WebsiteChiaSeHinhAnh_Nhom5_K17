@@ -125,9 +125,10 @@ namespace WebApi.Controllers
                     {
                         file.CopyTo(stream);
                     }
+
                     model.AvatarPath = dbPath;
 
-                    var temp = _accountService.SetAvatar(Account.Id, model.AvatarPath);
+                    var temp = _accountService.Update(id,model);
 
                     return Ok(temp);
                 }
