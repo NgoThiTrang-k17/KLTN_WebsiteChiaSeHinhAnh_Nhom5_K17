@@ -5,7 +5,7 @@ namespace WebApi.Models.Accounts
 {
     public class UpdateAccountRequest
     {
-        private string _avatarPath;
+   
         private string _title;
         private string _name;
         private string _password;
@@ -14,11 +14,8 @@ namespace WebApi.Models.Accounts
         private string _email;
 
 
-        public string AvatarPath
-        {
-            get => _avatarPath;
-            set => _avatarPath = replaceEmptyWithNull(value);
-        }
+    
+    
         public string Title
         {
             get => _title;
