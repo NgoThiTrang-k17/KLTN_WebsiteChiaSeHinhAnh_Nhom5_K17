@@ -109,7 +109,7 @@ namespace WebApi.Controllers
         [HttpPut("UploadAvatar/{id:int}"), DisableRequestSizeLimit]
         public ActionResult<AccountResponse> UploadAvatar([FromForm] UpdateAvatarRequest model)
         {
-            try
+            //try
             {
                 var file = Request.Form.Files[0];
                 var folderName = Path.Combine("Resources", "Images");
@@ -137,9 +137,9 @@ namespace WebApi.Controllers
                     return BadRequest();
                 }
             }
-            catch (Exception ex)
+           // catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex}");
+              //  return StatusCode(500, $"Internal server error: {ex}");
             }
 
 
