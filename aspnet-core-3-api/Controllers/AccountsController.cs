@@ -107,7 +107,7 @@ namespace WebApi.Controllers
         
         [Authorize]
         [HttpPut("UploadAvatar/{id:int}")]
-        public IActionResult UploadAvatar([FromForm] UpdateAvatarRequest model)
+        public ActionResult<AccountResponse> UploadAvatar([FromForm] UpdateAvatarRequest model)
         {
             try
             {
