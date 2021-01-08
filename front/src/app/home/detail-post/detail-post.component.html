@@ -69,14 +69,16 @@
                             
                         </div>
                         <div class="col-7 p-0 mt-1">
-                            <span class="ml-3"><a href="" class="btn" routerLink="../../../detail/{{account.id}}">{{account.name}} </a><svg class="gUZ lZJ U9O kVc text-danger" height="12" width="12"
-                                viewBox="0 0 24 24" aria-label="Biểu tượng xác minh miền" role="img">
+                            <span class="ml-3">
+                                <a *ngIf="editCmt" href="" class="btn" routerLink="../../../../detail/{{account.id}}">{{account.name}} </a>
+                                <a *ngIf="!editCmt" href="" class="btn" routerLink="../../../detail/{{account.id}}">{{account.name}} </a>
+                                <svg class="gUZ lZJ U9O kVc text-danger" height="12" width="12" viewBox="0 0 24 24" aria-label="Biểu tượng xác minh miền" role="img">
                                 <path
                                     d="M12 0a12 12 0 100 24 12 12 0 000-24zM6.37 11.61a1.25 1.25 0 011.76 0l2.37 2.36 5.37-5.35a1.25 1.25 0 011.76 1.76L10.5 17.5l-4.13-4.13a1.25 1.25 0 010-1.76z">
                                 </path>
                             </svg>
                             </span>
-                            <p style="font-size: small; margin-left: 8%;">{{post.reactionCount}} người theo dõi</p>
+                            <p style="font-size: small; margin-left: 8%;">{{post.followerCount}} người theo dõi</p>
                         </div>
                         <div *ngIf="maccount.id!=post.ownerId" class="col-2 p-0 mt-2">
                             <button *ngIf="mfollow.isCreated==0" (click)="onCreateFollow()" class="btn btn-light rounded-pill">Theo dõi</button>
@@ -106,9 +108,10 @@
                                                 <div class="ml-3 mt-2 mr-3">
                                                     <div class="row mr-3">
                                                         <div class="col-sm-9">
-                                                            <span><a href="" class="btn" routerLink="../../../detail/{{comment.ownerId}}"><strong>{{comment.ownerName}}</strong></a></span>
+                                                            <span><a *ngIf="editCmt" href="" class="btn" routerLink="../../../../detail/{{comment.ownerId}}"><strong>{{comment.ownerName}}</strong></a></span>
+                                                            <span><a *ngIf="!editCmt" href="" class="btn" routerLink="../../../detail/{{comment.ownerId}}"><strong>{{comment.ownerName}}</strong></a></span>
                                                         </div>
-                                                        <div *ngIf="maccount.id==comment.ownerId" class="col-sm-2">
+                                                        <div *ngIf="maccount.id==comment.ownerId && !editCmt" class="col-sm-2">
                                                             <div class="dropdown no-arrow ml-4" dropdown>
                                                                 <button class="dropdown-toggle card-link btn btn-ouline-light rounded-circle" role="button"
                                                                     id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
@@ -135,7 +138,7 @@
                                                 <form [formGroup]="cmtForm" (ngSubmit)="submitEdit()">
                                                     <div class="form-inline">
                                                         <div class="form-group" style="width: 90%;"> 
-                                                            <input type="text" class="form-control rounded-pill col-12" formControlName="contentEdit" id="contentEdit" value="{{commentEdit.content}}">
+                                                            <input type="text" class="form-control rounded-pill col-12" formControlName="content" value="{{commentEdit.content}}">
                                                         </div>
                                                     </div>
                                                     <div class="btn-group mt-1" style="float: right; margin-right: 15%;">
@@ -161,7 +164,7 @@
                                             style="height: 40px; width: 40px;" class="img-fluid card rounded-circle" alt="">
                                         </div>
                                         <div class="col-10 form-group"> <input style="width: 90%;" type="text" class="form-control rounded-pill"
-                                            formControlName="content" id="content" placeholder="Viết nhận xét"></div>
+                                            formControlName="contentCreate" id="contentCreate" placeholder="Viết nhận xét"></div>
                                     </div>
                                     <div class="btn-group mt-1" style="float: right; margin-right: 15%;">
                                         <input type="button" (click)="clearForm()" class="btn btn-light rounded-pill mr-2" value="Hủy">

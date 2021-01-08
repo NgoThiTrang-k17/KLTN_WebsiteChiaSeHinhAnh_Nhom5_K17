@@ -10,6 +10,7 @@ import { MustMatch } from '@app/_helpers';
 export class UpdateComponent implements OnInit {
     account = this.accountService.accountValue;
     form: FormGroup;
+    updateData: any;
     loading = false;
     submitted = false;
     deleting = false;
@@ -34,6 +35,7 @@ export class UpdateComponent implements OnInit {
         }, {
             validator: MustMatch('password', 'confirmPassword')
         });
+        this.updateData = new FormData();
     }
 
     // convenience getter for easy access to form fields
@@ -43,10 +45,11 @@ export class UpdateComponent implements OnInit {
         const reader = new FileReader();
         if (event.target.files && event.target.files.length) {
             const [file] = event.target.files;               
-            //this.testForm.append("file",file);
+            this.updateData.append("file",file);
             reader.readAsDataURL(file);
             reader.onload = () => {
                 this.imageSrc = reader.result as string;
+                console.log(this.form.value);
             };
         }
       }
@@ -62,11 +65,18 @@ export class UpdateComponent implements OnInit {
             return;
         }
 
+        this.updateData.append('title', this.form.get('title').value);
+        this.updateData.append('name', this.form.get('name').value);
+        this.updateData.append('email', this.form.get('email').value);
+        this.updateData.append('password', this.form.get('password').value);
+        console.log(this.updateData);
+
         this.loading = true;
-        this.accountService.update(this.account.id, this.form.value)
+        this.accountService.update(this.account.id, this.updateData.value)
             .pipe(first())
             .subscribe({
                 next: () => {
+                    console.log(this.updateData.value);
                     this.alertService.success('Update successful', { keepAfterRouteChange: true });
                     this.router.navigate(['../'], { relativeTo: this.route });
                 },
