@@ -16,6 +16,7 @@ namespace WebApi.Models.Notifications
         public DateTime Created { get; set; }
         public Status Status { get; set; }
         public string ActionOwnerName { get; set; }
+        public string ActionOwnerAvatarPath { get; set; }
         public string ReiceiverName { get; set; }
     }
 }

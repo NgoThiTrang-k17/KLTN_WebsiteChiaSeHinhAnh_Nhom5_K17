@@ -70,8 +70,11 @@ namespace WebApi.Services
             foreach (NotificationResponse notificationResponse in notificationResponses)
             {
                 var actionOwner = _accountService.GetById(notificationResponse.ActionOwnerId);
+
                 bool IsActionOwnerNameNull = actionOwner.Name == null;
                 notificationResponse.ActionOwnerName = IsActionOwnerNameNull ? "" : actionOwner.Name;
+
+                notificationResponse.ActionOwnerAvatarPath = actionOwner.AvatarPath;
 
                 var receiver = _accountService.GetById(notificationResponse.ReiceiverId);
                 bool IsReceiverNull = receiver.Name == null;
@@ -91,6 +94,8 @@ namespace WebApi.Services
                 var actionOwner = _accountService.GetById(notificationResponse.ActionOwnerId);
                 bool IsActionOwnerNameNull = actionOwner.Name == null;
                 notificationResponse.ActionOwnerName = IsActionOwnerNameNull ? "" : actionOwner.Name;
+
+                notificationResponse.ActionOwnerAvatarPath = actionOwner.AvatarPath;
 
                 var receiver = _accountService.GetById(notificationResponse.ReiceiverId);
                 bool IsReceiverNull = receiver.Name == null;
