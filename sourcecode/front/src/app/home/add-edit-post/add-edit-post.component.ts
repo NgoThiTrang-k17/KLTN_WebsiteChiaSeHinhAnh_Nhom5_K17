@@ -75,8 +75,8 @@ export class AddEditPostComponent implements OnInit {
     }
     console.log(this.testForm);
     console.log(this.myForm.get('postTitle').value);   
-    if (this.isAddMode) {
-      this.testForm.set("postTitle", this.myForm.get("postTitle").value); 
+    if (this.isAddMode) { 
+      this.testForm.set("postTitle", this.myForm.get("postTitle").value);
       this.postService.createPost(this.testForm)
       .subscribe(res => {
           console.log(res);

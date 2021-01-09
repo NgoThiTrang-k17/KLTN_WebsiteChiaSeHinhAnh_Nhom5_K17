@@ -38,9 +38,6 @@ export class NotificationService {
         return this.http.get<Notification[]>(`${baseUrl}/GetAllByUserId/${id}`);
     }
 
-    createPost(params) {
-        return this.http.post(baseUrl, params);
-    }
 
     delete(id: number) {
         return this.http.delete(`${baseUrl}/${id}`)

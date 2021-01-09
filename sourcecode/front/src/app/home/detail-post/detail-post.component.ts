@@ -111,6 +111,7 @@ export class DetailPostComponent {
     if (this.myForm.invalid) {
       return;
     }
+
     this.testForm.set('postId', this.post.id);
     this.testForm.set('content', this.myForm.get('contentCreate').value);
     // this.testForm.append("postId", this.post.id);
@@ -129,10 +130,15 @@ export class DetailPostComponent {
               })
         }, error => {
             console.log(error);               
-        }) 
+        })
+
   }
 
+
   submitEdit(){
+    if (this.cmtForm.invalid) {
+      return;
+    }
     this.cmtFormData.set('content', this.cmtForm.get('content').value);
     this.commentService.update(this.editCmtId ,this.cmtFormData)
         .subscribe(res => {
