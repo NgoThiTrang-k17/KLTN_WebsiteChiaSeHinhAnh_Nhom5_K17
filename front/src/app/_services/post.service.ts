@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpRequest, HttpEvent, HttpResponse } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, finalize } from 'rxjs/operators';
 
@@ -36,6 +36,18 @@ export class PostService {
 
     getAllByUserId(id:number):Observable<Post[]> {
         return this.http.get<Post[]>(`${baseUrl}/GetAllByUserId/${id}`);
+    }
+
+    getDownloadImage(id:number): Observable<HttpEvent<Blob>> {
+        return this.http.request(new HttpRequest(
+            'GET',
+            `${baseUrl}/DownloadImage/${id}`,
+            null,
+            {
+              reportProgress: true,
+              responseType: 'blob'
+            }));
+        // return this.http.get<Post>(`${baseUrl}/DownloadImage/${id}`);
     }
 
     createPost(params) {

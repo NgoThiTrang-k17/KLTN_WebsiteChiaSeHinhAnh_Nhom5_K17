@@ -121,7 +121,7 @@ export class DetailPostComponent {
     this.commentService.create(this.testForm)
         .subscribe(res => {
             console.log(res);
-            alert('Bình luận thành công.');
+            // alert('Bình luận thành công.');
             this.myForm.reset();
             this.commentService.getAllByPostId(this.post.id)
               .subscribe((res:any)=>{
@@ -183,7 +183,7 @@ export class DetailPostComponent {
       this.getRoute(this.post.id);
       this.getFollow(this.post.ownerId);
     });
-}
+  }
 
   unFollow() {
     console.log(this.post.ownerId);

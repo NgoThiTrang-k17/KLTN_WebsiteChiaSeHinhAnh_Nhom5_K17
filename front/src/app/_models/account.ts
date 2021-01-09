@@ -9,4 +9,6 @@ export class Account {
     role: string;
     jwtToken?: string;
     followerCount: number;
+    followingCount: number;
+    isFollowedByCurrentUser: number;
 }

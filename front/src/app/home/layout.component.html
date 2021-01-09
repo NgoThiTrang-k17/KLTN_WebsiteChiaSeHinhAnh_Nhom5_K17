@@ -31,48 +31,60 @@
                     <ul class="dropdown-menu dropdownNotification dropdown-menu-right shadow-sm rounded-lg" *dropdownMenu>
                         <li class="text-center mb-3" style="font-weight: bold; font-size: 20px;">Thông báo</li>
                         <div id="1" *ngFor="let notification of notifications">
-                            <li id="1" *ngIf="notification.notificationType==0 && notification.actionOwnerId!=account.id" routerLink="/" routerLinkActive="active" class="dropdown-item">
+                            <li id="1" *ngIf="notification.notificationType==0 && notification.actionOwnerId!=account.id" class="dropdown-item" routerLink="detail-post/{{notification.postId}}/{{notification.actionOwnerId}}" routerLinkActive="active">
                                 <div class="row" style="justify-content: center; align-items: center; display: flex;">
                                     <div class="col-2">
                                         <img *ngIf="notification.actionOwnerAvatarPath==null" class="card rounded-circle" style="height: 40px; width: 41px;" src="../../assets/images/default-profile.png">
                                         <img *ngIf="notification.actionOwnerAvatarPath!=null" class="card rounded-circle" style="height: 40px; width: 41px;" [src]="createImgPath(notification.actionOwnerAvatarPath)"> 
                                     </div>
-                                    <div class="col-10">
-                                        <p style="width:210px;white-space: normal;word-break: break-all"><strong>{{notification.actionOwnerName}}</strong> đã thêm bài viết mới</p>
+                                    <div class="col-8">
+                                        <p style="width:190px;white-space: normal;word-break: break-all"><strong>{{notification.actionOwnerName}}</strong> đã thêm bài viết mới</p>
                                     </div> 
+                                    <div class="col-2">
+                                        <button class="btn"><i class="fa fa-circle text-primary" style="font-size:small;"></i></button>
+                                    </div>
                                 </div>                              
                             </li>
-                            <li id="1" *ngIf="notification.notificationType==1 && notification.actionOwnerId!=account.id" class="dropdown-item">
+                            <li id="1" *ngIf="notification.notificationType==1 && notification.actionOwnerId!=account.id" class="dropdown-item" routerLink="detail-post/{{notification.postId}}/{{notification.actionOwnerId}}" routerLinkActive="active">
                                 <div class="row" style="justify-content: center; align-items: center; display: flex;">
                                     <div class="col-2">
                                         <img *ngIf="notification.actionOwnerAvatarPath==null" class="card rounded-circle" style="height: 40px; width: 41px;" src="../../assets/images/default-profile.png">
                                         <img *ngIf="notification.actionOwnerAvatarPath!=null" class="card rounded-circle" style="height: 40px; width: 41px;" [src]="createImgPath(notification.actionOwnerAvatarPath)"> 
                                     </div>
-                                    <div class="col-10">
-                                        <p style="width:210px;white-space: normal;word-break: break-all"><strong>{{notification.actionOwnerName}}</strong> đã thích bài viết của bạn</p>
+                                    <div class="col-8">
+                                        <p style="width:190px;white-space: normal;word-break: break-all"><strong>{{notification.actionOwnerName}}</strong> đã thích bài viết của bạn</p>
                                     </div> 
+                                    <div class="col-2">
+                                        <button class="btn"><i class="fa fa-circle text-primary" style="font-size:small;"></i></button>
+                                    </div>
                                 </div>                              
                             </li>
-                            <li id="1" *ngIf="notification.notificationType==2 && notification.actionOwnerId!=account.id" class="dropdown-item">
+                            <li id="1" *ngIf="notification.notificationType==2 && notification.actionOwnerId!=account.id" class="dropdown-item" routerLink="detail-post/{{notification.postId}}/{{notification.actionOwnerId}}" routerLinkActive="active" >
                                 <div class="row" style="justify-content: center; align-items: center; display: flex;">
                                     <div class="col-2">
                                         <img *ngIf="notification.actionOwnerAvatarPath==null" class="card rounded-circle" style="height: 40px; width: 41px;" src="../../assets/images/default-profile.png">
                                         <img *ngIf="notification.actionOwnerAvatarPath!=null" class="card rounded-circle" style="height: 40px; width: 41px;" [src]="createImgPath(notification.actionOwnerAvatarPath)"> 
                                     </div>
-                                    <div class="col-10">
-                                        <p style="width:210px;white-space: normal;word-break: break-all"><strong>{{notification.actionOwnerName}}</strong> đã bình luận bài viết của bạn</p>
+                                    <div class="col-8">
+                                        <p style="width:190px;white-space: normal;word-break: break-all"><strong>{{notification.actionOwnerName}}</strong> đã bình luận bài viết của bạn</p>
                                     </div> 
+                                    <div class="col-2">
+                                        <button class="btn"><i class="fa fa-circle text-primary" style="font-size:small;"></i></button>
+                                    </div>
                                 </div>                              
                             </li>
-                            <li id="1" *ngIf="notification.notificationType==3 && notification.actionOwnerId!=account.id" class="dropdown-item">
+                            <li id="1" *ngIf="notification.notificationType==3 && notification.actionOwnerId!=account.id" class="dropdown-item" routerLink="detail/{{notification.actionOwnerId}}" routerLinkActive="active">
                                 <div class="row" style="justify-content: center; align-items: center; display: flex;">
                                     <div class="col-2">
                                         <img *ngIf="notification.actionOwnerAvatarPath==null" class="card rounded-circle" style="height: 40px; width: 41px;" src="../../assets/images/default-profile.png">
                                         <img *ngIf="notification.actionOwnerAvatarPath!=null" class="card rounded-circle" style="height: 40px; width: 41px;" [src]="createImgPath(notification.actionOwnerAvatarPath)"> 
                                     </div>
-                                    <div class="col-10">
-                                        <p style="width:210px;white-space: normal;word-break: break-all"><strong>{{notification.actionOwnerName}}</strong> đã theo dõi bạn</p>
+                                    <div class="col-8">
+                                        <p style="width:190px;white-space: normal;word-break: break-all"><strong>{{notification.actionOwnerName}}</strong> đã theo dõi bạn</p>
                                     </div> 
+                                    <div class="col-2">
+                                        <button class="btn"><i class="fa fa-circle text-primary" style="font-size:small;"></i></button>
+                                    </div>
                                 </div>                              
                             </li>
                         </div>                        
@@ -91,8 +103,8 @@
             <div class="navbar-nav" dropdown [insideClick]="true">
                 <div class="nav-item dropdown br-xam "> 
                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" dropdownToggle>
-                        <img *ngIf="account.avatarPath==null" class="card rounded-circle" style="height: 35px; width: 36px;" src="../../assets/images/default-profile.png">
-                        <img *ngIf="account.avatarPath!=null" class="card rounded-circle" style="height: 35px; width: 36px;" [src]="createImgPath(account.avatarPath)">        
+                        <img *ngIf="maccount.avatarPath==null" class="card rounded-circle" style="height: 35px; width: 36px;" src="../../assets/images/default-profile.png">
+                        <img *ngIf="maccount.avatarPath!=null" class="card rounded-circle" style="height: 35px; width: 36px;" [src]="createImgPath(maccount.avatarPath)">        
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right" *dropdownMenu>
                         <li routerLink="profile" class="dropdown-item nav-link btn" style="text-align: left;">Trang cá nhân <!--<i class="fa fa-cogs"></i>--></li>
@@ -118,7 +130,7 @@
               <a routerLink="detail-post/{{post.id}}/{{post.ownerId}}" class="text-dark card-link" id="1">
                 <div class="card btn-outline-white">
                   <img class="card-img-top img-fluid" [src]="createImgPath(post.imagePath)" alt="Card image cap">
-                  <p class="card-title" style="margin: 5px 5px 5px 5px; font-size:15px; font-family: Noto Serif;">{{post.postTitle}}</p>
+                  <p class="card-title" style="margin: 5px 5px 5px 5px; font-size:15px;"><strong>{{post.postTitle}}</strong></p>
                 </div> 
               </a>
             </div> 
@@ -146,8 +158,8 @@
                                 <p style="font-size: small; margin-left: 4%;">{{account.followerCount}} người theo dõi</p>
                             </div> 
                             <div class="col-lg-3">
-                                <button *ngIf="mfollow.isCreated==0" (click)="onCreateFollow()" class="btn btn-light rounded-pill">Theo dõi</button>
-                                <button *ngIf="mfollow.isCreated!=0" (click)="unFollow()" class="btn btn-danger rounded-pill">Đã theo dõi</button>
+                                <button *ngIf="account.isFollowedByCurrentUser==0" (click)="onCreateFollow(account.id)" class="btn btn-light rounded-pill">Theo dõi</button>
+                                <button *ngIf="account.isFollowedByCurrentUser!=0" (click)="unFollow(account.id)" class="btn btn-danger rounded-pill">Đã theo dõi</button>
                             </div>
                         </div>              
                     </div>

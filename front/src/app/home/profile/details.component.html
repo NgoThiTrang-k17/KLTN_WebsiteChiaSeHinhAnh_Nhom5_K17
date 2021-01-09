@@ -3,7 +3,11 @@
         <img *ngIf="account.avatarPath==null" class="rounded-circle" style="height: 120px; width: 121px;" src="../../assets/images/default-profile.png">
         <img *ngIf="account.avatarPath!=null" class="rounded-circle" style="height: 120px; width: 121px;" [src]="createImgPath(account.avatarPath)">
         <h1 class="m-3" style="font-weight: bold;">{{account.name}}</h1>
-        <p>{{account.followerCount}} người theo dõi - người đang theo dõi</p>
+        <p>{{account.followerCount}} người theo dõi - Đang theo dõi {{account.followingCount}} người</p>
+        <div *ngIf="id" class="mt-2">
+          <button *ngIf="mfollow.isCreated==0" (click)="onCreateFollow()" class="btn btn-light rounded-pill">Theo dõi</button>
+          <button *ngIf="mfollow.isCreated!=0" (click)="unFollow()" class="btn btn-danger rounded-pill">Đã theo dõi</button>
+        </div>
         <div class="row">
             <div *ngIf="maccount.id==id || id==null" class="container text-center">
                 <button routerLink="update" routerLinkActive="router-link-active"  data-toggle="tooltip" data-placement="left" title="Chỉnh sửa thông tin" class="btn btn-light btn-outline-white rounded-circle text-center" style="height: 48px; width: 48px;" type="button">

@@ -3,13 +3,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
-import { AccountService, NotificationService, SearchService } from '../_services';
+import { AccountService, NotificationService, SearchService, FollowService } from '../_services';
 import { Account, Notification, Post, Follow, FollowToCreate } from '../_models';
 
 @Component({ templateUrl: 'layout.component.html' })
 export class LayoutComponent implements OnInit { 
 
-    account = this.accountService.accountValue;
+    maccount = this.accountService.accountValue;
     temp: any;
     login: boolean;
     search: boolean;
@@ -18,14 +18,15 @@ export class LayoutComponent implements OnInit {
     returnURL: any;
     public follow: FollowToCreate;
     public mfollow: Follow;
-
+    public account: Account;
     public accounts: Account[] = [];
     public posts: Post[] = [];
     public notifications: Notification[] = [];
 
     constructor(private accountService: AccountService, 
                 private notificationService: NotificationService,
-                private searchService: SearchService, 
+                private searchService: SearchService,
+                private followService: FollowService, 
                 private route: ActivatedRoute,
                 private router: Router,) {
         this.accountService.account.subscribe(x => this.account = x);
@@ -37,18 +38,53 @@ export class LayoutComponent implements OnInit {
             return false;
         }
 
-        this.accountService.getById(this.account.id)
+        this.accountService.getById(this.maccount.id)
         .subscribe((res:any)=>{
-            this.account = res;
+            this.maccount = res;
         })
 
-        this.notificationService.getAllByUserId(this.account.id)
+        this.notificationService.getAllByUserId(this.maccount.id)
             .subscribe(res => {
                 this.notifications = res as Notification[];
         });
 
         
     }
+
+    onCreateFollow(id:any) {
+        this.follow = {
+          accountId: id,
+        }
+        console.log(this.follow);
+        this.followService.createFollow(this.follow)
+        .subscribe(res => {
+          console.log(res);
+          //alert('Follow thành công!');
+          this.accountService.getById(id)
+            .subscribe((res:any)=>{
+                this.account = res;
+                console.log(this.account.isFollowedByCurrentUser);
+                this.router.routeReuseStrategy.shouldReuseRoute = () =>{
+                    return false;
+                }
+            })
+        });
+      }
+    
+      unFollow(id:any) {
+        this.followService.delete(id)
+        .subscribe(() => {
+          //alert('Bỏ follow thành công!');
+          this.accountService.getById(id)
+            .subscribe((res:any)=>{
+                this.account = res;
+                console.log(this.account.isFollowedByCurrentUser);
+                this.router.routeReuseStrategy.shouldReuseRoute = () =>{
+                    return false;
+                }
+            })
+        });
+      }
 
     logout() {
         this.accountService.logout();

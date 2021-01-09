@@ -24,7 +24,8 @@
                                 </button>
                                 <div id="myDropdown" class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                     aria-labelledby="dropdownMenuLink" *dropdownMenu>
-                                    <a class="dropdown-item" href="http://localhost:4200/user/detail-post/{{post.id}}/{{post.ownerId}}" download="{{post.postTitle}}">Tải xuống</a>
+                                    <a class="dropdown-item" href="../../../assets/images/{{post.imageName}}" download="{{post.postTitle}}.jpg" Download Image >Tải xuống</a>
+                                    <!-- <a class="dropdown-item" [disabled]="disabled" [ngClass]="{'disabled': disabled}" (click)="download()">Tải xuống</a> -->
                                     <a class="dropdown-item" href="#">Báo cáo bài viết</a>
                                     <!-- <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="#">Nhận mã nhúng ghim</a> -->

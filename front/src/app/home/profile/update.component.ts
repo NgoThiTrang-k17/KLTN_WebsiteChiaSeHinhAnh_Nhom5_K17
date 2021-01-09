@@ -35,6 +35,10 @@ export class UpdateComponent implements OnInit {
         }, {
             validator: MustMatch('password', 'confirmPassword')
         });
+        this.accountService.getById(this.account.id)
+        .subscribe((res:any)=>{
+            this.account = res;
+        })
         this.updateData = new FormData();
     }
 
