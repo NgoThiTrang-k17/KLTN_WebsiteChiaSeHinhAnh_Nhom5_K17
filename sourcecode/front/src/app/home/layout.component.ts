@@ -44,12 +44,14 @@ export class LayoutComponent implements OnInit {
             this.maccount = res;
         })
 
-        this.notificationService.getAllByUserId(this.maccount.id)
+        
+    }
+
+    getNotification(id:any){
+        this.notificationService.getAllByUserId(id)
             .subscribe(res => {
                 this.notifications = res as Notification[];
         });
-
-        
     }
 
     onCreateFollow(id:any) {
@@ -97,10 +99,6 @@ export class LayoutComponent implements OnInit {
         .subscribe(res => {
             console.log(res);
             alert('Xem thông báo thành công.');
-            this.notificationService.getAllByUserId(this.maccount.id)
-            .subscribe(res => {
-                this.notifications = res as Notification[];
-            });
         }, error => {
             console.log(error);               
         })
