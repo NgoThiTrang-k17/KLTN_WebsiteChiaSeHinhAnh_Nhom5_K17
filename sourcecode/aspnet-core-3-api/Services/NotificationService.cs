@@ -47,7 +47,7 @@ namespace WebApi.Services
             var notification = getNotification(id);
             if (notification == null) throw new AppException("Update Notification failed");
             //_mapper.Map(model, notification);
-            if (notification.Status != model.Status)
+            if (notification.Status < model.Status)
                 notification.Status = model.Status;
             _context.Notifications.Update(notification);
             _context.SaveChanges();
