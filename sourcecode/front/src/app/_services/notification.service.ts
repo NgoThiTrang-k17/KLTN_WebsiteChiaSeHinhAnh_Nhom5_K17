@@ -43,18 +43,9 @@ export class NotificationService {
         return this.http.delete(`${baseUrl}/${id}`)
     }
 
-    // update(id, params) {
-    //     return this.http.put(`${baseUrl}/${id}`, params)
-    //         .pipe(map((post: any) => {
-    //             // update the current account if it was updated
-    //             if (post.id === this.postValue.id) {
-    //                 // publish updated account to subscribers
-    //                 post = { ...this.postValue, ...post };
-    //                 this.postSubject.next(post);
-    //             }
-    //             return post;
-    //         }));
-    // }
+    update(id, params) {
+        return this.http.put(`${baseUrl}/${id}`, params)
+    }
 
     // createPost(posts) {
     //     const formData: FormData = new FormData();

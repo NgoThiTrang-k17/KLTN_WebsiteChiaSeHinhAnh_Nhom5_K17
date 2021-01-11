@@ -26,7 +26,7 @@
                 <div class="nav-item dropdown br-xam text-center" style="width: 350px,"> 
                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" dropdownToggle>
                         <i class="fa fa-bell mt-1" style="font-size:x-large;"></i>
-                        <span class="badge rounded-pill bg-danger" style="position: absolute;">1</span>
+                        <span class="badge rounded-pill bg-danger" style="position: absolute;">1+</span>
                     </a>
                     <ul class="dropdown-menu dropdownNotification dropdown-menu-right shadow-sm rounded-lg" *dropdownMenu>
                         <li class="text-center mb-3" style="font-weight: bold; font-size: 20px;">Thông báo</li>
@@ -34,14 +34,14 @@
                             <li id="1" *ngIf="notification.notificationType==0 && notification.actionOwnerId!=account.id" class="dropdown-item" routerLink="detail-post/{{notification.postId}}/{{notification.actionOwnerId}}" routerLinkActive="active">
                                 <div class="row" style="justify-content: center; align-items: center; display: flex;">
                                     <div class="col-2">
-                                        <img *ngIf="notification.actionOwnerAvatarPath==null" class="card rounded-circle" style="height: 40px; width: 41px;" src="../../assets/images/default-profile.png">
-                                        <img *ngIf="notification.actionOwnerAvatarPath!=null" class="card rounded-circle" style="height: 40px; width: 41px;" [src]="createImgPath(notification.actionOwnerAvatarPath)"> 
+                                        <img *ngIf="notification.actionOwnerAvatarPath==null" (click)="updateNotification(notification.id)" class="card rounded-circle" style="height: 40px; width: 41px;" src="../../assets/images/default-profile.png">
+                                        <img *ngIf="notification.actionOwnerAvatarPath!=null" (click)="updateNotification(notification.id)" class="card rounded-circle" style="height: 40px; width: 41px;" [src]="createImgPath(notification.actionOwnerAvatarPath)"> 
                                     </div>
                                     <div class="col-8">
-                                        <p style="width:190px;white-space: normal;word-break: break-all"><strong>{{notification.actionOwnerName}}</strong> đã thêm bài viết mới</p>
+                                        <p (click)="updateNotification(notification.id)" style="width:190px;white-space: normal;word-break: break-all"><strong>{{notification.actionOwnerName}}</strong> đã thêm bài viết mới</p>
                                     </div> 
                                     <div class="col-2">
-                                        <button class="btn"><i class="fa fa-circle text-primary" style="font-size:small;"></i></button>
+                                        <button (click)="updateNotification(notification.id)" class="btn"><i class="fa fa-circle text-primary" style="font-size:small;"></i></button>
                                     </div>
                                 </div>                              
                             </li>
@@ -55,7 +55,7 @@
                                         <p style="width:190px;white-space: normal;word-break: break-all"><strong>{{notification.actionOwnerName}}</strong> đã thích bài viết của bạn</p>
                                     </div> 
                                     <div class="col-2">
-                                        <button class="btn"><i class="fa fa-circle text-primary" style="font-size:small;"></i></button>
+                                        <button (click)="updateNotification(notification.id)" class="btn"><i class="fa fa-circle text-primary" style="font-size:small;"></i></button>
                                     </div>
                                 </div>                              
                             </li>
@@ -69,7 +69,7 @@
                                         <p style="width:190px;white-space: normal;word-break: break-all"><strong>{{notification.actionOwnerName}}</strong> đã bình luận bài viết của bạn</p>
                                     </div> 
                                     <div class="col-2">
-                                        <button class="btn"><i class="fa fa-circle text-primary" style="font-size:small;"></i></button>
+                                        <button *ngIf="notification.status==0" (click)="updateNotification(notification.id)" class="btn"><i class="fa fa-circle text-primary" style="font-size:small;"></i></button>
                                     </div>
                                 </div>                              
                             </li>

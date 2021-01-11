@@ -127,7 +127,7 @@
                                                                 <div id="myDropdown" class="dropdown-menu dropdown-menu-left shadow animated--fade-in"
                                                                     aria-labelledby="dropdownMenuLink" *dropdownMenu>
                                                                     <a class="dropdown-item" routerLink="../../../detail-post/{{post.id}}/{{post.ownerId}}/{{comment.id}}" (click)="editComment()">Chỉnh sửa</a>
-                                                                    <a class="dropdown-item" (click)="deleteComment()">Xoá</a>
+                                                                    <a class="dropdown-item" (click)="deleteComment(comment.id)">Xoá</a>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -139,7 +139,7 @@
                                                 <form [formGroup]="cmtForm" (ngSubmit)="submitEdit()">
                                                     <div class="form-inline">
                                                         <div class="form-group" style="width: 90%;"> 
-                                                            <input type="text" class="form-control rounded-pill col-12" formControlName="content" value="{{commentEdit.content}}">
+                                                            <input type="text" class="form-control rounded-pill col-12" formControlName="content" value="{{comment.content}}">
                                                         </div>
                                                     </div>
                                                     <div class="btn-group mt-1" style="float: right; margin-right: 15%;">

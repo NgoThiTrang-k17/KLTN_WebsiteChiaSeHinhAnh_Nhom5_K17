@@ -4,7 +4,7 @@ import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms'
 import { first } from 'rxjs/operators';
 
 import { AccountService, NotificationService, SearchService, FollowService } from '../_services';
-import { Account, Notification, Post, Follow, FollowToCreate } from '../_models';
+import { Account, Notification, NotificationToUpdate, Post, Follow, FollowToCreate } from '../_models';
 
 @Component({ templateUrl: 'layout.component.html' })
 export class LayoutComponent implements OnInit { 
@@ -21,6 +21,7 @@ export class LayoutComponent implements OnInit {
     public account: Account;
     public accounts: Account[] = [];
     public posts: Post[] = [];
+    public notification: NotificationToUpdate;
     public notifications: Notification[] = [];
 
     constructor(private accountService: AccountService, 
@@ -85,6 +86,25 @@ export class LayoutComponent implements OnInit {
             })
         });
       }
+
+    updateNotification(id:any){
+        this.notification = {
+            id: id,
+            status: 2,
+        }
+
+        this.notificationService.update(id ,this.notification)
+        .subscribe(res => {
+            console.log(res);
+            alert('Xem thông báo thành công.');
+            this.notificationService.getAllByUserId(this.maccount.id)
+            .subscribe(res => {
+                this.notifications = res as Notification[];
+            });
+        }, error => {
+            console.log(error);               
+        })
+    }
 
     logout() {
         this.accountService.logout();
