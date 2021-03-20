@@ -18,7 +18,7 @@ namespace WebApi.Entities
         Created,
         Seen,
         Opened,
-        Sent,
+        Sent, //đã gửi
         Accepted,
         Declined
     }
