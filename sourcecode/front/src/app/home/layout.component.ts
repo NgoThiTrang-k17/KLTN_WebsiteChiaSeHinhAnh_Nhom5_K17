@@ -91,7 +91,6 @@ export class LayoutComponent implements OnInit {
 
     updateNotification(id:any){
         this.notification = {
-            id: id,
             status: 2,
         }
 
