@@ -1,75 +1,49 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef } from "react";
+import Input from "./components/Input";
 import "./App.scss";
-import NameTag from "./components/nameTag";
-import Item from "./components/item/item";
 
-// const makeGreen = (BaseComponent) => (props) => {
-//   const addGreen = {
-//     style: {
-//       color: "green",
-//     },
-//   };
-//   const newProps = {
-//     ...props,
-//     ...addGreen,
-//   };
-//   return <BaseComponent {...newProps} />;
-// };
-// const removeInline = (BaseComponent) => (props) => {
-//   const newProps = { ...props };
-//   delete newProps.style;
-//   return <BaseComponent {...newProps} />;
-// };
-
-//const GreenNameTag = makeGreen(NameTag);
-//const CleanNameTag = removeInline(NameTag);
-const initialNames = [
-  //{ firstName: "john", lastName: "wick" }
-]; 
-const initialList = [
-  {name:"tomato", calorie:"200"},
-  {name:"banana", calorie:"150"},
-  {name:"cherry", calorie:"100"},
-]; 
-
+const inputStyle = {
+  width: "400px",
+  height: "40px",
+  fontSize: "30px",
+  marginBottom: "10px",
+};
 function App() {
-  const [names] = useState(initialNames);
-  const [list, setList] = useState(initialList);
-  const [editable, setEditable] =  useState(false)
-function removeUnhealthyHandle  (e) {
-e.preventDefault()
-const filterdList = list.filter(v => v.calorie <= 150);
-setList(filterdList);
-}
+  const firstNameRef = useRef(null);
+  const lastNameRef = useRef(null);
 
-function removeItemhandle (e){
-  console.dir(e.target.name);
+  useEffect(() => {
+    lastNameRef.current.focus();
+  }, []);
 
-  const filterdList2 = list.filter(v => v.name !== e.target.name);
-  setList(filterdList2);
-}
-function makeEditableHandle(){
- setEditable(true);
-}
+  function firstNameKeyDown(e) {
+    if (e.key === "Enter") {
+      console.log("first name entered")
+      lastNameRef.current.focus();
+    }
+  }
+
+  function lastNameKeyDown(e) {
+    if (e.key === "Enter") {
+      firstNameRef.current.focus();
+    }
+  }
   return (
     <div className="App">
       <header className="App-header">
-      
-          <h1 >Grocery list</h1>
-        {list.map(  (v,k) => {
-          return <Item key={`${k}${v.name}${v.calorie}`} 
-          item={v}  
-          onClick = {removeItemhandle}
-          editable={editable}
-          onDoubleClick={makeEditableHandle}
-          >
-
-          </Item>;
-        })}
-        <button onClick={removeUnhealthyHandle} 
-        className="remove-button"
-        >
-        remove unhealthy</button>
+        <h1>UseRefs Hooks</h1>
+        <Input
+          ref={firstNameRef}
+          placeholder="first name"
+          style={inputStyle}
+          onKeyDown={firstNameKeyDown}
+        ></Input>
+        <Input
+          ref={lastNameRef}
+          placeholder="last name"
+          style={inputStyle}
+          onKeyDown={lastNameKeyDown}
+        ></Input>
       </header>
     </div>
   );
