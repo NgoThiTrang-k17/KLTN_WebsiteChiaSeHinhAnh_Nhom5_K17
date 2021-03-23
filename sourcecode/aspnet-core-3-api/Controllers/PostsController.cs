@@ -1,8 +1,12 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using WebApi.Entities;
 using WebApi.Models.Posts;
@@ -103,7 +107,22 @@ namespace WebApi.Controllers
             }
         }
 
-        //uthorize]
+        [HttpGet("GetImageTags")]
+        public IActionResult GetImageTags(string imageUrl, string authorizeKey)
+        {
+            //Hosted web API REST Service base url  
+            
+            var client = new RestClient("https://api.imagga.com/v2/tags?image_url="+imageUrl);
+            client.Timeout = -1;
+            var request = new RestRequest(Method.GET);
+            //request.AddParameter
+           
+            request.AddHeader("Authorization", authorizeKey);
+            request.AddParameter("text/plain", "", ParameterType.RequestBody);
+            IRestResponse response = client.Execute(request);
+            return Ok(response.Content);
+        }
+        
         [HttpPut("{id:int}")]
         public ActionResult<PostResponse> Update(int id,[FromForm]UpdatePostRequest model)
         {
