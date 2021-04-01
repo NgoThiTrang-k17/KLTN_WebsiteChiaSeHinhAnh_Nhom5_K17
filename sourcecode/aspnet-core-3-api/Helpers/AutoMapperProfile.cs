@@ -11,7 +11,7 @@ namespace WebApi.Helpers
 {
     public class AutoMapperProfile : Profile
     {
-        // mappings between model and entity objects
+        // mappings between model and entity objects <source,des>
         public AutoMapperProfile()
         {
             //Follow
@@ -22,7 +22,8 @@ namespace WebApi.Helpers
             CreateMap<UpdateFollowRequest, Follow>();
 
             //Reaction
-            CreateMap<Reaction, ReactionResponse>();
+            CreateMap<Reaction, ReactionResponse>()
+                .ForMember(rs => rs.PostId, memberOptions=>memberOptions.MapFrom(r =>r.Post.Id));
 
             CreateMap<CreateReactionRequest, Reaction>();
 
@@ -34,8 +35,8 @@ namespace WebApi.Helpers
 
             CreateMap<UpdateNotificationRequest, Notification>();
             //Post
-            CreateMap<Post , PostResponse>();
-
+            CreateMap<Post, PostResponse>();
+               
             CreateMap<PostResponse, Post>();
 
             CreateMap<CreatePostRequest, Post>();

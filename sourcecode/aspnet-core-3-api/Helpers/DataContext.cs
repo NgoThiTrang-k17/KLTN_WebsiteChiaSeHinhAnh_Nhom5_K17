@@ -31,7 +31,14 @@ namespace WebApi.Helpers
             // connect to sqlserver database
              options.UseSqlServer(Configuration.GetConnectionString("DefaultDesktop"));
         }
-
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Post>()
+                .HasMany(g => g.Reactions)
+                .WithOne(s => s.Post)
+                .HasForeignKey(s => s.PostId)
+                .OnDelete(DeleteBehavior.Cascade);
+        }
         internal object Map<T>(object comments)
         {
             throw new NotImplementedException();

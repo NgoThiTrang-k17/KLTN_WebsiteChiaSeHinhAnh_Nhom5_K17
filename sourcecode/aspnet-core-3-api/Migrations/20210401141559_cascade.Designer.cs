@@ -10,8 +10,8 @@ using WebApi.Helpers;
 namespace WebApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20201223130907_Initiate")]
-    partial class Initiate
+    [Migration("20210401141559_cascade")]
+    partial class cascade
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -160,6 +160,9 @@ namespace WebApi.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("ImageName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ImagePath")
                         .HasColumnType("nvarchar(max)");
 
@@ -194,6 +197,8 @@ namespace WebApi.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PostId");
 
                     b.ToTable("Reactions");
                 });
@@ -240,6 +245,15 @@ namespace WebApi.Migrations
                             b1.WithOwner("Account")
                                 .HasForeignKey("AccountId");
                         });
+                });
+
+            modelBuilder.Entity("WebApi.Entities.Reaction", b =>
+                {
+                    b.HasOne("WebApi.Entities.Post", "Post")
+                        .WithMany("Reactions")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

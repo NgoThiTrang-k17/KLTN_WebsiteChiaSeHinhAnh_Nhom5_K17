@@ -11,6 +11,7 @@ namespace WebApi.Entities
         public DateTime Created { get; set; }
         public string ImageName { get; set; }
         public string ImagePath { get; set; }
-        public int OwnerId {get; set;}
+        public int OwnerId { get; set; }
+        public ICollection<Reaction> Reactions { get; set; }
     }
 }

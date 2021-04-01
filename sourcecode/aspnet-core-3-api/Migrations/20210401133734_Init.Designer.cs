@@ -10,8 +10,8 @@ using WebApi.Helpers;
 namespace WebApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210108200035_1")]
-    partial class _1
+    [Migration("20210401133734_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -190,13 +190,15 @@ namespace WebApi.Migrations
                     b.Property<int>("OwnerId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PostId")
+                    b.Property<int?>("PostId")
                         .HasColumnType("int");
 
                     b.Property<int>("ReactionType")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PostId");
 
                     b.ToTable("Reactions");
                 });
@@ -243,6 +245,13 @@ namespace WebApi.Migrations
                             b1.WithOwner("Account")
                                 .HasForeignKey("AccountId");
                         });
+                });
+
+            modelBuilder.Entity("WebApi.Entities.Reaction", b =>
+                {
+                    b.HasOne("WebApi.Entities.Post", "Post")
+                        .WithMany("Reactions")
+                        .HasForeignKey("PostId");
                 });
 #pragma warning restore 612, 618
         }

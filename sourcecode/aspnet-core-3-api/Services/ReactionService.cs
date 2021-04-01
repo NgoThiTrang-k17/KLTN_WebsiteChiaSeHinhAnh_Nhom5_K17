@@ -71,7 +71,7 @@ namespace WebApi.Services
 
         public void DeleteByPostId(int postId, int ownerId)
         {
-            var model = _context.Reactions.Where(reaction => reaction.PostId == postId && reaction.OwnerId == ownerId);
+            var model = _context.Reactions.Where(reaction => reaction.Post.Id == postId && reaction.OwnerId == ownerId);
             
             var reaction = getReaction(model.FirstOrDefault().Id);
             _context.Remove(reaction);
@@ -87,13 +87,13 @@ namespace WebApi.Services
 
         public IEnumerable<ReactionResponse> GetAllByPostId(int postId)
         {
-            var reactions = _context.Reactions.Where(reaction => reaction.PostId == postId);
+            var reactions = _context.Reactions.Where(reaction => reaction.Post.Id == postId);
             return _mapper.Map<List<ReactionResponse>>(reactions);
         }
         public ReactionState GetState(int postId, int ownerId)
         {
             
-            var reaction = _context.Reactions.Where(reaction => reaction.PostId == postId && reaction.OwnerId == ownerId).Count();
+            var reaction = _context.Reactions.Where(reaction => reaction.Post.Id == postId && reaction.OwnerId == ownerId).Count();
             var reactionState = new ReactionState
             {
                 IsCreated = 0

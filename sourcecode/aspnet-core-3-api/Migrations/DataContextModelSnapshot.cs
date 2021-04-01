@@ -196,6 +196,8 @@ namespace WebApi.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("PostId");
+
                     b.ToTable("Reactions");
                 });
 
@@ -241,6 +243,15 @@ namespace WebApi.Migrations
                             b1.WithOwner("Account")
                                 .HasForeignKey("AccountId");
                         });
+                });
+
+            modelBuilder.Entity("WebApi.Entities.Reaction", b =>
+                {
+                    b.HasOne("WebApi.Entities.Post", "Post")
+                        .WithMany("Reactions")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
