@@ -9,7 +9,6 @@ namespace WebApi.Models.Notifications
 {
     public class CreateNotificationRequest
     {
-        public int Id { get; set; }
         public int ActionOwnerId { get; set; }
         public NotificationType NotificationType { get; set; }
         public int? PostId { get; set; }
