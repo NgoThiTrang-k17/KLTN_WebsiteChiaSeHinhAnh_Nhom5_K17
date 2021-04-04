@@ -22,8 +22,7 @@ namespace WebApi.Helpers
             CreateMap<UpdateFollowRequest, Follow>();
 
             //Reaction
-            CreateMap<Reaction, ReactionResponse>()
-                .ForMember(rs => rs.PostId, memberOptions=>memberOptions.MapFrom(r =>r.Post.Id));
+            CreateMap<Reaction, ReactionResponse>();
 
             CreateMap<CreateReactionRequest, Reaction>();
 

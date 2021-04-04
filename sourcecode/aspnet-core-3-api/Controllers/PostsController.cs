@@ -40,21 +40,21 @@ namespace WebApi.Controllers
         [HttpGet("GetPostById/{id:int}")]
         public ActionResult<PostResponse> GetPostById(int id)
         {
-            var post = _postService.GetPostById(id);
+            var post = _postService.GetById(id);
             return Ok(post);
         }
 
         [HttpGet("GetAllByUserId/{id:int}")]
         public ActionResult<IEnumerable<PostResponse>> GetAllByUserId(int id)
         {
-            var posts = _postService.GetAllByUserId(id);
+            var posts = _postService.GetByOwnerId(id);
             return Ok(posts);
         }
 
         [HttpGet("DownloadImage/{id:int}")]
         public IActionResult DownloadImage(int id)
         {
-            var fileName = _postService.GetPostById(id).ImageName;
+            var fileName = _postService.GetById(id).ImageName;
 
             var folderName = Path.Combine("Resources", "Images");
             var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
@@ -92,7 +92,7 @@ namespace WebApi.Controllers
                         OwnerId = Account.Id,
                     };
 
-                    var temp = _postService.CreatePost(model);
+                    var temp = _postService.Create(model);
 
                     return Ok(new { fullPath });
                 }

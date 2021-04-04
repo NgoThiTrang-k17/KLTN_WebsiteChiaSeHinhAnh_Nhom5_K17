@@ -33,11 +33,7 @@ namespace WebApi.Helpers
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Post>()
-                .HasMany(g => g.Reactions)
-                .WithOne(s => s.Post)
-                .HasForeignKey(s => s.PostId)
-                .OnDelete(DeleteBehavior.Cascade);
+            
         }
         internal object Map<T>(object comments)
         {

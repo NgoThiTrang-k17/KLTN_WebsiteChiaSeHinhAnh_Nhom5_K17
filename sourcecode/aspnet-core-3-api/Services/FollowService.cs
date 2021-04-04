@@ -68,7 +68,7 @@ namespace WebApi.Services
 
         public void DeleteFollowByAccountId(int accountId, int followerId)
         {
-            var follow = _context.Follows.Where(follow => follow.AccountId == accountId && follow.FollowerId == followerId).FirstOrDefault();
+            var follow = _context.Follows.Where(follow => follow.SubjectId == accountId && follow.FollowerId == followerId).FirstOrDefault();
             _context.Remove(follow);
             _context.SaveChanges();
         }
@@ -82,14 +82,14 @@ namespace WebApi.Services
         //Get all Follow of each user
         public IEnumerable<FollowResponse> GetAllByUserId(int userId)
         {
-            var follows = _context.Follows.Where(follow => follow.AccountId == userId); ;
+            var follows = _context.Follows.Where(follow => follow.SubjectId == userId); ;
             return _mapper.Map<List<FollowResponse>>(follows);
         }
 
         public FollowState GetState(int accountId, int followerId)
         {
 
-            var follow = _context.Follows.Where(follow => follow.AccountId == accountId && follow.FollowerId == followerId).Count();
+            var follow = _context.Follows.Where(follow => follow.SubjectId == accountId && follow.FollowerId == followerId).Count();
             var followState = new FollowState
             {
                 IsCreated = 0
@@ -113,7 +113,7 @@ namespace WebApi.Services
                 ActionOwnerId = model.FollowerId,
                 NotificationType = NotificationType.FollowRequest,
                 PostId = 0,
-                ReiceiverId = model.AccountId,
+                ReiceiverId = model.SubjectId,
                 Created = DateTime.Now,
                 Status = Status.Created
             };

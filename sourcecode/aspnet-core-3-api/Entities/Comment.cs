@@ -9,7 +9,9 @@ namespace WebApi.Entities
     {
         public int Id { get; set; }
         public string Content { get; set; }
-        public DateTime DateCreated { get; set; }
+        public DateTime Created { get; set; }
+
+        public int? ParrentId { get; set; }
         public int OwnerId { get; set; }
         public int PostId { get; set; }
     }

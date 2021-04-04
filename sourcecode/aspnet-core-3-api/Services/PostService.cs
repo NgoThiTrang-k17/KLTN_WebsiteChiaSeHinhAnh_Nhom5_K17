@@ -13,12 +13,12 @@ namespace WebApi.Services
 
     public interface IPostService
     {
-        PostResponse GetPostById(int postId);
-        PostResponse CreatePost(CreatePostRequest model);
+        PostResponse GetById(int postId);
+        PostResponse Create(CreatePostRequest model);
         PostResponse UpdatePost(int id, UpdatePostRequest model);
         void DeletePost(int id);
         IEnumerable<PostResponse> GetAll();
-        IEnumerable<PostResponse> GetAllByUserId(int ownerId);
+        IEnumerable<PostResponse> GetByOwnerId(int ownerId);
     }
     public class PostService : IPostService
     {
@@ -42,10 +42,9 @@ namespace WebApi.Services
 
         }
         //Create
-        public PostResponse CreatePost(CreatePostRequest model)
+        public PostResponse Create(CreatePostRequest model)
         {
             var post = _mapper.Map<Post>(model);
-            if (post == null) throw new AppException("Create Post failed");
             _context.Posts.Add(post);
             _context.SaveChanges();
             SendNotification(post);
@@ -56,9 +55,7 @@ namespace WebApi.Services
         public PostResponse UpdatePost(int id, UpdatePostRequest model)
         {
             var post = GetPost(id);
-            if (post == null) throw new AppException("Update Post failed");
             post.PostTitle = model.Title;
-           //mapper.Map(model, post);
             _context.Posts.Update(post);
             _context.SaveChanges();
 
@@ -69,6 +66,8 @@ namespace WebApi.Services
         public void DeletePost(int id)
         {
             var post = GetPost(id);
+            _context.RemoveRange(GetComments(id));
+            _context.RemoveRange(GetReactions(id));
             _context.Remove(post);
             _context.SaveChanges();
         }
@@ -83,15 +82,10 @@ namespace WebApi.Services
                 var owner = _accountService.GetById(postResponse.OwnerId);
                 postResponse.OwnerId = owner.Id;
                 postResponse.OwnerName = owner.Name;
+                postResponse.OwnerName = owner.Name;
+                postResponse.OwnerAvatar = owner.AvatarPath;
 
-                bool IsOwnerNameNull = owner.Name == null;
-                postResponse.OwnerName = IsOwnerNameNull ? "" : owner.Name;
-
-                bool path = owner.AvatarPath == null;
-                postResponse.OwnerAvatar = path ? "" : owner.AvatarPath;
-
-                postResponse.FollowerCount = _context.Follows.Count(f => f.AccountId == owner.Id);
-
+                postResponse.FollowerCount = _context.Follows.Count(f => f.SubjectId == owner.Id);
 
                 (postResponse.CommentCount, postResponse.ReactionCount) = GetPostInfor(postResponse.Id);
             }
@@ -99,26 +93,26 @@ namespace WebApi.Services
         }
 
         //Get specific post by its Id
-        public PostResponse GetPostById(int postId)
+        public PostResponse GetById(int postId)
         {
             var post = GetPost(postId);
             var owner = _accountService.GetById(post.OwnerId);
-            var postResponse = _mapper.Map<PostResponse>(post);
+            var response = _mapper.Map<PostResponse>(post);
             bool IsOwnerNameNull = owner.Name == null;
-            postResponse.OwnerName = IsOwnerNameNull ? "" : owner.Name;
+            response.OwnerName = IsOwnerNameNull ? "" : owner.Name;
 
             bool IsAvatarPathNull = owner.AvatarPath == null;
-            postResponse.OwnerAvatar = IsAvatarPathNull ? "" : owner.AvatarPath;
+            response.OwnerAvatar = IsAvatarPathNull ? "" : owner.AvatarPath;
 
-            postResponse.FollowerCount = _context.Follows.Count(f => f.AccountId == owner.Id);
+            response.FollowerCount = owner.FollowerCount;
 
 
-            (postResponse.CommentCount, postResponse.ReactionCount) = GetPostInfor(postResponse.Id);
-            return postResponse;
+            (response.CommentCount, response.ReactionCount) = GetPostInfor(response.Id);
+            return response;
         }
 
         //Get posts for each user
-        public IEnumerable<PostResponse> GetAllByUserId(int ownerId)
+        public IEnumerable<PostResponse> GetByOwnerId(int ownerId)
         {
             var posts = _context.Posts.Where(post => post.OwnerId == ownerId);
             var postResponses = _mapper.Map<IList<PostResponse>>(posts);
@@ -133,12 +127,13 @@ namespace WebApi.Services
                 bool IsAvatarPathNull = owner.AvatarPath == null;
                 postResponse.OwnerAvatar = IsAvatarPathNull ? "" : owner.AvatarPath;
 
-                postResponse.FollowerCount = _context.Follows.Count(f => f.AccountId == owner.Id);
+                postResponse.FollowerCount = _context.Follows.Count(f => f.SubjectId == owner.Id);
 
                 (postResponse.CommentCount, postResponse.ReactionCount) = GetPostInfor(postResponse.Id);
             }
             return postResponses;
         }
+
         //helper
         private Post GetPost(int id)
         {
@@ -157,7 +152,7 @@ namespace WebApi.Services
                 var notification = new CreateNotificationRequest
                 {
                     //Post Owner
-                    ActionOwnerId = post.OwnerId, 
+                    ActionOwnerId = post.OwnerId,
                     NotificationType = NotificationType.Posted,
                     PostId = post.Id,
                     ReiceiverId = follow.FollowerId,
@@ -171,8 +166,18 @@ namespace WebApi.Services
         private (int, int) GetPostInfor(int id)
         {
             var commentcount = _context.Comments.Count(c => c.PostId == id);
-            var reactioncount = _context.Reactions.Count(r => r.Post.Id == id);
+            var reactioncount = _context.Reactions.Count(r => r.PostId == id);
             return (commentcount, reactioncount);
+        }
+
+        private IEnumerable<Comment> GetComments(int id)
+        {
+            return _context.Comments.Where(c => c.OwnerId == id);           
+        }
+
+        private IEnumerable<Reaction> GetReactions(int id)
+        {
+            return _context.Reactions.Where(c => c.OwnerId == id);
         }
     }
 }

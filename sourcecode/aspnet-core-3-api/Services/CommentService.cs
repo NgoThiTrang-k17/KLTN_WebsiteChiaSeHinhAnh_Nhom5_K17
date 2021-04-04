@@ -46,7 +46,7 @@ namespace WebApi.Services
             var comment = _mapper.Map<Comment>(model);
             if (comment == null) throw new AppException("Create comment failed");
             //Get post by postId then map it to new Post model
-            var postrespone = _postService.GetPostById(model.PostId);
+            var postrespone = _postService.GetById(model.PostId);
             var post = _mapper.Map<Post>(postrespone);
             _context.Comments.Add(comment);
             _context.SaveChanges();
