@@ -7,9 +7,10 @@ namespace WebApi.Entities
     public class Post
     {
         public int Id { get; set; }
-        public string PostTitle { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
         public DateTime Created { get; set; }
-        public string ImageName { get; set; }
+        public string Categories { get; set; }
         public string Path { get; set; }
 
         public int OwnerId { get; set; }

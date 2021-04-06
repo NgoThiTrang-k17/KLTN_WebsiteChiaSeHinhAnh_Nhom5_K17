@@ -94,57 +94,55 @@ namespace WebApi.Controllers
         }
 
 
-        [Authorize]
-        [HttpPut("SetAvatar/{id:int}")]
-        public ActionResult<AccountResponse> SetAvatar(int id, string avatarPath)
-        {
-            // users can update their own account and admins can update any account
-            if (id != Account.Id && Account.Role != Role.Admin)
-                return Unauthorized(new { message = "Unauthorized" });
-            var account = _accountService.SetAvatar(id, avatarPath);
-            return Ok(account);
-        } 
+        //[Authorize]
+        //[HttpPut("SetAvatar/{id:int}")]
+        //public ActionResult<AccountResponse> SetAvatar(int id, string avatarPath)
+        //{
+        //    // users can update their own account and admins can update any account
+        //    if (id != Account.Id && Account.Role != Role.Admin)
+        //        return Unauthorized(new { message = "Unauthorized" });
+        //    var account = _accountService.SetAvatar(id, avatarPath);
+        //    return Ok(account);
+        //} 
         
-        [Authorize]
-        [HttpPut("UploadAvatar/{id:int}"), DisableRequestSizeLimit]
-        public ActionResult<AccountResponse> UploadAvatar([FromForm] UpdateAvatarRequest model)
-        {
-            //try
-            {
-                var file = Request.Form.Files[0];
-                var folderName = Path.Combine("Resources", "Images");
-                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+        //[Authorize]
+        //[HttpPut("UploadAvatar/{id:int}"), DisableRequestSizeLimit]
+        //public ActionResult<AccountResponse> UploadAvatar([FromForm] UpdateAvatarRequest model)
+        //{
+        //    try
+        //    {
+        //        var file = Request.Form.Files[0];
+        //        var folderName = Path.Combine("Resources", "Images");
+        //        var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
 
-                if (file.Length > 0)
-                {
-                    //var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-                    var fileName = string.Format(@"{0}.jpg", Guid.NewGuid());
-                    var fullPath = Path.Combine(pathToSave, fileName);
-                    var dbPath = Path.Combine(folderName, fileName);
+        //        if (file.Length > 0)
+        //        {
+        //            //var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+        //            var fileName = string.Format(@"{0}.jpg", Guid.NewGuid());
+        //            var fullPath = Path.Combine(pathToSave, fileName);
+        //            var dbPath = Path.Combine(folderName, fileName);
 
-                    using (var stream = new FileStream(fullPath, FileMode.Create))
-                    {
-                        file.CopyTo(stream);
-                    }
+        //            using (var stream = new FileStream(fullPath, FileMode.Create))
+        //            {
+        //                file.CopyTo(stream);
+        //            }
 
-                    model.AvatarPath = dbPath;
+        //            model.AvatarPath = dbPath;
 
-                    var temp = _accountService.SetAvatar(Account.Id, model.AvatarPath);
+        //            var temp = _accountService.SetAvatar(Account.Id, model.AvatarPath);
 
-                    return Ok(temp);
-                }
-                else
-                {
-                    return BadRequest();
-                }
-            }
-           // catch (Exception ex)
-            {
-              //  return StatusCode(500, $"Internal server error: {ex}");
-            }
-
-
-        }
+        //            return Ok(temp);
+        //        }
+        //        else
+        //        {
+        //            return BadRequest();
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, $"Internal server error: {ex}");
+        //    }
+        //}
 
 
         //[Authorize(Role.Admin)]

@@ -9,7 +9,12 @@ namespace WebApi.Models.Comments
     {
         public int Id { get; set; }
         public string Content { get; set; }
-        public DateTime DateCreated { get; set; }
+        public DateTime Created { get; set; }
+
+        public int? ParentId { get; set; }
+        public bool IsParent => !ParentId.HasValue;
+        public bool IsChild => ParentId.HasValue;
+
         public int OwnerId { get; set; }
         public string OwnerName { get; set; }
         public string OwnerAvatar { get; set; }

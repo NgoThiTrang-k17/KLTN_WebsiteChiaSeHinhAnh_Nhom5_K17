@@ -45,7 +45,7 @@ namespace WebApi.Services
 
         public IEnumerable<PostResponse> SearchForPosts( string query)
         {
-            var posts = _context.Posts.Where(p=>p.PostTitle.Contains(query));
+            var posts = _context.Posts.Where(p=>p.Title.Contains(query));
             return _mapper.Map<IList<PostResponse>>(posts);
         }
 

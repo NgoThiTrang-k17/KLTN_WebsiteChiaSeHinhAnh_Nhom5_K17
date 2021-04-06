@@ -8,8 +8,12 @@ namespace WebApi.Models.Comments
 {
     public class CreateCommentRequest
     {
+        public int Id { get; set; }
         public string Content { get; set; }
-        public DateTime DateCreated { get; set; }
+        public DateTime Created { get; set; }
+
+        public int? ParentId { get; set; }
+
         public int OwnerId { get; set; }
         public int PostId { get; set; }
     }

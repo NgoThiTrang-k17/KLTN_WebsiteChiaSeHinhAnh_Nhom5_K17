@@ -5,10 +5,10 @@ namespace WebApi.Models.Reactions
 {
     public class CreateReactionRequest
     {
-        public ReactionType ReactionType { get; set; }
-        public DateTime DateCreated { get; set; }
+        public ReactionType Type { get; set; }
+        public DateTime Created { get; set; }
         public int OwnerId { get; set; }
-        public int PostId { get; set; }
-
+        public ReactionTarget Target { get; set; }
+        public int TargetId { get; set; }
     }
 }

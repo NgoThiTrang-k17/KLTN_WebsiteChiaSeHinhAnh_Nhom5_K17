@@ -16,6 +16,7 @@ namespace WebApi.Services
         PostResponse GetById(int postId);
         PostResponse Create(CreatePostRequest model);
         PostResponse UpdatePost(int id, UpdatePostRequest model);
+        void Share(int id);
         void DeletePost(int id);
         IEnumerable<PostResponse> GetAll();
         IEnumerable<PostResponse> GetByOwnerId(int ownerId);
@@ -55,7 +56,7 @@ namespace WebApi.Services
         public PostResponse UpdatePost(int id, UpdatePostRequest model)
         {
             var post = GetPost(id);
-            post.PostTitle = model.Title;
+            post.Title = model.Title;
             _context.Posts.Update(post);
             _context.SaveChanges();
 
@@ -70,6 +71,11 @@ namespace WebApi.Services
             _context.RemoveRange(GetReactions(id));
             _context.Remove(post);
             _context.SaveChanges();
+        }
+
+        public void Share(int id)
+        {
+           
         }
 
         //Get all posts
@@ -166,7 +172,7 @@ namespace WebApi.Services
         private (int, int) GetPostInfor(int id)
         {
             var commentcount = _context.Comments.Count(c => c.PostId == id);
-            var reactioncount = _context.Reactions.Count(r => r.PostId == id);
+            var reactioncount = _context.Reactions.Count(r => r.TargetId == id && r.Target == ReactionTarget.Post);
             return (commentcount, reactioncount);
         }
 

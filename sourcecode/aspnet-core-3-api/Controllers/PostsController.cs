@@ -18,15 +18,10 @@ namespace WebApi.Controllers
     [Route("[controller]")]
     public class PostsController : BaseController
     {
-        private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IPostService _postService;
 
-        public PostsController(
-            IWebHostEnvironment webHostEnvironment,
-            IPostService postService
-            )
+        public PostsController(IPostService postService)
         {
-            _webHostEnvironment = webHostEnvironment;
             _postService = postService;
         }
         [HttpGet]
@@ -37,34 +32,56 @@ namespace WebApi.Controllers
 
         }
 
-        [HttpGet("GetPostById/{id:int}")]
-        public ActionResult<PostResponse> GetPostById(int id)
+        [HttpGet("{id:int}")]
+        public ActionResult<PostResponse> GetById(int id)
         {
             var post = _postService.GetById(id);
             return Ok(post);
         }
 
-        [HttpGet("GetAllByUserId/{id:int}")]
-        public ActionResult<IEnumerable<PostResponse>> GetAllByUserId(int id)
+        [HttpGet("User/{id:int}")]
+        public ActionResult<IEnumerable<PostResponse>> GetByUser(int id)
         {
             var posts = _postService.GetByOwnerId(id);
             return Ok(posts);
         }
 
-        [HttpGet("DownloadImage/{id:int}")]
-        public IActionResult DownloadImage(int id)
+        [HttpGet("Tags")]
+        public IActionResult GetImageTags(string imageUrl, string authorizeKey)
         {
-            var fileName = _postService.GetById(id).ImageName;
+            //Hosted web API REST Service base url  
 
-            var folderName = Path.Combine("Resources", "Images");
-            var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
-            var filePath = Path.Combine(pathToSave, fileName);
+            var client = new RestClient("https://api.imagga.com/v2/tags?image_url=" + imageUrl);
+            client.Timeout = -1;
+            var request = new RestRequest(Method.GET);
+            //request.AddParameter
 
-            return PhysicalFile(filePath, "image/jpeg");
+            request.AddHeader("Authorization", authorizeKey);
+            request.AddParameter("text/plain", "", ParameterType.RequestBody);
+            IRestResponse response = client.Execute(request);
+            return Ok(response.Content);
         }
 
+        [HttpPost("Share")]
+        public IActionResult Share(int id)
+        {
+            _postService.Share(id);
+            return Ok(new { message = "Post shared"});
+        }
+        //[HttpGet("DownloadImage/{id:int}")]
+        //public IActionResult DownloadImage(int id)
+        //{
+        //    var fileName = _postService.GetById(id).ImageName;
+
+        //    var folderName = Path.Combine("Resources", "Images");
+        //    var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+        //    var filePath = Path.Combine(pathToSave, fileName);
+
+        //    return PhysicalFile(filePath, "image/jpeg");
+        //}
+
         [HttpPost, DisableRequestSizeLimit]
-        public IActionResult CreatePost([FromForm] CreatePostRequest post)
+        public IActionResult Create([FromForm] CreatePostRequest post)
         {
             try
             {
@@ -85,10 +102,10 @@ namespace WebApi.Controllers
                     }
                     var model = new CreatePostRequest
                     {
-                        PostTitle = post.PostTitle,
+                        Title = post.Title,
                         Created = DateTime.Now,
-                        ImageName = fileName,
-                        ImagePath = dbPath,
+                        //ImageName = fileName,
+                        Path = dbPath,
                         OwnerId = Account.Id,
                     };
 
@@ -107,33 +124,14 @@ namespace WebApi.Controllers
             }
         }
 
-        [HttpGet("GetImageTags")]
-        public IActionResult GetImageTags(string imageUrl, string authorizeKey)
-        {
-            //Hosted web API REST Service base url  
-            
-            var client = new RestClient("https://api.imagga.com/v2/tags?image_url="+imageUrl);
-            client.Timeout = -1;
-            var request = new RestRequest(Method.GET);
-            //request.AddParameter
-           
-            request.AddHeader("Authorization", authorizeKey);
-            request.AddParameter("text/plain", "", ParameterType.RequestBody);
-            IRestResponse response = client.Execute(request);
-            return Ok(response.Content);
-        }
-        
         [HttpPut("{id:int}")]
-        public ActionResult<PostResponse> Update(int id,[FromForm]UpdatePostRequest model)
+        public ActionResult<PostResponse> Update(int id, [FromForm] UpdatePostRequest model)
         {
 
             var post = _postService.UpdatePost(id, model);
 
             return Ok(post);
         }
-
-
-
 
         [HttpDelete("{id:int}")]
         public IActionResult Delete(int id)
@@ -143,7 +141,5 @@ namespace WebApi.Controllers
 
 
         }
-
-
     }
 }

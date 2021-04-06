@@ -9,7 +9,6 @@ namespace WebApi.Controllers
     {
         // returns the current authenticated account (null if not logged in)
         public Account Account => (Account)HttpContext.Items["Account"];
-
         public Post Post => (Post)HttpContext.Items["Post"];
     }
 }

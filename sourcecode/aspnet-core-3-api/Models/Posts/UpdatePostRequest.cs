@@ -5,14 +5,14 @@ namespace WebApi.Models.Posts
 {
     public class UpdatePostRequest
     {
-        [Required]
+        public int Id { get; set; }
         public string Title { get; set; }
-        [Required]
+        public string Description { get; set; }
         public DateTime Created { get; set; }
-        //[Required]
-        //public string Path { get; set; }
-        //[Required]
-        //public int OwnerId { get; set; }
+        public string Categories { get; set; }
+        public string Path { get; set; }
+
+        public int OwnerId { get; set; }
 
     }
 }

@@ -33,6 +33,16 @@ namespace WebApi
             services.AddSwaggerGen();
             //for notification service
             services.AddSignalR();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("ClientPermission", policy =>
+                {
+                    policy.WithOrigins("http://localhost:3000")
+                        .AllowAnyMethod()
+                        .AllowCredentials()
+                        .AllowAnyHeader();
+                });
+            });
             //services.AddElasticsearch(Configuration);
             // configure strongly typed settings object
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
@@ -52,7 +62,7 @@ namespace WebApi
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DataContext context)
         {
             // migrate database changes on startup (includes initial db creation)
-            context.Database.Migrate();
+            //context.Database.Migrate();
 
             // generated swagger json and swagger ui middleware
             app.UseSwagger();
@@ -67,11 +77,12 @@ namespace WebApi
 
             // global cors policy
             app.UseCors(x => x
-                   .WithOrigins("http://localhost:4200")
-                .SetIsOriginAllowed(origin => true)
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .AllowCredentials());
+                  .WithOrigins("http://localhost:3000")
+               //.SetIsOriginAllowed(origin => true)
+               .AllowAnyMethod()
+               .AllowAnyHeader()
+               .AllowCredentials());
+            //app.UseCors("ClientPermission");
 
             // global error handler
             app.UseMiddleware<ErrorHandlerMiddleware>();
@@ -79,11 +90,16 @@ namespace WebApi
             // custom jwt auth middleware
             app.UseMiddleware<JwtMiddleware>();
 
+            // SignalR 
+            //app.UseSignalR(route =>
+            //{
+            //    route.MapHub<InformHub>("/inform");
+            //})
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                
+                endpoints.MapHub<InformHub>("/inform");
             });
 
         }

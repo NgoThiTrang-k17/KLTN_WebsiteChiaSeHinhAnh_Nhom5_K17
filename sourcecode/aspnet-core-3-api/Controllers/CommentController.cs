@@ -23,14 +23,14 @@ namespace WebApi.Controllers
             _commentService = commentService;
         }
 
-        [HttpGet("GetAll")]
+        [HttpGet]
         public ActionResult<IEnumerable<CommentResponse>> GetAll()
         {
             var comments = _commentService.GetAll();
             return Ok(comments);
         }
 
-        [HttpGet("GetById/{id:int}")]
+        [HttpGet("{id:int}")]
         public ActionResult<CommentResponse> GetById(int id)
         {
             var comment = _commentService.GetById(id);
@@ -38,10 +38,10 @@ namespace WebApi.Controllers
         }
 
 
-        [HttpGet("GetAllByPostId/{id:int}")]
+        [HttpGet("Post/{id:int}")]
         public ActionResult<IEnumerable<CommentResponse>> GetAllByPostId(int id)
         {
-            var comments = _commentService.GetAllByPostId(id);
+            var comments = _commentService.GetByPost(id);
             return Ok(comments);
         }
 
@@ -57,23 +57,21 @@ namespace WebApi.Controllers
             //    PostId = //Post.Id
             //    comment.PostId
             //};
-            comment.DateCreated = DateTime.Now;
+            comment.Created = DateTime.Now;
             comment.OwnerId = Account.Id;
             _commentService.CreateComment(comment);
             return Ok(comment);
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPut("{id:int}")]
         public ActionResult<CommentResponse> Update(int id, [FromForm] UpdateCommentRequest model)
         {
-
             var comment = _commentService.UpdateComment(id, model);
-
             return Ok(comment);
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpDelete("{id:int}")]
         public IActionResult Delete(int id)
         {

@@ -41,9 +41,9 @@ namespace WebApi.Services
             var reaction = _mapper.Map<Reaction>(model);
             if (reaction == null) throw new AppException("Create reaction failed");
             //Get post by postId then map it to new Post model
-            var post = _mapper.Map<Post>(_postService.GetById(model.PostId));
+            var post = _mapper.Map<Post>(_postService.GetById(model.TargetId));
             reaction.Created = DateTime.Now;
-           
+
             _context.Reactions.Add(reaction);
             _context.SaveChanges();
             SendNotification(reaction.OwnerId, post);
@@ -71,8 +71,10 @@ namespace WebApi.Services
 
         public void DeleteByPostId(int postId, int ownerId)
         {
-            var model = _context.Reactions.Where(reaction => reaction.PostId == postId && reaction.OwnerId == ownerId);
-            
+            var model = _context.Reactions.Where(reaction => reaction.Target == ReactionTarget.Post
+            && reaction.TargetId == postId
+            && reaction.OwnerId == ownerId);
+
             var reaction = getReaction(model.FirstOrDefault().Id);
             _context.Remove(reaction);
             _context.SaveChanges();
@@ -87,13 +89,16 @@ namespace WebApi.Services
 
         public IEnumerable<ReactionResponse> GetAllByPostId(int postId)
         {
-            var reactions = _context.Reactions.Where(reaction => reaction.PostId == postId);
+            var reactions = _context.Reactions.Where(reaction => reaction.Target == ReactionTarget.Post && reaction.TargetId == postId);
             return _mapper.Map<List<ReactionResponse>>(reactions);
         }
         public ReactionState GetState(int postId, int ownerId)
         {
-            
-            var reaction = _context.Reactions.Where(reaction => reaction.PostId == postId && reaction.OwnerId == ownerId).Count();
+
+            var reaction = _context.Reactions.Where(reaction =>
+            reaction.Target == ReactionTarget.Post
+            && reaction.TargetId == postId
+            && reaction.OwnerId == ownerId).Count();
             var reactionState = new ReactionState
             {
                 IsCreated = 0
