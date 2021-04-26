@@ -1,6 +1,7 @@
 using AutoMapper;
 using WebApi.Entities;
 using WebApi.Models.Accounts;
+using WebApi.Models.Chats;
 using WebApi.Models.Comments;
 using WebApi.Models.Follows;
 using WebApi.Models.Notifications;
@@ -14,6 +15,13 @@ namespace WebApi.Helpers
         // mappings between model and entity objects <source,des>
         public AutoMapperProfile()
         {
+            //Follow
+            CreateMap<ChatMessage, ChatMessageResponse>();
+
+            CreateMap<CreateChatMessageRequest, ChatMessage>();
+
+            //CreateMap<UpdateChatMessageRequest, ChatMessage>();
+
             //Follow
             CreateMap<Follow, FollowResponse>();
 

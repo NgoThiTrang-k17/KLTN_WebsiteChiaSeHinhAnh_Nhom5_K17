@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -26,7 +27,10 @@ namespace WebApi.Controllers
         [HttpPost("authenticate")]
         public ActionResult<AuthenticateResponse> Authenticate(AuthenticateRequest model)
         {
+
             var response = _accountService.Authenticate(model, ipAddress());
+            if (response == null)
+                return BadRequest(new { message = "Some thing wrong" });
             setTokenCookie(response.RefreshToken);
             return Ok(response);
         }
@@ -153,7 +157,7 @@ namespace WebApi.Controllers
             return Ok(accounts);
         }
 
-        [Authorize]
+        [Authorize(Role.User,Role.Admin)]
         [HttpGet("{id:int}")]
         public ActionResult<AccountResponse> GetById(int id)
         {
@@ -165,7 +169,7 @@ namespace WebApi.Controllers
             return Ok(account);
         }
 
-        [Authorize(Role.Admin)]
+        [Authorize]
         [HttpPost]
         public ActionResult<AccountResponse> Create(CreateAccountRequest model)
         {

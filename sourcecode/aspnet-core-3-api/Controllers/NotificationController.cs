@@ -45,7 +45,7 @@ namespace WebApi.Controllers
             return Ok(notification);
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpDelete("{id:int}")]
         public IActionResult Delete(int id)
         {

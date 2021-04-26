@@ -1,13 +1,15 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IO;
+using System.Text;
 using WebApi.Helpers;
 using WebApi.Middleware;
 using WebApi.Services;
@@ -27,17 +29,30 @@ namespace WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DataContext>();
-            services.AddCors();
+
             services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.IgnoreNullValues = true);
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddSwaggerGen();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(option =>
+                {
+                    option.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey =  new SymmetricSecurityKey(Encoding.ASCII.GetBytes("409c0d66-a594-44d2-8bc0-d3961765b3e5")),
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                    };
+                });
             //for notification service
             services.AddSignalR();
+            services.AddSingleton<IUserConnectionManager, UserConnectionManager>();
             services.AddCors(options =>
             {
                 options.AddPolicy("ClientPermission", policy =>
                 {
-                    policy.WithOrigins("http://localhost:3000")
+                    policy.SetIsOriginAllowed(origin=>true)
                         .AllowAnyMethod()
                         .AllowCredentials()
                         .AllowAnyHeader();
@@ -48,6 +63,7 @@ namespace WebApi
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
             // configure DI for application services
+            services.AddScoped<IChatService, ChatService>();
             services.AddScoped<IReactionService, ReactionService>();
             services.AddScoped<IFollowService, FollowService>();
             services.AddScoped<INotificationService, NotificationService>();
@@ -77,7 +93,7 @@ namespace WebApi
 
             // global cors policy
             app.UseCors(x => x
-                  .WithOrigins("http://localhost:3000")
+                  .WithOrigins("http://localhost:4200")
                //.SetIsOriginAllowed(origin => true)
                .AllowAnyMethod()
                .AllowAnyHeader()
@@ -91,15 +107,14 @@ namespace WebApi
             app.UseMiddleware<JwtMiddleware>();
 
             // SignalR 
-            //app.UseSignalR(route =>
-            //{
-            //    route.MapHub<InformHub>("/inform");
-            //})
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<InformHub>("/inform");
+                endpoints.MapHub<ChatHub>("/hubs/chat");
             });
 
         }

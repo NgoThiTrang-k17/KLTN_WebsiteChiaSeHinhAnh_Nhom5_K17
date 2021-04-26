@@ -34,6 +34,20 @@ namespace WebApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ChatMessages",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    User = table.Column<string>(nullable: true),
+                    Message = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ChatMessages", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Comments",
                 columns: table => new
                 {
@@ -41,7 +55,7 @@ namespace WebApi.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Content = table.Column<string>(nullable: true),
                     Created = table.Column<DateTime>(nullable: false),
-                    ParrentId = table.Column<int>(nullable: true),
+                    ParentId = table.Column<int>(nullable: true),
                     OwnerId = table.Column<int>(nullable: false),
                     PostId = table.Column<int>(nullable: false)
                 },
@@ -89,9 +103,10 @@ namespace WebApi.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    PostTitle = table.Column<string>(nullable: true),
+                    Title = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
                     Created = table.Column<DateTime>(nullable: false),
-                    ImageName = table.Column<string>(nullable: true),
+                    Categories = table.Column<string>(nullable: true),
                     Path = table.Column<string>(nullable: true),
                     OwnerId = table.Column<int>(nullable: false)
                 },
@@ -109,7 +124,8 @@ namespace WebApi.Migrations
                     Type = table.Column<int>(nullable: false),
                     Created = table.Column<DateTime>(nullable: false),
                     OwnerId = table.Column<int>(nullable: false),
-                    PostId = table.Column<int>(nullable: false)
+                    Target = table.Column<int>(nullable: false),
+                    TargetId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -150,6 +166,9 @@ namespace WebApi.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "ChatMessages");
+
             migrationBuilder.DropTable(
                 name: "Comments");
 
