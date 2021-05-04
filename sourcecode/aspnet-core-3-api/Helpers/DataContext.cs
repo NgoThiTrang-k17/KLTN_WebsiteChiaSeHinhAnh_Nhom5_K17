@@ -29,7 +29,7 @@ namespace WebApi.Helpers
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
             // connect to sqlserver database
-             options.UseSqlServer(Configuration.GetConnectionString("DefaultDesktop"));
+             options.UseSqlServer(Configuration.GetConnectionString("WebApiDatabase"));
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
