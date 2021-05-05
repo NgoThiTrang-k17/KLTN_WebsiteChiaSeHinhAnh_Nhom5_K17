@@ -109,7 +109,7 @@ namespace WebApi.Controllers
                 //    OwnerId = Account.Id,
                 //};
                 
-                model.OwnerId = Account.Id;
+                //model.OwnerId = Account.Id;
                 var post = _postService.Create(model);
                 return Ok(post);
                 //}

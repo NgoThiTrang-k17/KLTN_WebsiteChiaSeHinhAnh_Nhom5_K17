@@ -5,7 +5,7 @@
             <div class="row">
                 <div class="col-6 text-center" style="outline-style: none; ">
                     <div class="card mt-4 mb-4 ml-4 mr-4" style="justify-content: center; align-items: center; display: flex;">
-                        <img style="height: 100%; width: 100%;" [src]="createImgPath(post.imagePath)" alt="">
+                        <img style="height: 100%; width: 100%;" [src]="createImgPath(post.path)" alt="">
                     </div>
                 </div>
                 <div class="col-6">
@@ -24,7 +24,7 @@
                                 </button>
                                 <div id="myDropdown" class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                     aria-labelledby="dropdownMenuLink" *dropdownMenu>
-                                    <a class="dropdown-item" href="../../../assets/images/{{post.imageName}}" download="{{post.postTitle}}.jpg" Download Image >Tải xuống</a>
+                                    <a class="dropdown-item" href="../../../assets/images/{{post.imageName}}" download="{{post.title}}.jpg" Download Image >Tải xuống</a>
                                     <!-- <a class="dropdown-item" [disabled]="disabled" [ngClass]="{'disabled': disabled}" (click)="download()">Tải xuống</a> -->
                                     <a class="dropdown-item" href="#">Báo cáo bài viết</a>
                                     <!-- <div class="dropdown-divider"></div>
@@ -56,7 +56,7 @@
                     <br>
                     <div class="row">
                         <div class="offset-1 col-10 p-0">
-                            <h3 class="mb-1"><strong>{{post.postTitle}}</strong></h3>
+                            <h3 class="mb-1"><strong>{{post.title}}</strong></h3>
                         </div>
                     </div>
                     <a *ngIf="mreaction.isCreated == 0" class="btn btn-sm ml-4 mt-3" (click)="onCreateReaction()" ><span style="font-size:medium;">{{post.reactionCount}}  <i class="fa fa-heart heart" style=" color: rgb(219, 219, 219);"></i></span></a>

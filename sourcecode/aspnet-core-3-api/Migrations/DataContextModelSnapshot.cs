@@ -86,6 +86,9 @@ namespace WebApi.Migrations
                     b.Property<string>("User")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("ChatMessages");
@@ -107,7 +110,7 @@ namespace WebApi.Migrations
                     b.Property<int>("OwnerId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ParentId")
+                    b.Property<int>("ParrentId")
                         .HasColumnType("int");
 
                     b.Property<int>("PostId")

@@ -2,6 +2,10 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Migrations\20210407070521_Initial.cs" />
+    <Compile Remove="Migrations\20210407070521_Initial.Designer.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Abp" Version="5.10.0" />
