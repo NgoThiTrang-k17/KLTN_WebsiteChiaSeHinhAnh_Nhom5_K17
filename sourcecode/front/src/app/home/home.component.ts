@@ -2,6 +2,7 @@
 import { HttpClient, HttpEventType } from '@angular/common/http';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { first } from 'rxjs/operators';
+import { AngularFireStorage } from '@angular/fire/storage'
 
 import { AccountService, PostService, AlertService } from '@app/_services';
 import { Post } from '../_models/post';
@@ -10,7 +11,7 @@ import { PostToCreate } from '../_models/postToCreate';
 @Component({ templateUrl: 'home.component.html' })
 export class HomeComponent implements OnInit {
     public isCreate: boolean;
-    public postTitle: string;
+    public title: string;
     // public created: string;
     // public ownerId: number;
     public post: PostToCreate;
@@ -21,6 +22,7 @@ export class HomeComponent implements OnInit {
     submitted = false;
     myForm: FormGroup;
     testForm: any;
+    downloadURL: any;
 
     account = this.accountService.accountValue;
     postS = this.postService.postValue;
@@ -36,12 +38,14 @@ export class HomeComponent implements OnInit {
         private accountService: AccountService,
         private postService: PostService,
         private formBuilder: FormBuilder,
-        private alertService: AlertService) { }
+        private alertService: AlertService,
+        private af: AngularFireStorage,
+    ) { }
 
     ngOnInit() {
         // this.isCreate = true;
         this.myForm = this.formBuilder.group({
-            postTitle: ['', Validators.required],
+            title: ['', Validators.required],
             file: ['', Validators.required],
             fileSource: ['', Validators.required]
         });
@@ -50,6 +54,8 @@ export class HomeComponent implements OnInit {
             .subscribe(res => {
                 this.posts = res as Post[];
             });
+
+        this.downloadURL = this.af.ref(this.post.path).getDownloadURL();
     }
 
     get f() { return this.myForm.controls; }
@@ -61,9 +67,9 @@ export class HomeComponent implements OnInit {
             const [file] = event.target.files;
             console.log('1');
             
-            console.log(this.myForm.get('postTitle').value);
-            this.testForm.append("file",file);
-            this.testForm.append("postTitle", this.myForm.get("postTitle").value);
+            console.log(this.myForm.get('title').value);
+            //this.testForm.append("file",file);
+            this.testForm.append("title", this.myForm.get("title").value);
             reader.readAsDataURL(file);
             reader.onload = () => {
                 this.imageSrc = reader.result as string;

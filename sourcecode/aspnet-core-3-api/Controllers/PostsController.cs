@@ -81,7 +81,7 @@ namespace WebApi.Controllers
         //}
 
         [HttpPost, DisableRequestSizeLimit]
-        public IActionResult Create([FromForm] CreatePostRequest model)
+        public IActionResult Create(CreatePostRequest model)
         {
             try
             {

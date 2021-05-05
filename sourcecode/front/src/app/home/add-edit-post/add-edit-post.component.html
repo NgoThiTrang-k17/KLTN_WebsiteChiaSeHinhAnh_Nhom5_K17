@@ -16,11 +16,11 @@
                         <h3 *ngIf="!isAddMode" class="text-center">Chỉnh sửa bài viết</h3>
                         <form [formGroup]="myForm" (ngSubmit)="submit()">
                             <div class="form-group">
-                                <label for="postTitle">Tiêu đề</label>
-                                <input *ngIf="isAddMode" type="text" class="form-control" formControlName="postTitle" id="postTitle" placeholder="Nhập tiêu đề" [ngClass]="{ 'is-invalid': submitted && f.postTitle.errors }">
-                                <input *ngIf="!isAddMode" type="text" class="form-control" formControlName="postTitle" id="postTitle" value="{{post.postTitle}}" [ngClass]="{ 'is-invalid': submitted && f.postTitle.errors }">
-                                <div *ngIf="submitted && f.postTitle.errors" class="invalid-feedback">
-                                    <div *ngIf="f.postTitle.errors.required">Vui lòng nhập tiêu đề</div>
+                                <label for="title">Tiêu đề</label>
+                                <input *ngIf="isAddMode" type="text" class="form-control" formControlName="title" id="title" placeholder="Nhập tiêu đề" [ngClass]="{ 'is-invalid': submitted && f.title.errors }">
+                                <input *ngIf="!isAddMode" type="text" class="form-control" formControlName="title" id="title" value="{{post.title}}" [ngClass]="{ 'is-invalid': submitted && f.title.errors }">
+                                <div *ngIf="submitted && f.title.errors" class="invalid-feedback">
+                                    <div *ngIf="f.title.errors.required">Vui lòng nhập tiêu đề</div>
                                 </div>
                             </div>
                             <div *ngIf="isAddMode" class="form-group">
@@ -35,7 +35,7 @@
                                     style="word-wrap:break-word;"
                                     [ngClass]="{ 'is-invalid': submitted && f.file.errors }">     
                                 <div *ngIf="submitted && f.file.errors" class="invalid-feedback">
-                                    <div *ngIf="f.postTitle.file.required">Vui lòng tải hình</div>
+                                    <div *ngIf="f.title.file.required">Vui lòng tải hình</div>
                                 </div>     
                             </div>
                             <!-- <img [src]="imageSrc" *ngIf="imageSrc" style="height: auto; width:500px"> -->

@@ -1,6 +1,6 @@
 export interface PostToCreate {
-    postTitle: string;
+    title: string;
     created: string;
-    imagePath: string;
+    path: string;
     ownerId: number
 }

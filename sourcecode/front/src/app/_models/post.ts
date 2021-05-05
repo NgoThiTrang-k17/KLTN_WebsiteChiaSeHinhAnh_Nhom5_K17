@@ -1,9 +1,9 @@
 export class Post {
     id: number;
-    postTitle: string;
+    title: string;
     created: string;
     imageName: string;
-    imagePath: string;
+    path: string;
     ownerId: number;
     reactionCount: number;
     commentCount: number;

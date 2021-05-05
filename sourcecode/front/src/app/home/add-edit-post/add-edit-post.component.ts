@@ -13,7 +13,7 @@ import { Post, PostToCreate } from '@app/_models';
 })
 export class AddEditPostComponent implements OnInit {
 
-  public postTitle: string;
+  public title: string;
   public imagePath: string;
   myForm: FormGroup;
   testForm: any;
@@ -43,8 +43,9 @@ export class AddEditPostComponent implements OnInit {
     this.isAddMode = !this.id;
 
     this.myForm = this.formBuilder.group({
-      postTitle: ['', Validators.required],
-      file: ['', this.isAddMode ? Validators.required : Validators.nullValidator]
+      title: ['', Validators.required],
+      path: ['', Validators.required],
+      //file: ['', this.isAddMode ? Validators.required : Validators.nullValidator]
     });
 
     if (!this.isAddMode) {
@@ -66,7 +67,7 @@ export class AddEditPostComponent implements OnInit {
     if ($event.target.files && $event.target.files.length) {
         const [file] = $event.target.files;
         console.log('1');
-        this.testForm.append("file",file);
+        //this.testForm.append("file",file);
         //this.testForm.append("postTitle", this.myForm.get("postTitle").value);     
         
         reader.readAsDataURL(file);
@@ -74,7 +75,7 @@ export class AddEditPostComponent implements OnInit {
             this.imageSrc = reader.result as string;
             console.log(this.myForm.value); 
         };
-        console.log(this.myForm.get('postTitle').value);
+        console.log(this.myForm.get('title').value);
     }
   }
 
@@ -84,16 +85,18 @@ export class AddEditPostComponent implements OnInit {
       return;
     }
 
-    console.log(this.path);
-    this.imagePath = "/files"+Math.random()+this.path;
-    this.af.upload(this.imagePath,this.path);
-    console.log(this.imagePath);
-
     console.log(this.testForm);
-    console.log(this.myForm.get('postTitle').value);   
+    console.log(this.myForm.get('title').value);   
     if (this.isAddMode) { 
-      this.testForm.set("postTitle", this.myForm.get("postTitle").value);
-      this.testForm.append("imagePath",this.imagePath);
+      console.log(this.path);
+      this.imagePath = "/files"+Math.random()+this.path;
+      this.af.upload(this.imagePath,this.path);
+      console.log(this.imagePath);
+      const fileRef = this.af.ref(this.imagePath);
+      fileRef.getDownloadURL().subscribe((url) => {
+        this.testForm['path'] = url;
+      })
+      this.testForm.set("title", this.myForm.get("title").value);
       this.postService.createPost(this.testForm)
       .subscribe(res => {
           console.log(res);
@@ -105,7 +108,7 @@ export class AddEditPostComponent implements OnInit {
           console.log(error);               
       })
     } else if (!this.isAddMode) {
-      this.testForm.set("title", this.myForm.get("postTitle").value); 
+      this.testForm.set("title", this.myForm.get("title").value); 
       this.postService.update(this.id, this.testForm)
         .subscribe(res => {
           console.log(res);
