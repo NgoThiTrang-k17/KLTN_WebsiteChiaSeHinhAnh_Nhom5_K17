@@ -31,6 +31,7 @@
                                     type="file"      
                                     class="form-control"     
                                     (change)="onFileChange($event)"
+                                    accept=".png,.jpg"
                                     style="word-wrap:break-word;"
                                     [ngClass]="{ 'is-invalid': submitted && f.file.errors }">     
                                 <div *ngIf="submitted && f.file.errors" class="invalid-feedback">
@@ -50,5 +51,11 @@
             </div>          
         </div>    
     </div>
+</div>
+
+<input type="file" (change)="onFileChange($event)" accept=".png,.jpg" id="">
+<button (click)="submit()">Upload</button>
+<div *ngIf="downloadURL | async; let url">
+    <img style="height: 100%; width: 100%;" [src]="url" alt="">
 </div>
 

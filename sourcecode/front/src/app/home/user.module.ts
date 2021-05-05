@@ -5,6 +5,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { MatTabsModule } from '@angular/material/tabs';
 import { TabsModule } from 'ngx-bootstrap/tabs';
+import { AngularFireStorageModule } from '@angular/fire/storage';
+import { AngularFireModule } from '@angular/fire';
 
 import { NavHomeComponent } from './navhome.component';
 import { UserRoutingModule } from './user-routing.module';
@@ -26,6 +28,16 @@ import { SearchComponent } from './search/search.component';
         MatTabsModule,
         TabsModule.forRoot(),
         ProfileModule,
+        AngularFireModule.initializeApp({
+            apiKey: "AIzaSyAD6FMqMf0DSIHhcg22zoihBCxmYHvC_Og",
+            authDomain: "kltn-websitechiasehinhanh.firebaseapp.com",
+            projectId: "kltn-websitechiasehinhanh",
+            storageBucket: "kltn-websitechiasehinhanh.appspot.com",
+            messagingSenderId: "505653862664",
+            appId: "1:505653862664:web:258fb90458859a842b8cbd",
+            measurementId: "G-4DJ7TDJKGG"
+        }),
+        AngularFireStorageModule,
     ],
     declarations: [
         HomeComponent,

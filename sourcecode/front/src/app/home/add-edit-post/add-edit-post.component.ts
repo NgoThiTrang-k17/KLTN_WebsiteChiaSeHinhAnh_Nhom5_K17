@@ -2,6 +2,7 @@ import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
+import { AngularFireStorage } from '@angular/fire/storage'
 
 import { AccountService, PostService, AlertService } from '@app/_services';
 import { Post, PostToCreate } from '@app/_models';
@@ -13,6 +14,7 @@ import { Post, PostToCreate } from '@app/_models';
 export class AddEditPostComponent implements OnInit {
 
   public postTitle: string;
+  public imagePath: string;
   myForm: FormGroup;
   testForm: any;
   imageSrc: string;
@@ -20,6 +22,8 @@ export class AddEditPostComponent implements OnInit {
   isAddMode: boolean;
   loading = false;
   submitted = false;
+  path: string;
+  downloadURL: any;
 
   post = new Post;
 
@@ -29,9 +33,12 @@ export class AddEditPostComponent implements OnInit {
     private alertService: AlertService,
     private route: ActivatedRoute,
     private router: Router,
+    private af: AngularFireStorage,
   ) { }
 
   ngOnInit(): void {
+    this.downloadURL = this.af.ref('/files0.7934253494382291[object File]').getDownloadURL();
+
     this.id = this.route.snapshot.params['id'];
     this.isAddMode = !this.id;
 
@@ -51,10 +58,13 @@ export class AddEditPostComponent implements OnInit {
 
   get f() { return this.myForm.controls; }
 
-  onFileChange(event) {
+  onFileChange($event) {
+
+    this.path = $event.target.files[0]
+
     const reader = new FileReader();
-    if (event.target.files && event.target.files.length) {
-        const [file] = event.target.files;
+    if ($event.target.files && $event.target.files.length) {
+        const [file] = $event.target.files;
         console.log('1');
         this.testForm.append("file",file);
         //this.testForm.append("postTitle", this.myForm.get("postTitle").value);     
@@ -73,10 +83,17 @@ export class AddEditPostComponent implements OnInit {
     if (this.myForm.invalid) {
       return;
     }
+
+    console.log(this.path);
+    this.imagePath = "/files"+Math.random()+this.path;
+    this.af.upload(this.imagePath,this.path);
+    console.log(this.imagePath);
+
     console.log(this.testForm);
     console.log(this.myForm.get('postTitle').value);   
     if (this.isAddMode) { 
       this.testForm.set("postTitle", this.myForm.get("postTitle").value);
+      this.testForm.append("imagePath",this.imagePath);
       this.postService.createPost(this.testForm)
       .subscribe(res => {
           console.log(res);
@@ -103,6 +120,7 @@ export class AddEditPostComponent implements OnInit {
   }
 
   public createImgPath = (serverPath: string) => {
-    return `http://localhost:5000/${serverPath}`;
+    return `storage.googleapis.com/storage/v1/b/kltn-websitechiasehinhanh.appspot.com/o/${serverPath}`;
+    // return `http://localhost:5000/${serverPath}`;
   }
 }
