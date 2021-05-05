@@ -81,42 +81,42 @@ namespace WebApi.Controllers
         //}
 
         [HttpPost, DisableRequestSizeLimit]
-        public IActionResult Create([FromForm] CreatePostRequest post)
+        public IActionResult Create([FromForm] CreatePostRequest model)
         {
             try
             {
-                var file = Request.Form.Files[0];
-                var folderName = Path.Combine("Resources", "Images");
-                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+                //var file = Request.Form.Files[0];
+                //var folderName = Path.Combine("Resources", "Images");
+                //var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
 
-                if (file.Length > 0)
-                {
-                    //var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-                    var fileName = string.Format(@"{0}.jpg", Guid.NewGuid());
-                    var fullPath = Path.Combine(pathToSave, fileName);
-                    var dbPath = Path.Combine(folderName, fileName);
+                //if (file.Length > 0)
+                //{
+                //var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                //var fileName = string.Format(@"{0}.jpg", Guid.NewGuid());
+                //var fullPath = Path.Combine(pathToSave, fileName);
+                //var dbPath = Path.Combine(folderName, fileName);
 
-                    using (var stream = new FileStream(fullPath, FileMode.Create))
-                    {
-                        file.CopyTo(stream);
-                    }
-                    var model = new CreatePostRequest
-                    {
-                        Title = post.Title,
-                        Created = DateTime.Now,
-                        //ImageName = fileName,
-                        Path = dbPath,
-                        OwnerId = Account.Id,
-                    };
-
-                    var temp = _postService.Create(model);
-
-                    return Ok(new { fullPath });
-                }
-                else
-                {
-                    return BadRequest();
-                }
+                //using (var stream = new FileStream(fullPath, FileMode.Create))
+                //{
+                //    file.CopyTo(stream);
+                //}
+                //var model = new CreatePostRequest
+                //{
+                //    Title = post.Title,
+                //    Created = DateTime.Now,
+                //    //ImageName = fileName,
+                //    Path = dbPath,
+                //    OwnerId = Account.Id,
+                //};
+                
+                model.OwnerId = Account.Id;
+                var post = _postService.Create(model);
+                return Ok(post);
+                //}
+                //else
+                //{
+                //    return BadRequest();
+                //}
             }
             catch (Exception ex)
             {
