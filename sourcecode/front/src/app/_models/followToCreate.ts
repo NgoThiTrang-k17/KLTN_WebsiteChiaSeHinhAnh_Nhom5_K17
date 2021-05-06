@@ -1,3 +1,3 @@
 export class FollowToCreate {
-    accountId: number;
+    subjectId: number;
 }

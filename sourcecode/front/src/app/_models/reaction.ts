@@ -1,8 +1,8 @@
 export class Reaction {
     id: number;
-    reactionType: number;
+    type: number;
     created: string;
     ownerId: number;
-    postId: number;
-    isCreated: number;
+    target: number;
+    targetId: number;
 }

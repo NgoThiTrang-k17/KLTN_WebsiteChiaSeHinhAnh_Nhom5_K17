@@ -35,7 +35,7 @@
                                 <div class="row" style="justify-content: center; align-items: center; display: flex;">
                                     <div class="col-2">
                                         <img *ngIf="notification.actionOwnerAvatarPath==null" (click)="updateNotification(notification.id)" class="card rounded-circle" style="height: 40px; width: 41px;" src="../../assets/images/default-profile.png">
-                                        <img *ngIf="notification.actionOwnerAvatarPath!=null" (click)="updateNotification(notification.id)" class="card rounded-circle" style="height: 40px; width: 41px;" [src]="createImgPath(notification.actionOwnerAvatarPath)"> 
+                                        <img *ngIf="notification.actionOwnerAvatarPath!=null" (click)="updateNotification(notification.id)" class="card rounded-circle" style="height: 40px; width: 41px;" [src]="notification.actionOwnerAvatarPath"> 
                                     </div>
                                     <div class="col-8">
                                         <p (click)="updateNotification(notification.id)" style="width:190px;white-space: normal;word-break: break-all"><strong>{{notification.actionOwnerName}}</strong> đã thêm bài viết mới</p>
@@ -49,7 +49,7 @@
                                 <div class="row" style="justify-content: center; align-items: center; display: flex;">
                                     <div class="col-2">
                                         <img *ngIf="notification.actionOwnerAvatarPath==null" class="card rounded-circle" style="height: 40px; width: 41px;" src="../../assets/images/default-profile.png">
-                                        <img *ngIf="notification.actionOwnerAvatarPath!=null" class="card rounded-circle" style="height: 40px; width: 41px;" [src]="createImgPath(notification.actionOwnerAvatarPath)"> 
+                                        <img *ngIf="notification.actionOwnerAvatarPath!=null" class="card rounded-circle" style="height: 40px; width: 41px;" [src]="notification.actionOwnerAvatarPath"> 
                                     </div>
                                     <div class="col-8">
                                         <p style="width:190px;white-space: normal;word-break: break-all"><strong>{{notification.actionOwnerName}}</strong> đã thích bài viết của bạn</p>
@@ -63,7 +63,7 @@
                                 <div class="row" style="justify-content: center; align-items: center; display: flex;">
                                     <div class="col-2">
                                         <img *ngIf="notification.actionOwnerAvatarPath==null" class="card rounded-circle" style="height: 40px; width: 41px;" src="../../assets/images/default-profile.png">
-                                        <img *ngIf="notification.actionOwnerAvatarPath!=null" class="card rounded-circle" style="height: 40px; width: 41px;" [src]="createImgPath(notification.actionOwnerAvatarPath)"> 
+                                        <img *ngIf="notification.actionOwnerAvatarPath!=null" class="card rounded-circle" style="height: 40px; width: 41px;" [src]="notification.actionOwnerAvatarPath"> 
                                     </div>
                                     <div class="col-8">
                                         <p style="width:190px;white-space: normal;word-break: break-all"><strong>{{notification.actionOwnerName}}</strong> đã bình luận bài viết của bạn</p>
@@ -77,7 +77,7 @@
                                 <div class="row" style="justify-content: center; align-items: center; display: flex;">
                                     <div class="col-2">
                                         <img *ngIf="notification.actionOwnerAvatarPath==null" class="card rounded-circle" style="height: 40px; width: 41px;" src="../../assets/images/default-profile.png">
-                                        <img *ngIf="notification.actionOwnerAvatarPath!=null" class="card rounded-circle" style="height: 40px; width: 41px;" [src]="createImgPath(notification.actionOwnerAvatarPath)"> 
+                                        <img *ngIf="notification.actionOwnerAvatarPath!=null" class="card rounded-circle" style="height: 40px; width: 41px;" [src]="notification.actionOwnerAvatarPath"> 
                                     </div>
                                     <div class="col-8">
                                         <p style="width:190px;white-space: normal;word-break: break-all"><strong>{{notification.actionOwnerName}}</strong> đã theo dõi bạn</p>
@@ -104,7 +104,7 @@
                 <div class="nav-item dropdown br-xam "> 
                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" dropdownToggle>
                         <img *ngIf="maccount.avatarPath==null" class="card rounded-circle" style="height: 35px; width: 36px;" src="../../assets/images/default-profile.png">
-                        <img *ngIf="maccount.avatarPath!=null" class="card rounded-circle" style="height: 35px; width: 36px;" [src]="createImgPath(maccount.avatarPath)">        
+                        <img *ngIf="maccount.avatarPath!=null" class="card rounded-circle" style="height: 35px; width: 36px;" [src]="maccount.avatarPath">        
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right" *dropdownMenu>
                         <li routerLink="profile" class="dropdown-item nav-link btn" style="text-align: left;">Trang cá nhân <!--<i class="fa fa-cogs"></i>--></li>
@@ -129,8 +129,8 @@
             <div id="1" *ngFor="let post of posts">
               <a routerLink="detail-post/{{post.id}}/{{post.ownerId}}" class="text-dark card-link" id="1">
                 <div class="card btn-outline-white">
-                  <img class="card-img-top img-fluid" [src]="createImgPath(post.imagePath)" alt="Card image cap">
-                  <p class="card-title" style="margin: 5px 5px 5px 5px; font-size:15px;"><strong>{{post.postTitle}}</strong></p>
+                  <img class="card-img-top img-fluid" [src]="post.path" alt="Card image cap">
+                  <p class="card-title" style="margin: 5px 5px 5px 5px; font-size:15px;"><strong>{{post.title}}</strong></p>
                 </div> 
               </a>
             </div> 
@@ -150,7 +150,7 @@
                                     style="height: 60px; width: 61px;" class="img-fluid rounded-circle" alt="">
                                 <img
                                     *ngIf="account.avatarPath!=null"
-                                    [src]="createImgPath(account.avatarPath)"
+                                    [src]="account.avatarPath"
                                     style="height: 60px; width: 61px;" class="img-fluid rounded-circle" alt="">
                             </div>
                             <div class="col-lg-7">

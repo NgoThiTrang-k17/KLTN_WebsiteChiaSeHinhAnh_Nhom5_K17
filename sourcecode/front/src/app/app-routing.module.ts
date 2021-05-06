@@ -9,7 +9,7 @@ const accountModule = () => import('./account/account.module').then(x => x.Accou
 const adminModule = () => import('./admin/admin.module').then(x => x.AdminModule);
 
 const routes: Routes = [
-    { path: '', redirectTo: 'account', pathMatch: 'full'},
+    { path: '', redirectTo: 'user', pathMatch: 'full'},
     { path: 'user', loadChildren: userModule, canActivate: [AuthGuard] },
     { path: 'account', loadChildren: accountModule, },
     { path: 'admin', loadChildren: adminModule, },

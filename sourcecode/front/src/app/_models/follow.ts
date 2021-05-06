@@ -1,3 +1,5 @@
 export class Follow {
-    isCreated: number;
+    subjectId: number;
+    followerId: number;
+    status: number;
 }

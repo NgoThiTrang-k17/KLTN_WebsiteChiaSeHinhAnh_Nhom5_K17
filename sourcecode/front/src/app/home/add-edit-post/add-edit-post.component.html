@@ -7,7 +7,7 @@
                     <div class="card mt-4 mb-4 ml-4 mr-4" style="justify-content: center; align-items: center; display: flex; height: 90%; width: 95%">
                         <img *ngIf="imageSrc!=null" style="height: 100%; width: 100%;" [src]="imageSrc" alt="">
                         <h6 *ngIf="imageSrc==null && isAddMode">Chưa có hình ảnh được chọn</h6>
-                        <img *ngIf="!isAddMode && imageSrc==null" style="height: 100%; width: 100%;" [src]="createImgPath(post.imagePath)" alt="">
+                        <img *ngIf="!isAddMode && imageSrc==null" style="height: 100%; width: 100%;" [src]="post.path" alt="">
                     </div>
                 </div>
                 <div class="col-6 mt-5 mb-5">
@@ -27,7 +27,7 @@
                                 <label for="file">File</label>     
                                 <input      
                                     formControlName="file"     
-                                    id="file"      
+                                    id="path"      
                                     type="file"      
                                     class="form-control"     
                                     (change)="onFileChange($event)"
@@ -53,9 +53,16 @@
     </div>
 </div>
 
-<input type="file" (change)="onFileChange($event)" accept=".png,.jpg" id="">
-<button (click)="submit()">Upload</button>
-<div *ngIf="downloadURL | async; let url">
-    <img style="height: 100%; width: 100%;" [src]="url" alt="">
-</div>
+<!-- <div *ngIf="isAddMode">
+    <input type="file" (change)="onFileChange($event)" accept=".png,.jpg" id="">
+    <button (click)="submit()">Upload</button>
+    <img style="height: 50%; width: 50%;" [src]="createImgPath('/files0.2345243105091137[object File]')" alt=""> 
+    <div (change)="ImgPath('/files0.2345243105091137[object File]')">
+        <div *ngIf="downloadURL | async; let url">
+            <img style="height: 100%; width: 100%;" [src]="url" alt="">
+        </div>
+    </div>
+      
+</div> -->
+
 

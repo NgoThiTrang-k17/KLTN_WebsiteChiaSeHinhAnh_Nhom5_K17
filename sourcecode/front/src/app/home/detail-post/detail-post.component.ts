@@ -15,17 +15,21 @@ export class DetailPostComponent {
   testForm: any;
   cmtForm: FormGroup;
   cmtFormData: any;
+  updateCmtForm: FormGroup;
+  updateCmtFormData: any;
   id:number;
   editCmt: boolean;
   editCmtId: any;
   public comments: Comment[] = [];
   public reaction: ReactionToCreate;
-  public mreaction: Reaction;
+  mreaction = new Reaction;
   public follow: FollowToCreate;
-  public mfollow: Follow;
+  mfollow = new Follow;
   public reactionType: number;
   account: Account;
 
+  // mreaction = this.reactionService.reactionValue;
+  // mfollow = this.followService.followValue;
   maccount = this.accountService.accountValue;
   comment = this.commentService.commentValue;
   post = new Post;
@@ -74,9 +78,13 @@ export class DetailPostComponent {
     this.cmtForm = this.formBuilder.group({
       content: ['', Validators.required],
     });
-
+    this.updateCmtForm = this.formBuilder.group({
+      content: [this.comment.content, Validators.required],
+    });
+    
     this.testForm = new FormData(); 
     this.cmtFormData = new FormData();
+    this.updateCmtFormData = new FormData(); 
   }
 
   getComment(id:any){
@@ -139,8 +147,8 @@ export class DetailPostComponent {
     if (this.cmtForm.invalid) {
       return;
     }
-    this.cmtFormData.set('content', this.cmtForm.get('content').value);
-    this.commentService.update(this.editCmtId ,this.cmtFormData)
+    this.updateCmtFormData.set('content', this.cmtForm.get('content').value);
+    this.commentService.update(this.editCmtId ,this.updateCmtFormData)
         .subscribe(res => {
             console.log(res);
             alert('Chỉnh sửa bình luận thành công.');
@@ -155,17 +163,18 @@ export class DetailPostComponent {
   }
 
   onCreateReaction() {
-        this.reaction = {
-          postId: this.post.id,
-        }
-        console.log(this.reaction);
-        this.reactionService.createReaction(this.reaction)
-        .subscribe(res => {
-          console.log(res);
-          //alert('Tim thành công!');
-          this.getRoute(this.post.id);
-          this.getReaction(this.post.id);
-        });
+    console.log(this.mreaction.type);
+    this.reaction = {
+      targetId: this.post.id,
+    }
+    console.log(this.reaction);
+    this.reactionService.createReaction(this.reaction)
+    .subscribe(res => {
+      console.log(res);
+      //alert('Tim thành công!');
+      this.getRoute(this.post.id);
+      this.getReaction(this.post.id);
+    });
   }
 
   unReaction() {
@@ -179,7 +188,7 @@ export class DetailPostComponent {
 
   onCreateFollow() {
     this.follow = {
-      accountId: this.post.ownerId,
+      subjectId: this.post.ownerId,
     }
     console.log(this.follow);
     this.followService.createFollow(this.follow)
@@ -242,7 +251,7 @@ export class DetailPostComponent {
     this.router.navigate(['../'], { relativeTo: this.route });
   }
 
-  public createImgPath = (serverPath: string) => {
-    return `http://localhost:5000/${serverPath}`;
-  }
+  // public createImgPath = (serverPath: string) => {
+  //   return `http://localhost:5000/${serverPath}`;
+  // }
 }

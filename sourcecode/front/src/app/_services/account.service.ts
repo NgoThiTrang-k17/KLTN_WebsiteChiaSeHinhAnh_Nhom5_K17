@@ -85,7 +85,7 @@ export class AccountService {
     }
     
     update(id, params) {
-        return this.http.put(`${baseUrl}/UploadAvatar/${id}`, params)
+        return this.http.put(`${baseUrl}/${id}`, params)
             .pipe(map((account: any) => {
                 // update the current account if it was updated
                 if (account.id === this.accountValue.id) {

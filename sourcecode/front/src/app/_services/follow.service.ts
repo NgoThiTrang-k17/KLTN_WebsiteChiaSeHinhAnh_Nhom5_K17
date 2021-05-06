@@ -35,7 +35,7 @@ export class FollowService {
     }
 
     getFollow(accountId){
-        return this.http.get<Follow>(`${baseUrl}/GetState/${accountId}`);
+        return this.http.get<Follow>(`${baseUrl}/GetAllByUserId/${accountId}`);
     }
 
     update(id, params) {

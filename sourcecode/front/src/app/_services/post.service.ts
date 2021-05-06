@@ -31,11 +31,11 @@ export class PostService {
     }
 
     getPostById(id):Observable<Post[]> {
-        return this.http.get<Post[]>(`${baseUrl}/GetPostById/${id}`);
+        return this.http.get<Post[]>(`${baseUrl}/${id}`);
     }
 
     getAllByUserId(id:number):Observable<Post[]> {
-        return this.http.get<Post[]>(`${baseUrl}/GetAllByUserId/${id}`);
+        return this.http.get<Post[]>(`${baseUrl}/User/${id}`);
     }
 
     getDownloadImage(id:number): Observable<HttpEvent<Blob>> {

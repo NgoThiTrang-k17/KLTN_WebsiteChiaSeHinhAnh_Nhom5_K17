@@ -1,3 +1,3 @@
 export class ReactionToCreate {
-    postId: number;
+    targetId: number;
 }

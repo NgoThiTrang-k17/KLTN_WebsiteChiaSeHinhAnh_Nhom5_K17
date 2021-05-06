@@ -54,8 +54,6 @@ export class HomeComponent implements OnInit {
             .subscribe(res => {
                 this.posts = res as Post[];
             });
-
-        this.downloadURL = this.af.ref(this.post.path).getDownloadURL();
     }
 
     get f() { return this.myForm.controls; }

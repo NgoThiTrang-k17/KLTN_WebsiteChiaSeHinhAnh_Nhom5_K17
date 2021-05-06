@@ -34,8 +34,8 @@ export class ReactionService {
         return this.http.post(baseUrl, params);
     }
 
-    getReaction(postId){
-        return this.http.get<Reaction>(`${baseUrl}/GetState/${postId}`);
+    getReaction(id):Observable<Reaction>{
+        return this.http.get<Reaction>(`${baseUrl}/GetAllByPostId/${id}`);
     }
 
     update(id, params) {

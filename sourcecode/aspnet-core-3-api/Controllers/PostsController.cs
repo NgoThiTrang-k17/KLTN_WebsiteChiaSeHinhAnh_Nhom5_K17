@@ -81,7 +81,7 @@ namespace WebApi.Controllers
         //}
 
         [HttpPost, DisableRequestSizeLimit]
-        public IActionResult Create(CreatePostRequest model)
+        public IActionResult Create([FromForm] CreatePostRequest model)
         {
             try
             {
@@ -108,8 +108,8 @@ namespace WebApi.Controllers
                 //    Path = dbPath,
                 //    OwnerId = Account.Id,
                 //};
-                
-                //model.OwnerId = Account.Id;
+                model.Created = DateTime.Now;
+                model.OwnerId = Account.Id;
                 var post = _postService.Create(model);
                 return Ok(post);
                 //}

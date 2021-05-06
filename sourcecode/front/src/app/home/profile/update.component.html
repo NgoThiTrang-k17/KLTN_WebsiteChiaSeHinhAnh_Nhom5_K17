@@ -7,7 +7,7 @@
             <div class="form-row">
                 <div class="form-group col ml-2">
                     <img *ngIf="account.avatarPath == null && !imageSrc" class="rounded-circle" style="height: 100px; width: 100px;" src="../../assets/images/default-profile.png">
-                    <img class="rounded-circle" [src]="createImgPath(account.avatarPath)" *ngIf="account.avatarPath != null && !imageSrc" style="height: 100px; width: 100px;">
+                    <img class="rounded-circle" [src]="account.avatarPath" *ngIf="account.avatarPath != null && !imageSrc" style="height: 100px; width: 100px;">
                     <img class="rounded-circle" [src]="imageSrc" *ngIf="imageSrc" style="height: 100px; width: 100px;">
                 </div>
                 <div class="form-group col-10">

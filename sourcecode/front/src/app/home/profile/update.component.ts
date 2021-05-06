@@ -1,7 +1,8 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { first } from 'rxjs/operators';
+import { first, finalize } from 'rxjs/operators';
+import { AngularFireStorage } from '@angular/fire/storage';
 
 import { AccountService, AlertService } from '@app/_services';
 import { MustMatch } from '@app/_helpers';
@@ -15,13 +16,17 @@ export class UpdateComponent implements OnInit {
     submitted = false;
     deleting = false;
     imageSrc: string;
+    path: string;
+    pathImg: string;
+    public imagePath: string;
 
     constructor(
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
         private accountService: AccountService,
-        private alertService: AlertService
+        private alertService: AlertService,
+        private af: AngularFireStorage,
     ) { }
 
     ngOnInit() {
@@ -45,12 +50,14 @@ export class UpdateComponent implements OnInit {
     // convenience getter for easy access to form fields
     get f() { return this.form.controls; }
 
-    onFileChange(event) {
+    onFileChange($event) {
+        this.path = $event.target.files[0]
+
         const reader = new FileReader();
-        if (event.target.files && event.target.files.length) {
-            const [file] = event.target.files;
+        if ($event.target.files && $event.target.files.length) {
+            const [file] = $event.target.files;
             console.log('1');               
-            this.updateData.append("file",file);
+            // this.updateData.append("file",file);
             reader.readAsDataURL(file);
             reader.onload = () => {
                 this.imageSrc = reader.result as string;
@@ -70,26 +77,39 @@ export class UpdateComponent implements OnInit {
             return;
         }
 
-        this.updateData.append('title', this.form.get('title').value);
-        this.updateData.append('name', this.form.get('name').value);
-        this.updateData.append('email', this.form.get('email').value);
-        this.updateData.append('password', this.form.get('password').value);
-        console.log(this.updateData);
+        this.imagePath = "/files"+Math.random()+this.path;
+        const fileRef = this.af.ref(this.imagePath);
+        this.af.upload(this.imagePath,this.path).snapshotChanges().pipe(
+            finalize(() => {
+                fileRef.getDownloadURL().subscribe((url) => {
+                    this.pathImg = url.toString();
+                    console.log(this.pathImg);
+                    this.updateData.append('avatarPath', this.imagePath);
+                    this.updateData.append('title', this.form.get('title').value);
+                    this.updateData.append('name', this.form.get('name').value);
+                    this.updateData.append('email', this.form.get('email').value);
+                    this.updateData.append('password', this.form.get('password').value);
+                    console.log(this.updateData);
 
-        this.loading = true;
-        this.accountService.update(this.account.id, this.updateData)
-            .pipe(first())
-            .subscribe({
-                next: () => {
-                    console.log(this.updateData.value);
-                    this.alertService.success('Update successful', { keepAfterRouteChange: true });
-                    this.router.navigate(['../'], { relativeTo: this.route });
-                },
-                error: error => {
-                    this.alertService.error(error);
-                    this.loading = false;
-                }
-            });
+                    this.loading = true;
+                    this.accountService.update(this.account.id, this.updateData)
+                        .pipe(first())
+                        .subscribe({
+                            next: () => {
+                                console.log(this.updateData.value);
+                                this.alertService.success('Update successful', { keepAfterRouteChange: true });
+                                this.router.navigate(['../'], { relativeTo: this.route });
+                            },
+                            error: error => {
+                                this.alertService.error(error);
+                                this.loading = false;
+                            }
+                        });
+                })
+            })
+        ).subscribe();
+
+        
     }
 
     onDelete() {

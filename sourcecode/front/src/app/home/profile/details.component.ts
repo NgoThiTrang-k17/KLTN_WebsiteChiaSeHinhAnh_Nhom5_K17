@@ -63,7 +63,7 @@ export class DetailsComponent {
 
     onCreateFollow() {
         this.follow = {
-          accountId: this.account.id,
+          subjectId: this.account.id,
         }
         console.log(this.follow);
         this.followService.createFollow(this.follow)

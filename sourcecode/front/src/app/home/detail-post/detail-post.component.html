@@ -5,7 +5,7 @@
             <div class="row">
                 <div class="col-6 text-center" style="outline-style: none; ">
                     <div class="card mt-4 mb-4 ml-4 mr-4" style="justify-content: center; align-items: center; display: flex;">
-                        <img style="height: 100%; width: 100%;" [src]="createImgPath(post.path)" alt="">
+                        <img style="height: 100%; width: 100%;" [src]="post.path" alt="">
                     </div>
                 </div>
                 <div class="col-6">
@@ -24,7 +24,7 @@
                                 </button>
                                 <div id="myDropdown" class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                     aria-labelledby="dropdownMenuLink" *dropdownMenu>
-                                    <a class="dropdown-item" href="../../../assets/images/{{post.imageName}}" download="{{post.title}}.jpg" Download Image >Tải xuống</a>
+                                    <a class="dropdown-item" href="post.path" download="{{post.title}}.jpg">Tải xuống</a>
                                     <!-- <a class="dropdown-item" [disabled]="disabled" [ngClass]="{'disabled': disabled}" (click)="download()">Tải xuống</a> -->
                                     <a class="dropdown-item" href="#">Báo cáo bài viết</a>
                                     <!-- <div class="dropdown-divider"></div>
@@ -59,12 +59,12 @@
                             <h3 class="mb-1"><strong>{{post.title}}</strong></h3>
                         </div>
                     </div>
-                    <a *ngIf="mreaction.isCreated == 0" class="btn btn-sm ml-4 mt-3" (click)="onCreateReaction()" ><span style="font-size:medium;">{{post.reactionCount}}  <i class="fa fa-heart heart" style=" color: rgb(219, 219, 219);"></i></span></a>
-                    <a *ngIf="mreaction.isCreated != 0" class="btn btn-sm ml-4 mt-3" (click)="unReaction()"><span style="font-size:medium;">{{post.reactionCount}}  <i class="fa fa-heart unheart" style=" color: rgba(212, 10, 10, 0.76);"></i></span></a>
+                    <a *ngIf="mreaction.type != 0" class="btn btn-sm ml-4 mt-3" (click)="onCreateReaction()" ><span style="font-size:medium;">{{post.reactionCount}} {{mreaction.type}} <i class="fa fa-heart heart" style=" color: rgb(219, 219, 219);"></i></span></a>
+                    <a *ngIf="mreaction.type == 0" class="btn btn-sm ml-4 mt-3" (click)="unReaction()"><span style="font-size:medium;">{{post.reactionCount}}  <i class="fa fa-heart unheart" style=" color: rgba(212, 10, 10, 0.76);"></i></span></a>
                     <div class="row mt-3">
                         <div class="offset-1 p-0 mt-1">
                             <img *ngIf="account.avatarPath==null" class="img-fluid rounded-circle" style="height: 45px; width: 46px;" src="../../assets/images/default-profile.png">
-                            <img *ngIf="account.avatarPath!=null" class="img-fluid rounded-circle" style="height: 45px; width: 46px;" [src]="createImgPath(account.avatarPath)">
+                            <img *ngIf="account.avatarPath!=null" class="img-fluid rounded-circle" style="height: 45px; width: 46px;" [src]="account.avatarPath">
                             <!-- <img src="../../assets/images/fc1cbe7b52ebf837e53383b9d24e1bf2.jpg"
                                 class="img-fluid w-25 rounded-circle" alt=""> -->
                             
@@ -82,8 +82,8 @@
                             <p style="font-size: small; margin-left: 8%;">{{post.followerCount}} người theo dõi</p>
                         </div>
                         <div *ngIf="maccount.id!=post.ownerId" class="col-2 p-0 mt-2">
-                            <button *ngIf="mfollow.isCreated==0" (click)="onCreateFollow()" class="btn btn-light rounded-pill">Theo dõi</button>
-                            <button *ngIf="mfollow.isCreated!=0" (click)="unFollow()" class="btn btn-danger rounded-pill">Đã theo dõi</button>
+                            <button *ngIf="mfollow.status!=Created" (click)="onCreateFollow()" class="btn btn-light rounded-pill">Theo dõi</button>
+                            <button *ngIf="mfollow.status==Created" (click)="unFollow()" class="btn btn-danger rounded-pill">Đã theo dõi</button>
                         </div>
                     </div>
                     <br>
@@ -95,14 +95,8 @@
                                 <div id="1" *ngFor="let comment of comments" class="mb-4">
                                     <div class="form-inline" id="1">
                                         <div class="col-2">
-                                            <img
-                                                *ngIf="comment.ownerAvatar==null"
-                                                src="../../assets/images/default-profile.png"
-                                                style="height: 40px; width: 41px;" class="img-fluid card rounded-circle" alt="">
-                                            <img
-                                                *ngIf="comment.ownerAvatar!=null"
-                                                [src]="createImgPath(comment.ownerAvatar)"
-                                                style="height: 40px; width: 41px;" class="img-fluid card rounded-circle" alt="">
+                                            <img *ngIf="comment.ownerAvatar==null" src="../../assets/images/default-profile.png" style="height: 40px; width: 41px;" class="img-fluid card rounded-circle" alt="">
+                                            <img *ngIf="comment.ownerAvatar!=null" [src]="comment.ownerAvatar" style="height: 40px; width: 41px;" class="img-fluid card rounded-circle" alt="">
                                         </div>
                                         <div class="col-10">
                                             <div *ngIf="!editCmt || comment.id!=editCmtId" class="card" style="width: 90%;">
@@ -136,7 +130,7 @@
                                                 </div>                                             
                                             </div>
                                             <div *ngIf="editCmt && comment.id==editCmtId">
-                                                <form [formGroup]="cmtForm" (ngSubmit)="submitEdit()">
+                                                <form [formGroup]="updateCmtForm" (ngSubmit)="submitEdit()">
                                                     <div class="form-inline">
                                                         <div class="form-group" style="width: 90%;"> 
                                                             <input type="text" class="form-control rounded-pill col-12" formControlName="content" value="{{comment.content}}">
@@ -161,7 +155,7 @@
                                             style="height: 40px; width: 40px;" class="img-fluid card rounded-circle" alt="">
                                         <img
                                             *ngIf="maccount.avatarPath!=null"
-                                            [src]="createImgPath(maccount.avatarPath)"
+                                            [src]="maccount.avatarPath"
                                             style="height: 40px; width: 40px;" class="img-fluid card rounded-circle" alt="">
                                         </div>
                                         <div class="col-10 form-group"> <input style="width: 90%;" type="text" class="form-control rounded-pill"

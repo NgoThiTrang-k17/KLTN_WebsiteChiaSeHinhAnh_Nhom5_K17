@@ -1,8 +1,9 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { first } from 'rxjs/operators';
-import { AngularFireStorage } from '@angular/fire/storage'
+import { finalize, first } from 'rxjs/operators';
+import { AngularFireStorage } from '@angular/fire/storage';
+import {Observable} from 'rxjs/Rx';
 
 import { AccountService, PostService, AlertService } from '@app/_services';
 import { Post, PostToCreate } from '@app/_models';
@@ -23,7 +24,8 @@ export class AddEditPostComponent implements OnInit {
   loading = false;
   submitted = false;
   path: string;
-  downloadURL: any;
+  downloadURL: Observable<string>;
+  pathImg: string;
 
   post = new Post;
 
@@ -37,15 +39,15 @@ export class AddEditPostComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.downloadURL = this.af.ref('/files0.7934253494382291[object File]').getDownloadURL();
+    //this.downloadURL = this.af.ref('/files0.7934253494382291[object File]').getDownloadURL();
 
     this.id = this.route.snapshot.params['id'];
     this.isAddMode = !this.id;
 
     this.myForm = this.formBuilder.group({
       title: ['', Validators.required],
-      path: ['', Validators.required],
-      //file: ['', this.isAddMode ? Validators.required : Validators.nullValidator]
+      //path: ['', this.isAddMode ? Validators.required : Validators.nullValidator],
+      file: ['', this.isAddMode ? Validators.required : Validators.nullValidator]
     });
 
     if (!this.isAddMode) {
@@ -73,9 +75,9 @@ export class AddEditPostComponent implements OnInit {
         reader.readAsDataURL(file);
         reader.onload = () => {
             this.imageSrc = reader.result as string;
-            console.log(this.myForm.value); 
+            //console.log(this.myForm.value); 
         };
-        console.log(this.myForm.get('title').value);
+        //console.log(this.myForm.get('title').value);
     }
   }
 
@@ -85,28 +87,31 @@ export class AddEditPostComponent implements OnInit {
       return;
     }
 
-    console.log(this.testForm);
-    console.log(this.myForm.get('title').value);   
+    //console.log(this.testForm);
+    //console.log(this.myForm.get('title').value);   
     if (this.isAddMode) { 
-      console.log(this.path);
       this.imagePath = "/files"+Math.random()+this.path;
-      this.af.upload(this.imagePath,this.path);
-      console.log(this.imagePath);
       const fileRef = this.af.ref(this.imagePath);
-      fileRef.getDownloadURL().subscribe((url) => {
-        this.testForm['path'] = url;
-      })
-      this.testForm.set("title", this.myForm.get("title").value);
-      this.postService.createPost(this.testForm)
-      .subscribe(res => {
-          console.log(res);
-          // this.alertService.success('Image created successfully', { keepAfterRouteChange: true });
-          // this.getPosts();
-          alert('Tạo bài viết thành công!');
-          this.router.navigate(['../'], { relativeTo: this.route });
-      }, error => {
-          console.log(error);               
-      })
+      this.af.upload(this.imagePath,this.path).snapshotChanges().pipe(
+        finalize(() => {
+          fileRef.getDownloadURL().subscribe((url) => {
+            this.pathImg = url.toString();
+            console.log(this.pathImg);
+            this.testForm.set("title", this.myForm.get("title").value);
+            this.testForm.set("path",this.pathImg);
+            this.postService.createPost(this.testForm)
+            .subscribe(res => {
+                console.log(res);
+                // this.alertService.success('Image created successfully', { keepAfterRouteChange: true });
+                // this.getPosts();
+                alert('Tạo bài viết thành công!');
+                this.router.navigate(['../'], { relativeTo: this.route });
+            }, error => {
+                console.log(error);               
+            })
+          })
+        })
+      ).subscribe();
     } else if (!this.isAddMode) {
       this.testForm.set("title", this.myForm.get("title").value); 
       this.postService.update(this.id, this.testForm)
@@ -122,8 +127,18 @@ export class AddEditPostComponent implements OnInit {
     }   
   }
 
-  public createImgPath = (serverPath: string) => {
-    return `storage.googleapis.com/storage/v1/b/kltn-websitechiasehinhanh.appspot.com/o/${serverPath}`;
-    // return `http://localhost:5000/${serverPath}`;
+  // public createImgPath = (serverPath: string) => {
+  //   return `storage.googleapis.com/storage/v1/b/kltn-websitechiasehinhanh.appspot.com/o/${serverPath}`;
+  //   // return `http://localhost:5000/${serverPath}`;
+  // }
+
+  public createImgPath = (path: string) => {
+    this.af.ref(path).getDownloadURL().subscribe((url) => {
+      return url;
+    })
+  }
+
+  ImgPath(path: string){
+    this.downloadURL = this.af.ref(path).getDownloadURL();
   }
 }

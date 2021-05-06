@@ -56,7 +56,7 @@ export class LayoutComponent implements OnInit {
 
     onCreateFollow(id:any) {
         this.follow = {
-          accountId: id,
+          subjectId: id,
         }
         console.log(this.follow);
         this.followService.createFollow(this.follow)
@@ -97,7 +97,7 @@ export class LayoutComponent implements OnInit {
         this.notificationService.update(id ,this.notification)
         .subscribe(res => {
             console.log(res);
-            alert('Xem thông báo thành công.');
+            // alert('Xem thông báo thành công.');
         }, error => {
             console.log(error);               
         })
