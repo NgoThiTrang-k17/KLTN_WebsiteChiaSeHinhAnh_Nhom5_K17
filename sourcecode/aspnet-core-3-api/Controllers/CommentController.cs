@@ -27,6 +27,10 @@ namespace WebApi.Controllers
         public ActionResult<IEnumerable<CommentResponse>> GetAll()
         {
             var comments = _commentService.GetAll();
+            foreach (CommentResponse comment in comments)
+            {
+                comment.IsCreatedByThisUser = comment.OwnerId == Account.Id;
+            }
             return Ok(comments);
         }
 
@@ -34,6 +38,7 @@ namespace WebApi.Controllers
         public ActionResult<CommentResponse> GetById(int id)
         {
             var comment = _commentService.GetById(id);
+            comment.IsCreatedByThisUser = comment.OwnerId == Account.Id;
             return Ok(comment);
         }
 
@@ -42,11 +47,15 @@ namespace WebApi.Controllers
         public ActionResult<IEnumerable<CommentResponse>> GetAllByPostId(int id)
         {
             var comments = _commentService.GetByPost(id);
+            foreach (CommentResponse comment in comments)
+            {
+                comment.IsCreatedByThisUser = comment.OwnerId == Account.Id;
+            }
             return Ok(comments);
         }
 
         [HttpPost]
-        public ActionResult<CommentResponse> Create([FromForm]CreateCommentRequest comment)
+        public ActionResult<CommentResponse> Create([FromForm] CreateCommentRequest comment)
         {
             //var model = new CreateCommentRequest
             //{

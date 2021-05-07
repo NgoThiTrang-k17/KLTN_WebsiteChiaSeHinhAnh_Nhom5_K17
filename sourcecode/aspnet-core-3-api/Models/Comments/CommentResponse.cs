@@ -16,9 +16,9 @@ namespace WebApi.Models.Comments
         public bool IsChild => ParrentId.HasValue;
 
         public int OwnerId { get; set; }
+        public bool IsCreatedByThisUser { get;  set; }
         public string OwnerName { get; set; }
         public string OwnerAvatar { get; set; }
         public int PostId { get; set; }
-
     }
 }

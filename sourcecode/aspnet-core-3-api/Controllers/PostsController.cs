@@ -28,6 +28,10 @@ namespace WebApi.Controllers
         public ActionResult<IEnumerable<PostResponse>> GetAll()
         {
             var posts = _postService.GetAll();
+            foreach (PostResponse post in posts)
+            {
+                post.IsCreatedByThisUser = post.OwnerId == Account.Id;
+            }
             return Ok(posts);
 
         }
@@ -36,6 +40,9 @@ namespace WebApi.Controllers
         public ActionResult<PostResponse> GetById(int id)
         {
             var post = _postService.GetById(id);
+
+            post.IsCreatedByThisUser = post.OwnerId == Account.Id;
+
             return Ok(post);
         }
 
@@ -43,6 +50,10 @@ namespace WebApi.Controllers
         public ActionResult<IEnumerable<PostResponse>> GetByUser(int id)
         {
             var posts = _postService.GetByOwnerId(id);
+            foreach (PostResponse post in posts)
+            {
+                post.IsCreatedByThisUser = post.OwnerId == Account.Id;
+            }
             return Ok(posts);
         }
 

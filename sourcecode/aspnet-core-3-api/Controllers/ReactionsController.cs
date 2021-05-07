@@ -27,15 +27,15 @@ namespace WebApi.Controllers
         [HttpGet("GetAllByTargetId/{targetType}/{targetId:int}")]
         public ActionResult<IEnumerable<ReactionResponse>> GetAllByTargetId(ReactionTarget targetType, int targetId)
         {
-            var reactions = _reactionService.GetAllByTargetId(targetType,targetId);
+            var reactions = _reactionService.GetAllByTargetId(targetType, targetId);
+            
             return Ok(reactions);
         }
 
-        [HttpGet("GetState/{postId:int}")]
-        public ActionResult<ReactionState> GetState(int postId)
+        [HttpGet("GetState/{targetType}/{targetId:int}")]
+        public ActionResult<ReactionState> GetState(ReactionTarget targetType, int targetId)
         {
-
-            var state = _reactionService.GetState(postId, Account.Id);
+            var state = _reactionService.GetState(targetType, targetId, Account.Id);
             return Ok(state);
         }
 

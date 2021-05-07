@@ -15,6 +15,7 @@ namespace WebApi.Models.Posts
         public string Path { get; set; }
 
         public int OwnerId { get; set; }
+        public bool IsCreatedByThisUser { get;  set; }
         public string OwnerName { get; set; }
         public string OwnerAvatar { get; set; }
         public int FollowerCount { get; set; }
