@@ -17,7 +17,7 @@ namespace WebApi.Services
         void DeleteByPostId(int postId, int ownerId);
         IEnumerable<ReactionResponse> GetAll();
         IEnumerable<ReactionResponse> GetAllByTargetId(ReactionTarget targetType, int targetId);
-        ReactionState GetState(int postId, int ownerId);
+        ReactionState GetState(ReactionTarget targetType, int targetId, int ownerId);
     }
     public class ReactionService : IReactionService
     {
@@ -92,12 +92,12 @@ namespace WebApi.Services
             var reactions = _context.Reactions.Where(reaction => reaction.Target == targetType && reaction.TargetId == targetId);
             return _mapper.Map<List<ReactionResponse>>(reactions);
         }
-        public ReactionState GetState(int postId, int ownerId)
+        public ReactionState GetState(ReactionTarget targetType, int targetId, int ownerId)
         {
 
             var reaction = _context.Reactions.Where(reaction =>
-            reaction.Target == ReactionTarget.Post
-            && reaction.TargetId == postId
+            reaction.Target == targetType
+            && reaction.TargetId == targetId
             && reaction.OwnerId == ownerId).Count();
             var reactionState = new ReactionState
             {
