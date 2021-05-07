@@ -55,7 +55,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public ActionResult<CommentResponse> Create([FromForm] CreateCommentRequest comment)
+        public ActionResult<CommentResponse> Create( CreateCommentRequest comment)
         {
             //var model = new CreateCommentRequest
             //{
@@ -74,7 +74,7 @@ namespace WebApi.Controllers
 
         //[Authorize]
         [HttpPut("{id:int}")]
-        public ActionResult<CommentResponse> Update(int id, [FromForm] UpdateCommentRequest model)
+        public ActionResult<CommentResponse> Update(int id, UpdateCommentRequest model)
         {
             var comment = _commentService.UpdateComment(id, model);
             return Ok(comment);

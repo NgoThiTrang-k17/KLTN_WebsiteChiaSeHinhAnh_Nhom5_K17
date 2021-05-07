@@ -7,6 +7,10 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AngularFireModule } from '@angular/fire';
+import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
+import {BrowserModule} from '@angular/platform-browser';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { NavHomeComponent } from './navhome.component';
 import { UserRoutingModule } from './user-routing.module';
@@ -14,6 +18,7 @@ import { LayoutComponent } from './layout.component';
 import { HomeComponent } from './home.component';
 import { AddEditPostComponent } from './add-edit-post/add-edit-post.component';
 import { DetailPostComponent } from './detail-post/detail-post.component';
+import { TabsOverviewComponent } from './detail-post/tabs-overview.component';
 import { ProfileModule } from './profile/profile.module';
 import { SearchComponent } from './search/search.component';
 
@@ -38,6 +43,7 @@ import { SearchComponent } from './search/search.component';
             measurementId: "G-4DJ7TDJKGG"
         }),
         AngularFireStorageModule,
+        MatProgressSpinnerModule
     ],
     declarations: [
         HomeComponent,
@@ -45,7 +51,8 @@ import { SearchComponent } from './search/search.component';
         LayoutComponent,
         AddEditPostComponent,
         DetailPostComponent,
-        SearchComponent
+        TabsOverviewComponent,
+        SearchComponent,
     ]
 })
 export class UserModule { }
