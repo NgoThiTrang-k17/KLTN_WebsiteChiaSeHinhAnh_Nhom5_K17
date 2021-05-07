@@ -65,11 +65,11 @@ namespace WebApi.Controllers
             return Ok(follows);
         }
 
-        [HttpGet("GetState/{accountId:int}")]
-        public ActionResult<FollowState> GetState(int accountId)
+        [HttpGet("GetState/{subjectId:int}")]
+        public ActionResult<FollowState> GetState(int subjectId)
         {
 
-            var state = _followService.GetState(accountId,Account.Id);
+            var state = _followService.GetState(subjectId,Account.Id);
             return Ok(state);
         }
 

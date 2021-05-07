@@ -86,10 +86,10 @@ namespace WebApi.Services
             return _mapper.Map<List<FollowResponse>>(follows);
         }
 
-        public FollowState GetState(int accountId, int followerId)
+        public FollowState GetState(int subjectId, int followerId)
         {
 
-            var follow = _context.Follows.Where(follow => follow.SubjectId == accountId && follow.FollowerId == followerId).Count();
+            var follow = _context.Follows.Where(follow => follow.SubjectId == subjectId && follow.FollowerId == followerId).Count();
             var followState = new FollowState
             {
                 IsCreated = 0

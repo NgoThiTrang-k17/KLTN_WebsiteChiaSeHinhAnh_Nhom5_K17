@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Entities;
 using WebApi.Models.Reactions;
 using WebApi.Services;
 
@@ -23,10 +24,10 @@ namespace WebApi.Controllers
             var reactions = _reactionService.GetAll();
             return Ok(reactions);
         }
-        [HttpGet("GetAllByPostId/{id:int}")]
-        public ActionResult<IEnumerable<ReactionResponse>> GetAllByPostId(int id)
+        [HttpGet("GetAllByTargetId/{targetType}/{targetId:int}")]
+        public ActionResult<IEnumerable<ReactionResponse>> GetAllByTargetId(ReactionTarget targetType, int targetId)
         {
-            var reactions = _reactionService.GetAllByPostId(id);
+            var reactions = _reactionService.GetAllByTargetId(targetType,targetId);
             return Ok(reactions);
         }
 
