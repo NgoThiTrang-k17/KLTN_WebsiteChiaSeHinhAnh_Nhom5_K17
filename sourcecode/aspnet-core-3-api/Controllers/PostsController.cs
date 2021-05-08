@@ -19,10 +19,13 @@ namespace WebApi.Controllers
     public class PostsController : BaseController
     {
         private readonly IPostService _postService;
+        private readonly IReactionService _reactionService;
 
-        public PostsController(IPostService postService)
+        public PostsController(IPostService postService,
+            IReactionService reactionService)
         {
             _postService = postService;
+            _reactionService = reactionService;
         }
         [HttpGet]
         public ActionResult<IEnumerable<PostResponse>> GetAll()
@@ -30,7 +33,7 @@ namespace WebApi.Controllers
             var posts = _postService.GetAll();
             foreach (PostResponse post in posts)
             {
-                post.IsCreatedByThisUser = post.OwnerId == Account.Id;
+                post.IsReactedByThisUser = _reactionService.GetState(ReactionTarget.Post, post.Id, Account.Id).IsReactedByThisUser;
             }
             return Ok(posts);
 
@@ -41,7 +44,7 @@ namespace WebApi.Controllers
         {
             var post = _postService.GetById(id);
 
-            post.IsCreatedByThisUser = post.OwnerId == Account.Id;
+            post.IsReactedByThisUser = _reactionService.GetState(ReactionTarget.Post, post.Id, Account.Id).IsReactedByThisUser;
 
             return Ok(post);
         }
@@ -52,7 +55,7 @@ namespace WebApi.Controllers
             var posts = _postService.GetByOwnerId(id);
             foreach (PostResponse post in posts)
             {
-                post.IsCreatedByThisUser = post.OwnerId == Account.Id;
+                post.IsReactedByThisUser = _reactionService.GetState(ReactionTarget.Post, post.Id, Account.Id).IsReactedByThisUser;
             }
             return Ok(posts);
         }

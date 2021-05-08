@@ -105,6 +105,7 @@ namespace WebApi.Services
             };
             if (reaction != 0)
             {
+                reactionState.IsReactedByThisUser = true;
                 reactionState.IsCreated = 1;
                 return reactionState;
             }

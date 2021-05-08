@@ -16,11 +16,14 @@ namespace WebApi.Controllers
     public class CommentController : BaseController
     {
         private readonly ICommentService _commentService;
+        private readonly IReactionService _reactionService;
         public CommentController(
-            ICommentService commentService
+            ICommentService commentService,
+            IReactionService reactionService
             )
         {
             _commentService = commentService;
+            _reactionService = reactionService;
         }
 
         [HttpGet]
@@ -29,7 +32,7 @@ namespace WebApi.Controllers
             var comments = _commentService.GetAll();
             foreach (CommentResponse comment in comments)
             {
-                comment.IsCreatedByThisUser = comment.OwnerId == Account.Id;
+                comment.IsReactedByThisUser = _reactionService.GetState(ReactionTarget.Comment,comment.Id,Account.Id ).IsReactedByThisUser;
             }
             return Ok(comments);
         }
@@ -38,7 +41,7 @@ namespace WebApi.Controllers
         public ActionResult<CommentResponse> GetById(int id)
         {
             var comment = _commentService.GetById(id);
-            comment.IsCreatedByThisUser = comment.OwnerId == Account.Id;
+            comment.IsReactedByThisUser = _reactionService.GetState(ReactionTarget.Comment, comment.Id, Account.Id).IsReactedByThisUser;
             return Ok(comment);
         }
 
@@ -49,7 +52,7 @@ namespace WebApi.Controllers
             var comments = _commentService.GetByPost(id);
             foreach (CommentResponse comment in comments)
             {
-                comment.IsCreatedByThisUser = comment.OwnerId == Account.Id;
+                comment.IsReactedByThisUser = _reactionService.GetState(ReactionTarget.Comment, comment.Id, Account.Id).IsReactedByThisUser;
             }
             return Ok(comments);
         }

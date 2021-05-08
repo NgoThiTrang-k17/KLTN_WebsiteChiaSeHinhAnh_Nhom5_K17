@@ -8,5 +8,6 @@ namespace WebApi.Models.Reactions
     public class ReactionState
     {
         public int IsCreated { get; set; }
+        public bool IsReactedByThisUser { get; set; }
     }
 }
