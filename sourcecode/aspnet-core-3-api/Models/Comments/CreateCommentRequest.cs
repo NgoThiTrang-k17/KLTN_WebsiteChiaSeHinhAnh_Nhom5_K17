@@ -12,7 +12,7 @@ namespace WebApi.Models.Comments
         public string Content { get; set; }
         public DateTime Created { get; set; }
 
-        public int? ParentId { get; set; }
+        public int? ParrentId { get; set; }
 
         public int OwnerId { get; set; }
         public int PostId { get; set; }

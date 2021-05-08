@@ -108,10 +108,10 @@ export class LayoutComponent implements OnInit {
     }
 
     save(event) {
+        var str = event.target.value;
+        if(str=='') { return; }
         this.search = true;
         console.log(event.target.value);
-
-        var str = event.target.value;
         console.log(str);
         if(str.substr(0,1)=='@')
         {

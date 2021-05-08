@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms'
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
 import { AccountService, PostService, AlertService, CommentService, ReactionService, FollowService } from '@app/_services';
-import { Post, Comment, CommentToCreate, CommentToUpdate , Reaction, ReactionToCreate, Account, Follow, FollowToCreate, ReactionCmtToCreate } from '@app/_models';
+import { Post, Comment, CommentToCreate, commentToCreateForCmt, CommentToUpdate , Reaction, ReactionToCreate, Account, Follow, FollowToCreate, ReactionCmtToCreate } from '@app/_models';
 
 @Component({
   selector: 'app-detail-post',
@@ -23,6 +23,8 @@ export class DetailPostComponent {
   editCmtId: any;
   public comments: Comment[] = [];
   public cmtCreate: CommentToCreate;
+  public cmtCreateForCmt: commentToCreateForCmt;
+  public cmtId?: number;
   public cmtUpdate: CommentToUpdate;
   public reaction: ReactionToCreate;
   public reactionCmt: ReactionCmtToCreate;
@@ -32,6 +34,10 @@ export class DetailPostComponent {
   mfollow = new Follow;
   public reactionType: number;
   account: Account;
+
+  content: string;
+  parrtentId: number;
+  postId: number;
 
   // mreaction = this.reactionService.reactionValue;
   // mfollow = this.followService.followValue;
@@ -68,7 +74,6 @@ export class DetailPostComponent {
     else {
       this.editCmt = false;
     }
-    console.log(this.editCmt);
     this.getRoute(this.route.snapshot.params['id']);
     this.getComment(this.route.snapshot.params['id']);
     this.getReaction(this.route.snapshot.params['id']);
@@ -123,55 +128,71 @@ export class DetailPostComponent {
         })
   }
 
-  submit() {
-    if (this.myForm.invalid) {
-      return;
-    }
-
+  createCmt(event) {    
+    var str = event.target.value;
+    if(str=='') { return; }
     this.cmtCreate = {
-      content: this.myForm.get('contentCreate').value,
+      content: str,
       postId: this.post.id,
     }
-
-    // this.testForm.set('postId', this.post.id);
-    // this.testForm.set('content', this.myForm.get('contentCreate').value);
-    // this.testForm.append("postId", this.post.id);
-    
-    console.log(this.myForm.get('contentCreate').value);
-    // console.log(this.post.id);
-    console.log(this.testForm);
     this.commentService.create(this.cmtCreate)
-        .subscribe(res => {
-            console.log(res);
-            // alert('Bình luận thành công.');
-            this.myForm.reset();
-            this.commentService.getAllByPostId(this.post.id)
-              .subscribe((res:any)=>{
-                this.comments = res as Comment[];
-              })
-        }, error => {
-            console.log(error);               
-        })
-
+      .subscribe(res => {
+        console.log(res);
+        // alert('Bình luận thành công.');
+        this.myForm.reset();
+        this.commentService.getAllByPostId(this.post.id)
+          .subscribe((res:any)=>{
+            this.comments = res as Comment[];
+          })
+      }, error => {
+          console.log(error);               
+      })
   }
 
-
-  submitEdit(){
-    if (this.updateCmtFormData.invalid) {
-      return;
-    }
+  updateCmt(event) {
+    var str = event.target.value;
+    if(str=='') { return; }
     this.cmtUpdate = {
-      content: this.updateCmtForm.get('content').value,
+      content: str,
     }
-    this.updateCmtFormData.set('content', this.updateCmtForm.get('content').value);
+    // this.updateCmtFormData.set('content', this.updateCmtForm.get('content').value);
     this.commentService.update(this.editCmtId ,this.cmtUpdate)
         .subscribe(res => {
             // console.log(res);
             alert('Chỉnh sửa bình luận thành công.');
-            this.router.navigate(['../'], { relativeTo: this.route });
+            this.router.navigate(['../../'], { relativeTo: this.route });
         }, error => {
             console.log(error);               
         })
+  }
+
+  createCmtForCmt(event){
+    this.cmtId = this.editCmtId;
+    var str = event.target.value;
+    if(str=='') { return; }
+    console.log(this.cmtId);
+    this.cmtCreateForCmt = {
+      content: str,
+      parrentId: parseInt(this.editCmtId),
+      postId: this.post.id,
+    }
+
+    // this.testForm.set('content',str);
+    // this.testForm.set('parrentId',this.editCmtId);
+    // this.testForm.set('postId',this.post.id);
+
+    this.commentService.create(this.cmtCreateForCmt)
+      .subscribe(res => {
+        console.log(res);
+        // alert('Bình luận thành công.');
+        this.myForm.reset();
+        this.commentService.getAllByPostId(this.post.id)
+          .subscribe((res:any)=>{
+            this.comments = res as Comment[];
+          })
+      }, error => {
+          console.log(error);               
+      })
   }
 
   editComment(){
