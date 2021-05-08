@@ -59,8 +59,8 @@
                             <h3 class="mb-1"><strong>{{post.title}}</strong></h3>
                         </div>
                     </div>
-                    <a *ngIf="post.isReactedByThisUser==false" class="btn btn-sm ml-4 mt-3" (click)="onCreateReaction()" ><span style="font-size:medium;">{{post.reactionCount}} <i class="fa fa-heart heart" style=" color: rgb(175, 173, 173);"></i></span></a>
-                    <a *ngIf="post.isReactedByThisUser==true" class="btn btn-sm ml-4 mt-3" (click)="unReaction()"><span style="font-size:medium;">{{post.reactionCount}}  <i class="fa fa-heart unheart" style=" color: rgba(212, 10, 10, 0.76);"></i></span></a>
+                    <a *ngIf="post.isReactedByThisUser==false" class="btn btn-sm ml-4 mt-3" (click)="onCreateReaction()" ><span style="font-size:medium;">{{post.reactionCount}} <i class="fa fa-heart unheart" style=" color: rgb(175, 173, 173);"></i></span></a>
+                    <a *ngIf="post.isReactedByThisUser==true" class="btn btn-sm ml-4 mt-3" (click)="unReaction()"><span style="font-size:medium;">{{post.reactionCount}}  <i class="fa fa-heart heart" style=" color: rgba(212, 10, 10, 0.76);"></i></span></a>
                     <div class="row mt-3">
                         <div class="offset-1 p-0 mt-1">
                             <img *ngIf="account.avatarPath==null" class="img-fluid rounded-circle" style="height: 45px; width: 46px;" src="../../assets/images/default-profile.png">
@@ -117,7 +117,8 @@
                                 <div style="margin-bottom: 2%;">
                                     <div id="1" *ngFor="let comment of comments">
                                         <div id="1">
-                                            <div class="container">
+                                            <!-- Comment -->
+                                            <div *ngIf="comment.isParent==true" class="container">
                                                 <div class="row">
                                                     <div class="col-log-2">
                                                         <img *ngIf="comment.ownerAvatar==null" src="../../assets/images/default-profile.png" style="height: 40px; width: 41px;" class="img-fluid card rounded-circle" alt="">
@@ -155,8 +156,10 @@
                                                                     <p style="font-size: 15px; margin-left: 4%;">{{comment.content}}</p>
                                                                 </div>
                                                             </div>
-                                                            <a class="btn btn-sm ml-3" (click)="onCreateReactionCmt()"><span style="font-size:medium;"><i class="fa fa-heart heart" style=" color: rgb(175, 173, 173);"></i></span></a>  
-                                                            <a class="btn btn-sm" (click)="onCmt()" routerLink="../../../detail-post/{{post.id}}/{{post.ownerId}}/{{comment.id}}/1"><span style="font-size:medium;"><i class="fa fa-comment comment" style=" color: rgb(175, 173, 173);"></i></span></a>                                 
+                                                            <a *ngIf="comment.isReactedByThisUser==false" class="btn btn-sm ml-3" (click)="onCreateReactionCmt()"><span style="font-size:medium;"><i class="fa fa-heart unheart" style=" color: rgb(175, 173, 173);"></i></span></a>  
+                                                            <a *ngIf="comment.isReactedByThisUser==true" class="btn btn-sm ml-3" (click)="onCreateReactionCmt()"><span style="font-size:medium;"><i class="fa fa-heart heart" style=" color: rgba(212, 10, 10, 0.76);"></i></span></a>  
+                                                            <a *ngIf="editCmtId==null" class="btn btn-sm" (click)="onCmt()" routerLink="../../../detail-post/{{post.id}}/{{post.ownerId}}/{{comment.id}}/1"><span style="font-size:medium;"><i class="fa fa-comment comment" style=" color: rgb(175, 173, 173);"></i></span></a>                                 
+                                                            <a *ngIf="editCmtId!=null" class="btn btn-sm" (click)="onCmt()" routerLink="../../../../../detail-post/{{post.id}}/{{post.ownerId}}/{{comment.id}}/1"><span style="font-size:medium;"><i class="fa fa-comment comment" style=" color: rgb(175, 173, 173);"></i></span></a>                                 
                                                         </div>
                                                         <div *ngIf="editCmt && comment.id==editCmtId" class="mb-3">
                                                             <form [formGroup]="updateCmtForm">
@@ -174,9 +177,75 @@
                                                     </div>
                                                 </div>                   
                                             </div>
+                                            <div *ngIf="comment.isParent==true">
+                                                <div id="1" *ngFor="let commentReply of comments">
+                                                    <div id="1">
+                                                        <div *ngIf="commentReply.isChild==true && commentReply.parrentId==comment.id" class="container">
+                                                            <div class="row" style="margin-left: 9%;">
+                                                                <div class="col-log-2">
+                                                                    <img *ngIf="comment.ownerAvatar==null" src="../../assets/images/default-profile.png" style="height: 40px; width: 41px;" class="img-fluid card rounded-circle" alt="">
+                                                                    <img *ngIf="comment.ownerAvatar!=null" [src]="comment.ownerAvatar" style="height: 40px; width: 41px;" class="img-fluid card rounded-circle" alt="">
+                                                                </div>
+                                                                <div class="col-10">
+                                                                    <div *ngIf="!editCmt || comment.id!=editCmtId">
+                                                                        <div class="card" style="width: 100%;">
+                                                                            <div class="ml-2 mt-2 mr-2">
+                                                                                <div class="row">
+                                                                                    <div class="col-sm-9">
+                                                                                        <span><a *ngIf="editCmt" href="" class="btn" routerLink="../../../../detail/{{comment.ownerId}}"><strong>{{comment.ownerName}}</strong></a></span>
+                                                                                        <span><a *ngIf="!editCmt" href="" class="btn" routerLink="../../../detail/{{comment.ownerId}}"><strong>{{comment.ownerName}}</strong></a></span>      
+                                                                                    </div>
+                                                                                    <div *ngIf="maccount.id==comment.ownerId && !editCmt" class="col-sm-2">
+                                                                                        <div class="dropdown no-arrow ml-4" dropdown>
+                                                                                            <button class="dropdown-toggle card-link btn btn-ouline-light rounded-circle" role="button"
+                                                                                                id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                                                                                dropdownToggle>
+                                                                                                <svg class="gUZ pBj" height="20" width="20" viewBox="0 0 24 24"
+                                                                                                    aria-label="Thêm tùy chọn" role="img" style=" color: rgb(175, 173, 173);">
+                                                                                                    <path
+                                                                                                        d="M12 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3M3 9c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm18 0c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3z">
+                                                                                                    </path>
+                                                                                                </svg>
+                                                                                            </button>
+                                                                                            <div id="myDropdown" class="dropdown-menu dropdown-menu-left shadow animated--fade-in"
+                                                                                                aria-labelledby="dropdownMenuLink" *dropdownMenu>
+                                                                                                <a class="dropdown-item" routerLink="../../../detail-post/{{post.id}}/{{post.ownerId}}/{{comment.id}}/0" (click)="editComment()">Chỉnh sửa</a>
+                                                                                                <a class="dropdown-item" (click)="deleteComment(comment.id)">Xoá</a>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div> 
+                                                                                <p style="font-size: 15px; margin-left: 4%;">{{comment.content}}</p>
+                                                                            </div>
+                                                                        </div>
+                                                                        <a *ngIf="comment.isReactedByThisUser==false" class="btn btn-sm ml-3" (click)="onCreateReactionCmt()"><span style="font-size:medium;"><i class="fa fa-heart unheart" style=" color: rgb(175, 173, 173);"></i></span></a>  
+                                                                        <a *ngIf="comment.isReactedByThisUser==true" class="btn btn-sm ml-3" (click)="onCreateReactionCmt()"><span style="font-size:medium;"><i class="fa fa-heart heart" style=" color: rgba(212, 10, 10, 0.76);"></i></span></a>  
+                                                                        <a *ngIf="editCmtId==null" class="btn btn-sm" (click)="onCmt()" routerLink="../../../detail-post/{{post.id}}/{{post.ownerId}}/{{comment.id}}/1"><span style="font-size:medium;"><i class="fa fa-comment comment" style=" color: rgb(175, 173, 173);"></i></span></a>                                 
+                                                                        <a *ngIf="editCmtId!=null" class="btn btn-sm" (click)="onCmt()" routerLink="../../../../../detail-post/{{post.id}}/{{post.ownerId}}/{{comment.id}}/1"><span style="font-size:medium;"><i class="fa fa-comment comment" style=" color: rgb(175, 173, 173);"></i></span></a>                                 
+                                                                    </div>
+                                                                    <div *ngIf="editCmt && comment.id==editCmtId" class="mb-3">
+                                                                        <form [formGroup]="updateCmtForm">
+                                                                            <div class="form-inline">
+                                                                                <div class="form-group" style="width: 100%;"> 
+                                                                                    <input (keydown.enter)="updateCmt($event)" type="text" class="form-control rounded-pill col-12" formControlName="content" value="{{comment.content}}">
+                                                                                </div>
+                                                                            </div>
+                                                                            <!-- <div class="btn-group mt-1" style="float: right; margin-right: 15%;">
+                                                                                <input type="button" (click)="closeEdit()" class="btn btn-light rounded-pill mr-2" value="Hủy">
+                                                                                <input type="submit" class="btn btn-danger rounded-pill" value="Đã xong">
+                                                                            </div> -->
+                                                                        </form>   
+                                                                    </div>
+                                                                </div>
+                                                            </div>                   
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Reply Comment -->
                                             <div *ngIf="cmt==1 && comment.id==editCmtId" class="container mb-4">
                                                 <form [formGroup]="myForm">
-                                                    <div class="row ml-3" style="height: 40px;">
+                                                    <div class="row" style="height: 40px; margin-left: 9%;">
                                                         <div class="col-log-2" style="height: 50%;">
                                                             <img
                                                                 *ngIf="maccount.avatarPath==null"
@@ -199,10 +268,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                
-                                
-                                
-                            
                             </mat-tab>
                             <mat-tab label="Ảnh"></mat-tab>
                         </mat-tab-group>
