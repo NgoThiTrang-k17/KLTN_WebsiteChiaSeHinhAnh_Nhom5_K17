@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms'
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
 import { AccountService, PostService, AlertService, CommentService, ReactionService, FollowService } from '@app/_services';
-import { Post, Comment, Reaction, ReactionToCreate, Account, Follow, FollowToCreate } from '@app/_models';
+import { Post, Comment, CommentToCreate, CommentToUpdate , Reaction, ReactionToCreate, Account, Follow, FollowToCreate, ReactionCmtToCreate } from '@app/_models';
 
 @Component({
   selector: 'app-detail-post',
@@ -19,10 +19,15 @@ export class DetailPostComponent {
   updateCmtFormData: any;
   id:number;
   editCmt: boolean;
+  cmt:number;
   editCmtId: any;
   public comments: Comment[] = [];
+  public cmtCreate: CommentToCreate;
+  public cmtUpdate: CommentToUpdate;
   public reaction: ReactionToCreate;
+  public reactionCmt: ReactionCmtToCreate;
   mreaction = new Reaction;
+  like = false;
   public follow: FollowToCreate;
   mfollow = new Follow;
   public reactionType: number;
@@ -47,22 +52,29 @@ export class DetailPostComponent {
 
   ngOnInit(): void {
     this.editCmtId = this.route.snapshot.params['commentId'];
-    if(this.editCmtId == null){
-      this.editCmt = false;
-    }
-    else if(this.editCmtId != null){
+    this.cmt = this.route.snapshot.params['onCmt'];
+    console.log(this.editCmtId);
+    console.log(this.cmt);
+    if(this.editCmtId != null && this.cmt==0){
       this.editCmt = true;
       this.router.routeReuseStrategy.shouldReuseRoute = () =>{
         return false;
       }
       this.commentService.getById(this.editCmtId)
-      .subscribe((res:any)=>{
-        this.commentEdit = res;
-      })
+        .subscribe((res:any)=>{
+          this.commentEdit = res;
+        })
     }
+    else {
+      this.editCmt = false;
+    }
+    console.log(this.editCmt);
     this.getRoute(this.route.snapshot.params['id']);
     this.getComment(this.route.snapshot.params['id']);
     this.getReaction(this.route.snapshot.params['id']);
+    if(this.mreaction.type == 0){
+      this.like = true;
+    }
     this.getFollow(this.route.snapshot.params['ownerId']);
     this.accountService.getById(this.route.snapshot.params['ownerId'])
         .subscribe((res:any)=>{
@@ -75,15 +87,11 @@ export class DetailPostComponent {
     this.myForm = this.formBuilder.group({
       contentCreate: ['', Validators.required],
     });
-    this.cmtForm = this.formBuilder.group({
-      content: ['', Validators.required],
-    });
     this.updateCmtForm = this.formBuilder.group({
       content: [this.comment.content, Validators.required],
     });
     
     this.testForm = new FormData(); 
-    this.cmtFormData = new FormData();
     this.updateCmtFormData = new FormData(); 
   }
 
@@ -120,14 +128,19 @@ export class DetailPostComponent {
       return;
     }
 
-    this.testForm.set('postId', this.post.id);
-    this.testForm.set('content', this.myForm.get('contentCreate').value);
+    this.cmtCreate = {
+      content: this.myForm.get('contentCreate').value,
+      postId: this.post.id,
+    }
+
+    // this.testForm.set('postId', this.post.id);
+    // this.testForm.set('content', this.myForm.get('contentCreate').value);
     // this.testForm.append("postId", this.post.id);
     
     console.log(this.myForm.get('contentCreate').value);
-    console.log(this.post.id);
+    // console.log(this.post.id);
     console.log(this.testForm);
-    this.commentService.create(this.testForm)
+    this.commentService.create(this.cmtCreate)
         .subscribe(res => {
             console.log(res);
             // alert('Bình luận thành công.');
@@ -144,13 +157,16 @@ export class DetailPostComponent {
 
 
   submitEdit(){
-    if (this.cmtForm.invalid) {
+    if (this.updateCmtFormData.invalid) {
       return;
     }
-    this.updateCmtFormData.set('content', this.cmtForm.get('content').value);
-    this.commentService.update(this.editCmtId ,this.updateCmtFormData)
+    this.cmtUpdate = {
+      content: this.updateCmtForm.get('content').value,
+    }
+    this.updateCmtFormData.set('content', this.updateCmtForm.get('content').value);
+    this.commentService.update(this.editCmtId ,this.cmtUpdate)
         .subscribe(res => {
-            console.log(res);
+            // console.log(res);
             alert('Chỉnh sửa bình luận thành công.');
             this.router.navigate(['../'], { relativeTo: this.route });
         }, error => {
@@ -162,15 +178,18 @@ export class DetailPostComponent {
     this.editCmt = true;
   }
 
+  onCmt() {
+    this.cmt = 1;
+  }
+
   onCreateReaction() {
-    console.log(this.mreaction.type);
     this.reaction = {
       targetId: this.post.id,
     }
-    console.log(this.reaction);
+    // console.log(this.reaction);
     this.reactionService.createReaction(this.reaction)
     .subscribe(res => {
-      console.log(res);
+      // console.log(res);
       //alert('Tim thành công!');
       this.getRoute(this.post.id);
       this.getReaction(this.post.id);
@@ -186,14 +205,29 @@ export class DetailPostComponent {
     });
   }
 
+  onCreateReactionCmt() {
+    this.reactionCmt = {
+      target: 1,
+      targetId: this.post.id,
+    }
+    // console.log(this.reaction);
+    this.reactionService.createReaction(this.reactionCmt)
+    .subscribe(res => {
+      // console.log(res);
+      //alert('Tim thành công!');
+      this.getRoute(this.post.id);
+      this.getReaction(this.post.id);
+    });
+  }
+
   onCreateFollow() {
     this.follow = {
       subjectId: this.post.ownerId,
     }
-    console.log(this.follow);
+    // console.log(this.follow);
     this.followService.createFollow(this.follow)
     .subscribe(res => {
-      console.log(res);
+      // console.log(res);
       //alert('Follow thành công!');
       this.getRoute(this.post.id);
       this.getFollow(this.post.ownerId);
@@ -201,7 +235,7 @@ export class DetailPostComponent {
   }
 
   unFollow() {
-    console.log(this.post.ownerId);
+    // console.log(this.post.ownerId);
     this.followService.delete(this.post.ownerId)
     .subscribe(() => {
       //alert('Bỏ follow thành công!');

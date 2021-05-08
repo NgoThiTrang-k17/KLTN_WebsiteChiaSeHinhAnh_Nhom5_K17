@@ -6,14 +6,16 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { DataTablesModule } from 'angular-datatables';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 // used to create fake backend
 // import { fakeBackendProvider } from './_helpers';
 
+import { UserModule } from './home/user.module'
 import { AppRoutingModule } from './app-routing.module';
 import { JwtInterceptor, ErrorInterceptor, appInitializer } from './_helpers';
 import { AccountService } from './_services';
 import { AppComponent } from './app.component';
-import { AlertComponent } from './_components';;
+import { AlertComponent } from './_components';
 
 @NgModule({
     imports: [
@@ -28,7 +30,7 @@ import { AlertComponent } from './_components';;
     ],
     declarations: [
         AppComponent,
-        AlertComponent 
+        AlertComponent ,
     ],
     providers: [
         { provide: APP_INITIALIZER, useFactory: appInitializer, multi: true, deps: [AccountService] },
