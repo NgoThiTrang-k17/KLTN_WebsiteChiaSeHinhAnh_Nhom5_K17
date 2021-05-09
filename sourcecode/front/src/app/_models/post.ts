@@ -5,6 +5,7 @@ export class Post {
     imageName: string;
     path: string;
     ownerId: number;
+    isReactedByThisUser: boolean;
     reactionCount: number;
     commentCount: number;
     followerCount: number;
