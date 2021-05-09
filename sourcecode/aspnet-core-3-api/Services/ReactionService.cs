@@ -41,12 +41,15 @@ namespace WebApi.Services
             var reaction = _mapper.Map<Reaction>(model);
             if (reaction == null) throw new AppException("Create reaction failed");
             //Get post by postId then map it to new Post model
-            var post = _mapper.Map<Post>(_postService.GetById(model.TargetId));
+            //if(model.Target == ReactionTarget.Post)
+            //    var post = _mapper.Map<Post>(_postService.GetById(model.TargetId));
+            //else
+            //    var post = _mapper.Map<Post>(_postService.GetById(model.TargetId));
             reaction.Created = DateTime.Now;
 
             _context.Reactions.Add(reaction);
             _context.SaveChanges();
-            SendNotification(reaction.OwnerId, post);
+            //SendNotification(reaction.OwnerId, reaction);
             return _mapper.Map<ReactionResponse>(reaction);
         }
 
@@ -122,13 +125,13 @@ namespace WebApi.Services
             return reaction;
         }
 
-        private void SendNotification(int reactionOwnerId, Post model)
+        private void SendNotification(int reactionOwnerId, Reaction model)
         {
             var notification = new CreateNotificationRequest
             {
                 ActionOwnerId = reactionOwnerId,
                 NotificationType = NotificationType.Reacted,
-                PostId = model.Id,
+                PostId = model.TargetId,
                 ReiceiverId = model.OwnerId,
                 Created = DateTime.Now,
                 Status = Status.Created
