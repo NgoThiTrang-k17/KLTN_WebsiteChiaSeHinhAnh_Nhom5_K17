@@ -53,6 +53,11 @@ namespace WebApi.Controllers
             foreach (CommentResponse comment in comments)
             {
                 comment.IsReactedByThisUser = _reactionService.GetState(ReactionTarget.Comment, comment.Id, Account.Id).IsReactedByThisUser;
+                if (comment.IsParent)
+                {
+                    comment.ChildCount = _commentService.GetByParent(comment.Id).Count();
+                }
+                else comment.ChildCount = 0;
             }
             return Ok(comments);
         }
@@ -60,15 +65,7 @@ namespace WebApi.Controllers
         [HttpPost]
         public ActionResult<CommentResponse> Create( CreateCommentRequest comment)
         {
-            //var model = new CreateCommentRequest
-            //{
-            //    Content = comment.Content,
-            //    DateCreated = DateTime.Now,
-            //    OwnerId = Account.Id,
-            //    //comment.OwnerId, 
-            //    PostId = //Post.Id
-            //    comment.PostId
-            //};
+
             comment.Created = DateTime.Now;
             comment.OwnerId = Account.Id;
             _commentService.CreateComment(comment);

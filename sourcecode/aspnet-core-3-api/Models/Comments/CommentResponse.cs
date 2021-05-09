@@ -14,6 +14,7 @@ namespace WebApi.Models.Comments
         public int ParrentId { get; set; }
         public bool IsParent => ParrentId == 0;
         public bool IsChild => ParrentId != 0;
+        public int ChildCount { get; set; }
 
         public int OwnerId { get; set; }
         public bool IsReactedByThisUser { get;  set; }
