@@ -42,8 +42,12 @@ export class ReactionService {
         return this.http.put(`${baseUrl}/${id}`, params);
     }
 
-    delete(id){
+    deletePost(id){
         return this.http.delete(`${baseUrl}/DeleteByPostId${id}`);
+    }
+
+    deleteCmt(id){
+        return this.http.delete(`${baseUrl}/DeleteByCommentId${id}`);
     }
 
     // createPost(posts) {

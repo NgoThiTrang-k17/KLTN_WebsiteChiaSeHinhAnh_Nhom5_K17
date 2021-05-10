@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import 'rxjs/add/operator/filter';
 
 import { AccountService, PostService, AlertService, CommentService, ReactionService, FollowService } from '@app/_services';
 import { Post, Comment, CommentToCreate, commentToCreateForCmt, CommentToUpdate , Reaction, ReactionToCreate, Account, Follow, FollowToCreate, ReactionCmtToCreate } from '@app/_models';
@@ -24,7 +25,7 @@ export class DetailPostComponent {
   public comments: Comment[] = [];
   public cmtCreate: CommentToCreate;
   public cmtCreateForCmt: commentToCreateForCmt;
-  public cmtId?: number;
+  public cmtId: any;
   public cmtUpdate: CommentToUpdate;
   public reaction: ReactionToCreate;
   public reactionCmt: ReactionCmtToCreate;
@@ -35,14 +36,11 @@ export class DetailPostComponent {
   public reactionType: number;
   account: Account;
 
-  content: string;
-  parrtentId: number;
-  postId: number;
-
   // mreaction = this.reactionService.reactionValue;
   // mfollow = this.followService.followValue;
   maccount = this.accountService.accountValue;
   comment = this.commentService.commentValue;
+  commentReply = this.commentService.commentValue;
   post = new Post;
   commentEdit = new Comment;
   constructor(
@@ -98,6 +96,7 @@ export class DetailPostComponent {
     
     this.testForm = new FormData(); 
     this.updateCmtFormData = new FormData(); 
+
   }
 
   getComment(id:any){
@@ -213,31 +212,39 @@ export class DetailPostComponent {
       // console.log(res);
       //alert('Tim thành công!');
       this.getRoute(this.post.id);
-      this.getReaction(this.post.id);
     });
   }
 
   unReaction() {
-    this.reactionService.delete(this.post.id)
+    this.reactionService.deletePost(this.post.id)
     .subscribe(() => {
       //alert('Bỏ tim thành công!');
       this.getRoute(this.post.id);
-      this.getReaction(this.post.id);
     });
   }
 
-  onCreateReactionCmt() {
+  onCreateReactionCmt(cmtId: number) {
     this.reactionCmt = {
       target: 1,
-      targetId: this.post.id,
+      targetId: cmtId,
     }
     // console.log(this.reaction);
     this.reactionService.createReaction(this.reactionCmt)
     .subscribe(res => {
       // console.log(res);
-      //alert('Tim thành công!');
+      // alert('Tim thành công!');
       this.getRoute(this.post.id);
-      this.getReaction(this.post.id);
+      this.getComment(this.post.id);
+    });
+    
+  }
+
+  unCreateReactionCmt(cmtId: number) {
+    this.reactionService.deleteCmt(cmtId)
+    .subscribe(() => {
+      //alert('Bỏ tim thành công!');
+      this.getRoute(this.post.id);
+      this.getComment(this.post.id);
     });
   }
 
