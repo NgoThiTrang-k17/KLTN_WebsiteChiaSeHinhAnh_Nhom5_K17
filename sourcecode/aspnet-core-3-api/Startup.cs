@@ -74,16 +74,18 @@ namespace WebApi
                 });
             });
 
-            services.AddAuthentication()
-                    .AddGoogle(options =>
-                    {
-                        IConfigurationSection googleAuthNSection =
-                            Configuration.GetSection("Authentication:Google");
+            //services.AddAuthentication()
+            //        .AddGoogle(options =>
+            //        {
+            //            IConfigurationSection googleAuthNSection =
+            //                Configuration.GetSection("Authentication:Google");
 
-                        options.ClientId = googleAuthNSection["ClientId"];
-                        options.ClientSecret = googleAuthNSection["ClientSecret"];
-                    });
+            //            options.ClientId = googleAuthNSection["ClientId"];
+            //            options.ClientSecret = googleAuthNSection["ClientSecret"];
+            //        });
+
             //services.AddElasticsearch(Configuration);
+
             // configure strongly typed settings object
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
@@ -134,7 +136,6 @@ namespace WebApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<PresenceHub>("hubs/presence");
             });
 
         }
