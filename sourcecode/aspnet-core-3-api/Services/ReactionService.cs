@@ -15,6 +15,7 @@ namespace WebApi.Services
         ReactionResponse UpdateReaction(int id, UpdateReactionRequest model);
         void DeleteReaction(int id);
         void DeleteByPostId(int postId, int ownerId);
+        void DeleteByCommentId(int commentId, int ownerId);
         IEnumerable<ReactionResponse> GetAll();
         IEnumerable<ReactionResponse> GetAllByTargetId(ReactionTarget targetType, int targetId);
         ReactionState GetState(ReactionTarget targetType, int targetId, int ownerId);
@@ -76,6 +77,16 @@ namespace WebApi.Services
         {
             var model = _context.Reactions.Where(reaction => reaction.Target == ReactionTarget.Post
             && reaction.TargetId == postId
+            && reaction.OwnerId == ownerId);
+
+            var reaction = getReaction(model.FirstOrDefault().Id);
+            _context.Remove(reaction);
+            _context.SaveChanges();
+        }
+        public void DeleteByCommentId(int commentId, int ownerId)
+        {
+            var model = _context.Reactions.Where(reaction => reaction.Target == ReactionTarget.Comment
+            && reaction.TargetId == commentId
             && reaction.OwnerId == ownerId);
 
             var reaction = getReaction(model.FirstOrDefault().Id);

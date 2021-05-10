@@ -67,5 +67,12 @@ namespace WebApi.Controllers
             _reactionService.DeleteByPostId(id, Account.Id);
             return Ok(new { message = "Reaction deleted successfully" });
         }
+
+        [HttpDelete("DeleteByCommentId{id:int}")]
+        public IActionResult DeleteByCommentId(int id)
+        {
+            _reactionService.DeleteByCommentId(id, Account.Id);
+            return Ok(new { message = "Reaction deleted successfully" });
+        }
     }
 }
