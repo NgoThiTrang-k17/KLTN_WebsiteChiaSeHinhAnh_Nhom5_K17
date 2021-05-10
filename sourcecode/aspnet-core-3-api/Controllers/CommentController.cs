@@ -53,11 +53,7 @@ namespace WebApi.Controllers
             foreach (CommentResponse comment in comments)
             {
                 comment.IsReactedByThisUser = _reactionService.GetState(ReactionTarget.Comment, comment.Id, Account.Id).IsReactedByThisUser;
-                if (comment.IsParent)
-                {
-                    comment.ChildCount = _commentService.GetByParent(comment.Id).Count();
-                }
-                else comment.ChildCount = 0;
+                
             }
             return Ok(comments);
         }

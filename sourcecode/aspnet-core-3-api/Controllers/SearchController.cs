@@ -42,37 +42,5 @@ namespace WebApi.Controllers
             }
 
         }
-        //[HttpGet("find")]
-        //public ActionResult<IEnumerable<PostResponse>> Find(string query)
-        //{
-        //    var response =  _elasticClient.Search<Post>(
-        //         s => s.Query(q => q.QueryString(d => d.Query(query))));
-
-        //    if (!response.IsValid)
-        //    {
-        //        // We could handle errors here by checking response.OriginalException 
-        //        //or response.ServerError properties
-        //        //_logger.LogError("Failed to search documents");
-        //        return StatusCode(500, $"Internal server error");
-        //    }
-
-        //    return Ok(response.Documents.ToList());
-        //}
-
-        //Only for development purpose
-        //[HttpGet("reindex")]
-        //public async Task<IActionResult> ReIndex()
-        //{
-        //    await _elasticClient.DeleteByQueryAsync<Post>(q => q.MatchAll());
-
-        //    var allProducts =  _productService.GetAll();
-
-        //    foreach (var product in allProducts)
-        //    {
-        //        await _elasticClient.IndexDocumentAsync(product);
-        //    }
-
-        //    return Ok($"{allProducts} product(s) reindexed");
-        //}
     }
 }

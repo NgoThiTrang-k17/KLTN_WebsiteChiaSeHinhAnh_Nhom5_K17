@@ -20,6 +20,7 @@ namespace WebApi.Services
         CommentResponse CreateComment(CreateCommentRequest model);
         CommentResponse UpdateComment(int id, UpdateCommentRequest model);
         void DeleteComment(int id);
+       
     }
     public class CommentService : ICommentService
     {
@@ -100,6 +101,7 @@ namespace WebApi.Services
                 var owner = _accountService.GetById(commentResponse.OwnerId);
                 commentResponse.OwnerName = owner.Name;
                 commentResponse.OwnerAvatar = owner.AvatarPath;
+                (commentResponse.ChildCount,commentResponse.ReactionCount) = GetCommentInfor(commentResponse.Id);
             }
             return _mapper.Map<List<CommentResponse>>(commentResponses);
         }
@@ -112,6 +114,7 @@ namespace WebApi.Services
                 var owner = _accountService.GetById(commentResponse.OwnerId);
                 commentResponse.OwnerName = owner.Name;
                 commentResponse.OwnerAvatar = owner.AvatarPath;
+                (commentResponse.ChildCount, commentResponse.ReactionCount) = GetCommentInfor(commentResponse.Id);
             }
             return _mapper.Map<List<CommentResponse>>(commentResponses);
         }
@@ -121,6 +124,12 @@ namespace WebApi.Services
             var comment = _context.Comments.Find(id);
             if (comment == null) throw new KeyNotFoundException("Post not found");
             return comment;
+        }
+        private (int, int) GetCommentInfor(int id)
+        {
+            var childcount = _context.Comments.Count(c => c.ParrentId == id);
+            var reactioncount = _context.Reactions.Count(r => r.TargetId == id && r.Target == ReactionTarget.Comment);
+            return (childcount, reactioncount);
         }
 
         private void SendNotification(int commentOwnerId,Post model)

@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using WebApi.Helpers;
 using WebApi.Middleware;
 using WebApi.Services;
@@ -40,24 +41,48 @@ namespace WebApi
                     option.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey =  new SymmetricSecurityKey(Encoding.ASCII.GetBytes("409c0d66-a594-44d2-8bc0-d3961765b3e5")),
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("409c0d66-a594-44d2-8bc0-d3961765b3e5")),
                         ValidateIssuer = false,
                         ValidateAudience = false,
+                    };
+
+                    option.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var accessToken = context.Request.Query["access_token"];
+                            var path = context.HttpContext.Request.Path;
+                            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
+                            {
+                                context.Token = accessToken;
+                            }
+                            return Task.CompletedTask;
+                        }
                     };
                 });
             //for notification service
             services.AddSignalR();
-            services.AddSingleton<IUserConnectionManager, UserConnectionManager>();
+            
             services.AddCors(options =>
             {
                 options.AddPolicy("ClientPermission", policy =>
                 {
-                    policy.SetIsOriginAllowed(origin=>true)
+                    policy.SetIsOriginAllowed(origin => true)
                         .AllowAnyMethod()
                         .AllowCredentials()
                         .AllowAnyHeader();
                 });
             });
+
+            services.AddAuthentication()
+                    .AddGoogle(options =>
+                    {
+                        IConfigurationSection googleAuthNSection =
+                            Configuration.GetSection("Authentication:Google");
+
+                        options.ClientId = googleAuthNSection["ClientId"];
+                        options.ClientSecret = googleAuthNSection["ClientSecret"];
+                    });
             //services.AddElasticsearch(Configuration);
             // configure strongly typed settings object
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
@@ -83,17 +108,12 @@ namespace WebApi
             // generated swagger json and swagger ui middleware
             app.UseSwagger();
             app.UseSwaggerUI(x => x.SwaggerEndpoint("/swagger/v1/swagger.json", "ASP.NET Core WebAPI"));
-            app.UseStaticFiles();
-            app.UseStaticFiles(new StaticFileOptions()
-            {
-                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Resources")),
-                RequestPath = new PathString("/Resources")
-            });
+           
             app.UseRouting();
 
             // global cors policy
             app.UseCors(x => x
-                  //.WithOrigins("http://localhost:4200")
+               //.WithOrigins("http://localhost:4200")
                .SetIsOriginAllowed(origin => true)
                .AllowAnyMethod()
                .AllowAnyHeader()
@@ -114,7 +134,7 @@ namespace WebApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<ChatHub>("/hubs/chat");
+                endpoints.MapHub<PresenceHub>("hubs/presence");
             });
 
         }
