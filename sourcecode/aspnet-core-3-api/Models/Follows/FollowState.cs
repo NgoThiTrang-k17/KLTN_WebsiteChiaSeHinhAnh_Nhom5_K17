@@ -4,6 +4,6 @@ namespace WebApi.Models.Follows
 {
     public class FollowState
     {
-        public int IsCreated { get; set; }
+        public bool IsCreated { get; set; }
     }
 }

@@ -58,18 +58,28 @@ namespace WebApi.Controllers
             var follows = _followService.GetAll();
             return Ok(follows);
         }
-        [HttpGet("GetAllBySubjectId/{id:int}")]
-        public ActionResult<IEnumerable<FollowResponse>> GetAllBySubjectId(int id)
+        [HttpGet("GetBySubjectId/{id:int}")]
+        public ActionResult<IEnumerable<FollowResponse>> GetBySubjectId(int id)
         {
-            var follows = _followService.GetAllBySubjectId(id);
-            return Ok(follows);
+            var followers = _followService.GetBySubjectId(id);
+            foreach (FollowResponse follower in followers)
+            {
+                follower.isFollower_FollowedByCurrentUser = _followService.GetState(follower.FollowerId, Account.Id).IsCreated;
+
+            }
+            return Ok(followers);
         }
 
-        [HttpGet("GetAllByFollowerId/{id:int}")]
-        public ActionResult<IEnumerable<FollowResponse>> GetAllByFollowerId(int id)
+        [HttpGet("GetByFollowerId/{id:int}")]
+        public ActionResult<IEnumerable<FollowResponse>> GetByFollowerId(int id)
         {
-            var follows = _followService.GetAllByFollowerId(id);
-            return Ok(follows);
+            var subjects = _followService.GetByFollowerId(id);
+            foreach (FollowResponse subject in subjects)
+            {
+                subject.isSubject_FollowedByCurrentUser = _followService.GetState(subject.SubjectId, Account.Id).IsCreated;
+
+            }
+            return Ok(subjects);
         }
 
         [HttpGet("GetState/{subjectId:int}")]

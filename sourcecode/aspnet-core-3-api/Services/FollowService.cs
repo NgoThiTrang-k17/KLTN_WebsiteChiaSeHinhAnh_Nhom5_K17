@@ -17,8 +17,8 @@ namespace WebApi.Services
         void DeleteFollowByAccountId(int accountId, int followerId);
 
         IEnumerable<FollowResponse> GetAll();
-        IEnumerable<FollowResponse> GetAllBySubjectId(int userId);
-        IEnumerable<FollowResponse> GetAllByFollowerId(int userId);
+        IEnumerable<FollowResponse> GetBySubjectId(int userId);
+        IEnumerable<FollowResponse> GetByFollowerId(int userId);
 
         FollowState GetState(int accountId, int followerId);
     }
@@ -27,12 +27,15 @@ namespace WebApi.Services
         private readonly DataContext _context;
         private readonly IMapper _mapper;
         private readonly INotificationService _notificationService;
+        private readonly IAccountService _accountService;
         public FollowService(DataContext context,
             IMapper mapper,
+            IAccountService accountService,
             INotificationService notificationService)
         {
             _context = context;
             _mapper = mapper;
+            _accountService = accountService;
             _notificationService = notificationService;
         }
 
@@ -80,35 +83,48 @@ namespace WebApi.Services
             return _mapper.Map<List<FollowResponse>>(follows);
         }
 
-        //Get all Follow of each user
-        public IEnumerable<FollowResponse> GetAllBySubjectId(int userId)
+        //Get all Follower of each user
+        public IEnumerable<FollowResponse> GetBySubjectId(int userId)
         {
-            var follows = _context.Follows.Where(follow => follow.SubjectId == userId); ;
-            return _mapper.Map<List<FollowResponse>>(follows);
+            var follows = _context.Follows.Where(follow => follow.SubjectId == userId);
+            var followers = _mapper.Map<List<FollowResponse>>(follows);
+            foreach (FollowResponse follower in followers)
+            {
+                var account = _accountService.GetById(follower.FollowerId);
+                follower.FollowerName = account.Name;
+                follower.FollowerAvatarPath = account.AvatarPath;
+            }
+
+            return followers;
         }
         //Get all Follow of each user
-        public IEnumerable<FollowResponse> GetAllByFollowerId(int userId)
+        public IEnumerable<FollowResponse> GetByFollowerId(int userId)
         {
-            var follows = _context.Follows.Where(follow => follow.FollowerId == userId); ;
-            return _mapper.Map<List<FollowResponse>>(follows);
+            var follows = _context.Follows.Where(follow => follow.FollowerId == userId);
+            var subjects = _mapper.Map<List<FollowResponse>>(follows);
+            foreach (FollowResponse subject in subjects)
+            {
+                var account = _accountService.GetById(subject.SubjectId);
+                subject.FollowerName = account.Name;
+                subject.FollowerAvatarPath = account.AvatarPath;
+            }
+            return subjects;
         }
 
         public FollowState GetState(int subjectId, int followerId)
         {
 
-            var follow = _context.Follows.Where(follow => follow.SubjectId == subjectId && follow.FollowerId == followerId).Count();
+            var followCount = _context.Follows.Where(follow => follow.SubjectId == subjectId && follow.FollowerId == followerId).Count();
             var followState = new FollowState
             {
-                IsCreated = 0
+                IsCreated = false
             };
-            if (follow != 0)
+            if (followCount != 0)
             {
-                followState.IsCreated = 1;
-                return followState;
-            }
-            else
+                followState.IsCreated = true;
 
-                return followState;
+            }
+            return followState;
         }
 
         //Helper methods

@@ -151,7 +151,7 @@ namespace WebApi.Services
         //Create Notification for posting
         private void SendNotification(Post post)
         {
-            var follows = _followService.GetAllBySubjectId(post.OwnerId);
+            var follows = _followService.GetBySubjectId(post.OwnerId);
             //Create notification for each follower of Post owner
             foreach (FollowResponse follow in follows)
             {
