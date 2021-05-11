@@ -122,7 +122,7 @@ namespace WebApi.Services
         private Comment GetComment(int id)
         {
             var comment = _context.Comments.Find(id);
-            if (comment == null) throw new KeyNotFoundException("Post not found");
+            if (comment == null) throw new KeyNotFoundException("Comment not found");
             return comment;
         }
         private (int, int) GetCommentInfor(int id)

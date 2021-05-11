@@ -16,30 +16,40 @@ namespace WebApi.Controllers
     [Route("[controller]")]
     public class ChatController : BaseController
     {
-        //private readonly IHubContext<ChatHub> _ChatContext;
-        //private readonly IUserConnectionManager _userConnectionManager;
-        //private readonly IChatService _chatService;
-        //public ChatController(IHubContext<ChatHub> hubContext,
-        //    IUserConnectionManager userConnectionManager,
-        //IChatService chatService)
-        //{
-        //    _ChatContext = hubContext;
-        //    _userConnectionManager = userConnectionManager;
-        //    _chatService = chatService;
-        //}
+        private readonly IChatService _chatService;
+        public ChatController(
+             IChatService chatService
+             )
+        {
+            _chatService = chatService;
+        }
+        [HttpPost]
+        public ActionResult<ChatMessageResponse> Send(CreateChatMessageRequest model)
+        {
+            model.OwnerId = Account.Id;
+            var message = _chatService.SendMessage(model);
+            return Ok(message);
+        }
 
-        //[HttpPost]
-        //public async Task<ActionResult> SendToSpecificUser(CreateChatMessageRequest model)
-        //{
-        //    var connections = _userConnectionManager.GetUserConnections(model.userId);
-        //    if (connections != null && connections.Count > 0)
-        //    {
-        //        foreach (var connectionId in connections)
-        //        {
-        //            await _ChatContext.Clients.Client(connectionId).SendAsync("sendToUser", model.User, model.Message);
-        //        }
-        //    }
-        //    return Ok(new { message = "Ok" });
-        //}
+        [HttpDelete]
+        public IActionResult Delete(int id)
+        {
+            _chatService.DeleteMessage(id);
+            return Ok(new { message = "Message deleted successfully" });
+        }
+
+        [HttpGet]
+        public ActionResult<ChatMessageResponse> GetAll()
+        {
+            var messages = _chatService.GetAll();
+            return Ok(messages);
+        }
+
+        [HttpGet("GetByChatRoomId/{id:int}")]
+        public ActionResult<ChatMessageResponse> GetByChatRoomId(int id)
+        {
+            var messages = _chatService.GetByChatRoomId(id);
+            return Ok(messages);
+        }
     }
 }
