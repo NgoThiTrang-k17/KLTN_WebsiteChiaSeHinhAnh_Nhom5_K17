@@ -17,7 +17,8 @@ namespace WebApi.Services
         void DeleteFollowByAccountId(int accountId, int followerId);
 
         IEnumerable<FollowResponse> GetAll();
-        IEnumerable<FollowResponse> GetAllByUserId(int userId);
+        IEnumerable<FollowResponse> GetAllBySubjectId(int userId);
+        IEnumerable<FollowResponse> GetAllByFollowerId(int userId);
 
         FollowState GetState(int accountId, int followerId);
     }
@@ -80,9 +81,15 @@ namespace WebApi.Services
         }
 
         //Get all Follow of each user
-        public IEnumerable<FollowResponse> GetAllByUserId(int userId)
+        public IEnumerable<FollowResponse> GetAllBySubjectId(int userId)
         {
             var follows = _context.Follows.Where(follow => follow.SubjectId == userId); ;
+            return _mapper.Map<List<FollowResponse>>(follows);
+        }
+        //Get all Follow of each user
+        public IEnumerable<FollowResponse> GetAllByFollowerId(int userId)
+        {
+            var follows = _context.Follows.Where(follow => follow.FollowerId == userId); ;
             return _mapper.Map<List<FollowResponse>>(follows);
         }
 

@@ -58,10 +58,17 @@ namespace WebApi.Controllers
             var follows = _followService.GetAll();
             return Ok(follows);
         }
-        [HttpGet("GetAllByUserId/{id:int}")]
-        public ActionResult<IEnumerable<FollowResponse>> GetAllByUserId(int id)
+        [HttpGet("GetAllBySubjectId/{id:int}")]
+        public ActionResult<IEnumerable<FollowResponse>> GetAllBySubjectId(int id)
         {
-            var follows = _followService.GetAllByUserId(id);
+            var follows = _followService.GetAllBySubjectId(id);
+            return Ok(follows);
+        }
+
+        [HttpGet("GetAllByFollowerId/{id:int}")]
+        public ActionResult<IEnumerable<FollowResponse>> GetAllByFollowerId(int id)
+        {
+            var follows = _followService.GetAllByFollowerId(id);
             return Ok(follows);
         }
 
