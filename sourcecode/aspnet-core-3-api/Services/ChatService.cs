@@ -50,8 +50,8 @@ namespace WebApi.Services
                 {
                     throw new KeyNotFoundException("Account not found");
                 }
-                chatRoom.MemberId.Add(_mapper.Map<Account>(ownerAccount));
-                chatRoom.MemberId.Add(_mapper.Map<Account>(receiverAccount));
+                chatRoom.Accounts.Add(_mapper.Map<Account>(ownerAccount));
+                chatRoom.Accounts.Add(_mapper.Map<Account>(receiverAccount));
                 chatRoom.Messages.Add(message);
                 _context.ChatRooms.Add(chatRoom);
             }
