@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Entities;
 using WebApi.Models.Notifications;
 using WebApi.Services;
 
@@ -17,6 +18,14 @@ namespace WebApi.Controllers
             _notificationService = notificationService;
 
         }
+
+        [HttpGet("NewNotificationCount/{id:int}")]
+        public ActionResult<IEnumerable<NotificationResponse>> NewNotificationCount(int id)
+        {
+            var notifications = _notificationService.NewNotificationCount(id);
+            return Ok(notifications);
+        }
+
         [HttpGet]
         public ActionResult<IEnumerable<NotificationResponse>> GetAll()
         {
@@ -37,6 +46,12 @@ namespace WebApi.Controllers
             return Ok(notification);
         }
 
+        [HttpPut("UpdateNotificationStatus/{id:int}")]
+        public ActionResult<NotificationResponse> UpdateNotificationStatus(int id, Status status)
+        {
+            var notification = _notificationService.UpdateNotificationStatus(id, status);
+            return Ok(notification);
+        }
 
         [HttpPut("{id:int}")]
         public ActionResult<NotificationResponse> Update(int id, UpdateNotificationRequest model)

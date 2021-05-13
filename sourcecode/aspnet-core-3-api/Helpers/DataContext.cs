@@ -21,6 +21,8 @@ namespace WebApi.Helpers
 
         public DbSet<ChatMessage> ChatMessages { get; set; }
 
+        public DbSet<ChatRoom> ChatRooms { get; set; }
+
         private readonly IConfiguration Configuration;
 
         public DataContext(IConfiguration configuration)

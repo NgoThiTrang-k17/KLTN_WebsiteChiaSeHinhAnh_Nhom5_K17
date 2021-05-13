@@ -14,7 +14,7 @@ namespace WebApi.Services
         FollowResponse CreateFollow(CreateFollowRequest model);
         FollowResponse UpdateFollow(int id, UpdateFollowRequest model);
         void DeleteFollow(int id);
-        void DeleteFollowByAccountId(int accountId, int followerId);
+        void DeleteFollowBySubjectId(int accountId, int followerId);
 
         IEnumerable<FollowResponse> GetAll();
         IEnumerable<FollowResponse> GetBySubjectId(int userId);
@@ -66,13 +66,15 @@ namespace WebApi.Services
         public void DeleteFollow(int id)
         {
             var follow = getFollow(id);
+            if (follow == null) throw new KeyNotFoundException("Follow not found");
             _context.Remove(follow);
             _context.SaveChanges();
         }
 
-        public void DeleteFollowByAccountId(int accountId, int followerId)
+        public void DeleteFollowBySubjectId(int accountId, int followerId)
         {
             var follow = _context.Follows.Where(follow => follow.SubjectId == accountId && follow.FollowerId == followerId).FirstOrDefault();
+            if (follow == null) throw new KeyNotFoundException("Follow not found");
             _context.Remove(follow);
             _context.SaveChanges();
         }

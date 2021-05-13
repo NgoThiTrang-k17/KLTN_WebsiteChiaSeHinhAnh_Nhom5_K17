@@ -10,11 +10,13 @@ namespace WebApi.Services
 {
     public interface INotificationService
     {
-        public NotificationResponse CreateNotification(CreateNotificationRequest model);
-        public NotificationResponse UpdateNotification(int id, UpdateNotificationRequest model);
-        public void DeleteNotification(int id);
+        NotificationResponse CreateNotification(CreateNotificationRequest model);
+        NotificationResponse UpdateNotification(int id, UpdateNotificationRequest model);
+        NotificationResponse UpdateNotificationStatus(int id, Status status);
+        void DeleteNotification(int id);
         IEnumerable<NotificationResponse> GetAll();
         IEnumerable<NotificationResponse> GetAllByUserId(int id);
+        int NewNotificationCount(int id);
     }
     public class NotificationService : INotificationService
     {
@@ -37,6 +39,17 @@ namespace WebApi.Services
             var notification = _mapper.Map<Notification>(model);
             if (notification == null) throw new AppException("Create Notification failed");
             _context.Notifications.Add(notification);
+            _context.SaveChanges();
+            return _mapper.Map<NotificationResponse>(notification);
+        }
+
+        //Update
+        public NotificationResponse UpdateNotificationStatus(int id, Status status)
+        {
+            var notification = getNotification(id);
+            if (notification == null) throw new AppException("Update Notification failed");
+            notification.Status = status;
+            _context.Notifications.Update(notification);
             _context.SaveChanges();
             return _mapper.Map<NotificationResponse>(notification);
         }
@@ -104,6 +117,15 @@ namespace WebApi.Services
                 notificationResponse.ReiceiverName = IsReceiverNull ? "" : receiver.Name;
             }
             return _mapper.Map<IList<NotificationResponse>>(notificationResponses);
+        }
+
+        //Get notifications for each user
+        public int NewNotificationCount(int id)
+        {
+
+            var notifications = _context.Notifications.Where(p => p.ReiceiverId == id && p.Status == 0);
+            var notificationResponses = _mapper.Map<IList<NotificationResponse>>(notifications);
+            return notificationResponses.Count();
         }
 
         //Helper methods

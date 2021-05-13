@@ -47,7 +47,7 @@ namespace WebApi.Controllers
         [HttpDelete("DeleteByAccountId/{id:int}")]
         public IActionResult DeleteByAccountId(int id)
         {
-            _followService.DeleteFollowByAccountId(id, Account.Id);
+            _followService.DeleteFollowBySubjectId(id, Account.Id);
             return Ok(new { message = "Follow deleted successfully" });
         }
 
