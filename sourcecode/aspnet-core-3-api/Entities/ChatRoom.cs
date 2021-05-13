@@ -7,8 +7,8 @@ namespace WebApi.Entities
     public class ChatRoom
     {
         public int Id { get; set; }
-        public List<Account> Accounts { get; set; }
-        public List<string> Nickname { get; set; }
+        public List<AccountChatRoom> AccountChatRooms { get; set; }
+        
         public List<ChatMessage> Messages { get; set; }
 
         public string Password { get; set; }
@@ -16,7 +16,7 @@ namespace WebApi.Entities
 
         public bool HaveMember(int id)
         {
-            return this.Accounts?.Find(x => x.Id == id) != null;
+            return this.AccountChatRooms?.Find(x => x.AccountId == id) != null;
         }
     }
 }

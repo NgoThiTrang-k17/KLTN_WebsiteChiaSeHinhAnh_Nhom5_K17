@@ -50,8 +50,8 @@ namespace WebApi.Services
                 {
                     throw new KeyNotFoundException("Account not found");
                 }
-                chatRoom.Accounts.Add(_mapper.Map<Account>(ownerAccount));
-                chatRoom.Accounts.Add(_mapper.Map<Account>(receiverAccount));
+                //chatRoom.Accounts.Add(_mapper.Map<Account>(ownerAccount));
+                //chatRoom.Accounts.Add(_mapper.Map<Account>(receiverAccount));
                 chatRoom.Messages.Add(message);
                 _context.ChatRooms.Add(chatRoom);
             }
@@ -95,7 +95,7 @@ namespace WebApi.Services
         {
             var chatRoomCount = _context.ChatRooms.Count(c => c.HaveMember(firstAccountId)
                              && c.HaveMember(secondAccountId)
-                             && c.MemberId.Count() == 2);
+                             && c.AccountChatRooms.Count() == 2);
             if (chatRoomCount == 1)
                 return true;
             else return false;

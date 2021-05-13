@@ -37,7 +37,6 @@ namespace WebApi.Helpers
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
         }
         internal object Map<T>(object comments)
         {
