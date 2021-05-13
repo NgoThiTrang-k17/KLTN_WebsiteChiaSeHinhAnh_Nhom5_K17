@@ -38,10 +38,21 @@
     <a routerLink="detail-post/{{post.id}}/{{post.ownerId}}" class="text-dark card-link" id="1">
       <div class="card btn-outline-white">
         <img class="card-img-top img-fluid" [src]="post.path" alt="Card image cap">
-        <p class="card-title" style="margin: 5px 5px 5px 5px; font-size:15px"><strong>{{post.title}}</strong></p>
-      </div> 
+        <div class="card-title" style="margin: 5px 5px 5px 5px; font-size:15px">
+          <strong>{{post.title}}</strong>
+          <div class="row ml-2">
+            <!-- <div class="col"> -->
+                <!-- <img [src]="post.ownerAvatar" style="height: 30px; width: 31px;" class="img-fluid card rounded-circle" alt=""> -->
+            <!-- </div> -->
+            <!-- <div class="col-9"> -->
+              <!-- <p class="mt-2" style="font-size: 13px; margin-left: 3%; font-weight: bold;">{{post.ownerName}}</p> -->
+            <!-- </div> -->
+          </div>
+        </div>
+         
+      </div>  
     </a>
-  </div>  
+  </div>
 </div>
 
 <div class="btn btn-fixed" >

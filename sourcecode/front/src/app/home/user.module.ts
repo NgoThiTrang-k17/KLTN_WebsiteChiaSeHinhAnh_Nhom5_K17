@@ -11,6 +11,10 @@ import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 
 import { NavHomeComponent } from './navhome.component';
 import { UserRoutingModule } from './user-routing.module';
@@ -43,7 +47,11 @@ import { SearchComponent } from './search/search.component';
             measurementId: "G-4DJ7TDJKGG"
         }),
         AngularFireStorageModule,
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        MatDialogModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
     ],
     declarations: [
         HomeComponent,

@@ -1,0 +1,20 @@
+<div mat-dialog-titile >
+    <div style="text-align: right;">
+        <a type="button"><span><i mat-dialog-close class="fa fa-times" style=" color: rgb(148, 148, 148); font-size:larger;"></i></span></a>
+    </div>
+    <h3 class="text-center">{{data.followerCount}} người theo dõi</h3>
+</div>
+<div mat-dialog-content >
+    <div id="1" *ngFor="let follow of follows" class="mt-2 ml-2 mr-2 mb-2">
+        <div id="1" class="row">
+            <div class="row col">
+                <img [src]="follow.followerAvatarPath" style="height: 50px; width: 51px;" class="img-fluid card rounded-circle" alt="">
+                <p class="ml-2 mt-3" routerLink="user/detail/{{follow.followerId}}" style="font-weight: bold; font-size: large;" mat-dialog-close>{{follow.followerName}}</p>
+            </div>
+            <div class="col-3 mt-2" *ngIf="maccount.id!=follow.followerId">
+                <button *ngIf="follow.isFollower_FollowedByCurrentUser==false" (click)="onCreateFollow(follow.followerId)" class="btn btn-light rounded-pill">Theo dõi</button>
+                <button *ngIf="follow.isFollower_FollowedByCurrentUser==true" (click)="unFollow(follow.followerId)" class="btn btn-danger rounded-pill">Đã theo dõi</button>    
+            </div>       
+        </div>
+    </div>  
+</div>

@@ -38,6 +38,16 @@ export class FollowService {
         return this.http.get<Follow>(`${baseUrl}/GetState/${accountId}`);
     }
 
+    // Danh sách người đang mình đang follow
+    getByFollowerId(id:number):Observable<Follow[]> {
+        return this.http.get<Follow[]>(`${baseUrl}/GetByFollowerId/${id}`);
+    }
+
+    // Danh sách người đang follow mình
+    getBySubjectId(id:number):Observable<Follow[]> {
+        return this.http.get<Follow[]>(`${baseUrl}/GetBySubjectId/${id}`);
+    }
+
     update(id, params) {
         return this.http.put(`${baseUrl}/${id}`, params);
     }

@@ -23,7 +23,7 @@ const routes: Routes = [
             { path: 'detail-post/:id/:ownerId/:commentId/:onCmt', component: DetailPostComponent},
             { path: 'edit/:id', component: AddEditPostComponent},
             { path: 'account', loadChildren: accountModule,},
-            { path: 'profile', loadChildren: profileModule},
+            { path: 'detail/:id', loadChildren: profileModule},
             { path: 'detail/:id', component: DetailsComponent},
             { path: 'search/:query', component: DetailsComponent},
         ]     
