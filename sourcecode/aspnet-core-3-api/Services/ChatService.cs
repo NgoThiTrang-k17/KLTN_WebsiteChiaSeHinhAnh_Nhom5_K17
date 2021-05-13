@@ -20,16 +20,16 @@ namespace WebApi.Services
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
-        private readonly IEmailService _emailService;
+        private readonly IAccountService _accountService;
 
         public ChatService(
             DataContext context,
             IMapper mapper,
-            IEmailService emailService)
+            IAccountService accountService)
         {
             _context = context;
             _mapper = mapper;
-            _emailService = emailService;
+            _accountService = accountService;
         }
 
         public ChatMessageResponse SendMessage(CreateChatMessageRequest model)
@@ -40,10 +40,18 @@ namespace WebApi.Services
            
             if (!IsExistChatRoom(model.OwnerId, model.ReceiverId))
             {
+                var ownerAccount = _accountService.GetById(model.OwnerId);
+                var receiverAccount = _accountService.GetById(model.ReceiverId);
+                _mapper.Map<Account>(ownerAccount);
+                _mapper.Map<Account>(receiverAccount);
                 //create chatroom if not exist
                 var chatRoom = new ChatRoom();
-                chatRoom.MemberId.Add(model.OwnerId);
-                chatRoom.MemberId.Add(model.ReceiverId);
+                if (ownerAccount != null && receiverAccount != null)
+                {
+                    throw new KeyNotFoundException("Account not found");
+                }
+                chatRoom.MemberId.Add(_mapper.Map<Account>(ownerAccount));
+                chatRoom.MemberId.Add(_mapper.Map<Account>(receiverAccount));
                 chatRoom.Messages.Add(message);
                 _context.ChatRooms.Add(chatRoom);
             }
