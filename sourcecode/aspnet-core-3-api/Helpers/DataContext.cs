@@ -23,6 +23,8 @@ namespace WebApi.Helpers
 
         public DbSet<ChatRoom> ChatRooms { get; set; }
 
+        public DbSet<AccountChatRoom> AccountChatRooms { get; set; }
+
         private readonly IConfiguration Configuration;
 
         public DataContext(IConfiguration configuration)
@@ -37,6 +39,7 @@ namespace WebApi.Helpers
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<AccountChatRoom>().HasKey(sc => new { sc.AccountId, sc.ChatRoomId });
         }
         internal object Map<T>(object comments)
         {
