@@ -50,7 +50,7 @@ namespace WebApi.Services
 
             _context.Reactions.Add(reaction);
             _context.SaveChanges();
-            //SendNotification(reaction.OwnerId, reaction);
+            SendNotification(reaction.OwnerId, reaction);
             return _mapper.Map<ReactionResponse>(reaction);
         }
 
@@ -141,12 +141,24 @@ namespace WebApi.Services
             var notification = new CreateNotificationRequest
             {
                 ActionOwnerId = reactionOwnerId,
-                NotificationType = NotificationType.Reacted,
-                PostId = model.TargetId,
-                ReiceiverId = model.OwnerId,
+                
+                
                 Created = DateTime.Now,
                 Status = Status.Created
             };
+            if (model.Target == ReactionTarget.Post)
+            {
+                notification.NotificationType = NotificationType.ReactedPost;
+                notification.PostId = model.TargetId;
+                notification.ReiceiverId = _context.Posts.Find(model.TargetId).OwnerId;
+            }
+            if (model.Target == ReactionTarget.Comment)
+            {
+                notification.NotificationType = NotificationType.ReactedComment;
+                notification.CommentId = model.TargetId;
+                notification.ReiceiverId = _context.Comments.Find(model.TargetId).OwnerId;
+            }
+
             _notificationService.CreateNotification(notification);
         }
     }
