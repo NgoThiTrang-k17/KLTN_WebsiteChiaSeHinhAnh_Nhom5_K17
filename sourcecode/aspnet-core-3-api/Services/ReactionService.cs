@@ -156,6 +156,7 @@ namespace WebApi.Services
             {
                 notification.NotificationType = NotificationType.ReactedComment;
                 notification.CommentId = model.TargetId;
+                notification.PostId = _context.Comments.Find(model.TargetId).PostId;
                 notification.ReiceiverId = _context.Comments.Find(model.TargetId).OwnerId;
             }
 
