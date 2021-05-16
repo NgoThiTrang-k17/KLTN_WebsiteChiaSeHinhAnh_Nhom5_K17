@@ -1,25 +1,29 @@
-import { HttpClient } from '@angular/common/http';
+
 import { Component, OnInit } from '@angular/core';
+import { User } from './_models/user';
+import { AccountService } from './_services/account.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
 })
-export class AppComponent implements OnInit{
+export class AppComponent implements OnInit {
   title = 'client';
-  accounts: any;
-  constructor(private http: HttpClient) {}
+  users: any;
+  constructor(
+    private accountService: AccountService,
+  ) {}
 
   ngOnInit(): void {
-    this.getAccounts();
+    
+    this.setCurrentUser();
   }
 
-  getAccounts(){
-    this.http.get('http://localhost:5001/Account').subscribe(response=>{
-      this.accounts = response;
-    }, error=>{
-      console.log(error);
-    })
+  setCurrentUser() {
+    const user: User = JSON.parse(localStorage.getItem('user'));
+    this.accountService.setCurrentUser(user);
   }
+
+ 
 }

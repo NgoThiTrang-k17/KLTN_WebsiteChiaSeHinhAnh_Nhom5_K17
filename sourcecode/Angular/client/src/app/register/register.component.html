@@ -1,0 +1,67 @@
+<form #registerForm="ngForm" (ngSubmit)="register()" autocomplete="off">
+  <h2 class="text-center text-primary">sign up</h2>
+  <hr />
+  <div class="form-group">
+    <input
+      type="text"
+      class="form-control"
+      name="title"
+      [(ngModel)]="model.title"
+      placeholder="title"
+    />
+  </div>
+  <hr />
+  <div class="form-group">
+    <input
+      type="text"
+      class="form-control"
+      name="name"
+      [(ngModel)]="model.name"
+      placeholder="Name"
+    />
+  </div>
+  <hr />
+  <div class="form-group">
+    <input
+      type="text"
+      class="form-control"
+      name="email"
+      [(ngModel)]="model.email"
+      placeholder="Email"
+    />
+  </div>
+  <hr />
+  <div class="form-group">
+    <input
+      type="password"
+      class="form-control"
+      name="password"
+      [(ngModel)]="model.password"
+      placeholder="Password"
+    />
+  </div>
+  <hr />
+  <div class="form-group">
+    <input
+      type="password"
+      class="form-control"
+      name="password"
+      [(ngModel)]="model.confirmPassword"
+      placeholder="Confirm Password"
+    />
+  </div>
+  <hr />
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" [(ngModel)]="model.acceptTerms" [ngModelOptions]="{standalone: true}"/>
+    <label class="form-check-label" >
+      Accept Terms
+    </label>
+  </div>
+  <hr />
+  <div class="form-group text-center">
+    <button class="btn btn-success mr-2" type="submit">Register</button>
+    <button class="btn btn-success mr-2" (click)="cancel()" type="button">
+      cancel
+    </button>
+  </div>
+</form>
