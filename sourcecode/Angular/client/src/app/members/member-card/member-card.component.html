@@ -1,0 +1,33 @@
+<div class="card mb-4">
+  <div class="card-img-wrapper">
+    <img
+      src="{{ member.avatarPath }}"
+      alt="{{ member.name }}"
+      class="card-img-top"
+    />
+    <ul class="list-inline member-icons animate text-center">
+      <li class="list-inline-item">
+        <button class="btn btn-primary" routerLink="/members/{{ member.id }}">
+          <em class="fa fa-user"></em>
+        </button>
+      </li>
+      <li class="list-inline-item">
+        <button class="btn btn-primary">
+          <em class="fa fa-heart"></em>
+        </button>
+      </li>
+      <li class="list-inline-item">
+        <button class="btn btn-primary">
+          <em class="fa fa-envelope"></em>
+        </button>
+      </li>
+    </ul>
+  </div>
+  <div class="card-body p-1">
+    <h6 class="card-title text-center mb-1">
+      <em class="fa fa-user mr-2"></em>
+      {{ member.name }}
+    </h6>
+    <p class="card-text text-muted text-center">{{ member.email }}</p>
+  </div>
+</div>
