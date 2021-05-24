@@ -21,9 +21,13 @@ export class ListFollowerDialogComponent implements OnInit {
         public dialogRef: MatDialogRef<ListFollowerDialogComponent>,
         private followService: FollowService,
         private accountService: AccountService,
+        private router: Router,
         @Inject(MAT_DIALOG_DATA) public data: any){}
     
     ngOnInit(){
+      this.router.routeReuseStrategy.shouldReuseRoute = () =>{
+        return false;
+      }
       console.log(this.data.followerId);
       this.followerId = this.data.followerId;
       this.followService.getBySubjectId(this.followerId)

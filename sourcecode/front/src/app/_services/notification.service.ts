@@ -38,6 +38,9 @@ export class NotificationService {
         return this.http.get<Notification[]>(`${baseUrl}/GetAllByUserId/${id}`);
     }
 
+    getNotificationCount(id:number):Observable<Notification> {
+        return this.http.get<Notification>(`${baseUrl}/NewNotificationCount/${id}`);
+    }
 
     delete(id: number) {
         return this.http.delete(`${baseUrl}/${id}`)

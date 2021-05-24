@@ -10,6 +10,7 @@ const routes: Routes = [
     { path: '', component: DetailsComponent },
     { path: 'update', component: UpdateComponent },
     { path: 'add-post', component: AddEditPostComponent},
+    // { path: ':id', component: DetailsComponent}
     // { path: 'detail-post/:id/:ownerId', component: DetailPostComponent},
 ];
 

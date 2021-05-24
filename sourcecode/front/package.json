@@ -28,6 +28,7 @@
     "@handsontable/angular": "^6.0.1",
     "angular-datatables": "^4.4.1",
     "angularfire2": "^5.4.2",
+    "angularx-social-login": "^3.5.7",
     "bootstrap": "^4.0.0-beta",
     "datatables.net": "^1.10.22",
     "datatables.net-dt": "^1.10.22",

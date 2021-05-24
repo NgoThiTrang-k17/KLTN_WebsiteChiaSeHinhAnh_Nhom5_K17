@@ -97,7 +97,7 @@ export class UpdateComponent implements OnInit {
                         .subscribe({
                             next: () => {
                                 console.log(this.updateData.value);
-                                this.alertService.success('Update successful', { keepAfterRouteChange: true });
+                                this.alertService.success('Chỉnh sửa thành công!', { keepAfterRouteChange: true });
                                 this.router.navigate(['../'], { relativeTo: this.route });
                             },
                             error: error => {
@@ -113,12 +113,12 @@ export class UpdateComponent implements OnInit {
     }
 
     onDelete() {
-        if (confirm('Are you sure you want to delete this account?')) {
+        if (confirm('Bạn có chắc chắn muốn xoá tài khoản?')) {
             this.deleting = true;
             this.accountService.delete(this.account.id)
                 .pipe(first())
                 .subscribe(() => {
-                    this.alertService.success('Account deleted successfully', { keepAfterRouteChange: true });
+                    this.alertService.success('Xoá tài khoản thành công!', { keepAfterRouteChange: true });
                 });
         }
     }

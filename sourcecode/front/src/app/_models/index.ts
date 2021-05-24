@@ -1,4 +1,5 @@
 ﻿export * from './account';
+export * from './socialUsers';
 export * from './alert';
 export * from './role';
 export * from './post';

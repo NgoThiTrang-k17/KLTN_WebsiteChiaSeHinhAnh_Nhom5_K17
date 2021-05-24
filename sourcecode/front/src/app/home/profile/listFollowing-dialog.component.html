@@ -8,12 +8,13 @@
     <div id="1" *ngFor="let follow of follows" class="mt-2 mb-2 mr-2 ml-2">
         <div id="1" class="row">
             <div class="row col">
-                <img [src]="follow.followerAvatarPath" style="height: 50px; width: 51px;" class="img-fluid card rounded-circle" alt="">
-                <p class="ml-2 mt-3" routerLink="../../detail/{{follow.subjectId}}" style="font-weight: bold; font-size: large;" mat-dialog-close>{{follow.followerName}}</p>
+                <img *ngIf="follow.followerAvatarPath==null" src="../../../assets/images/default-profile.png" style="height: 50px; width: 51px;" class="img-fluid card rounded-circle" alt="">
+                <img *ngIf="follow.followerAvatarPath!=null" [src]="follow.followerAvatarPath" style="height: 50px; width: 51px;" class="img-fluid card rounded-circle" alt="">
+                <p class="ml-2 mt-3" routerLink="user/detail/{{follow.subjectId}}" routerLinkActive="active" style="font-weight: bold; font-size: large;" mat-dialog-close>{{follow.followerName}}</p>
             </div>
             <div class="col-3 mt-2" *ngIf="maccount.id!=follow.subjectId">
                 <button *ngIf="follow.isSubject_FollowedByCurrentUser==false" (click)="onCreateFollow(follow.subjectId)" class="btn btn-light rounded-pill">Theo dõi</button>
-                <button *ngIf="follow.isSubject_FollowedByCurrentUser==true" (click)="unFollow(follow.subjectId)" class="btn btn-danger rounded-pill">Đã theo dõi</button>    
+                <button *ngIf="follow.isSubject_FollowedByCurrentUser==true" (click)="unFollow(follow.subjectId)" class="btn btn-danger rounded-pill">Huỷ theo dõi</button>    
             </div>       
         </div>
     </div>

@@ -2,21 +2,26 @@
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
+import { SocialAuthService, FacebookLoginProvider, GoogleLoginProvider } from 'angularx-social-login';
 
 import { AccountService, AlertService } from '@app/_services';
+import { SocialUsers } from '@app/_models';
 
 @Component({ templateUrl: 'login.component.html' })
 export class LoginComponent implements OnInit {
     form: FormGroup;
     loading = false;
     submitted = false;
-
+    response;  
+    socialusers=new SocialUsers(); 
     constructor(
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
         private accountService: AccountService,
-        private alertService: AlertService
+        private alertService: AlertService, 
+        private authService: SocialAuthService,
+        public OAuth: SocialAuthService,
     ) { }
 
     ngOnInit() {
@@ -54,5 +59,25 @@ export class LoginComponent implements OnInit {
                     this.loading = false;
                 }
             });
+    }
+
+    signInWithGoogle(): void {
+        this.authService.signIn(GoogleLoginProvider.PROVIDER_ID);
+        this.OAuth.signIn(GoogleLoginProvider.PROVIDER_ID).then(socialusers => {   
+            console.log(socialusers);  
+      
+        });
+    }
+    
+    signInWithFB(): void {
+        this.authService.signIn(FacebookLoginProvider.PROVIDER_ID);
+        this.OAuth.signIn(FacebookLoginProvider.PROVIDER_ID).then(socialusers => {   
+            console.log(socialusers);  
+      
+        });
+    }
+    
+    signOut(): void {
+        this.authService.signOut();
     }
 }

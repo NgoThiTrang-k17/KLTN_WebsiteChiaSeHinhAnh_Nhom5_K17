@@ -32,6 +32,10 @@ export class DetailsComponent {
 
     ngOnInit() {
         this.id = this.route.snapshot.params['id'];
+
+        this.router.routeReuseStrategy.shouldReuseRoute = () =>{
+            return false;
+        }
         
         this.postService.getAllByUserId(this.id)
             .subscribe(res => {
@@ -75,6 +79,9 @@ export class DetailsComponent {
             }
         }); 
         dialogRef1.afterClosed().subscribe(() => {
+            this.router.routeReuseStrategy.shouldReuseRoute = () =>{
+                return false;
+              }
             this.accountService.getById(this.id)
             .subscribe((res:any)=>{
                 this.account = res;
@@ -95,6 +102,9 @@ export class DetailsComponent {
             }
         });   
         dialogRef2.afterClosed().subscribe(() => {
+            this.router.routeReuseStrategy.shouldReuseRoute = () =>{
+                return false;
+            }
             this.accountService.getById(this.id)
             .subscribe((res:any)=>{
                 this.account = res;

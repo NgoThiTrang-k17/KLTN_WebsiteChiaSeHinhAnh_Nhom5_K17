@@ -54,7 +54,8 @@ export class ListFollowingDialogComponent implements OnInit {
           //alert('Bỏ follow thành công!');
           this.followService.getByFollowerId(this.followingId)
             .subscribe(res =>{
-                this.follows = res as Follow[];
+                if(res==null) this.dialogRef.close();
+                this.follows = res as Follow[];               
             })
         });       
     }

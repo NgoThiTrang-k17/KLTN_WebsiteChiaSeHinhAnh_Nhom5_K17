@@ -143,6 +143,7 @@ export class DetailPostComponent {
           .subscribe((res:any)=>{
             this.comments = res as Comment[];
           })
+          this.getRoute(this.route.snapshot.params['id']);
       }, error => {
           console.log(error);               
       })
@@ -189,6 +190,7 @@ export class DetailPostComponent {
           .subscribe((res:any)=>{
             this.comments = res as Comment[];
           })
+          this.getRoute(this.route.snapshot.params['id']);
       }, error => {
           console.log(error);               
       })
@@ -298,6 +300,7 @@ export class DetailPostComponent {
                   .subscribe((res:any)=>{
                     this.comments = res as Comment[];
                   })
+                  this.getRoute(this.route.snapshot.params['id']);
                 });
         } catch (e) {
             console.log(e);

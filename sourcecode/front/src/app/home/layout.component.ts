@@ -16,6 +16,7 @@ export class LayoutComponent implements OnInit {
     searchAccount = false;
     null = false;
     returnURL: any;
+    notificationCount: number;
     public follow: FollowToCreate;
     public mfollow: Follow;
     public account: Account;
@@ -44,6 +45,10 @@ export class LayoutComponent implements OnInit {
             this.maccount = res;
         })
 
+        this.notificationService.getNotificationCount(this.maccount.id)
+        .subscribe((res:any)=>{
+            this.notificationCount = res;
+        })
         
     }
 
@@ -98,6 +103,10 @@ export class LayoutComponent implements OnInit {
         .subscribe(res => {
             console.log(res);
             // alert('Xem thông báo thành công.');
+            this.notificationService.getNotificationCount(this.maccount.id)
+            .subscribe((res:any)=>{
+                this.notificationCount = res;
+            })
         }, error => {
             console.log(error);               
         })

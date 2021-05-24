@@ -8,8 +8,7 @@ namespace WebApi.Entities
     public enum NotificationType
     {
         Posted,
-        ReactedPost,
-        
+        ReactedPost,       
         Commented,
         FollowRequest,
         FollowRequestAwser,
