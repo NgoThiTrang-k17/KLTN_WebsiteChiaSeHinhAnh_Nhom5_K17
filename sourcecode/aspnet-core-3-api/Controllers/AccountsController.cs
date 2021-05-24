@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Google.Apis.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +35,25 @@ namespace WebApi.Controllers
             setTokenCookie(response.RefreshToken);
             return Ok(response);
         }
+
+        [HttpPost("google-login")]
+        public ActionResult<AuthenticateResponse> GoogleLogin(GoogleLoginResponse model)
+        {
+            //var refreshToken = Request.Cookies["refreshToken"];
+            GoogleJsonWebSignature.ValidationSettings settings = new GoogleJsonWebSignature.ValidationSettings
+            {
+                // your google client ID
+                Audience = new List<string>() { "436549259873-fvlvlseej8bo4d9ro7uism91nkol8vc0.apps.googleusercontent.com" }
+            };
+
+            GoogleJsonWebSignature.Payload payload = GoogleJsonWebSignature.ValidateAsync(model.IdToken, settings).Result;
+           
+            //return Ok(new { AuthToken = _jwtGenerator.CreateUserAuthToken(payload.Email) });
+            var response = _accountService.GoogleLogin(payload.Email, ipAddress());
+            setTokenCookie(response.RefreshToken);
+            return Ok(response);
+        }
+
 
         [HttpPost("refresh-token")]
         public ActionResult<AuthenticateResponse> RefreshToken()
@@ -169,7 +189,7 @@ namespace WebApi.Controllers
             return Ok(account);
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPost]
         public ActionResult<AccountResponse> Create(CreateAccountRequest model)
         {

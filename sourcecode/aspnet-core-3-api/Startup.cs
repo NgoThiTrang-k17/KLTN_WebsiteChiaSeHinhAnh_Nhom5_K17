@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IO;
@@ -102,7 +103,7 @@ namespace WebApi
         }
 
         // configure the HTTP request pipeline
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DataContext context)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             // migrate database changes on startup (includes initial db creation)
             //context.Database.Migrate();
@@ -131,6 +132,7 @@ namespace WebApi
             // SignalR 
 
             app.UseAuthentication();
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

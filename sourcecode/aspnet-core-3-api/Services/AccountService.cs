@@ -18,6 +18,7 @@ namespace WebApi.Services
     public interface IAccountService
     {
         AuthenticateResponse Authenticate(AuthenticateRequest model, string ipAddress);
+        AuthenticateResponse GoogleLogin(string email, string ipAddress);
         AuthenticateResponse RefreshToken(string token, string ipAddress);
         void RevokeToken(string token, string ipAddress);
         void Register(RegisterRequest model, string origin);
@@ -60,6 +61,33 @@ namespace WebApi.Services
                 throw new AppException("Email or password is incorrect");
             if (!account.IsVerified)
                 throw new AppException("Email not verified");
+
+            // authentication successful so generate jwt and refresh tokens
+            var jwtToken = generateJwtToken(account);
+            var refreshToken = generateRefreshToken(ipAddress);
+            account.RefreshTokens.Add(refreshToken);
+
+            // remove old refresh tokens from account
+            removeOldRefreshTokens(account);
+
+            // save changes to db
+            _context.Update(account);
+            _context.SaveChanges();
+
+            var response = _mapper.Map<AuthenticateResponse>(account);
+            response.JwtToken = jwtToken;
+            response.RefreshToken = refreshToken.Token;
+            return response;
+        }
+
+        public AuthenticateResponse GoogleLogin(string email, string ipAddress)
+        {
+            var account = _context.Accounts.SingleOrDefault(x => x.Email == email);
+
+            if (account == null)
+                throw new AppException("Email is not registerd");
+            //if (!account.IsVerified)
+            //    throw new AppException("Email not verified");
 
             // authentication successful so generate jwt and refresh tokens
             var jwtToken = generateJwtToken(account);
@@ -218,12 +246,12 @@ namespace WebApi.Services
         {
             var accounts = _context.Accounts;
             var accountResponses = _mapper.Map<IList<AccountResponse>>(accounts);
-            foreach (AccountResponse accountResponse in accountResponses) 
+            foreach (AccountResponse accountResponse in accountResponses)
             {
                 accountResponse.FollowerCount = _context.Follows.Count(f => f.SubjectId == accountResponse.Id);
                 accountResponse.FollowingCount = _context.Follows.Count(f => f.FollowerId == accountResponse.Id);
             };
-           
+
             return accountResponses;
         }
 
@@ -312,6 +340,7 @@ namespace WebApi.Services
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
+                //Subject = new ClaimsIdentity(new[] { new Claim(JwtRegisteredClaimNames.NameId, account.Id.ToString()) }),
                 Subject = new ClaimsIdentity(new[] { new Claim("id", account.Id.ToString()) }),
                 Expires = DateTime.UtcNow.AddMinutes(15),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -333,8 +362,8 @@ namespace WebApi.Services
 
         private void removeOldRefreshTokens(Account account)
         {
-            account.RefreshTokens.RemoveAll(x => 
-                !x.IsActive && 
+            account.RefreshTokens.RemoveAll(x =>
+                !x.IsActive &&
                 x.Created.AddDays(_appSettings.RefreshTokenTTL) <= DateTime.UtcNow);
         }
 
