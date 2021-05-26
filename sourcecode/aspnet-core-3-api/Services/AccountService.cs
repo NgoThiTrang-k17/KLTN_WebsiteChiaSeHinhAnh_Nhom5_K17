@@ -18,7 +18,7 @@ namespace WebApi.Services
     public interface IAccountService
     {
         AuthenticateResponse Authenticate(AuthenticateRequest model, string ipAddress);
-        AuthenticateResponse GoogleLogin(string email, string ipAddress);
+        AuthenticateResponse GoogleLogin(string email, string ipAddress, string origin);
         AuthenticateResponse RefreshToken(string token, string ipAddress);
         void RevokeToken(string token, string ipAddress);
         void Register(RegisterRequest model, string origin);
@@ -80,12 +80,29 @@ namespace WebApi.Services
             return response;
         }
 
-        public AuthenticateResponse GoogleLogin(string email, string ipAddress)
+        public AuthenticateResponse GoogleLogin(string email, string ipAddress, string origin)
         {
             var account = _context.Accounts.SingleOrDefault(x => x.Email == email);
-
+            var isFirstAccount = _context.Accounts.Count() == 0;
             if (account == null)
-                throw new AppException("Email is not registerd");
+            {
+                // map model to new account object
+                account = new Account
+                {
+                    Email = email,
+                    // first registered account is an admin
+                    Role = isFirstAccount ? Role.Admin : Role.User,
+                    Created = DateTime.UtcNow,
+                    VerificationToken = randomTokenString(),
+                    // hash password
+                    PasswordHash = BC.HashPassword(Guid.NewGuid().ToString())
+                };
+                // save account
+                _context.Accounts.Add(account);
+                _context.SaveChanges();
+                // send email
+                sendVerificationEmail(account, origin);
+            }
             //if (!account.IsVerified)
             //    throw new AppException("Email not verified");
 

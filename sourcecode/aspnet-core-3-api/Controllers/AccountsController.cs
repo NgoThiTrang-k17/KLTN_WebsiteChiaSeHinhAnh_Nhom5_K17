@@ -49,7 +49,7 @@ namespace WebApi.Controllers
             GoogleJsonWebSignature.Payload payload = GoogleJsonWebSignature.ValidateAsync(model.IdToken, settings).Result;
            
             //return Ok(new { AuthToken = _jwtGenerator.CreateUserAuthToken(payload.Email) });
-            var response = _accountService.GoogleLogin(payload.Email, ipAddress());
+            var response = _accountService.GoogleLogin(payload.Email, ipAddress(), Request.Headers["origin"]);
             setTokenCookie(response.RefreshToken);
             return Ok(response);
         }
