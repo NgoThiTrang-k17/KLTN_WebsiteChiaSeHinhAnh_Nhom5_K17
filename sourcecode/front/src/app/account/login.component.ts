@@ -5,7 +5,7 @@ import { first } from 'rxjs/operators';
 import { SocialAuthService, FacebookLoginProvider, GoogleLoginProvider } from 'angularx-social-login';
 
 import { AccountService, AlertService } from '@app/_services';
-import { SocialUsers } from '@app/_models';
+import { SocialUsers,  AccountLoginGoogle} from '@app/_models';
 
 @Component({ templateUrl: 'login.component.html' })
 export class LoginComponent implements OnInit {
@@ -13,7 +13,9 @@ export class LoginComponent implements OnInit {
     loading = false;
     submitted = false;
     response;  
+    public accountLoginGoogle: AccountLoginGoogle;
     socialusers=new SocialUsers(); 
+
     constructor(
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
@@ -64,9 +66,25 @@ export class LoginComponent implements OnInit {
     signInWithGoogle(): void {
         this.authService.signIn(GoogleLoginProvider.PROVIDER_ID);
         this.OAuth.signIn(GoogleLoginProvider.PROVIDER_ID).then(socialusers => {   
-            console.log(socialusers);  
-      
+            console.log(socialusers.idToken);
+            this.accountLoginGoogle = {
+                idToken: socialusers.idToken,
+            }   
+            this.accountService.loginGoogle(this.accountLoginGoogle)
+            .pipe(first())
+            .subscribe({
+                next: () => {
+                    // get return url from query parameters or default to home page
+                    const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+                    this.router.navigateByUrl(returnUrl);
+                },
+                error: error => {
+                    this.alertService.error(error);
+                    this.loading = false;
+                }
+            });   
         });
+        
     }
     
     signInWithFB(): void {

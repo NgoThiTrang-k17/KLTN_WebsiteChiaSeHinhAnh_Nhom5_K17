@@ -35,6 +35,15 @@ export class AccountService {
             }));
     }
 
+    loginGoogle(params) {
+        return this.http.post<any>(`${baseUrl}/google-login`, params)
+        .pipe(map(account => {
+            this.accountSubject.next(account);
+            this.startRefreshTokenTimer();
+            return account;
+        }));
+    }
+
     logout() {
         this.http.post<any>(`${baseUrl}/revoke-token`, {}, { withCredentials: true }).subscribe();
         this.stopRefreshTokenTimer();

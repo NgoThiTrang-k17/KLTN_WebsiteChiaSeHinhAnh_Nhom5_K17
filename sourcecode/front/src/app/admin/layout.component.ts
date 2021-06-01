@@ -1,17 +1,32 @@
-﻿import { Component } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { AccountService } from '../_services';
-import { Account, Role } from '../_models';
+import { AccountService, NotificationService, SearchService, FollowService } from '../_services';
+import { Account, Notification, NotificationToUpdate, Post, Follow, FollowToCreate } from '../_models';
 
-@Component({ templateUrl: 'layout.component.html' })
-export class LayoutComponent { 
+@Component({ 
+    templateUrl: 'layout.component.html',
+    styleUrls: ['layout.component.css']
+})
+export class LayoutComponent implements OnInit { 
     account: Account;
     temp: any;
     login: boolean;
 
+    maccount = this.accountService.accountValue;
+
     constructor(private accountService: AccountService, private activatedRoute: ActivatedRoute) {
         this.accountService.account.subscribe(x => this.account = x);
+    }
+
+    ngOnInit() {
+        console.log(this.maccount.avatarPath);
+        this.accountService.getById(this.maccount.id)
+        .subscribe((res:any)=>{
+            this.account = res;
+            console.log(this.account.avatarPath);
+        })
+        
     }
 
     logout() {

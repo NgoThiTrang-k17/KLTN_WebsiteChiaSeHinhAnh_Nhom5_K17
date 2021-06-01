@@ -1,12 +1,55 @@
-﻿<nav class="admin-nav navbar navbar-expand navbar-light">
-    <div class="navbar-nav pull-right">
+﻿
+<div class="admin-nav navbar-expand navbar-light" data-image-src="../../assets/images/sidebar-1.jpg">
+    <div class="text-center mt-3">
+        <img *ngIf="account.avatarPath==null" class="rounded-circle" style="height: 80px; width: 81px;" src="../../assets/images/default-profile.png">
+        <img *ngIf="account.avatarPath!=null" class="rounded-circle" style="height: 80px; width: 81px;" [src]="account.avatarPath">
+        <p style="font-weight: bold; font-size: large;">{{account.name}}</p>
+    </div>
+    <hr>
+    <div class="sidebar-wrapper">
+        <ul class="nav">
+            <li class="nav-item active">
+                <a class="nav-link" style="justify-content: left; align-items: center; display: flex;">
+                    <i class="material-icons">dashboard</i>
+                    <span class="ml-2">Dashboard</span>
+                </a>
+            </li>
+        </ul>
+        <ul class="nav">
+            <li class="nav-item active">
+                <a routerLink="accounts" routerLinkActive="active" class="nav-link" style="justify-content: left; align-items: center; display: flex;">
+                    <i class="material-icons">person</i>
+                    <span class="ml-2">Accounts</span>
+                </a>
+            </li>
+        </ul>
+        <ul class="nav">
+            <li class="nav-item active">
+                <a routerLink="posts" routerLinkActive="active" class="nav-link" style="justify-content: left; align-items: center; display: flex;">
+                    <i class="material-icons">library_books</i>
+                    <span class="ml-2">Posts</span>
+                </a>
+            </li>
+        </ul>
+        <ul class="nav">
+            <li class="nav-item active">
+                <a routerLink="comments" routerLinkActive="active" class="nav-link" style="justify-content: left; align-items: center; display: flex;">
+                    <i class="material-icons">comment</i>
+                    <span class="ml-2">Comments</span>
+                </a>
+            </li>
+        </ul>
+        <a (click)="logout()" class="nav-item nav-link"><strong>Log out</strong></a>
+    </div>
+    <!-- <div class="navbar-nav pull-right">
         <a routerLink="accounts" routerLinkActive="active" class="nav-item nav-link"><strong>Accounts</strong></a>
         <a routerLink="posts" routerLinkActive="active" class="nav-item nav-link"><strong>Posts</strong></a>
         <a routerLink="comments" routerLinkActive="active" class="nav-item nav-link"><strong>Comments</strong></a>
         <a (click)="logout()" class="nav-item nav-link"><strong>Log out</strong></a>
-    </div>
-</nav>
-<div class="p-4 mt-5">
+    </div> -->
+</div>
+
+<div class="p-4 mt-3" style="margin-left: 220px;">
     <div class="container">
         <router-outlet></router-outlet>
     </div>
