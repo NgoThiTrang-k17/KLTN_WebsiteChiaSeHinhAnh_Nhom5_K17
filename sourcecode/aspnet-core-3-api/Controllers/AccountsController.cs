@@ -7,7 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using WebApi.Entities;
+using WebApi.Helpers;
 using WebApi.Models.Accounts;
 using WebApi.Services;
 
@@ -29,10 +31,10 @@ namespace WebApi.Controllers
         public ActionResult<AuthenticateResponse> Authenticate(AuthenticateRequest model)
         {
 
-            var response = _accountService.Authenticate(model, ipAddress());
+            var response = _accountService.Authenticate(model, IpAddress());
             if (response == null)
                 return BadRequest(new { message = "Some thing wrong" });
-            setTokenCookie(response.RefreshToken);
+            SetTokenCookie(response.RefreshToken);
             return Ok(response);
         }
 
@@ -49,8 +51,8 @@ namespace WebApi.Controllers
             GoogleJsonWebSignature.Payload payload = GoogleJsonWebSignature.ValidateAsync(model.IdToken, settings).Result;
            
             //return Ok(new { AuthToken = _jwtGenerator.CreateUserAuthToken(payload.Email) });
-            var response = _accountService.GoogleLogin(payload.Email, ipAddress(), Request.Headers["origin"]);
-            setTokenCookie(response.RefreshToken);
+            var response = _accountService.GoogleLogin(payload, IpAddress(), Request.Headers["origin"]);
+            SetTokenCookie(response.RefreshToken);
             return Ok(response);
         }
 
@@ -59,8 +61,8 @@ namespace WebApi.Controllers
         public ActionResult<AuthenticateResponse> RefreshToken()
         {
             var refreshToken = Request.Cookies["refreshToken"];
-            var response = _accountService.RefreshToken(refreshToken, ipAddress());
-            setTokenCookie(response.RefreshToken);
+            var response = _accountService.RefreshToken(refreshToken, IpAddress());
+            SetTokenCookie(response.RefreshToken);
             return Ok(response);
         }
 
@@ -78,7 +80,7 @@ namespace WebApi.Controllers
             if (!Account.OwnsToken(token) && Account.Role != Role.Admin)
                 return Unauthorized(new { message = "Unauthorized" });
 
-            _accountService.RevokeToken(token, ipAddress());
+            _accountService.RevokeToken(token, IpAddress());
             return Ok(new { message = "Token revoked" });
         }
 
@@ -171,9 +173,10 @@ namespace WebApi.Controllers
 
         //[Authorize(Role.Admin)]
         [HttpGet]
-        public ActionResult<IEnumerable<AccountResponse>> GetAll()
+        public async Task<ActionResult<IEnumerable<AccountResponse>>> GetAll([FromQuery]AccountParams accountParams)
         {
-            var accounts = _accountService.GetAll();
+            var accounts = await _accountService.GetAll(accountParams);
+            Response.AddPaginationHeader(accounts.CurrentPage, accounts.PageSize,accounts.TotalCount, accounts.TotalPages);
             return Ok(accounts);
         }
 
@@ -229,7 +232,7 @@ namespace WebApi.Controllers
 
         // helper methods
 
-        private void setTokenCookie(string token)
+        private void SetTokenCookie(string token)
         {
             var cookieOptions = new CookieOptions
             {
@@ -239,7 +242,7 @@ namespace WebApi.Controllers
             Response.Cookies.Append("refreshToken", token, cookieOptions);
         }
 
-        private string ipAddress()
+        private string IpAddress()
         {
             if (Request.Headers.ContainsKey("X-Forwarded-For"))
                 return Request.Headers["X-Forwarded-For"];

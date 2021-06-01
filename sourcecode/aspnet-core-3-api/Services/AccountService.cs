@@ -12,13 +12,16 @@ using System.Text;
 using WebApi.Entities;
 using WebApi.Helpers;
 using WebApi.Models.Accounts;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Google.Apis.Auth;
 
 namespace WebApi.Services
 {
     public interface IAccountService
     {
         AuthenticateResponse Authenticate(AuthenticateRequest model, string ipAddress);
-        AuthenticateResponse GoogleLogin(string email, string ipAddress, string origin);
+        AuthenticateResponse GoogleLogin(GoogleJsonWebSignature.Payload payload, string ipAddress, string origin);
         AuthenticateResponse RefreshToken(string token, string ipAddress);
         void RevokeToken(string token, string ipAddress);
         void Register(RegisterRequest model, string origin);
@@ -27,7 +30,7 @@ namespace WebApi.Services
         void ValidateResetToken(ValidateResetTokenRequest model);
         void ResetPassword(ResetPasswordRequest model);
         public AccountResponse SetAvatar(int id, string AvatarPath);
-        IEnumerable<AccountResponse> GetAll();
+        Task<PagedList<AccountResponse>> GetAll(AccountParams accountParams);
         AccountResponse GetById(int id);
         AccountResponse Create(CreateAccountRequest model);
         AccountResponse Update(int id, UpdateAccountRequest model);
@@ -55,7 +58,7 @@ namespace WebApi.Services
 
         public AuthenticateResponse Authenticate(AuthenticateRequest model, string ipAddress)
         {
-            var account = _context.Accounts.SingleOrDefault(x => x.Email == model.Email);
+            var account = _context.Accounts.FirstOrDefault(x => x.Email == model.Email);
 
             if (account == null || !BC.Verify(model.Password, account.PasswordHash))
                 throw new AppException("Email or password is incorrect");
@@ -80,16 +83,18 @@ namespace WebApi.Services
             return response;
         }
 
-        public AuthenticateResponse GoogleLogin(string email, string ipAddress, string origin)
+        public AuthenticateResponse GoogleLogin(GoogleJsonWebSignature.Payload payload, string ipAddress, string origin)
         {
-            var account = _context.Accounts.SingleOrDefault(x => x.Email == email);
+            var account = _context.Accounts.SingleOrDefault(x => x.Email == payload.Email);
             var isFirstAccount = _context.Accounts.Count() == 0;
             if (account == null)
             {
                 // map model to new account object
                 account = new Account
                 {
-                    Email = email,
+                    Email = payload.Email,
+                    Name = payload.Name,
+                    AvatarPath = payload.Picture,
                     // first registered account is an admin
                     Role = isFirstAccount ? Role.Admin : Role.User,
                     Created = DateTime.UtcNow,
@@ -259,17 +264,18 @@ namespace WebApi.Services
             return _mapper.Map<AccountResponse>(account);
         }
 
-        public IEnumerable<AccountResponse> GetAll()
+        public async  Task<PagedList<AccountResponse>> GetAll(AccountParams accountParams)
         {
             var accounts = _context.Accounts;
-            var accountResponses = _mapper.Map<IList<AccountResponse>>(accounts);
+            var accountResponses = _mapper.ProjectTo<AccountResponse>(accounts).AsNoTracking();
+             
             foreach (AccountResponse accountResponse in accountResponses)
             {
                 accountResponse.FollowerCount = _context.Follows.Count(f => f.SubjectId == accountResponse.Id);
                 accountResponse.FollowingCount = _context.Follows.Count(f => f.FollowerId == accountResponse.Id);
             };
-
-            return accountResponses;
+             
+            return await PagedList<AccountResponse>.CreateAsync(accountResponses, accountParams.PageNumber, accountParams.PageSize);
         }
 
         public AccountResponse GetById(int id)
