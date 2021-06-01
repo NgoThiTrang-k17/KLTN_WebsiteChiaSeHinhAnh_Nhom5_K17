@@ -112,7 +112,8 @@ namespace WebApi.Services
             //    throw new AppException("Email not verified");
 
             // authentication successful so generate jwt and refresh tokens
-            var jwtToken = generateJwtToken(account);
+            //var jwtToken = generateJwtToken(account);
+            var jwtToken = payload.JwtId;
             var refreshToken = generateRefreshToken(ipAddress);
             account.RefreshTokens.Add(refreshToken);
 
@@ -264,17 +265,17 @@ namespace WebApi.Services
             return _mapper.Map<AccountResponse>(account);
         }
 
-        public async  Task<PagedList<AccountResponse>> GetAll(AccountParams accountParams)
+        public async Task<PagedList<AccountResponse>> GetAll(AccountParams accountParams)
         {
             var accounts = _context.Accounts;
             var accountResponses = _mapper.ProjectTo<AccountResponse>(accounts).AsNoTracking();
-             
+
             foreach (AccountResponse accountResponse in accountResponses)
             {
                 accountResponse.FollowerCount = _context.Follows.Count(f => f.SubjectId == accountResponse.Id);
                 accountResponse.FollowingCount = _context.Follows.Count(f => f.FollowerId == accountResponse.Id);
             };
-             
+
             return await PagedList<AccountResponse>.CreateAsync(accountResponses, accountParams.PageNumber, accountParams.PageSize);
         }
 
