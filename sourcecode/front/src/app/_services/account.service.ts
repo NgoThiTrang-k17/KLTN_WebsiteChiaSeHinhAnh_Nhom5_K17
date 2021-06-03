@@ -36,7 +36,7 @@ export class AccountService {
     }
 
     loginGoogle(params) {
-        return this.http.post<any>(`${baseUrl}/google-login`, params)
+        return this.http.post<any>(`${baseUrl}/google-login`, params, { withCredentials: true })
         .pipe(map(account => {
             this.accountSubject.next(account);
             this.startRefreshTokenTimer();

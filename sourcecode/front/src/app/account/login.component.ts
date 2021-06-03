@@ -64,6 +64,7 @@ export class LoginComponent implements OnInit {
     }
 
     signInWithGoogle(): void {
+        this.loading = true;
         this.authService.signIn(GoogleLoginProvider.PROVIDER_ID);
         this.OAuth.signIn(GoogleLoginProvider.PROVIDER_ID).then(socialusers => {   
             console.log(socialusers.idToken);
@@ -75,7 +76,7 @@ export class LoginComponent implements OnInit {
             .subscribe({
                 next: () => {
                     // get return url from query parameters or default to home page
-                    const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+                    const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/user';
                     this.router.navigateByUrl(returnUrl);
                 },
                 error: error => {
