@@ -1,10 +1,10 @@
 import styled from "styled-components/native";
 import { Button, TextInput } from "react-native-paper";
 import { colors } from "../../../infrastructure/theme/colors";
-import { Text } from "../../../components/typography/text.component";
+import { Text } from "../../../components/typopraphy/text.component";
 
 export const AccountBackground = styled.ImageBackground.attrs({
-  source: require("../../../../assets/backgroundImage2.jpg"),
+  source: require("../../../../assets/backgroundImage.jpg"),
 })`
   flex: 1;
   align-items: center;
@@ -24,10 +24,19 @@ export const AccountContainer = styled.View`
   margin-top: ${(props) => props.theme.space[2]};
 `;
 
+export const AccountContainerHome = styled.View`
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: ${(props) => props.theme.space[4]};
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+`;
+
 export const AuthButton = styled(Button).attrs({
   color: colors.brand.primary,
 })`
   padding: ${(props) => props.theme.space[2]};
+  border-radius: 50px;
 `;
 
 export const AuthInput = styled(TextInput)`
@@ -35,7 +44,12 @@ export const AuthInput = styled(TextInput)`
 `;
 
 export const Title = styled(Text)`
-  font-size: 30px;
+  font-size: 40px;
+  font-weight: bold;
+  align-items: center;
+  align-self: center;
+  margin-top: ${(props) => props.theme.space[5]};
+  margin-bottom: ${(props) => props.theme.space[4]};
 `;
 
 export const ErrorContainer = styled.View`
@@ -47,9 +61,11 @@ export const ErrorContainer = styled.View`
 `;
 
 export const AnimationWrapper = styled.View`
-  width: 100%;
-  height: 40%;
+  width: 40%;
+  height: auto;
   position: absolute;
-  top: 30px;
-  padding: ${(props) => props.theme.space[2]};
+  align-items: center;
+  align-self: center;
+  top: 20%;
+  padding: ${(props) => props.theme.space[5]};
 `;
