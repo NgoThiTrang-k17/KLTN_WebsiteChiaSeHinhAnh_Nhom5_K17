@@ -1,13 +1,32 @@
-import { StatusBar } from 'expo-status-bar';
+import { StatusBar as ExpoStatusBar } from 'expo-status-bar';
 import React from 'react';
+import { ThemeProvider } from "styled-components/native";
+import { useFonts as useMontserrat, Montserrat_400Regular } from "@expo-google-fonts/montserrat";
+import { theme } from "./src/infrastructure/theme";
+// import { Navigation } from "./src/infrastructure/navigation";
+import { AccountNavigator } from "./src/infrastructure/navigation/account.navigator";
+
+import { NavigationContainer } from "@react-navigation/native";
 import { StyleSheet, Text, View } from 'react-native';
 
 export default function App() {
+  const [montserratLoaded] = useMontserrat({
+    Montserrat_400Regular,
+  });
+
+  if (!montserratLoaded) {
+    return null;
+  }
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <>
+      <ThemeProvider theme={theme}>
+        <NavigationContainer>
+          <AccountNavigator/>
+        </NavigationContainer>
+      </ThemeProvider>
+      <ExpoStatusBar style="auto" />
+    </>
   );
 }
 
