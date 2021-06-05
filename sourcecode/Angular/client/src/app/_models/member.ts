@@ -6,6 +6,7 @@ export interface Member {
     email: string
     role: string
     created: Date
+    lastActive: Date
     updated: Date
     isVerified: boolean
     followerCount: number
