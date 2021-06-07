@@ -9,6 +9,7 @@ import {
   AuthButton,
   Title,
   AnimationWrapper,
+  TitleHome,
 } from "../components/account.styles";
 import { fontSizes, fontWeights } from "../../../infrastructure/theme/fonts";
 
@@ -26,13 +27,13 @@ export const AccountScreen = ({ navigation }) => {
             source={require("../../../../assets/12268-photo.json")}
             />
         </AnimationWrapper>
-        <Title>IS</Title>
+        <TitleHome>IS</TitleHome>
         <AuthButton
           icon="lock-open-outline"
           mode="contained"
           onPress={() => navigation.navigate("Login")}
         >
-          Login
+          Đăng nhập
         </AuthButton>
         <Spacer size="large">
           <AuthButton
@@ -40,7 +41,7 @@ export const AccountScreen = ({ navigation }) => {
             mode="contained"
             onPress={() => navigation.navigate("Register")}
           >
-            Register
+            Đăng ký
           </AuthButton>
         </Spacer>
       </AccountContainerHome>

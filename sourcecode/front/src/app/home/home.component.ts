@@ -2,7 +2,6 @@
 import { HttpClient, HttpEventType } from '@angular/common/http';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { first } from 'rxjs/operators';
-import { AngularFireStorage } from '@angular/fire/storage'
 
 import { AccountService, PostService, AlertService } from '@app/_services';
 import { Post } from '../_models/post';
@@ -39,7 +38,6 @@ export class HomeComponent implements OnInit {
         private postService: PostService,
         private formBuilder: FormBuilder,
         private alertService: AlertService,
-        private af: AngularFireStorage,
     ) { }
 
     ngOnInit() {
@@ -64,7 +62,7 @@ export class HomeComponent implements OnInit {
         if (event.target.files && event.target.files.length) {
             const [file] = event.target.files;
             console.log('1');
-            
+
             console.log(this.myForm.get('title').value);
             //this.testForm.append("file",file);
             this.testForm.append("title", this.myForm.get("title").value);
@@ -74,9 +72,9 @@ export class HomeComponent implements OnInit {
                 // this.testForm.patchValue({
                 //     fileSource: reader.result
                 // });
-                console.log(this.myForm.value); 
+                console.log(this.myForm.value);
             };
-            
+
         }
     }
 
@@ -101,12 +99,12 @@ export class HomeComponent implements OnInit {
                 // this.getPosts();
                 // alert('Uploaded Successfully.');
             }, error => {
-                console.log(error);               
+                console.log(error);
             })
         // this.postService.createPost(this.testForm)
         //     .pipe(first())
         //     .subscribe({
-        //         next: () => {                    
+        //         next: () => {
         //             this.alertService.success('Image created successfully', { keepAfterRouteChange: true });
         //             // this.getPosts();
         //             // this.router.navigate(['../'], { relativeTo: this.route });

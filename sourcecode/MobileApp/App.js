@@ -5,6 +5,7 @@ import { useFonts as useMontserrat, Montserrat_400Regular } from "@expo-google-f
 import { theme } from "./src/infrastructure/theme";
 // import { Navigation } from "./src/infrastructure/navigation";
 import { AccountNavigator } from "./src/infrastructure/navigation/account.navigator";
+import { AppNavigator } from "./src/infrastructure/navigation/app.navigator";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { StyleSheet, Text, View } from 'react-native';
@@ -22,7 +23,7 @@ export default function App() {
     <>
       <ThemeProvider theme={theme}>
         <NavigationContainer>
-          <AccountNavigator/>
+          <AppNavigator/>
         </NavigationContainer>
       </ThemeProvider>
       <ExpoStatusBar style="auto" />

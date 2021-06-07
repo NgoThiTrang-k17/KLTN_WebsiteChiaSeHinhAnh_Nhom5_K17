@@ -5,11 +5,12 @@ import { ActivityIndicator, Colors } from "react-native-paper";
 import {
   AccountBackground,
   AccountCover,
-  AccountContainer,
+  AccountContainerHome,
   AuthButton,
   AuthInput,
   ErrorContainer,
   Title,
+  Link,
 } from "../components/account.styles";
 import { Text } from "../../../components/typopraphy/text.component";
 import { Spacer } from "../../../components/spacer/spacer.component";
@@ -21,35 +22,44 @@ export const RegisterScreen = ({ navigation }) => {
   const [repeatedPassword, setRepeatedPassword] = useState("");
 //   const { onRegister, isLoading, error } = useContext(AuthenticationContext);
   return (
-    <AccountBackground>
-      <AccountCover />
-      <Title>Meals To Go</Title>
-      <AccountContainer>
+    <AccountBackground>     
+      <AccountContainerHome>
+        <AccountCover />
+        <Title>IS</Title>
         <AuthInput
-          label="E-mail"
+          label="Email"
           value={email}
           textContentType="emailAddress"
           keyboardType="email-address"
           autoCapitalize="none"
+          outlineColor="rgba(255, 255, 255, 0.3)"
+          mode="outlined"
+          theme={{colors: {primary: '#363636', underlineColor: 'transparent'}}}
           onChangeText={(u) => setEmail(u)}
         />
-        <Spacer size="large">
+        <Spacer size="small">
           <AuthInput
-            label="Password"
+            label="Mật khẩu"
             value={password}
             textContentType="password"
             secureTextEntry
             autoCapitalize="none"
+            outlineColor="rgba(255, 255, 255, 0.3)"
+            mode="outlined"
+            theme={{colors: {primary: '#363636', underlineColor: 'transparent'}}}
             onChangeText={(p) => setPassword(p)}
           />
         </Spacer>
-        <Spacer size="large">
+        <Spacer size="small">
           <AuthInput
-            label="Repeat Password"
+            label="Nhập lại mật khẩu"
             value={repeatedPassword}
             textContentType="password"
             secureTextEntry
             autoCapitalize="none"
+            outlineColor="rgba(255, 255, 255, 0.3)"
+            mode="outlined"
+            theme={{colors: {primary: '#363636', underlineColor: 'transparent'}}}
             onChangeText={(p) => setRepeatedPassword(p)}
           />
         </Spacer>
@@ -65,18 +75,18 @@ export const RegisterScreen = ({ navigation }) => {
               mode="contained"
             //   onPress={() => onRegister(email, password, repeatedPassword)}
             >
-              Register
+              Đăng ký
             </AuthButton>
-          {/* ) : ( */}
+          {/* ) : (
             <ActivityIndicator animating={true} color={Colors.blue300} />
-          {/* )} */}
+          )} */}
         </Spacer>
-      </AccountContainer>
-      <Spacer size="large">
-        <AuthButton mode="contained" onPress={() => navigation.goBack()}>
-          Back
-        </AuthButton>
-      </Spacer>
+        <Spacer size="large">
+          <Link mode="contained" onPress={() => navigation.navigate("Login")}>
+            Đăng nhập
+          </Link>
+        </Spacer>
+      </AccountContainerHome>     
     </AccountBackground>
   );
 };

@@ -4,40 +4,49 @@ import { ActivityIndicator, Colors } from "react-native-paper";
 import {
   AccountBackground,
   AccountCover,
-  AccountContainer,
+  AccountContainerHome,
   AuthButton,
   AuthInput,
   ErrorContainer,
   Title,
+  Link,
 } from "../components/account.styles";
 import { Text } from "../../../components/typopraphy/text.component";
 import { Spacer } from "../../../components/spacer/spacer.component";
-// import { AuthenticationContext } from "../../../services/authentication/authentication.context";
+import { colors } from "../../../infrastructure/theme/colors";
+
+// import { AccountContext } from "../../../services/account/account.context";
 
 export const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-//   const { onLogin, error, isLoading } = useContext(AuthenticationContext);
+  // const { onLogin, error, isLoading } = useContext(AccountContext);
   return (
     <AccountBackground>
-      <AccountCover />
-      <Title>Meals To Go</Title>
-      <AccountContainer>
+      <AccountContainerHome>
+        <AccountCover />
+        <Title>IS</Title>
         <AuthInput
-          label="E-mail"
+          label="Email"
           value={email}
           textContentType="emailAddress"
           keyboardType="email-address"
           autoCapitalize="none"
+          outlineColor="rgba(255, 255, 255, 0.3)"
+          mode="outlined"
+          theme={{colors: {primary: '#363636', underlineColor: 'transparent'}}}
           onChangeText={(u) => setEmail(u)}
         />
-        <Spacer size="large">
+        <Spacer size="small">
           <AuthInput
-            label="Password"
+            label="Mật khẩu"
             value={password}
             textContentType="password"
             secureTextEntry
             autoCapitalize="none"
+            outlineColor="rgba(255, 255, 255, 0.3)"
+            mode="outlined"
+            theme={{colors: {primary: '#363636', underlineColor: 'transparent'}}}
             onChangeText={(p) => setPassword(p)}
           />
         </Spacer>
@@ -51,20 +60,20 @@ export const LoginScreen = ({ navigation }) => {
             <AuthButton
               icon="lock-open-outline"
               mode="contained"
-            //   onPress={() => onLogin(email, password)}
+              onPress={() => onLogin(email, password)}
             >
-              Login
+              Đăng nhập
             </AuthButton>
-          {/* ) : ( */}
+          {/* ) : (
             <ActivityIndicator animating={true} color={Colors.blue300} />
-          {/* )} */}
+          )} */}
         </Spacer>
-      </AccountContainer>
-      <Spacer size="large">
-        <AuthButton mode="contained" onPress={() => navigation.goBack()}>
-          Back
-        </AuthButton>
-      </Spacer>
+        <Spacer size="large">
+          <Link onPress={() => navigation.navigate("Register")}>
+            Đăng ký
+          </Link>
+        </Spacer>
+      </AccountContainerHome>     
     </AccountBackground>
   );
 };

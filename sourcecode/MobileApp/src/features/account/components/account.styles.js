@@ -39,12 +39,27 @@ export const AuthButton = styled(Button).attrs({
   border-radius: 50px;
 `;
 
+export const Link = styled(Text).attrs({
+})`
+  font-weight: bold;
+  align-self: center;
+`;
+
 export const AuthInput = styled(TextInput)`
-  width: 300px;
+  width: 300px; 
+  background-color: #FFFFFF;
 `;
 
 export const Title = styled(Text)`
-  font-size: 40px;
+  font-size: 50px;
+  font-weight: bold;
+  align-items: center;
+  align-self: center;
+  margin-bottom: ${(props) => props.theme.space[4]};
+`;
+
+export const TitleHome = styled(Text)`
+  font-size: 50px;
   font-weight: bold;
   align-items: center;
   align-self: center;
