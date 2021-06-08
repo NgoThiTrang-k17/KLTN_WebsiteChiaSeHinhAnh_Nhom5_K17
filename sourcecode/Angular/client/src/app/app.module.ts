@@ -17,6 +17,10 @@ import { SharedModule } from './_modules/shared.module';
 import { MemberCardComponent } from './members/member-card/member-card.component';
 import { ErrorInterceptor } from './_interceptors/error.interceptor';
 import { JwtInterceptor } from './_interceptors/jwt.interceptor';
+import { MemberEditComponent } from './members/member-edit/member-edit.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { LoadingInterceptor } from './_interceptors/loading.interceptor';
+import { GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule } from 'angularx-social-login';
 
 @NgModule({
   declarations: [
@@ -28,7 +32,8 @@ import { JwtInterceptor } from './_interceptors/jwt.interceptor';
     MemberDetailComponent,
     ListsComponent,
     MessagesComponent,
-    MemberCardComponent
+    MemberCardComponent,
+    MemberEditComponent
   ],
   imports: [
     BrowserModule,
@@ -36,11 +41,29 @@ import { JwtInterceptor } from './_interceptors/jwt.interceptor';
     HttpClientModule,
     BrowserAnimationsModule,
     FormsModule,
-    SharedModule
+    SharedModule,
+    NgxSpinnerModule,
+    SocialLoginModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS,useClass: ErrorInterceptor, multi: true},
     {provide: HTTP_INTERCEPTORS,useClass: JwtInterceptor, multi: true},
+    {provide: HTTP_INTERCEPTORS,useClass: LoadingInterceptor, multi: true},
+    {
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: false,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider(
+              // replace this with your google client id			
+              '436549259873-fvlvlseej8bo4d9ro7uism91nkol8vc0.apps.googleusercontent.com'
+            )
+          }
+        ]
+      } as SocialAuthServiceConfig,
+    }
   ],
   bootstrap: [AppComponent]
 })

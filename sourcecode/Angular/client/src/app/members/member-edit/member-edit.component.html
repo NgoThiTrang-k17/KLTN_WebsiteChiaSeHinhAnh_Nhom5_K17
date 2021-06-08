@@ -1,0 +1,72 @@
+<div class="row" *ngIf="member">
+  <div class="col-4">
+    <h1>Your profile</h1>
+  </div>
+  <div class="col-8">
+    <div class="alert alert-info" *ngIf="editForm.dirty">
+      <p>
+        <strong> Information:</strong> You have made change. Any unsaved change
+        will be lost
+      </p>
+    </div>
+  </div>
+  <div class="col-4">
+    <div class="card">
+      <img
+        src="{{ member.avatarPath }}"
+        alt="{{ member.name }}"
+        class="card-img-top img-thumbnail"
+      />
+      <div class="card-body">
+        <div>
+          <strong>Email:</strong>
+          <p>{{ member.email }}</p>
+        </div>
+        <div>
+          <strong>Email:</strong>
+          <p>{{ member.lastActive | timeago }}</p>
+        </div>
+        <div>
+          <strong>Email:</strong>
+          <p>{{ member.created | date: "dd MMM yyyy" }}</p>
+        </div>
+      </div>
+     
+      <div class="card-footer">
+        <button
+          [disabled]="!editForm.dirty"
+          form="editForm"
+          type="submit"
+          class="btn btn-primary btn-block"
+        >
+          Save change
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="col-8">
+    <tabset class="member-tabset">
+      <tab heading="About {{ member.name }}">
+        <form #editForm="ngForm" id="editForm" (ngSubmit)="updateMember()">
+          <h4 class="mt-2">Gender</h4>
+          <textarea
+            class="form-control"
+            [(ngModel)]="member.title"
+            name="title"
+            rows="6"
+          ></textarea>
+          <h4 class="mt-2">Name</h4>
+          <textarea
+            class="form-control"
+            [(ngModel)]="member.name"
+            name="name"
+            rows="6"
+          ></textarea>
+        </form>
+      </tab>
+      <tab heading="Edit Photo">
+        <p>Photo Edit go here</p>
+      </tab>
+    </tabset>
+  </div>
+</div>
