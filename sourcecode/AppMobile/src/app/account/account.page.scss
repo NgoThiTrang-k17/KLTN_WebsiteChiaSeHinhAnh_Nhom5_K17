@@ -1,0 +1,46 @@
+ion-content{
+  --background: url(../../assets/images/backgroundImage.jpg) 0 0/100% 100% no-repeat;
+}
+
+.cover {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.884);
+  align-items: center;
+  justify-content: center;
+  display:flex;
+}
+
+h1{
+  color: #DF2C2C;
+  font-size: 70px;
+  font-weight: bold;
+  margin-bottom: 10%;
+}
+
+ion-label{
+  color:#525151;
+}
+.input{
+  -moz-border-radius: 50px;
+  -webkit-border-radius: 50px;
+  border-radius: 10px;
+  border: 1px solid #838383 !important;
+}
+
+.input--focus{
+ border: 1px solid black;
+}
+
+.forgetPass{
+  font-size: 70%;
+  font-weight: 700;
+}
+
+ion-button{
+  width: 100%;
+  margin-top: 10%;
+  --background: #DF2C2C;
+}
+

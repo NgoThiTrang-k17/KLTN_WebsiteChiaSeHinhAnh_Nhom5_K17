@@ -1,0 +1,21 @@
+<!-- <ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Tab 1
+    </ion-title>
+  </ion-toolbar>
+</ion-header> -->
+
+<ion-content [fullscreen]="true">
+  <ion-list class="card-columns">
+    <div *ngFor="let post of posts">
+      <ion-card class="card" slot="start">
+        <ion-img class="img" [src]="post.path"></ion-img>
+        <ion-label>{{post.title}}</ion-label>
+      </ion-card>
+    </div>
+  </ion-list>
+
+
+  <!-- <app-explore-container name="Tab 1 page"></app-explore-container> -->
+</ion-content>

@@ -1,0 +1,20 @@
+.card {
+  box-shadow:none !important;
+  border: none !important;
+  justify-content: center;
+  // width: 100%;
+  // height: auto;
+}
+
+.img {
+  --ion-border-radius: 20px;
+}
+
+ion-label {
+  color: black;
+  font-weight: bold;
+}
+
+.card-columns {
+  column-count: 2;
+}

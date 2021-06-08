@@ -1,0 +1,10 @@
+{
+  "name": "AppMobile",
+  "integrations": {
+    "capacitor": {
+      "enabled": false
+    },
+    "cordova": {}
+  },
+  "type": "angular"
+}
