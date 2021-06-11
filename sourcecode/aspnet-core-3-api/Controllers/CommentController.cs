@@ -58,6 +58,18 @@ namespace WebApi.Controllers
             return Ok(comments);
         }
 
+        [HttpGet("Post/Comment/{id:int}")]
+        public ActionResult<IEnumerable<CommentResponse>> GetAllByCommentId(int id)
+        {
+            var comments = _commentService.GetByComment(id);
+            foreach (CommentResponse comment in comments)
+            {
+                comment.IsReactedByThisUser = _reactionService.GetState(ReactionTarget.Comment, comment.Id, Account.Id).IsReactedByThisUser;
+
+            }
+            return Ok(comments);
+        }
+
         [HttpPost]
         public ActionResult<CommentResponse> Create( CreateCommentRequest comment)
         {

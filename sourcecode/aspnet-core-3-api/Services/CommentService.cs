@@ -16,6 +16,7 @@ namespace WebApi.Services
         CommentResponse GetById(int id);
         IEnumerable<CommentResponse> GetAll();
         IEnumerable<CommentResponse> GetByPost(int postId);
+        IEnumerable<CommentResponse> GetByComment(int commentId);
         IEnumerable<CommentResponse> GetByParent(int parentId);
         CommentResponse CreateComment(CreateCommentRequest model);
         CommentResponse UpdateComment(int id, UpdateCommentRequest model);
@@ -105,6 +106,22 @@ namespace WebApi.Services
             }
             return _mapper.Map<List<CommentResponse>>(commentResponses);
         }
+
+        //Get all comments for each comment
+        public IEnumerable<CommentResponse> GetByComment(int commentId)
+        {
+            var comments = _context.Comments.Where(comment => comment.ParrentId == commentId);
+            var commentResponses = _mapper.Map<List<CommentResponse>>(comments);
+            foreach (CommentResponse commentResponse in commentResponses)
+            {
+                var owner = _accountService.GetById(commentResponse.OwnerId);
+                commentResponse.OwnerName = owner.Name;
+                commentResponse.OwnerAvatar = owner.AvatarPath;
+                (commentResponse.ChildCount, commentResponse.ReactionCount) = GetCommentInfor(commentResponse.Id);
+            }
+            return _mapper.Map<List<CommentResponse>>(commentResponses);
+        }
+
         public IEnumerable<CommentResponse> GetByParent(int parentId)
         {
             var comments = _context.Comments.Where(comment => comment.ParrentId == parentId);
