@@ -6,6 +6,8 @@ import { TabHomePage } from './tabHome.page';
 import { ExploreContainerComponentModule } from '../explore-container/explore-container.module';
 
 import { TabHomePageRoutingModule } from './tabHome-routing.module';
+import { DetailPostPage } from './detailPost/detailPost.page';
+import { CommentPage } from './comment/comment.page';
 
 @NgModule({
   imports: [
@@ -13,8 +15,12 @@ import { TabHomePageRoutingModule } from './tabHome-routing.module';
     CommonModule,
     FormsModule,
     ExploreContainerComponentModule,
-    TabHomePageRoutingModule
+    TabHomePageRoutingModule,
   ],
-  declarations: [TabHomePage]
+  declarations: [
+    TabHomePage,
+    DetailPostPage,
+    CommentPage
+  ]
 })
 export class TabHomePageModule {}

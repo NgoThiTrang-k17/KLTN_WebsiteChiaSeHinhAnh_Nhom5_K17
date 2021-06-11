@@ -4,7 +4,7 @@ namespace WebApi.Models.Accounts
 {
     public class RegisterRequest
     {
-        [Required]
+        //[Required]
         public string Title { get; set; }
 
         [Required]

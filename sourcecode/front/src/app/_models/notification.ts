@@ -1,7 +1,7 @@
 export class Notification {
     id: number;
     actionOwnerId: number;
-    notificationType: string;
+    notificationType: number;
     postId: number;
     reiceiverId: number;
     created: string;

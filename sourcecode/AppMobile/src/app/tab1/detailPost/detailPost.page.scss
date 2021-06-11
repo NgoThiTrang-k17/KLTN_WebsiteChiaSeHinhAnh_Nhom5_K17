@@ -1,0 +1,98 @@
+.black {
+  color: #000000;
+}
+
+.btn-back {
+  background-color: #d3d3d37c;
+  position: fixed;
+  box-sizing: border-box;
+  z-index: 660;
+  top: 20px;
+  left: 20px;
+  width: 50px;
+  height: 50px;
+  align-items: center;
+  justify-content: center;
+  display:flex;
+}
+
+.card {
+  box-shadow:none !important;
+  border: none !important;
+  margin-left: none !important;
+  justify-content: center;
+}
+
+ion-img::part(image) {
+  border-radius: 20px;
+}
+
+div{
+  margin: 5px;
+}
+
+ion-row{
+  justify-content: center;
+  display: flex;
+}
+
+ion-avatar{
+  width: 45px !important;
+  height: 45px !important;
+}
+
+ion-label{
+  color: black;
+  font-weight: 700;
+}
+
+.title{
+  font-size: large;
+}
+
+.accountName{
+  font-size: medium;
+}
+
+p{
+  color: black;
+  margin-bottom: 0px !important;
+}
+
+ion-button{
+  --background: #000000;
+  height: 35px;
+  width: 100%;
+  text-transform: none !important;
+}
+
+.onFollow{
+  --background: #000000;
+}
+
+.unFollow{
+  --background: #aaaaaa;
+}
+
+ion-icon{
+  width: 20px;
+  height: 20px;
+  margin-right: 3px;
+}
+
+.action{
+  border-top: 1px solid #aaaaaa;
+  margin-top: 20px;
+  padding: 8px 8px 0 0;
+  text-align: center;
+}
+
+.icon-action {
+  width: 30px;
+  height: 30px;
+}
+
+.icon-action-cmt {
+  width: 30px;
+  height: 30px;
+}

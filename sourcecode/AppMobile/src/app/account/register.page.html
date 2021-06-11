@@ -1,0 +1,59 @@
+
+<ion-content padding>
+  <div class="cover">
+    <div>
+      <h1 class="ion-text-center">SI</h1>
+      <div class="ion-mt-4">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <!-- <ion-label>Email</ion-label> -->
+          <div style="margin-bottom:12px;">
+            <ion-item lines="none" class="ion-form-group input">
+              <ion-input class="ion-form-control" type="text" placeholder="Tên" formControlName="name" (keydown.enter)="onSubmit()" [ngClass]="{ 'is-invalid': submitted && f.name.errors }"></ion-input>
+            </ion-item>
+            <div *ngIf="submitted && f.name.errors" class="ion-invalid-feedback">
+              <div *ngIf="f.name.errors.required">Vui lòng nhập tên.</div>
+          </div>
+          </div>
+          <div style="margin-bottom:12px;">
+            <ion-item lines="none" class="ion-form-group input">
+              <ion-input class="ion-form-control" type="email" placeholder="Email" formControlName="email" (keydown.enter)="onSubmit()" [ngClass]="{ 'is-invalid': submitted && f.email.errors }"></ion-input>
+            </ion-item>
+            <div *ngIf="submitted && f.email.errors" class="ion-invalid-feedback">
+              <div *ngIf="f.email.errors.required">Bạn chưa nhập Email.</div>
+              <div *ngIf="f.email.errors.email">Email không hợp lệ.</div>
+            </div>
+          </div>
+          <div style="margin-bottom:12px;">
+            <ion-item lines="none" class="ion-form-group input">
+              <ion-input class="ion-form-control" type="password" placeholder="Mật khẩu" formControlName="password" (keydown.enter)="onSubmit()" [ngClass]="{ 'is-invalid': submitted && f.password.errors }"></ion-input>
+            </ion-item>
+            <div *ngIf="submitted && f.password.errors" class="ion-invalid-feedback">
+              <div *ngIf="f.password.errors.required">Bạn chưa nhập mật khẩu.</div>
+            </div>
+          </div>
+          <div style="margin-bottom:3px;">
+            <ion-item lines="none" class="ion-form-group input">
+              <ion-input class="ion-form-control" type="password" placeholder="Nhập lại mật khẩu" formControlName="confirmPassword" (keydown.enter)="onSubmit()" [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }"></ion-input>
+            </ion-item>
+            <div *ngIf="submitted && f.confirmPassword.errors" class="ion-invalid-feedback">
+              <div *ngIf="f.confirmPassword.errors.required">Vui lòng nhập lại mật khẩu.</div>
+              <div *ngIf="f.confirmPassword.errors.mustMatch">Mật khẩu không trùng khớp.</div>
+            </div>
+          </div>
+          <ion-item lines="none">
+            <ion-checkbox color="secondary" slot="start" formControlName="acceptTerms" id="acceptTerms" [ngClass]="{ 'is-invalid': submitted && f.acceptTerms.errors }"></ion-checkbox>
+            <ion-label for="acceptTerms" class="ion-form-check-label" style="font-size: 80%;">Đồng ý với các điều khoản và dịch vụ.</ion-label>
+          </ion-item>
+          <div *ngIf="submitted && f.acceptTerms.errors" class="ion-invalid-feedback">Vui lòng đồng ý với các điều kiện và dịch vụ để tiếp tục.</div>
+          <div class="ion-form-group" style="margin-top:5px;">
+            <ion-button [disabled]="loading" type="submit" shape="round">
+              <span *ngIf="loading" class="ion-spinner-border ion-spinner-border-sm ion-mr-1"></span>
+              <span>Đăng ký</span>
+            </ion-button>
+          </div>
+          <p class="lableLink" routerLink="">Đăng nhập</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</ion-content>
