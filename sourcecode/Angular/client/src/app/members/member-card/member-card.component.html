@@ -17,7 +17,7 @@
         </button>
       </li>
       <li class="list-inline-item">
-        <button class="btn btn-primary">
+        <button class="btn btn-primary" routerLink='/members/{{member.id}}' [queryParams]='{tab:1}'>
           <em class="fa fa-envelope"></em>
         </button>
       </li>
@@ -25,7 +25,10 @@
   </div>
   <div class="card-body p-1">
     <h6 class="card-title text-center mb-1">
-      <em class="fa fa-user mr-2"></em>
+      <span [class.is-online] = "(presence.onlineUsers$ | async).includes(member.id)">
+
+        <em class="fa fa-user mr-2"></em>
+      </span>
       {{ member.name }}
     </h6>
     <p class="card-text text-muted text-center">{{ member.email }}</p>

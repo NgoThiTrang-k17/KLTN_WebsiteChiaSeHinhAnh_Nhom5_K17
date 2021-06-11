@@ -1,8 +1,11 @@
-<div class="row" *ngIf="member" >
+<div class="row">
     <div class="col-4">
         <div class="card">
             <img src="{{member.avatarPath }}" alt="{{ member.name }}" class="card-img-top img-thumbnail">
             <div class="card-body">
+                <div class="mb-2"*ngIf="(presence.onlineUsers$|async).includes(member.id)">
+                    <em class="fa fa-user-circle text-success"></em> Online Now
+                </div>
                 <div>
                     <strong>Email:</strong>
                     <p>{{member.email}}</p>
@@ -19,20 +22,19 @@
             <div class="card-footer">
                 <div class="btn-group d-flex">
                     <button class="btn btn-primary">Like</button>
-                    <button class="btn btn-primary">Message</button>
+                    <button (click)="selectTab(1)" class="btn btn-success">Message</button>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-8">
-        <tabset class="member-tabset">
-            <tab heading="About {{ member.name }}">
+        <tabset class="member-tabset" #memberTabs>
+            <tab heading="About {{ member.name }}" (selectTab)="onTabActivated($event)">
                 <h4>Gender</h4>
                 <p>{{member.title}}</p>
             </tab>
-            <tab heading="Message to {{ member.name }}">
-                 
-                <p>Messages go here</p>
+            <tab heading="Messages" (selectTab)="onTabActivated($event)">
+                <app-member-messages  [userId]= "member.id"></app-member-messages>
             </tab>
         </tabset>
     </div>

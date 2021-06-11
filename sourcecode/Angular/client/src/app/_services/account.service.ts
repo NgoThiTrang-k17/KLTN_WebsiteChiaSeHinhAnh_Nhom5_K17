@@ -4,6 +4,7 @@ import { ReplaySubject } from "rxjs";
 import  {map } from 'rxjs/operators';
 import { environment } from "src/environments/environment";
 import { User } from "../_models/user"; 
+import { PresenceService } from "./presence.service";
 
 @Injectable({
   providedIn: "root",
@@ -16,7 +17,7 @@ export class AccountService {
 
 
 
-  constructor(  private http: HttpClient) {}
+  constructor(  private http: HttpClient, private presenceService: PresenceService) {}
 
   login(model: any) {
     console.log(model);
@@ -27,7 +28,8 @@ export class AccountService {
         const user = response;
         if(user){
           localStorage.setItem('user',JSON.stringify(user));
-          this.currentUserSource.next(user);
+          this.setCurrentUser(user);
+          this.presenceService.createHubConnection(user);
         }
       })
     );
@@ -37,7 +39,8 @@ export class AccountService {
         const user = model;
         if(user){
           localStorage.setItem('user',JSON.stringify(user));
-          this.currentUserSource.next(user);
+          this.setCurrentUser(user);
+          this.presenceService.createHubConnection(user);
         }
   }
 
@@ -46,7 +49,8 @@ export class AccountService {
       map((user: User) => {
         if(user){
           localStorage.setItem('user',JSON.stringify(user));
-          this.currentUserSource.next(user);
+          this.setCurrentUser(user);
+          this.presenceService.createHubConnection(user);
         }
         return user;
       })
@@ -61,5 +65,6 @@ export class AccountService {
     localStorage.removeItem('socialUser')
     localStorage.removeItem('user');
     this.currentUserSource.next(null);
+    this.presenceService.stopHubConnection();
   }
 }

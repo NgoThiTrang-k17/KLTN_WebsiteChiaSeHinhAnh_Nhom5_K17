@@ -1,0 +1,44 @@
+<div class="card">
+    <div class="card-body">
+        <div *ngIf="(messageService.messageThread$|async)?.length === 0">
+            no messages yet
+        </div>
+        <ul *ngIf="(messageService.messageThread$|async)?.length>0">
+            <li *ngFor="let message of (messageService.messageThread$|async)">
+                <div>
+                    <span class="chat-img float-right">
+                        <img class="rounded-circle" src="{{message.senderAvatarPath}}" alt="{{message.senderName}}"> 
+                    </span>
+                    <div class="chat-body">
+                        <div class="header">
+                            <small class="text-muted">
+                                <span class="fa fa-clock-o">{{message.created|timeago}}</span>
+                                <span class="text-danger" *ngIf="!message.read && message.senderId !== userId">
+                                    (unread)
+                                </span>
+                                <span class="text-success" *ngIf="message.read && message.senderId !== userId">
+                                    (read {{message.read|timeago}})
+                                </span>
+                            </small>
+                        </div>
+                        <p>{{message.content}}</p>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="card-footer">
+        <form #messageForm="ngForm" (ngSubmit)="sendMessage()" autocomplete="off">
+            <div class="input-group">
+                <input 
+                name="messageContent"
+                required
+                [(ngModel)]="messageContent"
+                type="text" class="form-control input-sm" placeholder="Send a private message">
+                <div class="input-group-append">
+                    <button [disabled]="!messageForm.valid" class="btn btn-primary" type="submit">Send</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

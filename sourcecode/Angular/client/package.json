@@ -19,6 +19,7 @@
     "@angular/platform-browser": "~11.2.11",
     "@angular/platform-browser-dynamic": "~11.2.11",
     "@angular/router": "~11.2.11",
+    "@microsoft/signalr": "^5.0.7",
     "@popperjs/core": "^2.9.2",
     "angularx-social-login": "^3.5.7",
     "bootstrap": "^5.0.1",
