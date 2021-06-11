@@ -31,10 +31,10 @@ namespace WebApi.Controllers
         public ActionResult<IEnumerable<PostResponse>> GetAll()
         {
             var posts = _postService.GetAll();
-            //foreach (PostResponse post in posts)
-            //{
-            //    post.IsReactedByThisUser = _reactionService.GetState(ReactionTarget.Post, post.Id, Account.Id).IsReactedByThisUser;
-            //}
+            foreach (PostResponse post in posts)
+            {
+                post.IsReactedByThisUser = _reactionService.GetState(ReactionTarget.Post, post.Id, Account.Id).IsReactedByThisUser;
+            }
             return Ok(posts);
 
         }

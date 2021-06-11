@@ -29,6 +29,11 @@ ion-label{
   border: 1px solid #838383 !important;
 }
 
+.ion-invalid-feedback{
+  font-size: small;
+  color: #DF2C2C;
+}
+
 .input--focus{
  border: 1px solid black;
 }
@@ -41,6 +46,13 @@ ion-label{
 ion-button{
   width: 100%;
   margin-top: 10%;
+  margin-bottom: 10%;
   --background: #DF2C2C;
+}
+
+.lableLink{
+  text-align: center;
+  font-weight: 700;
+  font-size: 90%;
 }
 

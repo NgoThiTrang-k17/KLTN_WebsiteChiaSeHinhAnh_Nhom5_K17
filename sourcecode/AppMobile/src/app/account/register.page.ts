@@ -3,19 +3,19 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
+import { MustMatch } from '../_helpers';
 import { AccountService } from '../_services/account.service';
 
 @Component({
-  selector: 'app-account',
-  templateUrl: './account.page.html',
+  selector: 'app-register',
+  templateUrl: './register.page.html',
   styleUrls: ['./account.page.scss'],
 })
-export class AccountPage implements OnInit {
+export class RegisterPage implements OnInit {
 
   form: FormGroup;
   loading = false;
   submitted = false;
-  error = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -26,8 +26,13 @@ export class AccountPage implements OnInit {
 
   ngOnInit() {
     this.form = this.formBuilder.group({
+      name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required]
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', Validators.required],
+      acceptTerms: [false, Validators.requiredTrue]
+    }, {
+        validator: MustMatch('password', 'confirmPassword')
     });
   }
 
@@ -41,21 +46,17 @@ export class AccountPage implements OnInit {
     }
 
     this.loading = true;
-    this.accountService.login(this.f.email.value, this.f.password.value)
+    this.accountService.register(this.form.value)
     .pipe(first())
     .subscribe({
         next: () => {
-            // get return url from query parameters or default to home page
-            const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-            this.router.navigateByUrl(returnUrl);
+            alert('Registration successful, please check your email for verification instructions');
+            this.router.navigate(['../login'], { relativeTo: this.route });
         },
         error: error => {
-          // this.error = true;
-          alert(error);
-          this.loading = false;
+            alert(error);
+            this.loading = false;
         }
     });
   }
-
-
 }

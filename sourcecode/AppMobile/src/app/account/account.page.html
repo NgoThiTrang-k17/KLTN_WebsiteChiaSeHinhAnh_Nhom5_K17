@@ -4,18 +4,31 @@
     <div>
       <h1 class="ion-text-center">SI</h1>
       <div class="ion-mt-4">
-        <form>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
           <!-- <ion-label>Email</ion-label> -->
-          <ion-item lines="none" class="ion-form-group input" style="margin-bottom:15px;">
-            <ion-input class="ion-form-control" type="email" placeholder="Email" ></ion-input>
+          <div style="margin-bottom:12px;">
+            <ion-item lines="none" class="ion-form-group input">
+              <ion-input class="ion-form-control" type="email" placeholder="Email" formControlName="email" (keydown.enter)="onSubmit()" [ngClass]="{ 'is-invalid': submitted && f.email.errors }"></ion-input>
+            </ion-item>
+            <div *ngIf="submitted && f.email.errors" class="ion-invalid-feedback">
+              <div *ngIf="f.email.errors.required">Bạn chưa nhập Email.</div>
+              <div *ngIf="f.email.errors.email">Email không hợp lệ.</div>
+            </div>
+          </div>
+          <ion-item lines="none" class="ion-form-group input">
+            <ion-input class="ion-form-control" type="password" placeholder="Mật khẩu" formControlName="password" (keydown.enter)="onSubmit()" [ngClass]="{ 'is-invalid': submitted && f.password.errors }"></ion-input>
           </ion-item>
-          <ion-item lines="none" class="ion-form-group input" style="margin-bottom: none;">
-            <ion-input class="ion-form-control" type="password" placeholder="Mật khẩu" ></ion-input>
-          </ion-item>
+          <div *ngIf="submitted && f.password.errors" class="ion-invalid-feedback">
+            <div *ngIf="f.password.errors.required">Bạn chưa nhập mật khẩu.</div>
+          </div>
           <ion-label class="forgetPass">Quên mật khẩu?</ion-label>
           <div class="ion-form-group">
-            <ion-button shape="round">Đăng nhập</ion-button>
+            <ion-button [disabled]="loading" type="submit" shape="round">
+              <span *ngIf="loading" class="ion-spinner-border ion-spinner-border-sm ion-mr-1"></span>
+              <span>Đăng nhập</span>
+            </ion-button>
           </div>
+          <p class="lableLink" routerLink="register">Chưa tham gia? Đăng ký</p>
         </form>
       </div>
     </div>
