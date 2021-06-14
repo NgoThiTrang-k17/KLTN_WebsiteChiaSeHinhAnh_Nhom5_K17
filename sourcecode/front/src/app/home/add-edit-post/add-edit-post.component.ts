@@ -70,12 +70,12 @@ export class AddEditPostComponent implements OnInit {
         const [file] = $event.target.files;
         console.log('1');
         //this.testForm.append("file",file);
-        //this.testForm.append("postTitle", this.myForm.get("postTitle").value);     
-        
+        //this.testForm.append("postTitle", this.myForm.get("postTitle").value);
+
         reader.readAsDataURL(file);
         reader.onload = () => {
             this.imageSrc = reader.result as string;
-            //console.log(this.myForm.value); 
+            //console.log(this.myForm.value);
         };
         //console.log(this.myForm.get('title').value);
     }
@@ -88,8 +88,8 @@ export class AddEditPostComponent implements OnInit {
     }
 
     //console.log(this.testForm);
-    //console.log(this.myForm.get('title').value);   
-    if (this.isAddMode) { 
+    //console.log(this.myForm.get('title').value);
+    if (this.isAddMode) {
       this.imagePath = "/files"+Math.random()+this.path;
       const fileRef = this.af.ref(this.imagePath);
       this.af.upload(this.imagePath,this.path).snapshotChanges().pipe(
@@ -99,6 +99,7 @@ export class AddEditPostComponent implements OnInit {
             console.log(this.pathImg);
             this.testForm.set("title", this.myForm.get("title").value);
             this.testForm.set("path",this.pathImg);
+
             this.postService.createPost(this.testForm)
             .subscribe(res => {
                 console.log(res);
@@ -107,13 +108,13 @@ export class AddEditPostComponent implements OnInit {
                 alert('Tạo bài viết thành công!');
                 this.router.navigate(['../'], { relativeTo: this.route });
             }, error => {
-                console.log(error);               
+                console.log(error);
             })
           })
         })
       ).subscribe();
     } else if (!this.isAddMode) {
-      this.testForm.set("title", this.myForm.get("title").value); 
+      this.testForm.set("title", this.myForm.get("title").value);
       this.postService.update(this.id, this.testForm)
         .subscribe(res => {
           console.log(res);
@@ -122,9 +123,9 @@ export class AddEditPostComponent implements OnInit {
           alert('Chỉnh sửa thành công!');
           this.router.navigate(['../../'], { relativeTo: this.route });
       }, error => {
-          console.log(error);               
+          console.log(error);
       })
-    }   
+    }
   }
 
   // public createImgPath = (serverPath: string) => {

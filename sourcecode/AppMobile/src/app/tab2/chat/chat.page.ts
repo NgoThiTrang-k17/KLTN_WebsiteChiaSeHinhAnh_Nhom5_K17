@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 @Component({
-  selector: 'app-comment',
-  templateUrl: './comment.page.html',
-  styleUrls: ['./comment.page.scss'],
+  selector: 'app-chat',
+  templateUrl: './chat.page.html',
+  styleUrls: ['./chat.page.scss'],
 })
-export class CommentPage implements OnInit {
+export class ChatPage implements OnInit {
 
   constructor(
     public modalController: ModalController,
@@ -15,7 +15,7 @@ export class CommentPage implements OnInit {
   ngOnInit() {
   }
 
-  closeModalCmt() {
+  closeModalChat() {
     this.modalController.dismiss({
       'dismissed': true
     });

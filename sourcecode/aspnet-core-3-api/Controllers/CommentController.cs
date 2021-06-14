@@ -64,7 +64,7 @@ namespace WebApi.Controllers
             var comments = _commentService.GetByComment(id);
             foreach (CommentResponse comment in comments)
             {
-                comment.IsReactedByThisUser = _reactionService.GetState(ReactionTarget.Comment, comment.Id, Account.Id).IsReactedByThisUser;
+                comment.IsReactedByThisUser = _reactionService.GetState(ReactionTarget.Comment, comment.Id, 2).IsReactedByThisUser;
 
             }
             return Ok(comments);

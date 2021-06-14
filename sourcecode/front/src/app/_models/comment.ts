@@ -6,6 +6,8 @@ export class Comment {
     isParent: boolean;
     isChild: boolean;
     ownerId: number;
-    isCreatedByThisUser: boolean;
+    ownerName: string;
+    ownerAvatar: string;
+    IsReactedByThisUser: boolean;
     postId: number;
 }
