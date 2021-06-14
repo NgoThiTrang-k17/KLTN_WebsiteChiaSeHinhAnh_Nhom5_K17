@@ -1,14 +1,10 @@
-﻿using AutoMapper;
-using Google.Apis.Auth;
-using Microsoft.AspNetCore.Authorization;
+﻿using Google.Apis.Auth;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using WebApi.Entities;
+using WebApi.Extensions;
 using WebApi.Helpers;
 using WebApi.Models.Accounts;
 using WebApi.Services;
@@ -20,6 +16,7 @@ namespace WebApi.Controllers
     public class AccountsController : BaseController
     {
         private readonly IAccountService _accountService;
+
         public AccountsController(
             IAccountService accountService
             )
@@ -28,10 +25,10 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("authenticate")]
-        public ActionResult<AuthenticateResponse> Authenticate(AuthenticateRequest model)
+        public async Task<ActionResult<AuthenticateResponse>> Authenticate(AuthenticateRequest model)
         {
 
-            var response = _accountService.Authenticate(model, IpAddress());
+            var response = await _accountService.Authenticate(model, IpAddress());
             if (response == null)
                 return BadRequest(new { message = "Some thing wrong" });
             SetTokenCookie(response.RefreshToken);
@@ -39,7 +36,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("google-login")]
-        public ActionResult<AuthenticateResponse> GoogleLogin(GoogleLoginResponse model)
+        public async Task<ActionResult<AuthenticateResponse>> GoogleLogin(GoogleLoginResponse model)
         {
             //var refreshToken = Request.Cookies["refreshToken"];
             GoogleJsonWebSignature.ValidationSettings settings = new GoogleJsonWebSignature.ValidationSettings
@@ -49,26 +46,26 @@ namespace WebApi.Controllers
             };
 
             GoogleJsonWebSignature.Payload payload = GoogleJsonWebSignature.ValidateAsync(model.IdToken, settings).Result;
-           
+
             //return Ok(new { AuthToken = _jwtGenerator.CreateUserAuthToken(payload.Email) });
-            var response = _accountService.GoogleLogin(payload, IpAddress(), Request.Headers["origin"]);
+            var response = await _accountService.GoogleLogin(payload, IpAddress(), Request.Headers["origin"]);
             SetTokenCookie(response.RefreshToken);
             return Ok(response);
         }
 
 
         [HttpPost("refresh-token")]
-        public ActionResult<AuthenticateResponse> RefreshToken()
+        public async Task<ActionResult<AuthenticateResponse>> RefreshToken()
         {
             var refreshToken = Request.Cookies["refreshToken"];
-            var response = _accountService.RefreshToken(refreshToken, IpAddress());
+            var response = await _accountService.RefreshToken(refreshToken, IpAddress());
             SetTokenCookie(response.RefreshToken);
             return Ok(response);
         }
 
         [Authorize]
         [HttpPost("revoke-token")]
-        public IActionResult RevokeToken(RevokeTokenRequest model)
+        public async Task<IActionResult> RevokeToken(RevokeTokenRequest model)
         {
             // accept token from request body or cookie
             var token = model.Token ?? Request.Cookies["refreshToken"];
@@ -77,45 +74,46 @@ namespace WebApi.Controllers
                 return BadRequest(new { message = "Token is required" });
 
             // users can revoke their own tokens and admins can revoke any tokens
-            if (!Account.OwnsToken(token) && Account.Role != Role.Admin)
+            if (!Account.OwnsToken(token))
                 return Unauthorized(new { message = "Unauthorized" });
 
-            _accountService.RevokeToken(token, IpAddress());
+            await _accountService.RevokeToken(token, IpAddress());
             return Ok(new { message = "Token revoked" });
         }
 
         [HttpPost("register")]
-        public IActionResult Register(RegisterRequest model)
+        public async Task<IActionResult> Register(RegisterRequest model)
         {
-            _accountService.Register(model, Request.Headers["origin"]);
+            var result = await _accountService.Register(model, Request.Headers["origin"]);
+            if(result == null) return BadRequest(new { message = "Some thing wrong or invalid email" });
             return Ok(new { message = "Registration successful, please check your email for verification instructions" });
         }
 
         [HttpPost("verify-email")]
-        public IActionResult VerifyEmail(VerifyEmailRequest model)
+        public async Task<IActionResult> VerifyEmail([FromQuery] VerifyEmailRequest model)
         {
-            _accountService.VerifyEmail(model.Token);
+            await _accountService.VerifyEmail(model.Token);
             return Ok(new { message = "Verification successful, you can now login" });
         }
 
         [HttpPost("forgot-password")]
-        public IActionResult ForgotPassword(ForgotPasswordRequest model)
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordRequest model)
         {
-            _accountService.ForgotPassword(model, Request.Headers["origin"]);
+            await _accountService.ForgotPassword(model, Request.Headers["origin"]);
             return Ok(new { message = "Please check your email for password reset instructions" });
         }
 
         [HttpPost("validate-reset-token")]
-        public IActionResult ValidateResetToken(ValidateResetTokenRequest model)
+        public async Task<IActionResult> ValidateResetToken(ValidateResetTokenRequest model)
         {
-            _accountService.ValidateResetToken(model);
+            await _accountService.ValidateResetToken(model);
             return Ok(new { message = "Token is valid" });
         }
 
         [HttpPost("reset-password")]
-        public IActionResult ResetPassword(ResetPasswordRequest model)
+        public async Task<IActionResult> ResetPassword(ResetPasswordRequest model)
         {
-            _accountService.ResetPassword(model);
+            await _accountService.ResetPassword(model);
             return Ok(new { message = "Password reset successful, you can now login" });
         }
 
@@ -173,14 +171,19 @@ namespace WebApi.Controllers
 
         //[Authorize(Role.Admin)]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AccountResponse>>> GetAll([FromQuery]AccountParams accountParams)
+        public async Task<ActionResult<IEnumerable<AccountResponse>>> GetAll([FromQuery]UserParams accountParams)
         {
+            accountParams.CurrentUserId = Account.Id;
+            if (string.IsNullOrEmpty(accountParams.Gender))
+            {
+                accountParams.Gender = Account.Title == "mr" ? "mrs": "mr" ;
+            }
             var accounts = await _accountService.GetAll(accountParams);
             Response.AddPaginationHeader(accounts.CurrentPage, accounts.PageSize,accounts.TotalCount, accounts.TotalPages);
             return Ok(accounts);
         }
 
-        [Authorize(Role.User,Role.Admin)]
+        
         [HttpGet("{id:int}")]
         public ActionResult<AccountResponse> GetById(int id)
         {
@@ -205,12 +208,12 @@ namespace WebApi.Controllers
         public ActionResult<AccountResponse> Update(int id, UpdateAccountRequest model)
         {
             // users can update their own account and admins can update any account
-            if (id != Account.Id && Account.Role != Role.Admin)
+            if (id != Account.Id)
                 return Unauthorized(new { message = "Unauthorized" });
 
             // only admins can update role
-            if (Account.Role != Role.Admin)
-                model.Role = null;
+            //if (Account.Role != UserRole.Admin)
+            //    model.Role = null;
 
             var account = _accountService.Update(id, model);
             return Ok(account);
@@ -223,8 +226,8 @@ namespace WebApi.Controllers
             // users cant delete their own account and admins can delete any account
             if (id == Account.Id)
             {
-                if (Account.Role != Role.Admin)
-                    return Unauthorized(new { message = "Unauthorized" });
+                //if (Account.Role != UserRole.Admin)
+                //    return Unauthorized(new { message = "Unauthorized" });
             }
             _accountService.Delete(id);
             return Ok(new { message = "Account deleted successfully" });
@@ -237,7 +240,7 @@ namespace WebApi.Controllers
             var cookieOptions = new CookieOptions
             {
                 HttpOnly = true,
-                Expires = DateTime.UtcNow.AddDays(7)
+                Expires = DateTime.Now.AddDays(7)
             };
             Response.Cookies.Append("refreshToken", token, cookieOptions);
         }

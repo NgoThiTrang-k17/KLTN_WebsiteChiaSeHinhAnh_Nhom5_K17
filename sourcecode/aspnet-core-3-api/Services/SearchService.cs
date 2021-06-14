@@ -45,14 +45,14 @@ namespace WebApi.Services
 
         public IEnumerable<PostResponse> SearchForPosts( string query)
         {
-            var posts = _context.Posts.Where(p=>p.Title.Contains(query));
+            var posts = _context.Posts.Where(p=>p.Title.Contains(query)||p.Categories.Contains(query));
             return _mapper.Map<IList<PostResponse>>(posts);
         }
 
 
         public IEnumerable<AccountResponse> SearchForAccounts(int id, string query)
         {
-            var accounts = _context.Accounts.Where(p => p.Name.Contains(query));
+            var accounts = _context.Users.Where(p => p.Name.Contains(query));
             var accountResponses = _mapper.Map<IList<AccountResponse>>(accounts);
             foreach (AccountResponse accountResponse in accountResponses)
             {
@@ -66,7 +66,22 @@ namespace WebApi.Services
             }    
             return accountResponses;
         }
+        public IEnumerable<AccountResponse> SearchForMessage(int id, string query)
+        {
+            var accounts = _context.Users.Where(p => p.Name.Contains(query));
+            var accountResponses = _mapper.Map<IList<AccountResponse>>(accounts);
+            foreach (AccountResponse accountResponse in accountResponses)
+            {
+                accountResponse.FollowerCount = _context.Follows.Count(f => f.SubjectId == accountResponse.Id);
+                accountResponse.FollowingCount = _context.Follows.Count(f => f.FollowerId == accountResponse.Id);
 
+                if (_context.Follows.Count(f => f.SubjectId == accountResponse.Id && f.FollowerId == id) == 1)
+                    accountResponse.IsFollowedByCurrentUser = 1;
+                else
+                    accountResponse.IsFollowedByCurrentUser = 0;
+            }
+            return accountResponses;
+        }
     }
     //public class ElasticIndexService
     //{

@@ -11,6 +11,7 @@ namespace WebApi.Models.Accounts
         public string Email { get; set; }
         public string Role { get; set; }
         public DateTime Created { get; set; }
+        public DateTime LastActive { get; set; }
         public DateTime? Updated { get; set; }
         public bool IsVerified { get; set; }
 

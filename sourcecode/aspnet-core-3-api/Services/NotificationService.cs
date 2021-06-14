@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
-
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using WebApi.Entities;
 using WebApi.Helpers;
 using WebApi.Models.Notifications;
@@ -10,13 +11,16 @@ namespace WebApi.Services
 {
     public interface INotificationService
     {
-        NotificationResponse CreateNotification(CreateNotificationRequest model);
+        NotificationResponse SendNotification(CreateNotificationRequest model);
         NotificationResponse UpdateNotification(int id, UpdateNotificationRequest model);
         NotificationResponse UpdateNotificationStatus(int id, Status status);
         void DeleteNotification(int id);
         IEnumerable<NotificationResponse> GetAll();
-        IEnumerable<NotificationResponse> GetAllByUserId(int id);
+        IEnumerable<NotificationResponse> GetNotificationThread(int id);
         int NewNotificationCount(int id);
+        
+        Task<bool> SaveAllAsync();
+        
     }
     public class NotificationService : INotificationService
     {
@@ -34,7 +38,7 @@ namespace WebApi.Services
         }
 
         //Create
-        public NotificationResponse CreateNotification(CreateNotificationRequest model)
+        public NotificationResponse SendNotification(CreateNotificationRequest model)
         {
             var notification = _mapper.Map<Notification>(model);
             if (notification == null) throw new AppException("Create Notification failed");
@@ -99,10 +103,10 @@ namespace WebApi.Services
         }
 
         //Get notifications for each user
-        public IEnumerable<NotificationResponse> GetAllByUserId(int id)
+        public IEnumerable<NotificationResponse> GetNotificationThread(int id)
         {
 
-            var notifications = _context.Notifications.Where(p => p.ReiceiverId == id);
+            var notifications = _context.Notifications.Where(n => n.ReiceiverId == id).OrderBy(n => n.Created);
             var notificationResponses = _mapper.Map<IList<NotificationResponse>>(notifications);
             foreach (NotificationResponse notificationResponse in notificationResponses)
             {
@@ -127,6 +131,44 @@ namespace WebApi.Services
             var notificationResponses = _mapper.Map<IList<NotificationResponse>>(notifications);
             return notificationResponses.Count();
         }
+
+
+        public async Task<bool> SaveAllAsync()
+        {
+            return await _context.SaveChangesAsync() > 0;
+        }
+
+        //public void AddGroup(NotificationGroup group)
+        //{
+        //    _context.NotificationGroups.Add(group);
+        //}
+
+        //public void RemoveConnection(Connection connection)
+        //{
+        //    _context.Connections.Remove(connection);
+        //}
+
+        public async Task<Connection> GetConnection(string connectionId)
+        {
+            return await _context.Connections.FindAsync(connectionId);
+        }
+
+
+
+        //public async Task<NotificationGroup> GetNotificationGroup(string groupName)
+        //{
+        //    return await _context.NotificationGroups
+        //        .Include(x => x.Connections)
+        //        .FirstOrDefaultAsync(x => x.Name == groupName);
+        //}
+
+        //public async Task<NotificationGroup> GetGroupForConnection(string connectionId)
+        //{
+        //    return await _context.NotificationGroups
+        //            .Include(c => c.Connections)
+        //            .Where(c => c.Connections.Any(x => x.ConnectionId == connectionId))
+        //            .FirstOrDefaultAsync();
+        //}
 
         //Helper methods
         private Notification getNotification(int id)

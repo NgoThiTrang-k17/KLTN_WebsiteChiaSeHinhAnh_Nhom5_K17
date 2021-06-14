@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApi.Entities;
+using WebApi.Models.Accounts;
 using WebApi.Models.Posts;
 using WebApi.Services;
 
@@ -41,6 +42,12 @@ namespace WebApi.Controllers
                 return Ok(posts);
             }
 
+        }
+        [HttpGet("SearchForMessage")]
+        public ActionResult<IEnumerable<AccountResponse>> SearchForMessage(string query)
+        {
+            var posts = _searchService.SearchForAccounts(Account.Id, query);
+            return Ok(posts);
         }
     }
 }

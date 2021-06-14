@@ -35,14 +35,14 @@ namespace WebApi.Controllers
         [HttpGet("GetAllByUserId/{id:int}")]
         public ActionResult<IEnumerable<NotificationResponse>> GetAllByUserId(int id)
         {
-            var notifications = _notificationService.GetAllByUserId(id);
+            var notifications = _notificationService.GetNotificationThread(id);
             return Ok(notifications);
         }
 
         [HttpPost]
         public ActionResult<NotificationResponse> Create(CreateNotificationRequest model)
         {
-            var notification = _notificationService.CreateNotification(model);
+            var notification = _notificationService.SendNotification(model);
             return Ok(notification);
         }
 

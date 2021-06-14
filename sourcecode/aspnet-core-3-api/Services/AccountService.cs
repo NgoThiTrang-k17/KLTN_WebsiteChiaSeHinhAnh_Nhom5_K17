@@ -1,72 +1,86 @@
 using AutoMapper;
-using BC = BCrypt.Net.BCrypt;
+using Google.Apis.Auth;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Security.Claims;
 using System.Security.Cryptography;
-using System.Text;
+using System.Threading.Tasks;
 using WebApi.Entities;
 using WebApi.Helpers;
 using WebApi.Models.Accounts;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Google.Apis.Auth;
+using BC = BCrypt.Net.BCrypt;
 
 namespace WebApi.Services
 {
     public interface IAccountService
     {
-        AuthenticateResponse Authenticate(AuthenticateRequest model, string ipAddress);
-        AuthenticateResponse GoogleLogin(GoogleJsonWebSignature.Payload payload, string ipAddress, string origin);
-        AuthenticateResponse RefreshToken(string token, string ipAddress);
-        void RevokeToken(string token, string ipAddress);
-        void Register(RegisterRequest model, string origin);
-        void VerifyEmail(string token);
-        void ForgotPassword(ForgotPasswordRequest model, string origin);
-        void ValidateResetToken(ValidateResetTokenRequest model);
-        void ResetPassword(ResetPasswordRequest model);
-        public AccountResponse SetAvatar(int id, string AvatarPath);
-        Task<PagedList<AccountResponse>> GetAll(AccountParams accountParams);
+        Task<AuthenticateResponse> Authenticate(AuthenticateRequest model, string ipAddress);
+        Task<AuthenticateResponse> GoogleLogin(GoogleJsonWebSignature.Payload payload, string ipAddress, string origin);
+        Task<AuthenticateResponse> RefreshToken(string token, string ipAddress);
+        Task RevokeToken(string token, string ipAddress);
+        Task<AppUser> Register(RegisterRequest model, string origin);
+        Task VerifyEmail(string token);
+        Task ForgotPassword(ForgotPasswordRequest model, string origin);
+        Task ValidateResetToken(ValidateResetTokenRequest model);
+        Task ResetPassword(ResetPasswordRequest model);
+        public Task<AccountResponse> SetAvatar(int id, string AvatarPath);
+        Task<PagedList<AccountResponse>> GetAll(UserParams accountParams);
         AccountResponse GetById(int id);
         AccountResponse Create(CreateAccountRequest model);
-        AccountResponse Update(int id, UpdateAccountRequest model);
+        Task<AccountResponse> Update(int id, UpdateAccountRequest model);
         void Delete(int id);
+        Task<bool> SaveAllAsync();
+        AppUser getAccount(int id);
     }
 
     public class AccountService : IAccountService
     {
         private readonly DataContext _context;
+        private readonly UserManager<AppUser> _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
+        private readonly RoleManager<AppRole> _roleManager;
         private readonly IMapper _mapper;
         private readonly AppSettings _appSettings;
         private readonly IEmailService _emailService;
+        private readonly ITokenService _tokenService;
 
         public AccountService(
             DataContext context,
+            UserManager<AppUser> userManager,
+            SignInManager<AppUser> signInManager,
+            RoleManager<AppRole> roleManager,
             IMapper mapper,
             IOptions<AppSettings> appSettings,
-            IEmailService emailService)
+            IEmailService emailService,
+            ITokenService tokenService
+            )
         {
             _context = context;
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _roleManager = roleManager;
             _mapper = mapper;
             _appSettings = appSettings.Value;
             _emailService = emailService;
+            _tokenService = tokenService;
         }
 
-        public AuthenticateResponse Authenticate(AuthenticateRequest model, string ipAddress)
+        public async Task<AuthenticateResponse> Authenticate(AuthenticateRequest model, string ipAddress)
         {
-            var account = _context.Accounts.FirstOrDefault(x => x.Email == model.Email);
+            var account = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == model.Email);
 
-            if (account == null || !BC.Verify(model.Password, account.PasswordHash))
-                throw new AppException("Email or password is incorrect");
+            if (account == null )
+                throw new AppException("Invalid Email");
             if (!account.IsVerified)
                 throw new AppException("Email not verified");
 
+            var result = await _signInManager.CheckPasswordSignInAsync(account, model.Password, false);
+            if (!result.Succeeded) throw new AppException("Wrong password");
             // authentication successful so generate jwt and refresh tokens
-            var jwtToken = generateJwtToken(account);
+            var jwtToken = await _tokenService.generateJwtToken(account);
             var refreshToken = generateRefreshToken(ipAddress);
             account.RefreshTokens.Add(refreshToken);
 
@@ -74,8 +88,9 @@ namespace WebApi.Services
             removeOldRefreshTokens(account);
 
             // save changes to db
-            _context.Update(account);
-            _context.SaveChanges();
+            //_context.Update(account);
+            //_context.SaveChanges();
+            await _userManager.UpdateAsync(account);
 
             var response = _mapper.Map<AuthenticateResponse>(account);
             response.JwtToken = jwtToken;
@@ -83,28 +98,31 @@ namespace WebApi.Services
             return response;
         }
 
-        public AuthenticateResponse GoogleLogin(GoogleJsonWebSignature.Payload payload, string ipAddress, string origin)
+        public async Task<AuthenticateResponse> GoogleLogin(GoogleJsonWebSignature.Payload payload, string ipAddress, string origin)
         {
-            var account = _context.Accounts.SingleOrDefault(x => x.Email == payload.Email);
-            var isFirstAccount = _context.Accounts.Count() == 0;
+            var account = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == payload.Email);
+            //var isFirstAccount = _userManager.Users.Count() == 0;
             if (account == null)
             {
                 // map model to new account object
-                account = new Account
+                account = new AppUser
                 {
                     Email = payload.Email,
                     Name = payload.Name,
                     AvatarPath = payload.Picture,
                     // first registered account is an admin
-                    Role = isFirstAccount ? Role.Admin : Role.User,
-                    Created = DateTime.UtcNow,
+                    //Role = isFirstAccount ? UserRole.Admin : UserRole.User,
+                    Created = DateTime.Now,
                     VerificationToken = randomTokenString(),
-                    // hash password
-                    PasswordHash = BC.HashPassword(Guid.NewGuid().ToString())
-                };
+                    UserName = "user" + Guid.NewGuid().ToString()
+                // hash password
+                //PasswordHash = BC.HashPassword(Guid.NewGuid().ToString())
+            };
                 // save account
-                _context.Accounts.Add(account);
-                _context.SaveChanges();
+                //_context.Users.Add(account);
+                //_context.SaveChanges();
+                var result = await _userManager.CreateAsync(account, Guid.NewGuid().ToString());
+                if (!result.Succeeded) throw new AppException("Some thing wrong");
                 // send email
                 sendVerificationEmail(account, origin);
             }
@@ -112,8 +130,8 @@ namespace WebApi.Services
             //    throw new AppException("Email not verified");
 
             // authentication successful so generate jwt and refresh tokens
-            //var jwtToken = generateJwtToken(account);
-            var jwtToken = payload.JwtId;
+            var jwtToken = await _tokenService.generateJwtToken(account);
+            //var jwtToken = payload.JwtId;
             var refreshToken = generateRefreshToken(ipAddress);
             account.RefreshTokens.Add(refreshToken);
 
@@ -121,8 +139,9 @@ namespace WebApi.Services
             removeOldRefreshTokens(account);
 
             // save changes to db
-            _context.Update(account);
-            _context.SaveChanges();
+            //_context.Update(account);
+            //_context.SaveChanges();
+            await _userManager.UpdateAsync(account);
 
             var response = _mapper.Map<AuthenticateResponse>(account);
             response.JwtToken = jwtToken;
@@ -130,24 +149,25 @@ namespace WebApi.Services
             return response;
         }
 
-        public AuthenticateResponse RefreshToken(string token, string ipAddress)
+        public async Task<AuthenticateResponse> RefreshToken(string token, string ipAddress)
         {
             var (refreshToken, account) = getRefreshToken(token);
 
             // replace old refresh token with a new one and save
             var newRefreshToken = generateRefreshToken(ipAddress);
-            refreshToken.Revoked = DateTime.UtcNow;
+            refreshToken.Revoked = DateTime.Now;
             refreshToken.RevokedByIp = ipAddress;
             refreshToken.ReplacedByToken = newRefreshToken.Token;
             account.RefreshTokens.Add(newRefreshToken);
 
             removeOldRefreshTokens(account);
 
-            _context.Update(account);
-            _context.SaveChanges();
+            //_context.Update(account);
+            //_context.SaveChanges();
+            await _userManager.UpdateAsync(account);
 
             // generate new jwt
-            var jwtToken = generateJwtToken(account);
+            var jwtToken = await _tokenService.generateJwtToken(account);
 
             var response = _mapper.Map<AuthenticateResponse>(account);
             response.JwtToken = jwtToken;
@@ -155,120 +175,154 @@ namespace WebApi.Services
             return response;
         }
 
-        public void RevokeToken(string token, string ipAddress)
+        public async Task RevokeToken(string token, string ipAddress)
         {
             var (refreshToken, account) = getRefreshToken(token);
 
             // revoke token and save
-            refreshToken.Revoked = DateTime.UtcNow;
+            refreshToken.Revoked = DateTime.Now;
             refreshToken.RevokedByIp = ipAddress;
-            _context.Update(account);
-            _context.SaveChanges();
+            //_context.Update(account);
+            //.SaveChanges();
+            await _userManager.UpdateAsync(account);
         }
 
-        public void Register(RegisterRequest model, string origin)
+        public async Task<AppUser> Register(RegisterRequest model, string origin)
         {
             // validate
-            if (_context.Accounts.Any(x => x.Email == model.Email))
+            //if (_context.Users.Any(x => x.Email == model.Email))
+            var account = await _userManager.FindByEmailAsync(model.Email);
+            if (account != null)
             {
                 // send already registered error in email to prevent account enumeration
                 sendAlreadyRegisteredEmail(model.Email, origin);
-                return;
+                return null;
             }
 
             // map model to new account object
-            var account = _mapper.Map<Account>(model);
+            account = _mapper.Map<AppUser>(model);
 
             // first registered account is an admin
-            var isFirstAccount = _context.Accounts.Count() == 0;
-            account.Role = isFirstAccount ? Role.Admin : Role.User;
-            account.Created = DateTime.UtcNow;
-            account.VerificationToken = randomTokenString();
+            //var isFirstAccount = _context.Users.Count() == 0;
+            //account.Role = isFirstAccount ? UserRole.Admin : UserRole.User;
 
+            account.Created = DateTime.Now;
+            account.VerificationToken = randomTokenString();
+            account.UserName = "user" + Guid.NewGuid().ToString();
             // hash password
-            account.PasswordHash = BC.HashPassword(model.Password);
+            //account.PasswordHash = BC.HashPassword(model.Password);
 
             // save account
-            _context.Accounts.Add(account);
-            _context.SaveChanges();
-
+            //_context.Users.Add(account);
+            //_context.SaveChanges();
+            var result = await _userManager.CreateAsync(account, model.Password);
+            if (!result.Succeeded) return null;
+            var isFirstAccount = _userManager.Users.Count();
+            if (isFirstAccount != 0)
+            {
+                var roles = new List<AppRole>
+                {
+                    new AppRole{Name="User"},
+                    new AppRole{Name="Admin"}
+                };
+                foreach (var role in roles)
+                {
+                    await _roleManager.CreateAsync(role);
+                }
+                await _userManager.AddToRoleAsync(account, "Admin");
+            } else await _userManager.AddToRoleAsync(account, "Member");
             // send email
             sendVerificationEmail(account, origin);
+            return account;
         }
 
-        public void VerifyEmail(string token)
+        public async Task VerifyEmail(string token)
         {
-            var account = _context.Accounts.SingleOrDefault(x => x.VerificationToken == token);
+            //var account = _context.Users.SingleOrDefault(x => x.VerificationToken == token);
+            var account = await _userManager.Users.FirstOrDefaultAsync(x => x.VerificationToken == token);
 
             if (account == null) throw new AppException("Verification failed");
 
-            account.Verified = DateTime.UtcNow;
+            account.Verified = DateTime.Now;
             account.VerificationToken = null;
 
-            _context.Accounts.Update(account);
-            _context.SaveChanges();
+            //_context.Users.Update(account);
+            //_context.SaveChanges();
+            await _userManager.UpdateAsync(account);
         }
 
-        public void ForgotPassword(ForgotPasswordRequest model, string origin)
+        public async Task ForgotPassword(ForgotPasswordRequest model, string origin)
         {
-            var account = _context.Accounts.SingleOrDefault(x => x.Email == model.Email);
+            var account = await _userManager.Users.SingleOrDefaultAsync(x => x.Email == model.Email);
 
             // always return ok response to prevent email enumeration
             if (account == null) return;
 
             // create reset token that expires after 1 day
             account.ResetToken = randomTokenString();
-            account.ResetTokenExpires = DateTime.UtcNow.AddDays(1);
+            account.ResetTokenExpires = DateTime.Now.AddDays(1);
 
-            _context.Accounts.Update(account);
-            _context.SaveChanges();
+            //_context.Users.Update(account);
+            //_context.SaveChanges();
+            await _userManager.UpdateAsync(account);
 
             // send email
             sendPasswordResetEmail(account, origin);
         }
 
-        public void ValidateResetToken(ValidateResetTokenRequest model)
+        public async Task ValidateResetToken(ValidateResetTokenRequest model)
         {
-            var account = _context.Accounts.SingleOrDefault(x =>
+            var account = await _userManager.Users.SingleOrDefaultAsync(x =>
                 x.ResetToken == model.Token &&
-                x.ResetTokenExpires > DateTime.UtcNow);
+                x.ResetTokenExpires > DateTime.Now);
 
             if (account == null)
                 throw new AppException("Invalid token");
         }
 
-        public void ResetPassword(ResetPasswordRequest model)
+        public async Task ResetPassword(ResetPasswordRequest model)
         {
-            var account = _context.Accounts.SingleOrDefault(x =>
+            var account = await _userManager.Users.SingleOrDefaultAsync(x =>
                 x.ResetToken == model.Token &&
-                x.ResetTokenExpires > DateTime.UtcNow);
+                x.ResetTokenExpires > DateTime.Now);
 
             if (account == null)
                 throw new AppException("Invalid token");
 
             // update password and remove reset token
             account.PasswordHash = BC.HashPassword(model.Password);
-            account.PasswordReset = DateTime.UtcNow;
+            account.PasswordReset = DateTime.Now;
             account.ResetToken = null;
             account.ResetTokenExpires = null;
 
-            _context.Accounts.Update(account);
-            _context.SaveChanges();
+            //_context.Users.Update(account);
+            //_context.SaveChanges();
+            await _userManager.UpdateAsync(account);
         }
 
-        public AccountResponse SetAvatar(int id, string AvatarPath)
+        public async Task<AccountResponse> SetAvatar(int id, string AvatarPath)
         {
             var account = getAccount(id);
             account.AvatarPath = AvatarPath;
-            _context.Accounts.Update(account);
-            _context.SaveChanges();
+            //_context.Users.Update(account);
+            //_context.SaveChanges();
+            await _userManager.UpdateAsync(account);
             return _mapper.Map<AccountResponse>(account);
         }
 
-        public async Task<PagedList<AccountResponse>> GetAll(AccountParams accountParams)
+        public async Task<PagedList<AccountResponse>> GetAll(UserParams accountParams)
         {
-            var accounts = _context.Accounts;
-            var accountResponses = _mapper.ProjectTo<AccountResponse>(accounts).AsNoTracking();
+            var accounts = _userManager.Users;
+            var accountResponses = _mapper.ProjectTo<AccountResponse>(accounts).AsNoTracking().AsQueryable() ;
+            accountResponses = accountResponses.Where(u => u.Id != accountParams.CurrentUserId);
+
+            accountResponses = accountResponses.Where(u => u.Title == accountParams.Gender);
+
+            accountResponses = accountParams.OrderBy switch
+            {
+                "created" => accountResponses.OrderBy(u => u.Created),
+                _ => accountResponses.OrderBy(u => u.LastActive)
+            };
 
             foreach (AccountResponse accountResponse in accountResponses)
             {
@@ -294,30 +348,30 @@ namespace WebApi.Services
         public AccountResponse Create(CreateAccountRequest model)
         {
             // validate
-            if (_context.Accounts.Any(x => x.Email == model.Email))
+            if (_userManager.Users.Any(x => x.Email == model.Email))
                 throw new AppException($"Email '{model.Email}' is already registered");
 
             // map model to new account object
-            var account = _mapper.Map<Account>(model);
-            account.Created = DateTime.UtcNow;
-            account.Verified = DateTime.UtcNow;
+            var account = _mapper.Map<AppUser>(model);
+            account.Created = DateTime.Now;
+            account.Verified = DateTime.Now;
 
             // hash password
             account.PasswordHash = BC.HashPassword(model.Password);
 
             // save account
-            _context.Accounts.Add(account);
-            _context.SaveChanges();
+            //_context.Users.Add(account);
+            //_context.SaveChanges();
 
             return _mapper.Map<AccountResponse>(account);
         }
 
-        public AccountResponse Update(int id, UpdateAccountRequest model)
+        public async Task<AccountResponse> Update(int id, UpdateAccountRequest model)
         {
             var account = getAccount(id);
 
             // validate
-            if (account.Email != model.Email && _context.Accounts.Any(x => x.Email == model.Email))
+            if (account.Email != model.Email && _userManager.Users.Any(x => x.Email == model.Email))
                 throw new AppException($"Email '{model.Email}' is already taken");
 
             // hash password if it was entered
@@ -326,69 +380,63 @@ namespace WebApi.Services
 
             // copy model to account and save
             _mapper.Map(model, account);
-            account.Updated = DateTime.UtcNow;
-            _context.Accounts.Update(account);
-            _context.SaveChanges();
+            account.Updated = DateTime.Now;
+            //_context.Users.Update(account);
+            //_context.SaveChanges();
+            await _userManager.UpdateAsync(account);
 
             return _mapper.Map<AccountResponse>(account);
         }
 
-        public void Delete(int id)
+        public async void Delete(int id)
         {
             var account = getAccount(id);
-            _context.Accounts.Remove(account);
-            _context.SaveChanges();
+            //_context.Users.Remove(account);
+            //_context.SaveChanges();
+            await _userManager.DeleteAsync(account);
+        }
+
+        public async Task<bool> SaveAllAsync()
+        {
+            return await _context.SaveChangesAsync() > 0;
         }
 
         // helper methods
 
-        private Account getAccount(int id)
+        public AppUser getAccount(int id)
         {
-            var account = _context.Accounts.Find(id);
+            var account = _userManager.Users.FirstOrDefault(u=>u.Id == id);
             if (account == null) throw new KeyNotFoundException("Account not found");
             return account;
         }
 
-        private (RefreshToken, Account) getRefreshToken(string token)
+        private (RefreshToken, AppUser) getRefreshToken(string token)
         {
-            var account = _context.Accounts.SingleOrDefault(u => u.RefreshTokens.Any(t => t.Token == token));
+            var account = _userManager.Users.SingleOrDefault(u => u.RefreshTokens.Any(t => t.Token == token));
             if (account == null) throw new AppException("Invalid token");
             var refreshToken = account.RefreshTokens.Single(x => x.Token == token);
             if (!refreshToken.IsActive) throw new AppException("Invalid token");
             return (refreshToken, account);
         }
 
-        private string generateJwtToken(Account account)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                //Subject = new ClaimsIdentity(new[] { new Claim(JwtRegisteredClaimNames.NameId, account.Id.ToString()) }),
-                Subject = new ClaimsIdentity(new[] { new Claim("id", account.Id.ToString()) }),
-                Expires = DateTime.UtcNow.AddMinutes(15),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
-        }
+        
 
         private RefreshToken generateRefreshToken(string ipAddress)
         {
             return new RefreshToken
             {
                 Token = randomTokenString(),
-                Expires = DateTime.UtcNow.AddDays(7),
-                Created = DateTime.UtcNow,
+                Expires = DateTime.Now.AddDays(7),
+                Created = DateTime.Now,
                 CreatedByIp = ipAddress
             };
         }
 
-        private void removeOldRefreshTokens(Account account)
+        private void removeOldRefreshTokens(AppUser account)
         {
             account.RefreshTokens.RemoveAll(x =>
                 !x.IsActive &&
-                x.Created.AddDays(_appSettings.RefreshTokenTTL) <= DateTime.UtcNow);
+                x.Created.AddDays(_appSettings.RefreshTokenTTL) <= DateTime.Now);
         }
 
         private string randomTokenString()
@@ -400,12 +448,12 @@ namespace WebApi.Services
             return BitConverter.ToString(randomBytes).Replace("-", "");
         }
 
-        private void sendVerificationEmail(Account account, string origin)
+        private void sendVerificationEmail(AppUser account, string origin)
         {
             string message;
             if (!string.IsNullOrEmpty(origin))
             {
-                var verifyUrl = $"{origin}/Account/verify-email?token={account.VerificationToken}";
+                var verifyUrl = $"{origin}/Accounts/verify-email?token={account.VerificationToken}";
                 message = $@"<p>Please click the below link to verify your email address:</p>
                              <p><a href=""{verifyUrl}"">{verifyUrl}</a></p>";
             }
@@ -428,9 +476,9 @@ namespace WebApi.Services
         {
             string message;
             if (!string.IsNullOrEmpty(origin))
-                message = $@"<p>If you don't know your password please visit the <a href=""{origin}/account/forgot-password"">forgot password</a> page.</p>";
+                message = $@"<p>If you don't know your password please visit the <a href=""{origin}/Accounts/forgot-password"">forgot password</a> page.</p>";
             else
-                message = "<p>If you don't know your password you can reset it via the <code>/accounts/forgot-password</code> api route.</p>";
+                message = "<p>If you don't know your password you can reset it via the <code>/Accounts/forgot-password</code> api route.</p>";
 
             _emailService.Send(
                 to: email,
@@ -441,12 +489,12 @@ namespace WebApi.Services
             );
         }
 
-        private void sendPasswordResetEmail(Account account, string origin)
+        private void sendPasswordResetEmail(AppUser account, string origin)
         {
             string message;
             if (!string.IsNullOrEmpty(origin))
             {
-                var resetUrl = $"{origin}/account/reset-password?token={account.ResetToken}";
+                var resetUrl = $"{origin}/Accounts/reset-password?token={account.ResetToken}";
                 message = $@"<p>Please click the below link to reset your password, the link will be valid for 1 day:</p>
                              <p><a href=""{resetUrl}"">{resetUrl}</a></p>";
             }
