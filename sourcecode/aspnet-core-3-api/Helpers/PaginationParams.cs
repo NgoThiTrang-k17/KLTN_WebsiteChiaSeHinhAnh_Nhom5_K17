@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace WebApi.Helpers
 {
-    public class AccountParams
+    public class PaginationParams
     {
         private const int MaxPageSize = 50;
 

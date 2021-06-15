@@ -9,17 +9,17 @@ using WebApi.Entities;
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class AuthorizeAttribute : Attribute, IAuthorizationFilter
 {
-    private readonly IList<Role> _roles;
+    private readonly IList<RoleList> _roles;
 
-    public AuthorizeAttribute(params Role[] roles)
+    public AuthorizeAttribute(params RoleList[] roles)
     {
-        _roles = roles ?? new Role[] { };
+        //_roles = roles ?? new UserRole[] { };
     }
 
     public void OnAuthorization(AuthorizationFilterContext context)
     {
-        var account = (Account)context.HttpContext.Items["Account"];
-        if (account == null || (_roles.Any() && !_roles.Contains(account.Role)))
+        var account = (AppUser)context.HttpContext.Items["Account"];
+        if (account == null  /*||(_roles.Any() && !_roles.Contains(account.Role))*/)
         {
             // not logged in or role not authorized
             context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };

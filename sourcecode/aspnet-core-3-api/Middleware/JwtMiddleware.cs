@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using WebApi.Helpers;
@@ -48,10 +49,9 @@ namespace WebApi.Middleware
                 }, out SecurityToken validatedToken);
 
                 var jwtToken = (JwtSecurityToken)validatedToken;
-                var accountId = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
-
+                var accountId = int.Parse(jwtToken.Claims.First(x => x.Type == JwtRegisteredClaimNames.NameId).Value); 
                 // attach account to context on successful jwt validation
-                context.Items["Account"] = await dataContext.Accounts.FindAsync(accountId);
+                context.Items["Account"] = await dataContext.Users.FindAsync(accountId);
             }
             catch 
             {

@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
-using System.Threading.Tasks;
+using WebApi.Helpers;
 
-namespace WebApi.Helpers
+namespace WebApi.Extensions
 {
     public static class HttpExtensions
     {

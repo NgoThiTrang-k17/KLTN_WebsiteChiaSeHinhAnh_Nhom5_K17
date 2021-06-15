@@ -160,7 +160,7 @@ namespace WebApi.Services
                 notification.ReiceiverId = _context.Comments.Find(model.TargetId).OwnerId;
             }
 
-            _notificationService.CreateNotification(notification);
+            _notificationService.SendNotification(notification);
         }
     }
 }

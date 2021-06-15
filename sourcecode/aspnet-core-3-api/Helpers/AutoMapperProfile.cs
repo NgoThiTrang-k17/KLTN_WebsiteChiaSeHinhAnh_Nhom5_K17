@@ -1,4 +1,5 @@
 using AutoMapper;
+using System;
 using WebApi.Entities;
 using WebApi.Models.Accounts;
 using WebApi.Models.Chats;
@@ -15,10 +16,12 @@ namespace WebApi.Helpers
         // mappings between model and entity objects <source,des>
         public AutoMapperProfile()
         {
-            //Follow
-            CreateMap<ChatMessage, ChatMessageResponse>();
 
-            CreateMap<CreateChatMessageRequest, ChatMessage>();
+            //CreateMap<DateTime, DateTime>().ConvertUsing(d => DateTime.SpecifyKind(d, DateTimeKind.Utc));
+            //Follow
+            CreateMap<Message, MessageResponse>();
+
+            CreateMap<CreateChatMessageRequest, Message>();
 
             //CreateMap<UpdateChatMessageRequest, ChatMessage>();
 
@@ -58,17 +61,17 @@ namespace WebApi.Helpers
 
             CreateMap<UpdateCommentRequest, Comment>();
             //Account
-            CreateMap<Account, AccountResponse>();
+            CreateMap<AppUser, AccountResponse>();
 
-            CreateMap<AccountResponse, Account>();
+            CreateMap<AccountResponse, AppUser>();
 
-            CreateMap<Account, AuthenticateResponse>();
+            CreateMap<AppUser, AuthenticateResponse>();
 
-            CreateMap<RegisterRequest, Account>();
+            CreateMap<RegisterRequest, AppUser>();
 
-            CreateMap<CreateAccountRequest, Account>();
+            CreateMap<CreateAccountRequest, AppUser>();
 
-            CreateMap<UpdateAccountRequest, Account>()
+            CreateMap<UpdateAccountRequest, AppUser>()
                 .ForAllMembers(x => x.Condition(
                     (src, dest, prop) =>
                     {

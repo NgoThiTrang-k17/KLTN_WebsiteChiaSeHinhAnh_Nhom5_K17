@@ -60,21 +60,45 @@ namespace WebApi.Controllers
             return Ok(posts);
         }
 
-        [HttpGet("Tags")]
-        public IActionResult GetImageTags(string imageUrl, string authorizeKey)
+        [HttpGet("ImageTags")]
+        public IActionResult GetImageTags(string imageUrl)
         {
             //Hosted web API REST Service base url  
 
-            var client = new RestClient("https://api.imagga.com/v2/tags?image_url=" + imageUrl);
-            client.Timeout = -1;
-            var request = new RestRequest(Method.GET);
-            //request.AddParameter
+            string apiKey = "acc_0f6c245c9850af0";
+            string apiSecret = "8e6427e8172eee4a8a6c260c6f71e32a";
+             
 
-            request.AddHeader("Authorization", authorizeKey);
-            request.AddParameter("text/plain", "", ParameterType.RequestBody);
+            string basicAuthValue = System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(String.Format("{0}:{1}", apiKey, apiSecret)));
+
+            var client = new RestClient("https://api.imagga.com/v2/tags");
+            client.Timeout = -1;
+
+            var request = new RestRequest(Method.GET);
+            request.AddParameter("image_url", imageUrl);
+            //request.AddParameter("limit", 10);
+            request.AddParameter("threshold", 30.0);
+            request.AddHeader("Authorization", String.Format("Basic {0}", basicAuthValue));
+
             IRestResponse response = client.Execute(request);
+            
             return Ok(response.Content);
         }
+
+        [HttpGet("Tags")]
+        public IActionResult GetTags(string response)
+        {
+            CategorizerResult myDeserializedClass = JsonConvert.DeserializeObject<CategorizerResult>(response);
+            var a = new List<string>();
+            foreach( var tag in myDeserializedClass.Result.Tags)
+            {
+                a.Add(tag.Tag.En);
+            }
+            var categories = String.Join('-', a);
+            return Ok(categories);
+        }
+
+
 
         [HttpPost("Share")]
         public IActionResult Share(int id)

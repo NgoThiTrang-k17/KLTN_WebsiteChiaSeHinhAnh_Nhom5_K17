@@ -1,14 +1,17 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Entities;
+using WebApi.Helpers;
 
 namespace WebApi.Controllers
 {
+    [ServiceFilter(typeof(LogUserActivity))]
     [Controller]
     public abstract class BaseController : ControllerBase
     {
         // returns the current authenticated account (null if not logged in)
-        public Account Account => (Account)HttpContext.Items["Account"];
-        public Post Post => (Post)HttpContext.Items["Post"];
+        public AppUser Account => (AppUser)HttpContext.Items["Account"];
+
+        
     }
 }

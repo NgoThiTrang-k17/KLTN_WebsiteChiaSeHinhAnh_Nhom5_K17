@@ -165,7 +165,7 @@ namespace WebApi.Services
                     Created = DateTime.Now,
                     Status = Status.Created
                 };
-                _notificationService.CreateNotification(notification);
+                _notificationService.SendNotification(notification);
             }
         }
 
