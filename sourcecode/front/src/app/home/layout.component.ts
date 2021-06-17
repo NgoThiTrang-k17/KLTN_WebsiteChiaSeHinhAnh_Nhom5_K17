@@ -7,7 +7,7 @@ import { AccountService, NotificationService, SearchService, FollowService } fro
 import { Account, Notification, NotificationToUpdate, Post, Follow, FollowToCreate } from '../_models';
 
 @Component({ templateUrl: 'layout.component.html' })
-export class LayoutComponent implements OnInit { 
+export class LayoutComponent implements OnInit {
 
     maccount = this.accountService.accountValue;
     temp: any;
@@ -25,16 +25,19 @@ export class LayoutComponent implements OnInit {
     public notification: NotificationToUpdate;
     public notifications: Notification[] = [];
 
-    constructor(private accountService: AccountService, 
+    constructor(private accountService: AccountService,
                 private notificationService: NotificationService,
                 private searchService: SearchService,
-                private followService: FollowService, 
+                private followService: FollowService,
                 private route: ActivatedRoute,
                 private router: Router,) {
         this.accountService.account.subscribe(x => this.account = x);
     }
 
     ngOnInit() {
+
+        console.log(this.accountService.accountValue);
+
         this.search = false;
         this.router.routeReuseStrategy.shouldReuseRoute = () =>{
             return false;
@@ -49,7 +52,7 @@ export class LayoutComponent implements OnInit {
         .subscribe((res:any)=>{
             this.notificationCount = res;
         })
-        
+
     }
 
     getNotification(id:any){
@@ -78,7 +81,7 @@ export class LayoutComponent implements OnInit {
             })
         });
       }
-    
+
       unFollow(id:any) {
         this.followService.delete(id)
         .subscribe(() => {
@@ -108,7 +111,7 @@ export class LayoutComponent implements OnInit {
                 this.notificationCount = res;
             })
         }, error => {
-            console.log(error);               
+            console.log(error);
         })
     }
 

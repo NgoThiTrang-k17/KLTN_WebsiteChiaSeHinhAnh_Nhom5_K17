@@ -6,8 +6,12 @@
       </ion-col>
       <ion-col size="8">
         <ion-item lines="none" class="center" style="align-items: center;">
-          <ion-avatar><img src="../../assets/images/default-profile.png"></ion-avatar>
-          <ion-title class="title">Lê Huy Hiệp</ion-title>
+          <ion-avatar *ngIf="account.avatarPath==null"><img src="../../assets/images/default-profile.png"></ion-avatar>
+          <ion-avatar *ngIf="account.avatarPath!=null"><img [src]="account.avatarPath"></ion-avatar>
+          <ion-title class="title">{{account.name}}</ion-title>
+          <span *ngIf = "(presence.onlineUsers$ | async).includes(account.id)">
+            <ion-icon name="ellipse" style="color: blue; width: 15px; height: 15px;"></ion-icon>
+          </span>
         </ion-item>
         <!-- <ion-avatar class="center"><img src="../../assets/images/default-profile.png"></ion-avatar><span class="title">Lê Huy Hiệp</span> -->
       </ion-col>
@@ -24,36 +28,53 @@
 
 <ion-content>
   <div class="chat">
-    <div class="right">
-      <ion-row>
-        <ion-col size="4">
-        </ion-col>
-        <ion-col size="8">
-          <div class="mMess">
-            <ion-label class="text-mMess">HelloOOOOoooooooooooooooooo!!!!!!!!!!!!!!!!</ion-label>
-          </div>
-        </ion-col>
-      </ion-row>
+    <div *ngIf="(messageService.messageThread$|async)?.length === 0">
+      Không có tin nhắn trước đó. Gửi tin nhắn để bắt đầu trò chuyện.
     </div>
-    <div class="left">
-      <ion-row>
-        <ion-col size="2">
-          <ion-avatar><img src="../../assets/images/default-profile.png"></ion-avatar>
-        </ion-col>
-        <ion-col size="6">
-          <ion-label class="text-yMess">Hiiiiiiiiiiiiiiiiiiiiioo!!!!!!!!!!!!!!!!</ion-label>
-        </ion-col>
-        <ion-col size="4">
-        </ion-col>
-      </ion-row>
-    </div>
+    <ion-list *ngIf="(messageService.messageThread$|async)?.length>0">
+      <div *ngFor="let message of (messageService.messageThread$|async)">
+        <div *ngIf="message.recipientId==account.id" class="right">
+          <ion-row>
+            <ion-col size="4">
+            </ion-col>
+            <ion-col size="8">
+              <ion-label class="text-mMess">{{message.content}}</ion-label>
+            </ion-col>
+          </ion-row>
+        </div>
+        <div *ngIf="message.recipientId!=account.id" class="left">
+          <ion-row>
+            <ion-col size="2">
+              <ion-avatar *ngIf="message.senderAvatarPath==null" class="avatar"><img src="../../assets/images/default-profile.png"></ion-avatar>
+              <ion-avatar *ngIf="message.senderAvatarPath!=null" class="avatar"><img [src]="message.senderAvatarPath"></ion-avatar>
+            </ion-col>
+            <ion-col size="6">
+              <ion-label class="text-yMess">{{message.content}}</ion-label>
+            </ion-col>
+            <ion-col size="4">
+            </ion-col>
+          </ion-row>
+        </div>
+      </div>
+    </ion-list>
 
   </div>
   <div class="footer">
-    <ion-item lines="none" class="ion-form-group input">
-      <ion-input class="ion-form-control" placeholder="Soạn tin nhắn..."></ion-input>
-      <ion-icon name="paper-plane"></ion-icon>
-    </ion-item>
+    <form #messageForm="ngForm" (ngSubmit)="sendMessage()" autocomplete="off">
+      <ion-item lines="none" class="ion-form-group input">
+        <ion-input
+        name="messageContent"
+        required
+        [(ngModel)]="messageContent"
+        class="ion-form-control"
+        placeholder="Soạn tin nhắn..."></ion-input>
+        <ion-button [disabled]="!messageForm.valid" type="submit">
+          <span>
+            <ion-icon name="paper-plane"></ion-icon>
+          </span>
+        </ion-button>
+      </ion-item>
+    </form>
   </div>
 
 </ion-content>

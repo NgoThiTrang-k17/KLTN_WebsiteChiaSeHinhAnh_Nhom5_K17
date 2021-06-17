@@ -1,22 +1,27 @@
 ﻿import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
 import { map, finalize } from 'rxjs/operators';
 
 import { environment } from '../../environments/environment';
-import { Account } from '../_models/account';
+import { Account } from '../_models';
+import { PresenceService } from '../_services';
 
-const baseUrl = `${environment.apiUrl}/accounts`;
+const baseUrl = `${environment.apiUrl}/Accounts`;
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
     private accountSubject: BehaviorSubject<Account>;
     public account: Observable<Account>;
 
+    // private currentUserSource = new ReplaySubject<Account>(1);
+    // currentUser$ = this.currentUserSource.asObservable();
+
     constructor(
         private router: Router,
-        private http: HttpClient
+        private http: HttpClient,
+        private presenceService: PresenceService
     ) {
         this.accountSubject = new BehaviorSubject<Account>(null);
         this.account = this.accountSubject.asObservable();
@@ -26,9 +31,10 @@ export class AccountService {
         return this.accountSubject.value;
     }
 
-    login(email: string, password: string) {
-        return this.http.post<any>(`${baseUrl}/authenticate`, { email, password }, { withCredentials: true })
+    login(model) {
+        return this.http.post<any>(`${baseUrl}/authenticate`, model, { withCredentials: true })
             .pipe(map(account => {
+                this.presenceService.createHubConnection(account);
                 this.accountSubject.next(account);
                 this.startRefreshTokenTimer();
                 return account;
@@ -36,7 +42,14 @@ export class AccountService {
     }
 
     loginGoogle(params) {
-        return this.http.post<any>(`${baseUrl}/google-login`, params, { withCredentials: true })
+      // const user = params;
+      // if(user){
+      //   localStorage.setItem('user',JSON.stringify(user));
+      //   this.setCurrentUser(user);
+      //   this.presenceService.createHubConnection(user);
+      // }
+
+      return this.http.post<any>(`${baseUrl}/google-login`, params, { withCredentials: true })
         .pipe(map(account => {
             this.accountSubject.next(account);
             this.startRefreshTokenTimer();
@@ -44,15 +57,25 @@ export class AccountService {
         }));
     }
 
+    // setCurrentUser(user: Account){
+    //   this.currentUserSource.next(user);
+    // }
+
     logout() {
         this.http.post<any>(`${baseUrl}/revoke-token`, {}, { withCredentials: true }).subscribe();
         this.stopRefreshTokenTimer();
         this.accountSubject.next(null);
+
+        // localStorage.removeItem('socialUser')
+        // localStorage.removeItem('user');
+        // this.currentUserSource.next(null);
+        // this.presenceService.stopHubConnection();
+
         this.router.navigate(['/account/login']);
     }
 
     refreshToken() {
-        return this.http.post<any>(`${baseUrl}/refresh-token`, {}, { withCredentials: true })
+        return this.http.post<any>(`${baseUrl}/refresh-token`, { withCredentials: true })
             .pipe(map((account) => {
                 this.accountSubject.next(account);
                 this.startRefreshTokenTimer();
@@ -61,7 +84,15 @@ export class AccountService {
     }
 
     register(account: Account) {
-        return this.http.post(`${baseUrl}/register`, account);
+      return this.http.post(`${baseUrl}/register`, account)
+      // .pipe(map((user: Account) => {
+      //   if(user){
+      //     localStorage.setItem('user',JSON.stringify(user));
+      //     this.setCurrentUser(user);
+      //     this.presenceService.createHubConnection(user);
+      //   }
+      //   return user;
+      // }))
     }
 
     verifyEmail(token: string) {

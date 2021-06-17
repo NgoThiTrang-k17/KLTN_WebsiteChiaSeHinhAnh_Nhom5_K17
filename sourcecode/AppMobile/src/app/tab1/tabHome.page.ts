@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Post, Account, FollowToCreate, ReactionToCreate } from '../_models';
-import { PostService, SearchService, FollowService, AccountService, ReactionService } from '../_services';
+import { PostService, SearchService, FollowService, AccountService, ReactionService, PresenceService } from '../_services';
 
 @Component({
   selector: 'app-tabHome',
@@ -13,6 +13,7 @@ export class TabHomePage implements OnInit {
 
   public posts: Post[] = [];
   public accounts: Account[] = [];
+
   public follow: FollowToCreate;
   public reaction: ReactionToCreate;
   public account: Account;
@@ -21,12 +22,15 @@ export class TabHomePage implements OnInit {
   search = false;
   searchAccount = false;
 
+  maccount = this.accountService.accountValue;
+
   constructor(
     private postService: PostService,
     private searchService: SearchService,
     private followService: FollowService,
     private accountService: AccountService,
     private reactionService: ReactionService,
+    public presence: PresenceService,
     private router: Router,
   ) {}
 

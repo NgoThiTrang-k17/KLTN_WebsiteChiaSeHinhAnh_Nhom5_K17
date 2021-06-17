@@ -1,4 +1,5 @@
 ﻿export * from './account';
+export * from './accountLogin';
 export * from './accountLoginGoogle';
 export * from './socialUsers';
 export * from './alert';
@@ -16,3 +17,5 @@ export * from './notification';
 export * from './notificationToUpdate';
 export * from './follow';
 export * from './followToCreate';
+export * from './message';
+export * from './group';

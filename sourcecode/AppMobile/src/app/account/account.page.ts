@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
+import { AccountLogin } from '../_models'
 import { AccountService } from '../_services/account.service';
 
 @Component({
@@ -16,6 +17,8 @@ export class AccountPage implements OnInit {
   loading = false;
   submitted = false;
   error = false;
+
+  public accountLogin: AccountLogin;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -40,8 +43,16 @@ export class AccountPage implements OnInit {
       return;
     }
 
+    // console.log(this.f.email.value);
+
+
+    this.accountLogin = {
+      email: this.f.email.value,
+      password: this.f.password.value
+    }
+
     this.loading = true;
-    this.accountService.login(this.f.email.value, this.f.password.value)
+    this.accountService.login(this.accountLogin)
     .pipe(first())
     .subscribe({
         next: () => {

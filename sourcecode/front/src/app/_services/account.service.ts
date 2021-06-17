@@ -7,7 +7,7 @@ import { map, finalize } from 'rxjs/operators';
 import { environment } from '@environments/environment';
 import { Account } from '@app/_models';
 
-const baseUrl = `${environment.apiUrl}/accounts`;
+const baseUrl = `${environment.apiUrl}/Accounts`;
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
@@ -23,13 +23,18 @@ export class AccountService {
     }
 
     public get accountValue(): Account {
+        console.log(this.accountSubject.value);
+
         return this.accountSubject.value;
     }
 
-    login(email: string, password: string) {
-        return this.http.post<any>(`${baseUrl}/authenticate`, { email, password }, { withCredentials: true })
+    login(model) {
+        return this.http.post<any>(`${baseUrl}/authenticate`, model, { withCredentials: true })
             .pipe(map(account => {
+                // console.log(account);
+
                 this.accountSubject.next(account);
+                // console.log(this.accountSubject);
                 this.startRefreshTokenTimer();
                 return account;
             }));
@@ -67,15 +72,15 @@ export class AccountService {
     verifyEmail(token: string) {
         return this.http.post(`${baseUrl}/verify-email`, { token });
     }
-    
+
     forgotPassword(email: string) {
         return this.http.post(`${baseUrl}/forgot-password`, { email });
     }
-    
+
     validateResetToken(token: string) {
         return this.http.post(`${baseUrl}/validate-reset-token`, { token });
     }
-    
+
     resetPassword(token: string, password: string, confirmPassword: string) {
         return this.http.post(`${baseUrl}/reset-password`, { token, password, confirmPassword });
     }
@@ -88,11 +93,11 @@ export class AccountService {
         return this.http.get<Account>(`${baseUrl}/${id}`);
     }
 
-    
+
     create(params) {
         return this.http.post(baseUrl, params);
     }
-    
+
     update(id, params) {
         return this.http.put(`${baseUrl}/${id}`, params)
             .pipe(map((account: any) => {
@@ -105,7 +110,7 @@ export class AccountService {
                 return account;
             }));
     }
-    
+
     delete(id: number) {
         return this.http.delete(`${baseUrl}/${id}`)
             .pipe(finalize(() => {

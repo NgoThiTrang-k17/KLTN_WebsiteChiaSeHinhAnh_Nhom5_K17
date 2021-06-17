@@ -5,23 +5,24 @@ import { first } from 'rxjs/operators';
 import { SocialAuthService, FacebookLoginProvider, GoogleLoginProvider } from 'angularx-social-login';
 
 import { AccountService, AlertService } from '@app/_services';
-import { SocialUsers,  AccountLoginGoogle} from '@app/_models';
+import { SocialUsers,  AccountLoginGoogle, AccountLogin} from '@app/_models';
 
 @Component({ templateUrl: 'login.component.html' })
 export class LoginComponent implements OnInit {
     form: FormGroup;
     loading = false;
     submitted = false;
-    response;  
+    response;
     public accountLoginGoogle: AccountLoginGoogle;
-    socialusers=new SocialUsers(); 
+    public model: AccountLogin;
+    socialusers=new SocialUsers();
 
     constructor(
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
         private accountService: AccountService,
-        private alertService: AlertService, 
+        private alertService: AlertService,
         private authService: SocialAuthService,
         public OAuth: SocialAuthService,
     ) { }
@@ -47,8 +48,19 @@ export class LoginComponent implements OnInit {
             return;
         }
 
+        console.log(this.f.email.value);
+
+
+        this.model = {
+          email: this.f.email.value,
+          password: this.f.password.value
+        }
+
+        console.log(this.model);
+
+
         this.loading = true;
-        this.accountService.login(this.f.email.value, this.f.password.value)
+        this.accountService.login(this.model)
             .pipe(first())
             .subscribe({
                 next: () => {
@@ -66,11 +78,11 @@ export class LoginComponent implements OnInit {
     signInWithGoogle(): void {
         this.loading = true;
         this.authService.signIn(GoogleLoginProvider.PROVIDER_ID);
-        this.OAuth.signIn(GoogleLoginProvider.PROVIDER_ID).then(socialusers => {   
+        this.OAuth.signIn(GoogleLoginProvider.PROVIDER_ID).then(socialusers => {
             console.log(socialusers.idToken);
             this.accountLoginGoogle = {
                 idToken: socialusers.idToken,
-            }   
+            }
             this.accountService.loginGoogle(this.accountLoginGoogle)
             .pipe(first())
             .subscribe({
@@ -83,19 +95,19 @@ export class LoginComponent implements OnInit {
                     this.alertService.error(error);
                     this.loading = false;
                 }
-            });   
+            });
         });
-        
+
     }
-    
+
     signInWithFB(): void {
         this.authService.signIn(FacebookLoginProvider.PROVIDER_ID);
-        this.OAuth.signIn(FacebookLoginProvider.PROVIDER_ID).then(socialusers => {   
-            console.log(socialusers);  
-      
+        this.OAuth.signIn(FacebookLoginProvider.PROVIDER_ID).then(socialusers => {
+            console.log(socialusers);
+
         });
     }
-    
+
     signOut(): void {
         this.authService.signOut();
     }

@@ -3,10 +3,12 @@ import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TimeagoModule } from 'ngx-timeago';
 import { Tab2Page } from './tab2.page';
 import { ExploreContainerComponentModule } from '../explore-container/explore-container.module';
 
 import { Tab2PageRoutingModule } from './tab2-routing.module';
+import { ChatPage } from './chat/chat.page';
 
 @NgModule({
   imports: [
@@ -14,8 +16,15 @@ import { Tab2PageRoutingModule } from './tab2-routing.module';
     CommonModule,
     FormsModule,
     ExploreContainerComponentModule,
-    Tab2PageRoutingModule
+    Tab2PageRoutingModule,
+    TimeagoModule.forRoot(),
   ],
-  declarations: [Tab2Page]
+  exports: [
+    TimeagoModule
+  ],
+  declarations: [
+    Tab2Page,
+    ChatPage
+  ]
 })
 export class Tab2PageModule {}

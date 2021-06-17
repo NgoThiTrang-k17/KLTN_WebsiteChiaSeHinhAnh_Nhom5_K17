@@ -195,7 +195,7 @@ namespace WebApi.Services
             if (account != null)
             {
                 // send already registered error in email to prevent account enumeration
-                sendAlreadyRegisteredEmail(model.Email, origin);
+                //sendAlreadyRegisteredEmail(model.Email, origin);
                 return null;
             }
 
@@ -232,7 +232,7 @@ namespace WebApi.Services
                 await _userManager.AddToRoleAsync(account, "Admin");
             } else await _userManager.AddToRoleAsync(account, "Member");
             // send email
-            sendVerificationEmail(account, origin);
+            //sendVerificationEmail(account, origin);
             return account;
         }
 
