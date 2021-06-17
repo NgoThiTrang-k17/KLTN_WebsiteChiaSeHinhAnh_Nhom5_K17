@@ -25,7 +25,7 @@ namespace WebApi.Services
         Task<Group> GetGroupForConnection(string connectionId);
         Message AddMessage(CreateChatMessageRequest model);
         Task<Message> GetMessage(int id);
-        Task<PagedList<MessageResponse>> GetMessagesForUser(MessageParams messageParams);
+        Task<IEnumerable<MessageResponse>> GetMessagesForUser(MessageParams messageParams);
         Task<IEnumerable<MessageResponse>> GetMessageThread(int currentUserId, int recipientId);
         Task<bool> SaveAllAsync();
     }
@@ -115,38 +115,38 @@ namespace WebApi.Services
         }
 
 
-        public async Task<PagedList<MessageResponse>> GetMessagesForUser(MessageParams messageParams)
+        public async Task<IEnumerable<MessageResponse>> GetMessagesForUser(MessageParams messageParams)
         {
-            var query = _context.Messages
-                .OrderByDescending(m => m.Created)
-                .AsQueryable();
-            query = messageParams.Container switch
-            {
-                "Inbox" => query
-                .Where(u => u.RecipientId == messageParams.CurrentUserId && !u.RecipientDeleted),
-                "Outbox" => query
-                .Where(u => u.SenderId == messageParams.CurrentUserId && !u.SenderDeleted),
-                _ => query
-                .Where(u => u.RecipientId == messageParams.CurrentUserId && !u.RecipientDeleted && u.Read == null)
-            };
-            var messages = _mapper.ProjectTo<MessageResponse>(query)
-                .Include(m => m.SenderName)
-                .Include(m => m.SenderAvatarPath)
-                .Include(m => m.RecipientName)
-                .Include(m => m.RecipientAvatarPath);
+             
+            var query = await _context.Messages.Where(m=>m.SenderId == messageParams.CurrentUserId || m.RecipientId==messageParams.CurrentUserId).OrderBy(m=>m.Created).Distinct().ToListAsync();
+            var messages = _mapper.Map<IEnumerable<MessageResponse>>(query);
+
+            List<MessageResponse> response = new List<MessageResponse>();
             foreach (var message in messages)
             {
-                var sender = _accountService.getAccount(message.SenderId);
-                var recipient = _accountService.getAccount(message.RecipientId);
-                if (sender != null && recipient != null)
+                if (!(response.Any(m => m.SenderId == message.RecipientId && m.RecipientId == message.SenderId)))
                 {
-                    message.SenderName = sender.Name;
-                    message.SenderAvatarPath = sender.AvatarPath;
-                    message.RecipientName = recipient.Name;
-                    message.RecipientAvatarPath = recipient.AvatarPath;
+                    if (!(response.Any(m => m.SenderId == message.SenderId && m.RecipientId == message.RecipientId))) 
+                    { 
+                        var sender = _accountService.getAccount(message.SenderId);
+                    var recipient = _accountService.getAccount(message.RecipientId);
+                    if (sender != null && recipient != null)
+                    {
+                        message.SenderName = sender.Name;
+                        message.SenderAvatarPath = sender.AvatarPath;
+                        message.RecipientName = recipient.Name;
+                        message.RecipientAvatarPath = recipient.AvatarPath;
+
+                    }
+                    response.Add(message);
+                    }
                 }
+                
             }
-            return await PagedList<MessageResponse>.CreateAsync(messages, messageParams.PageNumber, messageParams.PageSize);
+            
+            //return await PagedList<MessageResponse>.CreateAsync(messages, messageParams.PageNumber, messageParams.PageSize);
+            return response;
+;
         }
 
         public async Task<IEnumerable<MessageResponse>> GetMessageThread(int currentUserId, int recipientId)

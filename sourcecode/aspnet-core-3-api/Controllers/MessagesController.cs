@@ -79,11 +79,11 @@ namespace WebApi.Controllers
         public async Task<ActionResult<IEnumerable<MessageResponse>>> GetMessagesForUser([FromQuery] MessageParams messageParams)
         {
             messageParams.CurrentUserId = User.GetUserId();
-            var messages = await _messageService.GetMessagesForUser(messageParams);
 
-            Response.AddPaginationHeader(messages.CurrentPage, messages.PageSize, messages.TotalCount, messages.TotalPages);
 
-            return messages;
+            //Response.AddPaginationHeader(messages.CurrentPage, messages.PageSize, messages.TotalCount, messages.TotalPages);
+
+            return Ok(await _messageService.GetMessagesForUser(messageParams));
         }
 
         [HttpGet("thread/{userId:int}")]
