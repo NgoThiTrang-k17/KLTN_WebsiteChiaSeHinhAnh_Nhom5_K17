@@ -153,7 +153,10 @@ export class DetailPostPage implements OnInit {
   async openComment() {
     const modal = await this.modalController.create({
       component: CommentPage,
-      cssClass: 'my-custom-class'
+      cssClass: 'my-custom-class',
+      componentProps: {
+        "postId": this.post.id
+      }
     });
     return await modal.present();
   }

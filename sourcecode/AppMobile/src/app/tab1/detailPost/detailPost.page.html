@@ -27,16 +27,20 @@
         </div>
       </div>
       <ion-row class="action">
+        <!-- Tim -->
         <ion-col>
           <ion-icon class="icon-action" *ngIf="post.isReactedByThisUser==false" (click)="onCreateReaction(post.id)" name="heart-outline"></ion-icon>
           <ion-icon class="icon-action" *ngIf="post.isReactedByThisUser==true && post.reactionCount!=0" (click)="unReaction(post.id)" name="heart" style="color: rgba(255, 0, 0, 0.788);"></ion-icon>
         </ion-col>
+        <!-- Nhận xét -->
         <ion-col>
           <ion-icon (click)="openComment()" class="icon-action" name="chatbox-outline"></ion-icon>
         </ion-col>
+        <!-- Chia sẻ -->
         <ion-col>
           <ion-icon class="icon-action" name="share-social-outline"></ion-icon>
         </ion-col>
+        <!-- Tải xuống -->
         <ion-col>
           <a style="color: #747474;" href="post.path" download="{{post.title}}.jpg">
             <span>
@@ -44,6 +48,7 @@
             </span>
           </a>
         </ion-col>
+        <!-- Xoá -->
         <ion-col *ngIf="post.ownerId==maccount.id">
           <ion-icon (click)="deletePost(post.id)" class="icon-action" name="trash-outline"></ion-icon>
         </ion-col>

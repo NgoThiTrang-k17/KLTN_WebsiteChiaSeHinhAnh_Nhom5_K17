@@ -7,3 +7,4 @@ export * from './follow.service';
 export * from './reaction.service';
 export * from './presence.service';
 export * from './message.service';
+export * from './comment.service';

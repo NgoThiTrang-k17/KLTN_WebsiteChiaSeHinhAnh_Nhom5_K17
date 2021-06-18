@@ -32,13 +32,13 @@ export class PresenceService {
     .catch(error=> console.log(error));
 
     this.hubConnection.on('UserIsOnline', userId=>{
-      alert(userId+"Onlline!");
+      // alert(userId+"Onlline!");
        this.onlineUsers$.pipe(take(1)).subscribe(userIds=>{
          this.onlineUsersSource.next([...userIds, userId])
        })
     })
     this.hubConnection.on('UserIsOffline', userId =>{
-      alert(userId+"Offline!");
+      // alert(userId+"Offline!");
       this.onlineUsers$.pipe(take(1)).subscribe(userIds=>{
         this.onlineUsersSource.next([...userIds.filter(x=> x!= userId)])
       })

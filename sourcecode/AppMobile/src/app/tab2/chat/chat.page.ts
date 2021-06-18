@@ -45,7 +45,7 @@ export class ChatPage implements OnInit {
       this.account = res;
     })
 
-    this.loadMessages(this.accountId);
+    // this.loadMessages(this.accountId);
     this.messageService.messageThread$
     .pipe()
     .subscribe( messages=>{
