@@ -13,7 +13,7 @@ namespace WebApi.Extensions
             services.AddSingleton<PresenceTracker>();
             // configure DI for application services
             services.AddScoped<IReportService, ReportService>();
-            services.AddScoped<ISuggestionService, ISuggestionService>();
+            services.AddScoped<ISuggestionService, SuggestionService>();
             services.AddScoped<IMessageService, MessageService>();
             services.AddScoped<IReactionService, ReactionService>();
             services.AddScoped<IFollowService, FollowService>();
