@@ -17,6 +17,9 @@ export class MessageService {
   private messageThreadSource = new BehaviorSubject<Message[]>([]);
   messageThread$ = this.messageThreadSource.asObservable();
 
+  message: BehaviorSubject<Message> = new BehaviorSubject<Message>(null);
+  messageFinal$ = this.message.asObservable();
+
   constructor(private http:HttpClient) { }
 
   createHubConnection(user :Account, otherUserId : number){

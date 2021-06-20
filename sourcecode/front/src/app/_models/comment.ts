@@ -5,9 +5,11 @@ export class Comment {
     parrentId: number;
     isParent: boolean;
     isChild: boolean;
+    childCount: number;
+    reactionCount: number;
     ownerId: number;
     ownerName: string;
     ownerAvatar: string;
-    IsReactedByThisUser: boolean;
+    isReactedByThisUser: boolean;
     postId: number;
 }

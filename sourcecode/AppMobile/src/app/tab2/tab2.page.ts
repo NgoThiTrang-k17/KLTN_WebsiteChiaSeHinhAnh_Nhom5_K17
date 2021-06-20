@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { Router } from "@angular/router";
 
 import { ChatPage } from './chat/chat.page';
 import { Account, Message } from '../_models';
@@ -25,7 +26,10 @@ export class Tab2Page implements OnInit{
     public accountService: AccountService,
     private searchService: SearchService,
     private messageService: MessageService,
-  ) {}
+    private router : Router,
+  ) {
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+  }
 
   ngOnInit() {
     this.search = false;
@@ -37,6 +41,8 @@ export class Tab2Page implements OnInit{
   }
 
   async openModalChat(id: number) {
+    console.log(id);
+
 
     const modal = await this.modalController.create({
       component: ChatPage,
@@ -45,6 +51,14 @@ export class Tab2Page implements OnInit{
         "accountId": id
       }
     });
+
+    modal.onDidDismiss().then(()=>{
+      this.messageService.getMessages()
+      .subscribe(res => {
+        this.messages = res as Message[];
+      });
+    });
+
     return await modal.present();
   }
 

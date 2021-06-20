@@ -26,6 +26,7 @@ ion-title{
 ion-avatar{
   width: 50px;
   height: 50px;
+  position: relative;
 }
 
 ion-row{
@@ -46,5 +47,8 @@ ion-row{
 }
 
 .is-online{
-  color: blue;
+  color: rgb(2, 168, 2);
+  position: absolute;
+  right: 10px;
+  bottom: 5px;
 }
