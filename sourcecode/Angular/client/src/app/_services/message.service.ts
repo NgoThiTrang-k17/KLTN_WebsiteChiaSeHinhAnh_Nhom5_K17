@@ -17,7 +17,9 @@ export class MessageService {
   hubUrl = environment.hubUrl;
   private hubConnection: HubConnection;
   private messageThreadSource = new BehaviorSubject<Message[]>([]);
+  private messageSource = new BehaviorSubject<Message[]>([]);
   messageThread$ = this.messageThreadSource.asObservable();
+  messages$ = this.messageSource.asObservable();
 
   constructor(private http:HttpClient) { }
 
@@ -62,11 +64,11 @@ export class MessageService {
     }
   }
 
-  getMessages(pageNumber, pageSize, container){
-    let params = getPaginationHeaders(pageNumber,pageSize);
-    params = params.append('Container', container);
-    console.log(params);
-    return getPaginatedResult<Message[]>(this.baseUrl + 'Messages', params, this.http)
+  getMessages( ){
+    //let params = getPaginationHeaders(pageNumber,pageSize);
+    // params = params.append('Container', container);
+    //console.log(params);
+    return this.http.get<Message[]>(this.baseUrl + 'Messages');
   }
 
   getMessageThread(userId: number){

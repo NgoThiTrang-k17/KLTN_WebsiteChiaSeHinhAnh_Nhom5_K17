@@ -14,23 +14,20 @@ namespace WebApi.Services
 {
     public interface ITokenService
     {
-        Task<string> generateJwtToken(AppUser account);
+        string generateJwtToken(User account);
         
     }
     public class TokenService : ITokenService
     { 
         private readonly SymmetricSecurityKey _key;
 
-        private readonly UserManager<AppUser> _userManager;
 
-        public TokenService(IConfiguration configuration, UserManager<AppUser> userManager)
+        public TokenService(IConfiguration configuration)
         {
-
-            _userManager = userManager;
             _key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configuration["Secret"]));
         }
 
-        public async Task<string> generateJwtToken(AppUser account)
+        public string generateJwtToken(User account)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
 
@@ -39,9 +36,9 @@ namespace WebApi.Services
                 new Claim(JwtRegisteredClaimNames.NameId, account.Id.ToString()),
                 
             };
-            var roles = await _userManager.GetRolesAsync(account);
+            //var roles = await _userManager.GetRolesAsync(account);
 
-            claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+            //claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
             var creds = new SigningCredentials( _key, SecurityAlgorithms.HmacSha256Signature);
 

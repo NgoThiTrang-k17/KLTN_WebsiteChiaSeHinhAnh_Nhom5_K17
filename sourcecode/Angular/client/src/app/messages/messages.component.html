@@ -8,22 +8,6 @@
     >
       <em class="fa fa-envelope"></em>Unread
     </button>
-    <button
-      class="btn btn-primary"
-      btnRadio="Inbox"
-      [(ngModel)]="container"
-      (click)="loadMessage()"
-    >
-      <em class="fa fa-envelope-open"></em>Inbox
-    </button>
-    <button
-      class="btn btn-primary"
-      btnRadio="OutBox"
-      [(ngModel)]="container"
-      (click)="loadMessage()"
-    >
-      <em class="fa fa-paper-plane"></em>Outbox
-    </button>
   </div>
 </div>
 <div class="row" *ngIf="messages?.length === 0">
@@ -71,7 +55,7 @@
     </tr>
   </table>
 </div>
-<div class="d-flex justify-content-center" *ngIf="pagination && !loading">
+<!-- <div class="d-flex justify-content-center" *ngIf="pagination && !loading">
     <pagination
       [boundaryLinks]="true"
       [totalItems]="pagination.totalItems"
@@ -83,4 +67,4 @@
       firstText="&lsaquo;"
       lastText="&lsaquo;"
     ></pagination>
-  </div>
+  </div> -->

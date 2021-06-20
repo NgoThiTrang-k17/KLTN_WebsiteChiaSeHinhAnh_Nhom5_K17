@@ -27,7 +27,7 @@ namespace WebApi.Models.Accounts
             set => _name = replaceEmptyWithNull(value);
         }
 
-        [EnumDataType(typeof(RoleList))]
+        [EnumDataType(typeof(UserRole))]
         public string Role
         {
             get => _role;

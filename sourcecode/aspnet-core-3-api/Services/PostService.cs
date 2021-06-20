@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using WebApi.Entities;
 using WebApi.Helpers;
+using WebApi.Hubs;
 using WebApi.Models.Follows;
 using WebApi.Models.Notifications;
 using WebApi.Models.Posts;
@@ -14,7 +16,7 @@ namespace WebApi.Services
     public interface IPostService
     {
         PostResponse GetById(int postId);
-        PostResponse Create(CreatePostRequest model);
+        PostResponse CreatePost(CreatePostRequest model);
         PostResponse UpdatePost(int id, UpdatePostRequest model);
         void Share(int id);
         void DeletePost(int id);
@@ -26,24 +28,33 @@ namespace WebApi.Services
         private readonly DataContext _context;
         private readonly IMapper _mapper;
         private readonly IAccountService _accountService;
-        private readonly INotificationService _notificationService;
         private readonly IFollowService _followService;
+        private readonly ISuggestionService _suggestionService;
+        private readonly INotificationService _notificationService;
+        private readonly IHubContext<NotificationHub> _notificationHubContext;
+        private readonly PresenceTracker _tracker;
         public PostService(
             DataContext context,
             IMapper mapper,
             IAccountService accountService,
+            IFollowService followService,
+            ISuggestionService suggestionService,
             INotificationService notificationService,
-            IFollowService followService)
+            IHubContext<NotificationHub> notificationHubContext,
+            PresenceTracker tracker
+            )
         {
             _context = context;
             _mapper = mapper;
             _accountService = accountService;
             _notificationService = notificationService;
             _followService = followService;
-
+            _suggestionService = suggestionService;
+            _notificationHubContext = notificationHubContext;
+            _tracker = tracker;
         }
         //Create
-        public PostResponse Create(CreatePostRequest model)
+        public PostResponse CreatePost(CreatePostRequest model)
         {
             var post = _mapper.Map<Post>(model);
             _context.Posts.Add(post);
@@ -73,6 +84,7 @@ namespace WebApi.Services
             _context.SaveChanges();
         }
 
+        //Share
         public void Share(int id)
         {
            
@@ -149,7 +161,7 @@ namespace WebApi.Services
         }
 
         //Create Notification for posting
-        private void SendNotification(Post post)
+        private async void SendNotification(Post post)
         {
             var follows = _followService.GetBySubjectId(post.OwnerId);
             //Create notification for each follower of Post owner
@@ -165,8 +177,15 @@ namespace WebApi.Services
                     Created = DateTime.Now,
                     Status = Status.Created
                 };
-                _notificationService.SendNotification(notification);
+                _notificationService.CreateNotification(notification);
+                var connections = await _tracker.GetConnectionForUser(notification.ReiceiverId);
+                if (connections != null)
+                {
+                    await _notificationHubContext.Clients.Clients(connections).SendAsync("NewNotification", notification);
+                }
+
             }
+
         }
 
         private (int, int) GetPostInfor(int id)

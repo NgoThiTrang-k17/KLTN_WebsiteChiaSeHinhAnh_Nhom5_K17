@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using WebApi.Entities;
 using WebApi.Helpers;
+using WebApi.Hubs;
 using WebApi.Models.Comments;
 using WebApi.Models.Notifications;
 
@@ -30,17 +30,24 @@ namespace WebApi.Services
         private readonly IAccountService _accountService;
         private readonly IPostService _postService;
         private readonly INotificationService _notificationService;
+        private readonly IHubContext<NotificationHub> _notificationHubContext;
+        private readonly PresenceTracker _tracker;
+
         public CommentService(DataContext context,
             IMapper mapper,
             IAccountService accountService,
             IPostService postService,
-            INotificationService notificationService)
+            INotificationService notificationService,
+            IHubContext<NotificationHub> notificationHubContext,
+            PresenceTracker tracker)
         {
             _context = context;
             _mapper = mapper;
             _accountService = accountService;
             _postService = postService;
             _notificationService = notificationService;
+            _notificationHubContext = notificationHubContext;
+            _tracker = tracker;
         }
 
         //Create
@@ -149,7 +156,7 @@ namespace WebApi.Services
             return (childcount, reactioncount);
         }
 
-        private void SendNotification(int commentOwnerId,Post model)
+        private async void SendNotification(int commentOwnerId,Post model)
         {
             var notification = new CreateNotificationRequest
             {
@@ -160,7 +167,12 @@ namespace WebApi.Services
                 Created = DateTime.Now,
                 Status = Status.Created
             };
-            _notificationService.SendNotification(notification);
+            _notificationService.CreateNotification(notification);
+            var connections = await _tracker.GetConnectionForUser(notification.ReiceiverId);
+            if (connections != null)
+            {
+                await _notificationHubContext.Clients.Clients(connections).SendAsync("NewNotification", notification);
+            }
         }
     }
 }

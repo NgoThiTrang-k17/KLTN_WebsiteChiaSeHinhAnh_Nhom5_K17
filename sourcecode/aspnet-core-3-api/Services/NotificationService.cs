@@ -11,7 +11,7 @@ namespace WebApi.Services
 {
     public interface INotificationService
     {
-        NotificationResponse SendNotification(CreateNotificationRequest model);
+        NotificationResponse CreateNotification(CreateNotificationRequest model);
         NotificationResponse UpdateNotification(int id, UpdateNotificationRequest model);
         NotificationResponse UpdateNotificationStatus(int id, Status status);
         void DeleteNotification(int id);
@@ -38,7 +38,7 @@ namespace WebApi.Services
         }
 
         //Create
-        public NotificationResponse SendNotification(CreateNotificationRequest model)
+        public NotificationResponse CreateNotification(CreateNotificationRequest model)
         {
             var notification = _mapper.Map<Notification>(model);
             if (notification == null) throw new AppException("Create Notification failed");

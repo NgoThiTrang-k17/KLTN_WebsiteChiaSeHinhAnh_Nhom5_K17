@@ -118,32 +118,33 @@ namespace WebApi.Services
         public async Task<IEnumerable<MessageResponse>> GetMessagesForUser(MessageParams messageParams)
         {
              
-            var query = await _context.Messages.Where(m=>m.SenderId == messageParams.CurrentUserId || m.RecipientId==messageParams.CurrentUserId).OrderBy(m=>m.Created).Distinct().ToListAsync();
+            var query = await _context.Messages.Where(m=>m.SenderId == messageParams.CurrentUserId || m.RecipientId == messageParams.CurrentUserId).OrderByDescending(m=>m.Created).ToListAsync();
             var messages = _mapper.Map<IEnumerable<MessageResponse>>(query);
 
             List<MessageResponse> response = new List<MessageResponse>();
             foreach (var message in messages)
             {
-                if (!(response.Any(m => m.SenderId == message.RecipientId && m.RecipientId == message.SenderId)))
+                if (!response.Any(m => (m.SenderId == message.SenderId && m.RecipientId == message.RecipientId)))
                 {
-                    if (!(response.Any(m => m.SenderId == message.SenderId && m.RecipientId == message.RecipientId))) 
-                    { 
-                        var sender = _accountService.getAccount(message.SenderId);
-                    var recipient = _accountService.getAccount(message.RecipientId);
-                    if (sender != null && recipient != null)
+                    if (!response.Any(m => (m.SenderId == message.RecipientId && m.RecipientId == message.SenderId)))
                     {
-                        message.SenderName = sender.Name;
-                        message.SenderAvatarPath = sender.AvatarPath;
-                        message.RecipientName = recipient.Name;
-                        message.RecipientAvatarPath = recipient.AvatarPath;
 
-                    }
-                    response.Add(message);
+                        var sender = _accountService.getAccount(message.SenderId);
+                        var recipient = _accountService.getAccount(message.RecipientId);
+                        if (sender != null && recipient != null)
+                        {
+                            message.SenderName = sender.Name;
+                            message.SenderAvatarPath = sender.AvatarPath;
+                            message.RecipientName = recipient.Name;
+                            message.RecipientAvatarPath = recipient.AvatarPath;
+
+                        }
+                        response.Add(message);
+                    
                     }
                 }
-                
+
             }
-            
             //return await PagedList<MessageResponse>.CreateAsync(messages, messageParams.PageNumber, messageParams.PageSize);
             return response;
 ;

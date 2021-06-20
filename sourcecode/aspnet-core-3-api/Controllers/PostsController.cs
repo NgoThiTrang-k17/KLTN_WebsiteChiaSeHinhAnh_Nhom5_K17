@@ -60,8 +60,8 @@ namespace WebApi.Controllers
             return Ok(posts);
         }
 
-        [HttpGet("ImageTags")]
-        public IActionResult GetImageTags(string imageUrl)
+        
+        public string GetImageTags(string imageUrl)
         {
             //Hosted web API REST Service base url  
 
@@ -81,16 +81,39 @@ namespace WebApi.Controllers
             request.AddHeader("Authorization", String.Format("Basic {0}", basicAuthValue));
 
             IRestResponse response = client.Execute(request);
-            
-            return Ok(response.Content);
+            CategorizerResult myDeserializedClass = JsonConvert.DeserializeObject<CategorizerResult>(response.Content);
+            var a = new List<string>();
+            foreach (var tag in myDeserializedClass.Result.Tags)
+            {
+                a.Add(tag.Tag.En);
+            }
+            var categories = String.Join('-', a);
+            return categories;
         }
 
         [HttpGet("Tags")]
-        public IActionResult GetTags(string response)
+        public IActionResult GetTags(string imageUrl)
         {
-            CategorizerResult myDeserializedClass = JsonConvert.DeserializeObject<CategorizerResult>(response);
+            //Hosted web API REST Service base url  
+
+            string apiKey = "acc_0f6c245c9850af0";
+            string apiSecret = "8e6427e8172eee4a8a6c260c6f71e32a";
+
+            string basicAuthValue = System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(String.Format("{0}:{1}", apiKey, apiSecret)));
+
+            var client = new RestClient("https://api.imagga.com/v2/tags");
+            client.Timeout = -1;
+
+            var request = new RestRequest(Method.GET);
+            request.AddParameter("image_url", imageUrl);
+            //request.AddParameter("limit", 10);
+            request.AddParameter("threshold", 30.0);
+            request.AddHeader("Authorization", String.Format("Basic {0}", basicAuthValue));
+            IRestResponse response = client.Execute(request);
+
+            CategorizerResult myDeserializedClass = JsonConvert.DeserializeObject<CategorizerResult>(response.Content);
             var a = new List<string>();
-            foreach( var tag in myDeserializedClass.Result.Tags)
+            foreach (var tag in myDeserializedClass.Result.Tags)
             {
                 a.Add(tag.Tag.En);
             }
@@ -106,6 +129,7 @@ namespace WebApi.Controllers
             _postService.Share(id);
             return Ok(new { message = "Post shared"});
         }
+
         //[HttpGet("DownloadImage/{id:int}")]
         //public IActionResult DownloadImage(int id)
         //{
@@ -122,33 +146,11 @@ namespace WebApi.Controllers
         public IActionResult Create([FromForm] CreatePostRequest model)
         {
             try
-            {
-                //var file = Request.Form.Files[0];
-                //var folderName = Path.Combine("Resources", "Images");
-                //var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
-
-                //if (file.Length > 0)
-                //{
-                //var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-                //var fileName = string.Format(@"{0}.jpg", Guid.NewGuid());
-                //var fullPath = Path.Combine(pathToSave, fileName);
-                //var dbPath = Path.Combine(folderName, fileName);
-
-                //using (var stream = new FileStream(fullPath, FileMode.Create))
-                //{
-                //    file.CopyTo(stream);
-                //}
-                //var model = new CreatePostRequest
-                //{
-                //    Title = post.Title,
-                //    Created = DateTime.Now,
-                //    //ImageName = fileName,
-                //    Path = dbPath,
-                //    OwnerId = Account.Id,
-                //};
+            { 
                 model.Created = DateTime.Now;
                 model.OwnerId = Account.Id;
-                var post = _postService.Create(model);
+                model.Categories = GetImageTags(model.Path);
+                var post = _postService.CreatePost(model);
                 return Ok(post);
                 //}
                 //else

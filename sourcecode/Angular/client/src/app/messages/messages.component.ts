@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { map, take } from 'rxjs/operators';
 import { Message } from '../_models/message';
 import { Pagination } from '../_models/pagination';
+import { User } from '../_models/user';
+import { AccountService } from '../_services/account.service';
 import { MessageService } from '../_services/message.service';
 
 @Component({
@@ -16,7 +19,12 @@ export class MessagesComponent implements OnInit {
   pageSize = 5;
   loading = false;
 
-  constructor(private messageService: MessageService) { }
+  currentUser : User;
+
+  constructor(private messageService: MessageService,private accountService: AccountService) 
+  { 
+    this.accountService.currentUser$.pipe(take(1)).subscribe(user => this.currentUser = user)
+  }
 
   ngOnInit(): void {
     this.loadMessage();
@@ -24,10 +32,10 @@ export class MessagesComponent implements OnInit {
 
   loadMessage(){
     this.loading =true;
-    this.messageService.getMessages(this.pageNumber, this.pageSize, this.container).subscribe(response=>{
-      this.messages = response.result;
-      this.pagination = response.pagination;
-      console.log(this.messages);
+    this.messageService.getMessages().subscribe(messages=>{
+      console.log(messages);
+      
+      this.messages = messages;
       this.loading = false;
     })
   }

@@ -20,10 +20,9 @@ export class AccountService {
   constructor(  private http: HttpClient, private presenceService: PresenceService) {}
 
   login(model: any) {
-    console.log(model);
-    return this.http.post(this.baseUrl+'authenticate',  model).pipe(
+    return this.http.post<any>(this.baseUrl+'authenticate',  model, { withCredentials: true }).pipe(
       map((response: User)=>{
-        console.log(response);
+        console.log(this.http.head);
       
         const user = response;
         if(user){

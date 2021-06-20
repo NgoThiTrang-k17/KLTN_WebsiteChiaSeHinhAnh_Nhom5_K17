@@ -10,7 +10,7 @@ namespace WebApi.Controllers
     public abstract class BaseController : ControllerBase
     {
         // returns the current authenticated account (null if not logged in)
-        public AppUser Account => (AppUser)HttpContext.Items["Account"];
+        public User Account => (User)HttpContext.Items["Account"];
 
         
     }

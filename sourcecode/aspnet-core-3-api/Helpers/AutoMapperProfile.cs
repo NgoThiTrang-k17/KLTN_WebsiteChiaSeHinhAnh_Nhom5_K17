@@ -8,6 +8,7 @@ using WebApi.Models.Follows;
 using WebApi.Models.Notifications;
 using WebApi.Models.Posts;
 using WebApi.Models.Reactions;
+using WebApi.Models.Reports;
 
 namespace WebApi.Helpers
 {
@@ -16,6 +17,12 @@ namespace WebApi.Helpers
         // mappings between model and entity objects <source,des>
         public AutoMapperProfile()
         {
+            //Report
+            CreateMap<CreateReportRequest, Report>();
+
+            CreateMap<UpdateReportRequest, Report>();
+
+            CreateMap<Report, ReportResponse>();
 
             //CreateMap<DateTime, DateTime>().ConvertUsing(d => DateTime.SpecifyKind(d, DateTimeKind.Utc));
             //Follow
@@ -61,17 +68,17 @@ namespace WebApi.Helpers
 
             CreateMap<UpdateCommentRequest, Comment>();
             //Account
-            CreateMap<AppUser, AccountResponse>();
+            CreateMap<User, AccountResponse>();
 
-            CreateMap<AccountResponse, AppUser>();
+            CreateMap<AccountResponse, User>();
 
-            CreateMap<AppUser, AuthenticateResponse>();
+            CreateMap<User, AuthenticateResponse>();
 
-            CreateMap<RegisterRequest, AppUser>();
+            CreateMap<RegisterRequest, User>();
 
-            CreateMap<CreateAccountRequest, AppUser>();
+            CreateMap<CreateAccountRequest, User>();
 
-            CreateMap<UpdateAccountRequest, AppUser>()
+            CreateMap<UpdateAccountRequest, User>()
                 .ForAllMembers(x => x.Condition(
                     (src, dest, prop) =>
                     {

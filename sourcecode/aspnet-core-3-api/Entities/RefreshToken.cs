@@ -9,7 +9,7 @@ namespace WebApi.Entities
     {
         [Key]
         public int Id { get; set; }
-        public AppUser User { get; set; }
+        public User User { get; set; }
         public string Token { get; set; }
         public DateTime Expires { get; set; }
         public bool IsExpired => DateTime.Now >= Expires;

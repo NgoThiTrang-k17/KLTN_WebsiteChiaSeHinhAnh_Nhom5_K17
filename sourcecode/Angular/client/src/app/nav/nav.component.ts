@@ -42,7 +42,8 @@ export class NavComponent implements OnInit {
 
   login(){
     this.accountService.login(this.model).subscribe(response => {
-      console.log(response);
+
+       
       this.router.navigateByUrl('/members');
       },error =>{
       console.log(error);
@@ -52,6 +53,16 @@ export class NavComponent implements OnInit {
 
   signInWithGoogle(){
     this.authService.signIn(GoogleLoginProvider.PROVIDER_ID).then((x: any) => console.log(x));
+  }
+  refresh(){
+      this.http.post('https://localhost:5001/Accounts/refresh-token',{},{ withCredentials: true }).subscribe(response => {
+        console.log(document.cookie.toString());
+         
+        this.router.navigateByUrl('/');
+        },error =>{
+        console.log(error);
+        this.toastr.error(error.error);
+      })
   }
   logout(){
     this.accountService.logout();

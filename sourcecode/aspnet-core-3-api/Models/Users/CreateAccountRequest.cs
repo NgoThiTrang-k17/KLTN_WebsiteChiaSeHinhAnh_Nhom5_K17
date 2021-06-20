@@ -12,7 +12,7 @@ namespace WebApi.Models.Accounts
         public string Name { get; set; }
 
         [Required]
-        [EnumDataType(typeof(RoleList))]
+        [EnumDataType(typeof(UserRole))]
         public string Role { get; set; }
 
         [Required]

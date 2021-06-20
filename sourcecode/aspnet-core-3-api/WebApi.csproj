@@ -10,6 +10,12 @@
     <Compile Remove="Migrations\20210608073647_Identity.Designer.cs" />
     <Compile Remove="Migrations\20210608074245_Identity.cs" />
     <Compile Remove="Migrations\20210608074245_Identity.Designer.cs" />
+    <Compile Remove="Migrations\20210608074812_Identity.cs" />
+    <Compile Remove="Migrations\20210608074812_Identity.Designer.cs" />
+    <Compile Remove="Migrations\20210610044939_group.cs" />
+    <Compile Remove="Migrations\20210610044939_group.Designer.cs" />
+    <Compile Remove="Migrations\20210616093047_removeIdentity.cs" />
+    <Compile Remove="Migrations\20210616093047_removeIdentity.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,16 +25,16 @@
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.0" />
     <PackageReference Include="Google.Apis.Auth" Version="1.51.0" />
     <PackageReference Include="MailKit" Version="2.8.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="3.1.15" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.15" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.15" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.15">
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="3.1.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.10">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.10" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.15" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.15">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.10">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -39,6 +45,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Migrations\" />
     <Folder Include="Models\Accounts\" />
   </ItemGroup>
 </Project>

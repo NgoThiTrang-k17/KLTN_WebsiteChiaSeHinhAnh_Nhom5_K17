@@ -9,16 +9,16 @@ using WebApi.Entities;
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class AuthorizeAttribute : Attribute, IAuthorizationFilter
 {
-    private readonly IList<RoleList> _roles;
+    private readonly IList<UserRole> _roles;
 
-    public AuthorizeAttribute(params RoleList[] roles)
+    public AuthorizeAttribute(params UserRole[] roles)
     {
-        //_roles = roles ?? new UserRole[] { };
+        _roles = roles ?? new UserRole[] { };
     }
 
     public void OnAuthorization(AuthorizationFilterContext context)
     {
-        var account = (AppUser)context.HttpContext.Items["Account"];
+        var account = (User)context.HttpContext.Items["Account"];
         if (account == null  /*||(_roles.Any() && !_roles.Contains(account.Role))*/)
         {
             // not logged in or role not authorized

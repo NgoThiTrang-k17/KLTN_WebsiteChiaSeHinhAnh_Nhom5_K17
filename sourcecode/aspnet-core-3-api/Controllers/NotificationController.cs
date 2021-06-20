@@ -42,7 +42,7 @@ namespace WebApi.Controllers
         [HttpPost]
         public ActionResult<NotificationResponse> Create(CreateNotificationRequest model)
         {
-            var notification = _notificationService.SendNotification(model);
+            var notification = _notificationService.CreateNotification(model);
             return Ok(notification);
         }
 

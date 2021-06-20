@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace WebApi.Entities
 {
-    public class AppUserPreference
+    public class UserPreference
     {
         public int Id { get; set; }
 

@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using WebApi.Entities;
 using WebApi.Helpers;
+using WebApi.Hubs;
 using WebApi.Models.Follows;
 using WebApi.Models.Notifications;
 
@@ -26,17 +28,24 @@ namespace WebApi.Services
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
-        private readonly INotificationService _notificationService;
         private readonly IAccountService _accountService;
+        private readonly INotificationService _notificationService;
+        private readonly IHubContext<NotificationHub> _notificationHubContext;
+        private readonly PresenceTracker _tracker;
+
         public FollowService(DataContext context,
             IMapper mapper,
             IAccountService accountService,
-            INotificationService notificationService)
+            INotificationService notificationService,
+            IHubContext<NotificationHub> notificationHubContext,
+            PresenceTracker tracker)
         {
             _context = context;
             _mapper = mapper;
             _accountService = accountService;
             _notificationService = notificationService;
+            _notificationHubContext = notificationHubContext;
+            _tracker = tracker;
         }
 
         //Create
@@ -131,7 +140,7 @@ namespace WebApi.Services
 
         //Helper methods
 
-        private void SendNotification(Follow model)
+        private async void SendNotification(Follow model)
         {
             var notification = new CreateNotificationRequest
             {
@@ -142,7 +151,12 @@ namespace WebApi.Services
                 Created = DateTime.Now,
                 Status = Status.Created
             };
-            _notificationService.SendNotification(notification);
+            _notificationService.CreateNotification(notification);
+            var connections = await _tracker.GetConnectionForUser(notification.ReiceiverId);
+            if (connections != null)
+            {
+                await _notificationHubContext.Clients.Clients(connections).SendAsync("NewNotification", notification);
+            }
         }
 
         private Follow getFollow(int id)

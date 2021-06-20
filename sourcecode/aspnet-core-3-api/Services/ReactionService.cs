@@ -6,6 +6,8 @@ using WebApi.Helpers;
 using WebApi.Entities;
 using WebApi.Models.Notifications;
 using WebApi.Models.Reactions;
+using Microsoft.AspNetCore.SignalR;
+using WebApi.Hubs;
 
 namespace WebApi.Services
 {
@@ -24,28 +26,27 @@ namespace WebApi.Services
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
-        private readonly IPostService _postService;
         private readonly INotificationService _notificationService;
+        private readonly IHubContext<NotificationHub> _notificationHubContext;
+        private readonly PresenceTracker _tracker;
         public ReactionService(DataContext context,
-            IMapper mapper,
-            IPostService postService,
-            INotificationService notificationService)
+            IMapper mapper, 
+            INotificationService notificationService,
+            IHubContext<NotificationHub> notificationHubContext,
+            PresenceTracker tracker
+            )
         {
             _context = context;
             _mapper = mapper;
-            _postService = postService;
             _notificationService = notificationService;
+            _notificationHubContext = notificationHubContext;
+            _tracker = tracker;
         }
 
         public ReactionResponse CreateReaction(CreateReactionRequest model)
         {
             var reaction = _mapper.Map<Reaction>(model);
             if (reaction == null) throw new AppException("Create reaction failed");
-            //Get post by postId then map it to new Post model
-            //if(model.Target == ReactionTarget.Post)
-            //    var post = _mapper.Map<Post>(_postService.GetById(model.TargetId));
-            //else
-            //    var post = _mapper.Map<Post>(_postService.GetById(model.TargetId));
             reaction.Created = DateTime.Now;
 
             _context.Reactions.Add(reaction);
@@ -136,7 +137,7 @@ namespace WebApi.Services
             return reaction;
         }
 
-        private void SendNotification(int reactionOwnerId, Reaction model)
+        private async void SendNotification(int reactionOwnerId, Reaction model)
         {
             var notification = new CreateNotificationRequest
             {
@@ -160,7 +161,13 @@ namespace WebApi.Services
                 notification.ReiceiverId = _context.Comments.Find(model.TargetId).OwnerId;
             }
 
-            _notificationService.SendNotification(notification);
+            _notificationService.CreateNotification(notification);
+
+            var connections = await _tracker.GetConnectionForUser(notification.ReiceiverId);
+            if (connections != null)
+            {
+                await _notificationHubContext.Clients.Clients(connections).SendAsync("NewNotification", notification);
+            }
         }
     }
 }

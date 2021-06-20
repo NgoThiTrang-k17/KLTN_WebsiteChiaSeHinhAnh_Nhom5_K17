@@ -51,19 +51,5 @@ namespace WebApi.Hubs
             //await Clients.Group(group.Name).SendAsync("UpdatedGroup", group);
             await base.OnDisconnectedAsync(exception);
         }
-
-        public async Task SendNotification(CreateNotificationRequest model)
-        {
-            var notification = _notificationService.SendNotification(model);
-
-            if (await _notificationService.SaveAllAsync())
-            {
-                var connections = await _tracker.GetConnectionForUser(notification.ReiceiverId);
-                if (connections != null)
-                {
-                    await _presenceHub.Clients.Clients(connections).SendAsync("NewNotification", _mapper.Map<NotificationResponse>(notification));
-                }
-            }
-        }
     }
 }

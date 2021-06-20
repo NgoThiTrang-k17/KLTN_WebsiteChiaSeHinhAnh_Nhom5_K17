@@ -10,7 +10,12 @@ using WebApi.Models.Posts;
 
 namespace WebApi.Services
 {
-    public class SuggestionService
+    public interface ISuggestionService
+    {
+        Task<List<string>> GetUserPreference(int userId);
+        Task<IEnumerable<PostResponse>> GetPostByPreference(int userId);
+    }
+    public class SuggestionService : ISuggestionService
     {
         private readonly IAccountService _accountService;
         private readonly DataContext _context;
@@ -27,7 +32,7 @@ namespace WebApi.Services
 
         public async Task<List<string>> GetUserPreference(int userId)
         {
-            var userPreferences = _context.AppUserPreferences.Where(x => x.UserId == userId);
+            var userPreferences = _context.UserPreferences.Where(x => x.UserId == userId);
             List<Categories> preferences = new List<Categories>();
             foreach (var userPreference in userPreferences)
             {

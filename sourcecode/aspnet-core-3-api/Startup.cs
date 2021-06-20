@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,20 +26,20 @@ namespace WebApi
         // add services to the DI container
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddIdentityCore<AppUser>(options =>
-            {
-                options.Password.RequireDigit = false;
-                options.Password.RequiredLength = 6;
-                options.Password.RequiredUniqueChars = 0;
-                options.Password.RequireLowercase = false;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = false;
-            })
-                .AddRoles<AppRole>()
-                .AddRoleManager<RoleManager<AppRole>>()
-                .AddSignInManager<SignInManager<AppUser>>()
-                .AddRoleValidator<RoleValidator<AppRole>>()
-                .AddEntityFrameworkStores<DataContext>();
+            //services.AddIdentityCore<AppUser>(options =>
+            //{
+            //    options.Password.RequireDigit = false;
+            //    options.Password.RequiredLength = 6;
+            //    options.Password.RequiredUniqueChars = 0;
+            //    options.Password.RequireLowercase = false;
+            //    options.Password.RequireNonAlphanumeric = false;
+            //    options.Password.RequireUppercase = false;
+            //})
+            //    .AddRoles<AppRole>()
+            //    .AddRoleManager<RoleManager<AppRole>>()
+            //    .AddSignInManager<SignInManager<AppUser>>()
+            //    .AddRoleValidator<RoleValidator<AppRole>>()
+            //    .AddEntityFrameworkStores<DataContext>();
 
             services.AddDbContext<DataContext>();
             
@@ -92,6 +93,7 @@ namespace WebApi
                 endpoints.MapControllers();
                 endpoints.MapHub<PresenceHub>("hubs/presence");
                 endpoints.MapHub<MessageHub>("hubs/message");
+                endpoints.MapHub<NotificationHub>("hubs/notification");
             });
 
         }
