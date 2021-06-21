@@ -60,8 +60,7 @@ namespace WebApi.Controllers
             return Ok(posts);
         }
 
-        
-        public string GetImageTags(string imageUrl)
+        private string GetImageTags(string imageUrl)
         {
             //Hosted web API REST Service base url  
 
@@ -82,6 +81,15 @@ namespace WebApi.Controllers
 
             IRestResponse response = client.Execute(request);
             CategorizerResult myDeserializedClass = JsonConvert.DeserializeObject<CategorizerResult>(response.Content);
+            if(myDeserializedClass.Result.Tags.Count == 0)
+            {
+                var secondRequest = new RestRequest(Method.GET);
+                secondRequest.AddParameter("image_url", imageUrl);
+                secondRequest.AddParameter("threshold", 10.0);
+                secondRequest.AddHeader("Authorization", String.Format("Basic {0}", basicAuthValue));
+                response = client.Execute(secondRequest);
+            }
+            myDeserializedClass = JsonConvert.DeserializeObject<CategorizerResult>(response.Content);
             var a = new List<string>();
             foreach (var tag in myDeserializedClass.Result.Tags)
             {
@@ -112,6 +120,15 @@ namespace WebApi.Controllers
             IRestResponse response = client.Execute(request);
 
             CategorizerResult myDeserializedClass = JsonConvert.DeserializeObject<CategorizerResult>(response.Content);
+            if (myDeserializedClass.Result.Tags.Count == 0)
+            {
+                var secondRequest = new RestRequest(Method.GET);
+                secondRequest.AddParameter("image_url", imageUrl);
+                secondRequest.AddParameter("threshold", 10.0);
+                secondRequest.AddHeader("Authorization", String.Format("Basic {0}", basicAuthValue));
+                response = client.Execute(secondRequest);
+            }
+            myDeserializedClass = JsonConvert.DeserializeObject<CategorizerResult>(response.Content);
             var a = new List<string>();
             foreach (var tag in myDeserializedClass.Result.Tags)
             {
