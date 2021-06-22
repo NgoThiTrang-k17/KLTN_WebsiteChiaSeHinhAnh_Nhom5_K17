@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { AlertController } from '@ionic/angular';
-import { ModalController } from '@ionic/angular';
+import { AlertController, ModalController, ActionSheetController } from '@ionic/angular';
+import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 
 import { Post, Account, Follow, FollowToCreate, ReactionToCreate } from '../../_models'
 import { AccountService, PostService, FollowService, ReactionService } from '../../_services';
@@ -38,6 +38,8 @@ export class DetailPostPage implements OnInit {
     private postService: PostService,
     private followService: FollowService,
     private reactionService: ReactionService,
+    public actionSheetController: ActionSheetController,
+    private transfer: FileTransfer,
   ) { }
 
   ngOnInit() {
@@ -122,9 +124,39 @@ export class DetailPostPage implements OnInit {
     });
   }
 
+  async openOptinalMyPost(postId: number) {
+    const actionSheet = await this.actionSheetController.create({
+      cssClass: 'optinal',
+      buttons: [{
+        text: 'Chỉnh sửa',
+        icon: 'create-outline',
+        handler: () => {
+          console.log('Edit clicked');
+        }
+      },{
+        text: 'Xoá',
+        icon: 'trash-outline',
+        handler: () => {
+          console.log('Delete clicked');
+          this.deletePost(postId);
+        }
+      }]
+    });
+    await actionSheet.present();
+  }
+
+  download(path){
+    const fileTransfer: FileTransferObject = this.transfer.create();
+    fileTransfer.download(path, path).then((entry) => {
+      console.log('download complete: ' + entry.toURL());
+    }, (error) => {
+      console.log(error);
+    });
+  }
+
   async deletePost(id: number) {
     const alert = await this.alertController.create({
-      cssClass: 'my-custom-class',
+      // cssClass: 'my-custom-class',
       // header: 'Confirm!',
       message: '<strong>Bạn có chắc chắn muốn xoá bài viết này?</strong>!!!',
       buttons: [

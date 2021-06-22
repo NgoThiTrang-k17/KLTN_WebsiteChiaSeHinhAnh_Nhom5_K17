@@ -1,4 +1,4 @@
-export class commentToCreateForCmt {
+export class CommentToCreateForCmt {
     content: string;
     parrentId: number;
     postId: number;

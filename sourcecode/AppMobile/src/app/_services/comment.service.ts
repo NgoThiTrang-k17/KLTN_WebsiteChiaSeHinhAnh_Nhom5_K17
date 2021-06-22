@@ -23,30 +23,34 @@ export class CommentService {
     }
 
     public get commentValue(): Comment {
-        return this.commentSubject.value;
+      return this.commentSubject.value;
     }
 
     getAll():Observable<Comment[]> {
-        return this.http.get<Comment[]>(`${baseUrl}/GetAll`);
+      return this.http.get<Comment[]>(`${baseUrl}/GetAll`);
     }
 
     getAllByPostId(id:number):Observable<Comment[]> {
-        return this.http.get<Comment[]>(`${baseUrl}/Post/${id}`);
+      return this.http.get<Comment[]>(`${baseUrl}/Post/${id}`);
+    }
+
+    getAllByCommentId(id:number):Observable<Comment[]> {
+      return this.http.get<Comment[]>(`${baseUrl}/Post/Comment/${id}`);
     }
 
     getById(id:number):Observable<Comment[]> {
-        return this.http.get<Comment[]>(`${baseUrl}/GetById/${id}`);
+      return this.http.get<Comment[]>(`${baseUrl}/GetById/${id}`);
     }
 
     create(params) {
-        return this.http.post(baseUrl, params);
+      return this.http.post(baseUrl, params);
     }
 
     update(id, params) {
-        return this.http.put(`${baseUrl}/${id}`, params)
+      return this.http.put(`${baseUrl}/${id}`, params)
     }
 
     delete(id: number) {
-        return this.http.delete(`${baseUrl}/${id}`);
+      return this.http.delete(`${baseUrl}/${id}`);
     }
 }

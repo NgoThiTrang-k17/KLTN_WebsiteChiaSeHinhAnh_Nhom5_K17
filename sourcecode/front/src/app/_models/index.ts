@@ -17,3 +17,5 @@ export * from './notification';
 export * from './notificationToUpdate';
 export * from './follow';
 export * from './followToCreate';
+export * from './message';
+export * from './group';

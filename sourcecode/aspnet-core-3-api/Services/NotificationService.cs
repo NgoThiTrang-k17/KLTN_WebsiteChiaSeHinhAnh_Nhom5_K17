@@ -44,7 +44,17 @@ namespace WebApi.Services
             if (notification == null) throw new AppException("Create Notification failed");
             _context.Notifications.Add(notification);
             _context.SaveChanges();
-            return _mapper.Map<NotificationResponse>(notification);
+            var notificationResponse = _mapper.Map<NotificationResponse>(notification);
+            var actionOwner = _accountService.GetById(notificationResponse.ActionOwnerId);
+            bool IsActionOwnerNameNull = actionOwner.Name == null;
+            notificationResponse.ActionOwnerName = IsActionOwnerNameNull ? "" : actionOwner.Name;
+
+            notificationResponse.ActionOwnerAvatarPath = actionOwner.AvatarPath;
+
+            var receiver = _accountService.GetById(notificationResponse.ReiceiverId);
+            bool IsReceiverNull = receiver.Name == null;
+            notificationResponse.ReiceiverName = IsReceiverNull ? "" : receiver.Name;
+            return notificationResponse;
         }
 
         //Update

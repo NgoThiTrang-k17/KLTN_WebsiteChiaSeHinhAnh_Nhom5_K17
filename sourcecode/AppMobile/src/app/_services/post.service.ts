@@ -13,6 +13,9 @@ export class PostService {
     private postSubject: BehaviorSubject<Post>;
     public post: Observable<Post>;
 
+    private postSource = new BehaviorSubject<Post[]>([]);
+    post$ = this.postSource.asObservable();
+
     constructor(
         private router: Router,
         private http: HttpClient

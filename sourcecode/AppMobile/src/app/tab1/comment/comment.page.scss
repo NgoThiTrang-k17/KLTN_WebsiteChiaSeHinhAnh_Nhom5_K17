@@ -33,9 +33,19 @@ ion-list{
   padding-bottom: 0 !important;
 }
 
+ion-col{
+  padding-inline-start: 0 !important;
+  padding-inline-end: 0 !important;
+  padding-bottom: 0 !important;
+}
+
 .comment{
   background-color: #ebebeb;
   border-radius: 20px;
+}
+
+ion-item{
+  --min-height: 35px !important;
 }
 
 .icon-comment{

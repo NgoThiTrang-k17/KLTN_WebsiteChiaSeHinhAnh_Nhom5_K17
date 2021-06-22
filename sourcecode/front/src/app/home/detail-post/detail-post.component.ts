@@ -93,9 +93,9 @@ export class DetailPostComponent {
     this.updateCmtForm = this.formBuilder.group({
       content: [this.comment.content, Validators.required],
     });
-    
-    this.testForm = new FormData(); 
-    this.updateCmtFormData = new FormData(); 
+
+    this.testForm = new FormData();
+    this.updateCmtFormData = new FormData();
 
   }
 
@@ -127,7 +127,7 @@ export class DetailPostComponent {
         })
   }
 
-  createCmt(event) {    
+  createCmt(event) {
     var str = event.target.value;
     if(str=='') { return; }
     this.cmtCreate = {
@@ -145,7 +145,7 @@ export class DetailPostComponent {
           })
           this.getRoute(this.route.snapshot.params['id']);
       }, error => {
-          console.log(error);               
+          console.log(error);
       })
   }
 
@@ -162,7 +162,7 @@ export class DetailPostComponent {
             alert('Chỉnh sửa bình luận thành công.');
             this.router.navigate(['../../'], { relativeTo: this.route });
         }, error => {
-            console.log(error);               
+            console.log(error);
         })
   }
 
@@ -192,7 +192,7 @@ export class DetailPostComponent {
           })
           this.getRoute(this.route.snapshot.params['id']);
       }, error => {
-          console.log(error);               
+          console.log(error);
       })
   }
 
@@ -238,7 +238,7 @@ export class DetailPostComponent {
       this.getRoute(this.post.id);
       this.getComment(this.post.id);
     });
-    
+
   }
 
   unCreateReactionCmt(cmtId: number) {
@@ -280,13 +280,13 @@ export class DetailPostComponent {
     {
         try {
             this.postService.delete(id)
-                .subscribe(() => {
-                  this.router.navigate(['../../../profile'], { relativeTo: this.route });
-                });
-        } catch (e) {
+            .subscribe(() => {
+              this.router.navigate(['../../../'], { relativeTo: this.route });
+            });
+          } catch (e) {
             console.log(e);
         }
-    }   
+    }
   }
 
   deleteComment(id: number) {
@@ -305,7 +305,7 @@ export class DetailPostComponent {
         } catch (e) {
             console.log(e);
         }
-    }   
+    }
   }
 
   clearForm(){

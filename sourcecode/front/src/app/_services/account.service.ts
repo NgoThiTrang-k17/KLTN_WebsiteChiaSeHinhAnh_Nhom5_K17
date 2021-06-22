@@ -6,6 +6,7 @@ import { map, finalize } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
 import { Account } from '@app/_models';
+import { PresenceService, NotificationService } from '../_services';
 
 const baseUrl = `${environment.apiUrl}/Accounts`;
 
@@ -16,29 +17,27 @@ export class AccountService {
 
     constructor(
         private router: Router,
-        private http: HttpClient
+        private http: HttpClient,
+        private presenceService: PresenceService,
+        private notificationService: NotificationService,
     ) {
         this.accountSubject = new BehaviorSubject<Account>(null);
         this.account = this.accountSubject.asObservable();
     }
 
     public get accountValue(): Account {
-        console.log(this.accountSubject.value);
-
         return this.accountSubject.value;
     }
 
     login(model) {
         return this.http.post<any>(`${baseUrl}/authenticate`, model, { withCredentials: true })
-            .pipe(map(account => {
-                // console.log(account);
-
-                this.accountSubject.next(account);
-                // console.log(this.accountSubject);
-                this.startRefreshTokenTimer();
-                return account;
-            }));
-    }
+        .pipe(map(account => {
+          this.accountSubject.next(account);
+          this.presenceService.createHubConnection(account);
+          this.startRefreshTokenTimer();
+          return account;
+        }));
+      }
 
     loginGoogle(params) {
         return this.http.post<any>(`${baseUrl}/google-login`, params, { withCredentials: true })
@@ -53,6 +52,8 @@ export class AccountService {
         this.http.post<any>(`${baseUrl}/revoke-token`, {}, { withCredentials: true }).subscribe();
         this.stopRefreshTokenTimer();
         this.accountSubject.next(null);
+        this.presenceService.stopHubConnection();
+        this.notificationService.stopHubConnection();
         this.router.navigate(['/account/login']);
     }
 

@@ -1,0 +1,29 @@
+ion-list{
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+ion-col{
+  padding-inline-start: 0 !important;
+  padding-inline-end: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.avatar{
+  width: 40px;
+  height: 40px;
+}
+
+.comment{
+  background-color: #ebebeb;
+  border-radius: 20px;
+}
+
+ion-item{
+  --min-height: 35px !important;
+}
+
+.icon-comment{
+  width: 20px;
+  height: 20px;
+}

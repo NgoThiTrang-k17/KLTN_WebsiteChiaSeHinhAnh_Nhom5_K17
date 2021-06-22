@@ -8,30 +8,41 @@
 
   <div class="body">
     <ion-list *ngFor="let comment of comments">
-      <ion-row slot="start">
+      <ion-row *ngIf="comment.parrentId==0" slot="start">
         <ion-col size="2">
           <ion-avatar *ngIf="comment.ownerAvatar!=null" class="avatar"><img [src]="comment.ownerAvatar"></ion-avatar>
           <ion-avatar *ngIf="comment.ownerAvatar==null" class="avatar"><img src="../../assets/images/default-profile.png"></ion-avatar>
         </ion-col>
         <ion-col>
           <div class="comment">
-            <ion-title style="font-size: 15px; font-weight: 700; padding-top: 5px;">{{comment.ownerName}}</ion-title>
-            <ion-text style="padding-inline: 15px; font-size: 18px; padding-bottom: 5px;">{{comment.content}}</ion-text>
+            <ion-title style="padding-inline: 15px; font-size: 16px; font-weight: 700; padding-top: 10px;">{{comment.ownerName}}</ion-title>
+            <ion-text style="padding-inline: 15px; font-size: 16px; padding-bottom: 10px;">{{comment.content}}</ion-text>
           </div>
           <ion-item lines="none">
             <ion-icon *ngIf="comment.isReactedByThisUser==false" (click)="onCreateReactionComment(comment.id)" name="heart-outline" class="icon-comment"></ion-icon>
             <ion-icon *ngIf="comment.isReactedByThisUser==true" (click)="unReactionComment(comment.id)" name="heart" style="color: rgba(255, 0, 0, 0.788);" class="icon-comment"></ion-icon>
             <span *ngIf="comment.reactionCount!=0" style="margin-left: 1px; color:black;">{{comment.reactionCount}}</span>
-            <ion-icon class="icon-comment" name="chatbox-outline" style="margin-left: 5px;"></ion-icon>
+            <ion-icon class="icon-comment" (click)="focusInputReplyComment(comment.id, comment.ownerName, input)" name="chatbox-outline" style="margin-left: 5px;"></ion-icon>
             <ion-icon class="icon-comment" name="ellipsis-horizontal" style="margin-left: 5px;"></ion-icon>
           </ion-item>
+          <div *ngIf="comment.childCount!=0 && !seenReplyComment" (click)="onSeenReplyComment()" style="align-items: center; display: flex;">
+            <span style="font-size: 14px;">Xem {{comment.childCount}} câu trả lời</span>
+            <ion-icon name="chevron-down-outline" style="width: 15px; height: 15px; margin-left: 5px;"></ion-icon>
+          </div>
+          <div *ngIf="comment.childCount!=0 && seenReplyComment" (click)="unSeenReplyComment()">
+            <div style="align-items: center; display: flex;">
+              <span style="font-size: 14px;">Ẩn câu trả lời</span>
+              <ion-icon name="chevron-up-outline" style="width: 15px; height: 15px; margin-left: 5px;"></ion-icon>
+            </div>
+            <app-reply-comment [commentId] = "comment.id"></app-reply-comment>
+          </div>
         </ion-col>
       </ion-row>
     </ion-list>
   </div>
 
   <div class="footer">
-    <form #commentForm="ngForm" (ngSubmit)="sendComment()" autocomplete="off">
+    <form *ngIf="!onReplyComment" #commentForm="ngForm" (ngSubmit)="sendComment()" autocomplete="off">
       <ion-row>
         <ion-col size="2">
           <ion-avatar *ngIf="maccount.avatarPath!=null" class="avatar"><img [src]="maccount.avatarPath"></ion-avatar>
@@ -46,6 +57,38 @@
             class="ion-form-control"
             placeholder="Soạn nhận xét..."></ion-input>
             <ion-button [disabled]="!commentForm.valid" type="submit">
+              <span>
+                <ion-icon name="paper-plane" style="width: 23px; height: 23px"></ion-icon>
+              </span>
+            </ion-button>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </form>
+    <form *ngIf="onReplyComment" #replyCommentForm="ngForm" (ngSubmit)="sendReplyComment()" autocomplete="off">
+      <ion-row>
+        <ion-col>
+          <ion-text>Đang trả lời <span style="font-weight: 700;">{{ownerName}}</span></ion-text>
+        </ion-col>
+        <ion-col size="1">
+          <ion-icon (click)="unReplyComment()" style="text-align: right; width: 20px; height: 20px;" name="close-outline"></ion-icon>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="2">
+          <ion-avatar *ngIf="maccount.avatarPath!=null" class="avatar"><img [src]="maccount.avatarPath"></ion-avatar>
+          <ion-avatar *ngIf="maccount.avatarPath==null" class="avatar"><img src="../../assets/images/default-profile.png"></ion-avatar>
+        </ion-col>
+        <ion-col>
+          <ion-item lines="none" class="ion-form-group input">
+            <ion-input
+            #input
+            name="messageContent"
+            required
+            [(ngModel)]="replyCommentContent"
+            class="ion-form-control"
+            placeholder="Soạn nhận xét..."></ion-input>
+            <ion-button [disabled]="!replyCommentForm.valid" type="submit">
               <span>
                 <ion-icon name="paper-plane" style="width: 23px; height: 23px"></ion-icon>
               </span>

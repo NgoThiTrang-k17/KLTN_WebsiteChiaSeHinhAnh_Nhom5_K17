@@ -50,7 +50,7 @@
         </ion-col>
         <!-- Xoá -->
         <ion-col *ngIf="post.ownerId==maccount.id">
-          <ion-icon (click)="deletePost(post.id)" class="icon-action" name="trash-outline"></ion-icon>
+          <ion-icon (click)="openOptinalMyPost(post.id)" class="icon-action" name="ellipsis-horizontal"></ion-icon>
         </ion-col>
       </ion-row>
     </div>

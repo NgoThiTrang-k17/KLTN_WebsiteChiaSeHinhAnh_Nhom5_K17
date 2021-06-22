@@ -13,7 +13,6 @@
       <div *ngFor="let post of posts">
         <ion-card class="card" slot="start">
           <ion-img class="img" [src]="post.path" routerLink="detail/{{post.id}}/{{post.ownerId}}"></ion-img>
-          <ion-label style="margin-top:5px;" routerLink="detail/{{post.id}}/{{post.ownerId}}">{{post.title}}</ion-label>
           <ion-row>
             <ion-col size="10" style="text-align: left; justify-self: center; display: flex;">
               <ion-icon *ngIf="post.isReactedByThisUser==false" (click)="onCreateReaction(post.id)" name="heart-outline"></ion-icon>
@@ -21,13 +20,11 @@
               <span *ngIf="post.reactionCount!=0" style="margin-left: 1px; color:black;">{{post.reactionCount}}</span>
             </ion-col>
             <ion-col size="2">
-              <ion-icon name="ellipsis-horizontal" style="color: black;"></ion-icon>
-              <ion-select class="custom-options" interface="action-sheet">
-                <ion-select-option >Tải xuống hình ảnh</ion-select-option>
-                <ion-select-option >Báo cáo</ion-select-option>
-              </ion-select>
+              <ion-icon *ngIf="post.ownerId==maccount.id" (click)="openOptinalMyPost(post.ownerId, post.path, post.id)" name="ellipsis-horizontal" style="color: black;"></ion-icon>
+              <ion-icon *ngIf="post.ownerId!=maccount.id" (click)="openOptinal(post.ownerId, post.path, post.id)" name="ellipsis-horizontal" style="color: black;"></ion-icon>
             </ion-col>
           </ion-row>
+          <ion-label routerLink="detail/{{post.id}}/{{post.ownerId}}">{{post.title}}</ion-label>
         </ion-card>
       </div>
     </ion-list>
@@ -38,7 +35,6 @@
       <div *ngFor="let post of posts">
         <ion-card class="card" slot="start">
           <ion-img class="img" [src]="post.path" routerLink="detail/{{post.id}}/{{post.ownerId}}"></ion-img>
-          <ion-label style="margin-top:5px;" routerLink="detail/{{post.id}}">{{post.title}}/{{post.ownerId}}</ion-label>
           <ion-row>
             <ion-col size="10" style="text-align: left; justify-self: center; display: flex;">
               <ion-icon *ngIf="post.isReactedByThisUser==false" (click)="onCreateReaction(post.id)" name="heart-outline"></ion-icon>
@@ -46,13 +42,11 @@
               <span *ngIf="post.reactionCount!=0" style="margin-left: 1px; color: black;">{{post.reactionCount}}</span>
             </ion-col>
             <ion-col size="2">
-              <ion-icon name="ellipsis-horizontal" style="color: black;"></ion-icon>
-              <ion-select class="custom-options" interface="action-sheet">
-                <ion-select-option >Tải xuống hình ảnh</ion-select-option>
-                <ion-select-option >Báo cáo</ion-select-option>
-              </ion-select>
+              <ion-icon *ngIf="post.ownerId==maccount.id" (click)="openOptinalMyPost(post.ownerId, post.path, post.id)" name="ellipsis-horizontal" style="color: black;"></ion-icon>
+              <ion-icon *ngIf="post.ownerId!=maccount.id" (click)="openOptinal(post.ownerId, post.path, post.id)" name="ellipsis-horizontal" style="color: black;"></ion-icon>
             </ion-col>
           </ion-row>
+          <ion-label routerLink="detail/{{post.id}}">{{post.title}}/{{post.ownerId}}</ion-label>
         </ion-card>
       </div>
     </ion-list>

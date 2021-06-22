@@ -25,6 +25,7 @@ import { DetailPostComponent } from './detail-post/detail-post.component';
 import { TabsOverviewComponent } from './detail-post/tabs-overview.component';
 import { ProfileModule } from './profile/profile.module';
 import { SearchComponent } from './search/search.component';
+import { MessageComponent } from './message/message.component';
 
 @NgModule({
     imports: [
@@ -61,6 +62,7 @@ import { SearchComponent } from './search/search.component';
         DetailPostComponent,
         TabsOverviewComponent,
         SearchComponent,
+        MessageComponent,
     ]
 })
 export class UserModule { }

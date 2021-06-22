@@ -1,24 +1,24 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
-// import { ToastrService } from 'ngx-toastr';
 import { BehaviorSubject } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
+import { Account, Notification } from '../_models';
 
-import { environment } from 'src/environments/environment';
-import { Account } from '../_models';
-import { User } from '../_models/user';
-
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class PresenceService {
   hubUrl= environment.hubUrl;
   private hubConnection: HubConnection;
   private onlineUsersSource = new BehaviorSubject<number[]>([]);
   onlineUsers$ = this.onlineUsersSource.asObservable();
 
-  constructor(
-    private router: Router
-  ){}
+  public notificationThreadSource = new BehaviorSubject<Notification[]>([]);
+  notificationThread$ = this.notificationThreadSource.asObservable();
+
+  constructor(private router: Router) { }
 
   createHubConnection(user: Account) {
     this.hubConnection = new HubConnectionBuilder()
@@ -33,13 +33,11 @@ export class PresenceService {
     .catch(error=> console.log(error));
 
     this.hubConnection.on('UserIsOnline', userId=>{
-      // alert(userId+"Onlline!");
        this.onlineUsers$.pipe(take(1)).subscribe(userIds=>{
          this.onlineUsersSource.next([...userIds, userId])
        })
     })
     this.hubConnection.on('UserIsOffline', userId =>{
-      // alert(userId+"Offline!");
       this.onlineUsers$.pipe(take(1)).subscribe(userIds=>{
         this.onlineUsersSource.next([...userIds.filter(x=> x!= userId)])
       })
@@ -47,6 +45,19 @@ export class PresenceService {
 
     this.hubConnection.on('GetOnlineUsers', (userIds: number[])=>{
       this.onlineUsersSource.next(userIds);
+    })
+
+    this.hubConnection.on('ReceiveNotificationThread', notifications =>{
+      console.log('hub receive noti'+notifications);
+      this.notificationThreadSource.next(notifications);
+    })
+
+    this.hubConnection.on('NewNotification', notification=>{
+      console.log('hub new noti'+notification);
+      this.notificationThread$.pipe(take(1)).subscribe(notifications=>{
+       this.notificationThreadSource.next([...notifications, notification])
+       console.log(this.notificationThreadSource.value);
+      })
     })
     // this.hubConnection.on('NewMessageReceived', ({userId, name})=>{
     //   this.toastr.info(name+ 'has send you a message!')
