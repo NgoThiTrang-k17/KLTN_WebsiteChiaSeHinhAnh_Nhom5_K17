@@ -30,18 +30,21 @@ export class MessageService {
     })
     .withAutomaticReconnect()
     .build()
-    console.log('Token ' + user.jwtToken);
     this.hubConnection.start().catch(error=> console.log());
     
     this.hubConnection.on('ReceiveMessageThread', messages =>{
       this.messageThreadSource.next(messages);
     })
-
     this.hubConnection.on('NewMessage', message=>{
       this.messageThread$.pipe(take(1)).subscribe(messages=>{
         this.messageThreadSource.next([...messages, message])
+       
       })
     })
+    this.hubConnection.on('NewNotification', notificate=>{
+      console.log(notificate);
+        
+     })
     this.hubConnection.on('UpdatedGroup',(group:Group) =>{
       if(group.connections.some(x=> x.userId === otherUserId)){
         this.messageThread$.pipe(take(1)).subscribe(messages=>{

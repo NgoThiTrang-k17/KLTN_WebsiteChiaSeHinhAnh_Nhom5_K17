@@ -2,15 +2,21 @@
 using System;
 using System.Threading.Tasks;
 using WebApi.Extensions;
+using WebApi.Services;
 
 namespace WebApi.Hubs
 {
     [Authorize]
     public class PresenceHub : Hub
     {
+        private readonly INotificationService _notificationService;
         private readonly PresenceTracker _tracker;
-        public PresenceHub(PresenceTracker tracker)
+
+        public PresenceHub(
+            INotificationService notificationService,
+            PresenceTracker tracker)
         {
+            _notificationService = notificationService;
             _tracker = tracker;
         }
 
@@ -26,6 +32,10 @@ namespace WebApi.Hubs
 
             var currentUsers = await _tracker.GetOnlineUsers();
             await Clients.Caller.SendAsync("GetOnlineUsers", currentUsers);
+
+            var currentUserId = Context.User.GetUserId();
+            var notifications = _notificationService.GetNotificationThread(currentUserId);
+            await Clients.Caller.SendAsync("ReceiveNotificationThread", notifications);
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)

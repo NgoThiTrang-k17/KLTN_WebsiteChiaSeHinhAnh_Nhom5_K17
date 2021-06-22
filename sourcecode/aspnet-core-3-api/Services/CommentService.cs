@@ -30,7 +30,7 @@ namespace WebApi.Services
         private readonly IAccountService _accountService;
         private readonly IPostService _postService;
         private readonly INotificationService _notificationService;
-        private readonly IHubContext<NotificationHub> _notificationHubContext;
+        private readonly IHubContext<PresenceHub> _presenceHub;
         private readonly PresenceTracker _tracker;
 
         public CommentService(DataContext context,
@@ -38,7 +38,7 @@ namespace WebApi.Services
             IAccountService accountService,
             IPostService postService,
             INotificationService notificationService,
-            IHubContext<NotificationHub> notificationHubContext,
+            IHubContext<PresenceHub> presenceHub,
             PresenceTracker tracker)
         {
             _context = context;
@@ -46,7 +46,7 @@ namespace WebApi.Services
             _accountService = accountService;
             _postService = postService;
             _notificationService = notificationService;
-            _notificationHubContext = notificationHubContext;
+            _presenceHub = presenceHub;
             _tracker = tracker;
         }
 
@@ -158,7 +158,7 @@ namespace WebApi.Services
 
         private async void SendNotification(int commentOwnerId,Post model)
         {
-            var notification = new CreateNotificationRequest
+            var createnotificationRequest = new CreateNotificationRequest
             {
                 ActionOwnerId = commentOwnerId,
                 NotificationType = NotificationType.Commented,
@@ -167,11 +167,11 @@ namespace WebApi.Services
                 Created = DateTime.Now,
                 Status = Status.Created
             };
-            _notificationService.CreateNotification(notification);
+            var notification = _notificationService.CreateNotification(createnotificationRequest);
             var connections = await _tracker.GetConnectionForUser(notification.ReiceiverId);
             if (connections != null)
             {
-                await _notificationHubContext.Clients.Clients(connections).SendAsync("NewNotification", notification);
+                await _presenceHub.Clients.Clients(connections).SendAsync("NewNotification", notification);
             }
         }
     }

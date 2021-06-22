@@ -31,7 +31,7 @@ namespace WebApi.Services
         private readonly IFollowService _followService;
         private readonly ISuggestionService _suggestionService;
         private readonly INotificationService _notificationService;
-        private readonly IHubContext<NotificationHub> _notificationHubContext;
+        private readonly IHubContext<PresenceHub> _presenceHub;
         private readonly PresenceTracker _tracker;
         public PostService(
             DataContext context,
@@ -40,7 +40,7 @@ namespace WebApi.Services
             IFollowService followService,
             ISuggestionService suggestionService,
             INotificationService notificationService,
-            IHubContext<NotificationHub> notificationHubContext,
+            IHubContext<PresenceHub> presenceHub,
             PresenceTracker tracker
             )
         {
@@ -50,7 +50,7 @@ namespace WebApi.Services
             _notificationService = notificationService;
             _followService = followService;
             _suggestionService = suggestionService;
-            _notificationHubContext = notificationHubContext;
+            _presenceHub = presenceHub;
             _tracker = tracker;
         }
         //Create
@@ -181,7 +181,7 @@ namespace WebApi.Services
                 var connections = await _tracker.GetConnectionForUser(notification.ReiceiverId);
                 if (connections != null)
                 {
-                    await _notificationHubContext.Clients.Clients(connections).SendAsync("NewNotification", notification);
+                    await _presenceHub.Clients.Clients(connections).SendAsync("NewNotification", notification);
                 }
 
             }

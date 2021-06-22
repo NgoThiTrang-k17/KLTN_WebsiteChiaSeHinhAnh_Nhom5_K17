@@ -4,6 +4,7 @@ import { ReplaySubject } from "rxjs";
 import  {map } from 'rxjs/operators';
 import { environment } from "src/environments/environment";
 import { User } from "../_models/user"; 
+import { NotiService } from "./notiService";
 import { PresenceService } from "./presence.service";
 
 @Injectable({
@@ -17,7 +18,7 @@ export class AccountService {
 
 
 
-  constructor(  private http: HttpClient, private presenceService: PresenceService) {}
+  constructor(  private http: HttpClient, private presenceService: PresenceService, private notiService: NotiService) {}
 
   login(model: any) {
     return this.http.post<any>(this.baseUrl+'authenticate',  model, { withCredentials: true }).pipe(
@@ -29,6 +30,7 @@ export class AccountService {
           localStorage.setItem('user',JSON.stringify(user));
           this.setCurrentUser(user);
           this.presenceService.createHubConnection(user);
+          this.notiService.createHubConnection(user);
         }
       })
     );
@@ -40,6 +42,7 @@ export class AccountService {
           localStorage.setItem('user',JSON.stringify(user));
           this.setCurrentUser(user);
           this.presenceService.createHubConnection(user);
+          this.notiService.createHubConnection(user);
         }
   }
 
@@ -50,6 +53,7 @@ export class AccountService {
           localStorage.setItem('user',JSON.stringify(user));
           this.setCurrentUser(user);
           this.presenceService.createHubConnection(user);
+          this.notiService.createHubConnection(user);
         }
         return user;
       })
@@ -65,5 +69,6 @@ export class AccountService {
     localStorage.removeItem('user');
     this.currentUserSource.next(null);
     this.presenceService.stopHubConnection();
+    this.notiService.stopHubConnection();
   }
 }

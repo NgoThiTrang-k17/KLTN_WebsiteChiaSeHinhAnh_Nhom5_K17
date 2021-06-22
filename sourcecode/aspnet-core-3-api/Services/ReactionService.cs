@@ -27,19 +27,19 @@ namespace WebApi.Services
         private readonly DataContext _context;
         private readonly IMapper _mapper;
         private readonly INotificationService _notificationService;
-        private readonly IHubContext<NotificationHub> _notificationHubContext;
+        private readonly IHubContext<PresenceHub> _presenceHub;
         private readonly PresenceTracker _tracker;
         public ReactionService(DataContext context,
             IMapper mapper, 
             INotificationService notificationService,
-            IHubContext<NotificationHub> notificationHubContext,
+            IHubContext<PresenceHub> presenceHub,
             PresenceTracker tracker
             )
         {
             _context = context;
             _mapper = mapper;
             _notificationService = notificationService;
-            _notificationHubContext = notificationHubContext;
+            _presenceHub = presenceHub;
             _tracker = tracker;
         }
 
@@ -166,7 +166,7 @@ namespace WebApi.Services
             var connections = await _tracker.GetConnectionForUser(notification.ReiceiverId);
             if (connections != null)
             {
-                await _notificationHubContext.Clients.Clients(connections).SendAsync("NewNotification", notification);
+                await _presenceHub.Clients.Clients(connections).SendAsync("NewNotification", notification);
             }
         }
     }

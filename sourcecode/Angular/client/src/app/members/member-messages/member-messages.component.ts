@@ -17,8 +17,7 @@ export class MemberMessagesComponent implements OnInit {
 
   ngOnInit(): void {
     this.messageService.messageThread$.pipe().subscribe( messages=>{
-      console.log(messages);
-      
+      //console.log(messages);
     })
   }
   sendMessage(){

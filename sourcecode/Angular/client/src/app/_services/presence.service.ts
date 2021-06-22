@@ -6,6 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { User } from '../_models/user';
+import { Notification } from '../_models/notification';
 
 @Injectable({
   providedIn: 'root'
@@ -15,13 +16,15 @@ export class PresenceService {
   private hubConnection: HubConnection;
   private onlineUsersSource = new BehaviorSubject<number[]>([]);
   onlineUsers$ = this.onlineUsersSource.asObservable();
+  private notiThreadSource = new BehaviorSubject<Notification[]>([]);
+  notiThread$ = this.notiThreadSource.asObservable();
 
   constructor(private toastr: ToastrService, private router: Router) { }
 
   createHubConnection(user: User) {
     this.hubConnection = new HubConnectionBuilder()
     .withUrl(this.hubUrl+'presence',{
-      accessTokenFactory: () =>user.jwtToken
+      accessTokenFactory: () => user.jwtToken
     })
     .withAutomaticReconnect()
     .build()
@@ -50,6 +53,20 @@ export class PresenceService {
       .pipe(take(1))
       .subscribe(() => this.router.navigateByUrl('/members/'+ userId +'?Tab=1'));
     })
+
+    this.hubConnection.on('ReceiveNotificationThread', notifications =>{
+      console.log(notifications);
+      var array = [notifications].reverse();
+      this.notiThreadSource.next(array);
+    })
+    this.hubConnection.on('NewNotification', notification=>{
+      console.log(notification);
+      this.notiThread$.pipe(take(1)).subscribe(notifications=>{
+       
+       this.notiThreadSource.next([...notifications, notification])
+       console.log(this.notiThreadSource.value);
+      }) 
+     })
   }
 
   stopHubConnection(){
