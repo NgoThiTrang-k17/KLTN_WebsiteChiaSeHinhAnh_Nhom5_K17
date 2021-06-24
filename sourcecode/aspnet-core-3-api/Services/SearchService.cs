@@ -26,11 +26,13 @@ namespace WebApi.Services
 
         //T Get(string id);
         IEnumerable<PostResponse> SearchForPosts(string query);
+        IEnumerable<PostResponse> SearchByCategories(string query);
         IEnumerable<AccountResponse> SearchForAccounts(int id, string query);
+        IEnumerable<AccountResponse> SearchForMessage(int id, string query);
     }
     public class SearchService : ISearchService
     {
-        
+
         private readonly DataContext _context;
         private readonly IMapper _mapper;
         private readonly AppSettings _appSettings;
@@ -43,12 +45,17 @@ namespace WebApi.Services
             _appSettings = appSettings.Value;
         }
 
-        public IEnumerable<PostResponse> SearchForPosts( string query)
+        public IEnumerable<PostResponse> SearchForPosts(string query)
         {
-            var posts = _context.Posts.Where(p=>p.Title.Contains(query)||p.Categories.Contains(query));
+            var posts = _context.Posts.Where(p => p.Title.Contains(query) || p.Categories.Contains(query));
             return _mapper.Map<IList<PostResponse>>(posts);
         }
-
+        public IEnumerable<PostResponse> SearchByCategories(string query)
+        {
+            if (query.Contains('-')) query = query.Split('-').Take(1).ToString();
+            var posts = _context.Posts.Where(p => p.Categories.Contains(query));
+            return _mapper.Map<IList<PostResponse>>(posts);
+        }
 
         public IEnumerable<AccountResponse> SearchForAccounts(int id, string query)
         {
@@ -63,7 +70,7 @@ namespace WebApi.Services
                     accountResponse.IsFollowedByCurrentUser = 1;
                 else
                     accountResponse.IsFollowedByCurrentUser = 0;
-            }    
+            }
             return accountResponses;
         }
         public IEnumerable<AccountResponse> SearchForMessage(int id, string query)

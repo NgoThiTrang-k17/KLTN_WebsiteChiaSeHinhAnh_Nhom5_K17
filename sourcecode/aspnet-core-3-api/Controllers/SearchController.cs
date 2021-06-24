@@ -49,5 +49,13 @@ namespace WebApi.Controllers
             var posts = _searchService.SearchForAccounts(Account.Id, query);
             return Ok(posts);
         }
+
+        [HttpGet("SearchByCategories")]
+        public ActionResult<IEnumerable<AccountResponse>> SearchByCategories(string query)
+        {
+            var posts = _searchService.SearchForAccounts(Account.Id, query);
+            return Ok(posts);
+        }
+
     }
 }

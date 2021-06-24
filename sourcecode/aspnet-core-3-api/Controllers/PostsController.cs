@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using WebApi.Entities;
 using WebApi.Models.Posts;
 using WebApi.Services;
@@ -19,12 +20,16 @@ namespace WebApi.Controllers
     public class PostsController : BaseController
     {
         private readonly IPostService _postService;
+        private readonly ISuggestionService _suggestionService;
         private readonly IReactionService _reactionService;
 
-        public PostsController(IPostService postService,
+        public PostsController(
+            IPostService postService, 
+            ISuggestionService suggestionService,
             IReactionService reactionService)
         {
             _postService = postService;
+            _suggestionService = suggestionService;
             _reactionService = reactionService;
         }
         [HttpGet]
@@ -37,6 +42,39 @@ namespace WebApi.Controllers
             }
             return Ok(posts);
 
+        }
+
+        [HttpGet("GetSuggestion")]
+        public async Task<ActionResult<IEnumerable<PostResponse>>> GetSuggestion()
+        {
+            var posts = await _suggestionService.GetSearchSuggestion();
+            foreach (PostResponse post in posts)
+            {
+                post.IsReactedByThisUser = _reactionService.GetState(ReactionTarget.Post, post.Id, Account.Id).IsReactedByThisUser;
+            }
+            return Ok(posts);
+        }
+
+        [HttpGet("GetSuggestion/{id:int}")]
+        public async Task<ActionResult<IEnumerable<PostResponse>>> GetSuggestion(int id)
+        {
+            var posts = await _suggestionService.GetSearchSuggestion(id);
+            foreach (PostResponse post in posts)
+            {
+                post.IsReactedByThisUser = _reactionService.GetState(ReactionTarget.Post, post.Id, Account.Id).IsReactedByThisUser;
+            }
+            return Ok(posts);
+        }
+
+        [HttpGet("GetByPreference/{id:int}")]
+        public async Task<ActionResult<IEnumerable<PostResponse>>> GetByPreference(int id)
+        {
+            var posts = await _suggestionService.GetPostByPreference(id);
+            foreach (PostResponse post in posts)
+            {
+                post.IsReactedByThisUser = _reactionService.GetState(ReactionTarget.Post, post.Id, Account.Id).IsReactedByThisUser;
+            }
+            return Ok(posts);
         }
 
         [HttpGet("{id:int}")]
@@ -138,26 +176,19 @@ namespace WebApi.Controllers
             return Ok(categories);
         }
 
-
+        [HttpPost("UpdateTags")]
+        public IActionResult UpdateTags(int id)
+        {
+            _postService.Share(id);
+            return Ok(new { message = "Tag updated" });
+        }
 
         [HttpPost("Share")]
         public IActionResult Share(int id)
         {
             _postService.Share(id);
             return Ok(new { message = "Post shared"});
-        }
-
-        //[HttpGet("DownloadImage/{id:int}")]
-        //public IActionResult DownloadImage(int id)
-        //{
-        //    var fileName = _postService.GetById(id).ImageName;
-
-        //    var folderName = Path.Combine("Resources", "Images");
-        //    var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
-        //    var filePath = Path.Combine(pathToSave, fileName);
-
-        //    return PhysicalFile(filePath, "image/jpeg");
-        //}
+        } 
 
         [HttpPost, DisableRequestSizeLimit]
         public IActionResult Create([FromForm] CreatePostRequest model)
