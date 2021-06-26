@@ -42,18 +42,21 @@ namespace WebApi.Services
             foreach (var userPreference in userPreferences)
             {
                 var post = await _context.Posts.FindAsync(userPreference.TargetId);
-                var postCategories = post.Categories.Split('-').ToList();
-                foreach (var postCartegory in postCategories)
+                if (post != null)
                 {
-                    var category = new Categories
+                    var postCategories = post.Categories.Split('-').ToList();
+                    foreach (var postCartegory in postCategories)
                     {
-                        Name = postCartegory,
-                        Count = preferences.Count(x => x.Name == postCartegory)
-                    };
-                    preferences.Add(category);
+                        var category = new Categories
+                        {
+                            Name = postCartegory,
+                            Count = preferences.Count(x => x.Name == postCartegory)
+                        };
+                        preferences.Add(category);
+                    }
                 }
             }
-            var result = preferences.OrderByDescending(x => x.Count).Take(10).Select(x=>x.Name).ToList();  
+            var result = preferences.OrderByDescending(x => x.Count).Take(10).Select(x => x.Name).ToList();
             return result;
         }
         public async Task<List<string>> GetUserPreference(int userId)
@@ -63,15 +66,19 @@ namespace WebApi.Services
             foreach (var userPreference in userPreferences)
             {
                 var post = await _context.Posts.FindAsync(userPreference.TargetId);
-                var postCategories = post.Categories.Split('-').ToList();
-                foreach (var postCartegory in postCategories)
+                if (post != null)
                 {
-                    var category = new Categories
+                    var postCategories = post.Categories.Split('-').ToList();
+
+                    foreach (var postCartegory in postCategories)
                     {
-                        Name = postCartegory,
-                        Count = preferences.Count(x => x.Name == postCartegory)
-                    };
-                    preferences.Add(category);
+                        var category = new Categories
+                        {
+                            Name = postCartegory,
+                            Count = preferences.Count(x => x.Name == postCartegory)
+                        };
+                        preferences.Add(category);
+                    }
                 }
             }
             var result = preferences.OrderByDescending(x => x.Count).Take(10).Select(x => x.Name).ToList();
@@ -80,10 +87,10 @@ namespace WebApi.Services
 
         public async Task<IEnumerable<PostResponse>> GetPostByPreference(int userId)
         {
-            var userPreference = await GetUserPreference(userId); 
+            var userPreference = await GetUserPreference(userId);
             var posts = _context.Posts;
             var responses = new List<Post>();
-            foreach(var post in posts)
+            foreach (var post in posts)
             {
                 var postCategories = post.Categories.Split('-').ToList();
                 var suitable = postCategories.Intersect(userPreference).Any();
@@ -93,7 +100,7 @@ namespace WebApi.Services
                 }
             }
 
-            return  _mapper.Map<IEnumerable<PostResponse>>(responses);
+            return _mapper.Map<IEnumerable<PostResponse>>(responses);
         }
 
         public async Task<IEnumerable<PostResponse>> GetSearchSuggestion()
@@ -104,7 +111,10 @@ namespace WebApi.Services
             foreach (var userPreference in userPreferences)
             {
                 var post = _context.Posts.Where(x => x.Categories.StartsWith(userPreference)).FirstOrDefault();
-                responses.Add(post);
+                if (post != null)
+                {
+                    responses.Add(post);
+                }
             }
 
             return _mapper.Map<IEnumerable<PostResponse>>(responses);
@@ -112,12 +122,15 @@ namespace WebApi.Services
         public async Task<IEnumerable<PostResponse>> GetSearchSuggestion(int userId)
         {
             var userPreferences = await GetUserPreference(userId);
-            
+
             var responses = new List<Post>();
             foreach (var userPreference in userPreferences)
             {
-                var post = _context.Posts.Where(x=>x.Categories.StartsWith(userPreference)).FirstOrDefault();
-                responses.Add(post);
+                var post = _context.Posts.Where(x => x.Categories.StartsWith(userPreference)).FirstOrDefault();
+                if (post != null)
+                {
+                    responses.Add(post);
+                }
             }
 
             return _mapper.Map<IEnumerable<PostResponse>>(responses);
