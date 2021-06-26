@@ -22,26 +22,26 @@ namespace WebApi.Services
     }
     public class SuggestionService : ISuggestionService
     {
-        private readonly IAccountService _accountService;
+        private readonly IReactionService _reactionService;
         private readonly DataContext _context;
         private readonly IMapper _mapper;
 
-        public SuggestionService(IAccountService accountService,
+        public SuggestionService(IReactionService reactionService,
             DataContext context,
             IMapper mapper)
         {
-            _accountService = accountService;
+            _reactionService = reactionService;
             _context = context;
             _mapper = mapper;
         }
 
         public async Task<List<string>> GetUserPreference()
         {
-            var userPreferences = _context.UserPreferences;
+            var userPreferences = _context.Reactions.Where(x => x.Target == ReactionTarget.Post);
             List<Categories> preferences = new List<Categories>();
             foreach (var userPreference in userPreferences)
             {
-                var post = await _context.Posts.FindAsync(userPreference.PostId);
+                var post = await _context.Posts.FindAsync(userPreference.TargetId);
                 var postCategories = post.Categories.Split('-').ToList();
                 foreach (var postCartegory in postCategories)
                 {
@@ -58,11 +58,11 @@ namespace WebApi.Services
         }
         public async Task<List<string>> GetUserPreference(int userId)
         {
-            var userPreferences = _context.UserPreferences.Where(x => x.UserId == userId);
+            var userPreferences = _context.Reactions.Where(x => x.Target == ReactionTarget.Post && x.OwnerId == userId);
             List<Categories> preferences = new List<Categories>();
             foreach (var userPreference in userPreferences)
             {
-                var post = await _context.Posts.FindAsync(userPreference.PostId);
+                var post = await _context.Posts.FindAsync(userPreference.TargetId);
                 var postCategories = post.Categories.Split('-').ToList();
                 foreach (var postCartegory in postCategories)
                 {
