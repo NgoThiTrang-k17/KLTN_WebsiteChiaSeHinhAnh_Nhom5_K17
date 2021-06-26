@@ -113,6 +113,7 @@ namespace WebApi.Services
                 var post = _context.Posts.Where(x => x.Categories.StartsWith(userPreference)).FirstOrDefault();
                 if (post != null)
                 {
+                    post.Categories = userPreference;
                     responses.Add(post);
                 }
             }
@@ -129,6 +130,7 @@ namespace WebApi.Services
                 var post = _context.Posts.Where(x => x.Categories.StartsWith(userPreference)).FirstOrDefault();
                 if (post != null)
                 {
+                    post.Categories = userPreference;
                     responses.Add(post);
                 }
             }
