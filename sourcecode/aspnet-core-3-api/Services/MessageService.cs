@@ -25,7 +25,7 @@ namespace WebApi.Services
         Task<Group> GetGroupForConnection(string connectionId);
         Message AddMessage(CreateChatMessageRequest model);
         Task<Message> GetMessage(int id);
-        Task<IEnumerable<MessageResponse>> GetMessagesForUser(MessageParams messageParams);
+        Task<IEnumerable<MessageResponse>> GetMessagesForUser(int currentUserId);
         Task<IEnumerable<MessageResponse>> GetMessageThread(int currentUserId, int recipientId);
         Task<bool> SaveAllAsync();
     }
@@ -115,10 +115,10 @@ namespace WebApi.Services
         }
 
 
-        public async Task<IEnumerable<MessageResponse>> GetMessagesForUser(MessageParams messageParams)
+        public async Task<IEnumerable<MessageResponse>> GetMessagesForUser(int currentUserId)
         {
              
-            var query = await _context.Messages.Where(m=>m.SenderId == messageParams.CurrentUserId || m.RecipientId == messageParams.CurrentUserId).OrderByDescending(m=>m.Created).ToListAsync();
+            var query = await _context.Messages.Where(m=>m.SenderId == currentUserId || m.RecipientId == currentUserId).OrderByDescending(m=>m.Created).ToListAsync();
             var messages = _mapper.Map<IEnumerable<MessageResponse>>(query);
 
             List<MessageResponse> response = new List<MessageResponse>();
