@@ -39,6 +39,9 @@ namespace WebApi.Hubs
             var group = await AddToGroup(groupName);
             await Clients.Group(groupName).SendAsync("UpdatedGroup", group);
 
+            var userMessages = await _messageService.GetMessagesForUser(Context.User.GetUserId());
+            await Clients.Caller.SendAsync("ReceiveUserMessages", userMessages);
+
             var messages = await _messageService.GetMessageThread(currentUserId, otherUserId);
             await Clients.Caller.SendAsync("ReceiveMessageThread", messages);
         }
@@ -86,7 +89,16 @@ namespace WebApi.Hubs
 
             if (await _messageService.SaveAllAsync())
             {
-                await Clients.Group(groupName).SendAsync("NewMessage", _mapper.Map<MessageResponse>(message));
+                var response = _mapper.Map<MessageResponse>(message);
+                if (sender != null && recipient != null)
+                {
+                    response.SenderName = sender.Name;
+                    response.SenderAvatarPath = sender.AvatarPath;
+                    response.RecipientName = recipient.Name;
+                    response.RecipientAvatarPath = recipient.AvatarPath;
+
+                }
+                await Clients.Group(groupName).SendAsync("NewMessage", response);
             }
         }
 

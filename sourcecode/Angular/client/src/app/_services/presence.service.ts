@@ -19,6 +19,8 @@ export class PresenceService {
   private notiThreadSource = new BehaviorSubject<Notification[]>([]);
   notiThread$ = this.notiThreadSource.asObservable();
 
+  
+
   constructor(private toastr: ToastrService, private router: Router) { }
 
   createHubConnection(user: User) {
@@ -55,7 +57,7 @@ export class PresenceService {
     })
 
     this.hubConnection.on('ReceiveNotificationThread', notifications =>{
-      console.log(notifications);
+      
       var array = [notifications].reverse();
       this.notiThreadSource.next(array);
     })

@@ -38,7 +38,7 @@ namespace WebApi.Controllers
             var posts = _postService.GetAll();
             foreach (PostResponse post in posts)
             {
-                post.IsReactedByThisUser = _reactionService.GetState(ReactionTarget.Post, post.Id, Account.Id).IsReactedByThisUser;
+               // post.IsReactedByThisUser = _reactionService.GetState(ReactionTarget.Post, post.Id, Account.Id).IsReactedByThisUser;
             }
             return Ok(posts);
 
@@ -114,6 +114,7 @@ namespace WebApi.Controllers
             var request = new RestRequest(Method.GET);
             request.AddParameter("image_url", imageUrl);
             //request.AddParameter("limit", 10);
+            request.AddParameter("language", "vi");
             request.AddParameter("threshold", 30.0);
             request.AddHeader("Authorization", String.Format("Basic {0}", basicAuthValue));
 
@@ -123,7 +124,8 @@ namespace WebApi.Controllers
             {
                 var secondRequest = new RestRequest(Method.GET);
                 secondRequest.AddParameter("image_url", imageUrl);
-                secondRequest.AddParameter("threshold", 10.0);
+                secondRequest.AddParameter("language", "vi");
+                secondRequest.AddParameter("limit", 10);
                 secondRequest.AddHeader("Authorization", String.Format("Basic {0}", basicAuthValue));
                 response = client.Execute(secondRequest);
             }
@@ -131,7 +133,7 @@ namespace WebApi.Controllers
             var a = new List<string>();
             foreach (var tag in myDeserializedClass.Result.Tags)
             {
-                a.Add(tag.Tag.En);
+                a.Add(tag.Tag.Vi);
             }
             var categories = String.Join('-', a);
             return categories;
@@ -152,7 +154,7 @@ namespace WebApi.Controllers
 
             var request = new RestRequest(Method.GET);
             request.AddParameter("image_url", imageUrl);
-            //request.AddParameter("limit", 10);
+            request.AddParameter("language", "vi");
             request.AddParameter("threshold", 30.0);
             request.AddHeader("Authorization", String.Format("Basic {0}", basicAuthValue));
             IRestResponse response = client.Execute(request);
@@ -162,6 +164,7 @@ namespace WebApi.Controllers
             {
                 var secondRequest = new RestRequest(Method.GET);
                 secondRequest.AddParameter("image_url", imageUrl);
+                request.AddParameter("language", "vi");
                 secondRequest.AddParameter("threshold", 10.0);
                 secondRequest.AddHeader("Authorization", String.Format("Basic {0}", basicAuthValue));
                 response = client.Execute(secondRequest);
@@ -170,17 +173,25 @@ namespace WebApi.Controllers
             var a = new List<string>();
             foreach (var tag in myDeserializedClass.Result.Tags)
             {
-                a.Add(tag.Tag.En);
+                a.Add(tag.Tag.Vi);
             }
             var categories = String.Join('-', a);
             return Ok(categories);
         }
 
-        [HttpPost("UpdateTags")]
-        public IActionResult UpdateTags(int id)
+        [HttpPut("UpdateTags")]
+        public IActionResult UpdateTags()
         {
-            _postService.Share(id);
-            return Ok(new { message = "Tag updated" });
+            var posts = _postService.GetAll();
+            foreach(var post in posts)
+            {
+                UpdatePostRequest request = new UpdatePostRequest
+                {
+                    Categories = GetImageTags(post.Path)
+                };
+                _postService.UpdatePost(post.Id,request);
+            }
+            return Ok(posts);
         }
 
         [HttpPost("Share")]

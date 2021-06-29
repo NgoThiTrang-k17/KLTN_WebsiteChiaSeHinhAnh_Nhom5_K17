@@ -20,8 +20,8 @@ namespace WebApi.Entities
     // Root myDeserializedClass = JsonSerializer.Deserialize<Root>(myJsonResponse);
     public class Tag
     {
-        [JsonPropertyName("en")]
-        public string En { get; set; }
+        [JsonPropertyName("vi")]
+        public string Vi { get; set; }
     }
 
     public class TagDetail

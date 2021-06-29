@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { map, take } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 import { Message } from '../_models/message';
 import { Pagination } from '../_models/pagination';
 import { User } from '../_models/user';

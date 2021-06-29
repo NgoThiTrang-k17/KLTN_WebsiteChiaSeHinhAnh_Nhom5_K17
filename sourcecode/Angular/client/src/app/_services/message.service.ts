@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Message } from '../_models/message';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { getPaginatedResult, getPaginationHeader as getPaginationHeaders } from './paginationHelper';
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { User } from '../_models/user';
 import { BehaviorSubject } from 'rxjs';
@@ -16,10 +15,12 @@ export class MessageService {
   baseUrl = environment.apiUrl;
   hubUrl = environment.hubUrl;
   private hubConnection: HubConnection;
+  //danh sach tin nhan cua tung nguoi
   private messageThreadSource = new BehaviorSubject<Message[]>([]);
-  private messageSource = new BehaviorSubject<Message[]>([]);
   messageThread$ = this.messageThreadSource.asObservable();
-  messages$ = this.messageSource.asObservable();
+  // Danh sanh nguoi dang nhan tin 
+  private userMessageSource = new BehaviorSubject<Message[]>([]);
+  userMessages$ = this.userMessageSource.asObservable();
 
   constructor(private http:HttpClient) { }
 
@@ -31,20 +32,36 @@ export class MessageService {
     .withAutomaticReconnect()
     .build()
     this.hubConnection.start().catch(error=> console.log());
-    
+    //danh sach tin nhan cua tung nguoi
     this.hubConnection.on('ReceiveMessageThread', messages =>{
       this.messageThreadSource.next(messages);
     })
-    this.hubConnection.on('NewMessage', message=>{
+
+    // Danh sanh nguoi dang nhan tin 
+    this.hubConnection.on('ReceiveUserMessages', messages =>{
+      this.userMessageSource.next(messages);
+      console.log(this.userMessageSource.value);
+    })
+
+    this.hubConnection.on('NewMessage', message =>{
+      //danh sach tin nhan cua tung nguoi
       this.messageThread$.pipe(take(1)).subscribe(messages=>{
         this.messageThreadSource.next([...messages, message])
+
        
+            
       })
+      // Danh sanh nguoi dang nhan tin 
+      this.userMessages$.pipe(take(1)).subscribe(messages=>{
+        this.userMessageSource.next([...messages.filter(m =>
+          (m.recipientId + m.senderId ) !== (message.recipientId + message.senderId)), message]);
+          console.log(message);
+          
+          console.log(this.userMessageSource.value);
+      })
+      //
     })
-    this.hubConnection.on('NewNotification', notificate=>{
-      console.log(notificate);
-        
-     })
+ 
     this.hubConnection.on('UpdatedGroup',(group:Group) =>{
       if(group.connections.some(x=> x.userId === otherUserId)){
         this.messageThread$.pipe(take(1)).subscribe(messages=>{
@@ -67,10 +84,7 @@ export class MessageService {
     }
   }
 
-  getMessages( ){
-    //let params = getPaginationHeaders(pageNumber,pageSize);
-    // params = params.append('Container', container);
-    //console.log(params);
+  getMessages( ){ 
     return this.http.get<Message[]>(this.baseUrl + 'Messages');
   }
 

@@ -53,7 +53,6 @@ export class MembersService {
     return  getPaginatedResult<Member[]>(this.baseUrl,params,this.http)
       .pipe(map(response1=>{
       this.memberCache.set(Object.values(userParams).join('-'), response1);
-      console.log(response1);
       
       return response1;
     }))

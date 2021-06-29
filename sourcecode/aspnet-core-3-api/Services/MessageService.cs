@@ -111,6 +111,7 @@ namespace WebApi.Services
         {
             var message = _mapper.Map<Message>(model);
             _context.Messages.Add(message);
+
             return message;
         }
 
@@ -146,7 +147,7 @@ namespace WebApi.Services
 
             }
             //return await PagedList<MessageResponse>.CreateAsync(messages, messageParams.PageNumber, messageParams.PageSize);
-            return response;
+            return response.OrderBy(m=>m.Created).ToList();
 ;
         }
 
