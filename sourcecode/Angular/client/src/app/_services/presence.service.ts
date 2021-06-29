@@ -7,6 +7,7 @@ import { take } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { User } from '../_models/user';
 import { Notification } from '../_models/notification';
+import { Message } from '../_models/message';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,9 @@ export class PresenceService {
   onlineUsers$ = this.onlineUsersSource.asObservable();
   private notiThreadSource = new BehaviorSubject<Notification[]>([]);
   notiThread$ = this.notiThreadSource.asObservable();
+    // Danh sanh nguoi dang nhan tin 
+    private userMessageSource = new BehaviorSubject<Message[]>([]);
+    userMessages$ = this.userMessageSource.asObservable();
 
   
 
@@ -49,11 +53,21 @@ export class PresenceService {
     this.hubConnection.on('GetOnlineUsers', (userIds: number[])=>{
       this.onlineUsersSource.next(userIds);
     })
-    this.hubConnection.on('NewMessageReceived', ({userId, name})=>{
-      this.toastr.info(name+ 'has send you a message!')
-      .onTap
-      .pipe(take(1))
-      .subscribe(() => this.router.navigateByUrl('/members/'+ userId +'?Tab=1'));
+
+    // Danh sanh nguoi dang nhan tin 
+    this.hubConnection.on('ReceiveUserMessages', messages =>{
+      this.userMessageSource.next(messages);
+      console.log(this.userMessageSource.value);
+    })
+    this.hubConnection.on('NewMessageReceived', message =>{
+       // Danh sanh nguoi dang nhan tin 
+      this.userMessages$.pipe(take(1)).subscribe(messages=>{
+        this.userMessageSource.next([...messages.filter(m =>
+          (m.recipientId + m.senderId ) !== (message.recipientId + message.senderId)), message]);
+          console.log(message);
+          
+          console.log(this.userMessageSource.value);
+      })
     })
 
     this.hubConnection.on('ReceiveNotificationThread', notifications =>{

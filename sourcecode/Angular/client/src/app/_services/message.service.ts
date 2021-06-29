@@ -18,9 +18,7 @@ export class MessageService {
   //danh sach tin nhan cua tung nguoi
   private messageThreadSource = new BehaviorSubject<Message[]>([]);
   messageThread$ = this.messageThreadSource.asObservable();
-  // Danh sanh nguoi dang nhan tin 
-  private userMessageSource = new BehaviorSubject<Message[]>([]);
-  userMessages$ = this.userMessageSource.asObservable();
+
 
   constructor(private http:HttpClient) { }
 
@@ -37,11 +35,7 @@ export class MessageService {
       this.messageThreadSource.next(messages);
     })
 
-    // Danh sanh nguoi dang nhan tin 
-    this.hubConnection.on('ReceiveUserMessages', messages =>{
-      this.userMessageSource.next(messages);
-      console.log(this.userMessageSource.value);
-    })
+    
 
     this.hubConnection.on('NewMessage', message =>{
       //danh sach tin nhan cua tung nguoi
@@ -51,14 +45,7 @@ export class MessageService {
        
             
       })
-      // Danh sanh nguoi dang nhan tin 
-      this.userMessages$.pipe(take(1)).subscribe(messages=>{
-        this.userMessageSource.next([...messages.filter(m =>
-          (m.recipientId + m.senderId ) !== (message.recipientId + message.senderId)), message]);
-          console.log(message);
-          
-          console.log(this.userMessageSource.value);
-      })
+     
       //
     })
  

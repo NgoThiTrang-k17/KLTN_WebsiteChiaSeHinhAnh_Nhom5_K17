@@ -39,8 +39,6 @@ namespace WebApi.Hubs
             var group = await AddToGroup(groupName);
             await Clients.Group(groupName).SendAsync("UpdatedGroup", group);
 
-            var userMessages = await _messageService.GetMessagesForUser(Context.User.GetUserId());
-            await Clients.Caller.SendAsync("ReceiveUserMessages", userMessages);
 
             var messages = await _messageService.GetMessageThread(currentUserId, otherUserId);
             await Clients.Caller.SendAsync("ReceiveMessageThread", messages);
@@ -72,24 +70,18 @@ namespace WebApi.Hubs
             var groupName = GetGroupName(sender.Id, recipient.Id);
             var group = await _messageService.GetMessageGroup(groupName);
 
+            
             if (group.Connections.Any(x => x.UserId == recipient.Id))
             {
                 model.Read = DateTime.Now;
             }
-            else
-            {
-                var connections = await _tracker.GetConnectionForUser(recipient.Id);
-                if (connections != null)
-                {
-                    await _presenceHub.Clients.Clients(connections).SendAsync("NewMessageReceived", new { userId = sender.Id, name = sender.Name });
-                }
-            }
-
+             
             var message = _messageService.AddMessage(model);
 
             if (await _messageService.SaveAllAsync())
             {
                 var response = _mapper.Map<MessageResponse>(message);
+
                 if (sender != null && recipient != null)
                 {
                     response.SenderName = sender.Name;
@@ -97,6 +89,16 @@ namespace WebApi.Hubs
                     response.RecipientName = recipient.Name;
                     response.RecipientAvatarPath = recipient.AvatarPath;
 
+                }
+                var connections = await _tracker.GetConnectionForUser(recipient.Id);
+                var curentUserConnections = await _tracker.GetConnectionForUser(sender.Id);
+                if (connections != null)
+                {
+                    await _presenceHub.Clients.Clients(connections).SendAsync("NewMessageReceived", response);
+                }
+                if (curentUserConnections != null)
+                {
+                    await _presenceHub.Clients.Clients(curentUserConnections).SendAsync("NewMessageReceived", response);
                 }
                 await Clients.Group(groupName).SendAsync("NewMessage", response);
             }

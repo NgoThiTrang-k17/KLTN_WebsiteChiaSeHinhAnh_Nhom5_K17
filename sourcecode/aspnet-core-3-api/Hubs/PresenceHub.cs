@@ -10,13 +10,16 @@ namespace WebApi.Hubs
     public class PresenceHub : Hub
     {
         private readonly INotificationService _notificationService;
+        private readonly IMessageService _messageService;
         private readonly PresenceTracker _tracker;
 
         public PresenceHub(
             INotificationService notificationService,
+            IMessageService messageService,
             PresenceTracker tracker)
         {
             _notificationService = notificationService;
+            _messageService = messageService;
             _tracker = tracker;
         }
 
@@ -34,8 +37,12 @@ namespace WebApi.Hubs
             await Clients.Caller.SendAsync("GetOnlineUsers", currentUsers);
 
             var currentUserId = Context.User.GetUserId();
+
             var notifications = _notificationService.GetNotificationThread(currentUserId);
             await Clients.Caller.SendAsync("ReceiveNotificationThread", notifications);
+
+            var userMessages = await _messageService.GetMessagesForUser(currentUserId);
+            await Clients.Caller.SendAsync("ReceiveUserMessages", userMessages);
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
