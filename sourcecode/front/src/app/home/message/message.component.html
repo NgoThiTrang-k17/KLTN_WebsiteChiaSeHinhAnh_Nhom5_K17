@@ -1,1 +1,122 @@
-<p>message works!</p>
+<div class="messages">
+  <div class="header">
+    <div class="row rowHeader">
+      <div class="col-1 centerAll">
+        <i *ngIf="searchMess" (click)="closeSearch()" class="fas fa-angle-left text-left" style="font-size: 30px;"></i>
+      </div>
+      <div class="col centerAll">
+        <label style="font-weight: 600; font-size: 18px; margin-bottom: 0;">Tin nhắn</label>
+      </div>
+      <div class="col-1 centerAll">
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-3 mr-3 ml-3">
+    <div class="body">
+      <!-- ----------Khi chưa search---------- -->
+      <div *ngIf="!searchMess">
+        <input (click)="onSearchForMessage()" class="form-control py-2 border" placeholder="Tìm kiếm bằng tên" style="border-radius: 20px;">
+        <div *ngFor="let message of (presenceService.userMessages$ | async).slice().reverse()">
+          <!-- -------------Tin nhắn tới--------------- -->
+          <div *ngIf="message.senderId != maccount.id" (click)="updateStatus(message.id)">
+            <div (click)="openChat(message.senderId)" class="row" style="margin: 15px 0 15px 0;">
+              <div class="col-2" style="padding: 0; align-items: center; display: flex;">
+                <img *ngIf="message.senderAvatarPath == null" src="../../assets/images/default-profile.png" alt="" class="img-fluid rounded-circle" style="height: 55px;width: 55px;">
+                <img *ngIf="message.senderAvatarPath != null" [src]="message.senderAvatarPath" alt="" class="img-fluid rounded-circle" style="height: 55px;width: 55px;">
+                <span *ngIf = "(presenceService.onlineUsers$ | async).includes(message.senderId)" class="material-icons is-online">circle</span>
+              </div>
+              <div class="col" style="padding: 0; margin-left: 10px;">
+                <!-- ---------Tin nhắn tới chưa xem (mới)--------- -->
+                <div *ngIf="message.read == null">
+                  <label style="margin: 0; font-weight: 500;">{{message.senderName}}</label>
+                  <p class="text-danger" style="margin: 0; font-weight: 500; font-size: 15px;">
+                    {{message.content}}
+                    <span style="font-size: 13px; color: #4e4e4e;">· {{message.created | timeago}}</span>
+                  </p>
+                </div>
+                <!-- ------------Tin nhắn tới đã xem--------------- -->
+                <div *ngIf="message.read != null">
+                  <label style="margin: 0; font-weight: 400;">{{message.senderName}}</label>
+                  <p style="margin: 0; color: #4e4e4e; font-size: 15px;">
+                    {{message.content}}
+                    <span style="font-size: 13px;color: #4e4e4e;">· {{message.created | timeago}}</span>
+                  </p>
+                </div>
+              </div>
+              <div class="col-1" style="padding: 0; align-items: center; display: flex;">
+                <div *ngIf="message.read == null">
+                  <button class="btn"><i class="fa fa-circle text-primary" style="font-size: small;"></i></button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- -------------Tin nhắn gửi đi--------------- -->
+          <div *ngIf="message.senderId == maccount.id" (click)="updateStatus(message.id)">
+            <div (click)="openChat(message.recipientId)" class="row" style="margin: 15px 0 15px 0;">
+              <div class="col-2" style="padding: 0; align-items: center; display: flex;">
+                <img
+                *ngIf="message.recipientAvatarPath==null"
+                src="../../assets/images/default-profile.png"
+                style="height: 55px; width: 55px;" class="img-fluid rounded-circle" alt="">
+                <img
+                *ngIf="message.recipientAvatarPath!=null"
+                [src]="message.recipientAvatarPath"
+                style="height: 55px; width: 55px;" class="img-fluid rounded-circle" alt="">
+                <span *ngIf = "(presenceService.onlineUsers$ | async).includes(message.recipientId)" class="material-icons is-online">circle</span>
+              </div>
+              <div class="col" style="padding: 0; margin-left: 10px;">
+                <label style="margin: 0; font-weight: 400;">{{message.recipientName}}</label>
+                <p style="margin: 0;color: #4e4e4e; font-size: 15px;">
+                  <span>Bạn: </span>
+                  {{message.content}}
+                  <span style="font-size: 13px;color: #4e4e4e;">· {{message.created | timeago}}</span>
+                </p>
+              </div>
+              <div class="col-1" style="padding: 0; align-items: center; display: flex;">
+                <!-- ---------Tin nhắn đã gửi khi đối phương không onl--------- -->
+                <i *ngIf="(presenceService.onlineUsers$ | async).includes(message.recipientId) && message.read == null" class="far fa-check-circle" style="font-size: small; margin-left: 13px;"></i>
+                <!-- ---------Tin nhắn đã gửi khi đối phương onl--------- -->
+                <i *ngIf="(presenceService.onlineUsers$ | async).includes(message.recipientId) && message.read == null" class="fas fa-check-circle" style="font-size: small; margin-left: 13px;"></i>
+                <!-- ---------Tin nhắn đã gửi khi đối phương đã xem--------- -->
+                <div *ngIf="message.read != null">
+                  <img
+                  *ngIf="message.recipientAvatarPath==null"
+                  src="../../assets/images/default-profile.png"
+                  style="height: 14px; width: 15px; margin-left: 11px;" class="img-fluid rounded-circle" alt="">
+                  <img
+                  *ngIf="message.recipientAvatarPath!=null"
+                  [src]="message.recipientAvatarPath"
+                  style="height: 14px; width: 15px; margin-left: 11px;" class="img-fluid rounded-circle" alt="">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ----------Khi search---------- -->
+      <div *ngIf="searchMess">
+        <input #searchInput (keyup)="searchForMessage($event)" class="form-control py-2 border" placeholder="Tìm kiếm bằng tên" id="example-search-input" style="border-radius: 20px;">
+        <div id="1" *ngFor="let account of accounts">
+          <div (click)="openChat(account.id)" id="1" class="row" style="margin: 10px 0 10px 0;">
+            <div class="col-2 text-center" style="padding: 0;">
+              <img
+                  *ngIf="account.avatarPath==null"
+                  src="../../assets/images/default-profile.png"
+                  style="height: 40px; width: 41px;" class="img-fluid rounded-circle" alt="">
+              <img
+                  *ngIf="account.avatarPath!=null"
+                  [src]="account.avatarPath"
+                  style="height: 40px; width: 41px;" class="img-fluid rounded-circle" alt="">
+            </div>
+            <div class="col" style="padding: 0; align-items: center; display: flex;">
+              <label style="margin: 0;">{{account.name}}</label>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

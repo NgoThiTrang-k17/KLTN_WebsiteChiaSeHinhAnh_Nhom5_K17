@@ -1,0 +1,44 @@
+<div *ngIf="!searchAccount" class="item card-columns">
+  <div id="1" *ngFor="let post of posts">
+    <a routerLink="../../detail-post/{{post.id}}/{{post.ownerId}}" class="text-dark card-link" id="1">
+      <div class="card btn-outline-white">
+        <img class="card-img-top img-fluid" [src]="post.path" alt="Card image cap">
+        <p class="card-title" style="margin: 5px 5px 5px 5px; font-size:15px;"><strong>{{post.title}}</strong></p>
+      </div>
+    </a>
+  </div>
+  <div *ngIf="posts.length==0">
+      <p>Không có kết quả phù hợp.</p>
+  </div>
+</div>
+<div *ngIf="searchAccount">
+  <div id="1" *ngFor="let account of accounts">
+      <div class="container mt-3" style="width: 60%;">
+          <div class="card shadow-lg mb-3" style="width: 90%;" id="1">
+              <div class="row ml-3 mr-3 mt-3 mb-3" style="justify-content: center; align-items: center; display: flex;">
+                  <div class="col-lg-2 text-center">
+                      <img
+                          *ngIf="account.avatarPath==null"
+                          src="../../assets/images/default-profile.png"
+                          style="height: 60px; width: 61px;" class="img-fluid rounded-circle" alt="">
+                      <img
+                          *ngIf="account.avatarPath!=null"
+                          [src]="account.avatarPath"
+                          style="height: 60px; width: 61px;" class="img-fluid rounded-circle" alt="">
+                  </div>
+                  <div class="col-lg-7">
+                      <a href="" class="btn" routerLink="../../detail/{{account.id}}"><strong>{{account.name}}</strong></a>
+                      <p style="font-size: small; margin-left: 4%;">{{account.followerCount}} người theo dõi</p>
+                  </div>
+                  <div class="col-lg-3">
+                      <button *ngIf="account.isFollowedByCurrentUser==0" (click)="onCreateFollow(account.id)" class="btn btn-danger rounded-pill">Theo dõi</button>
+                      <button *ngIf="account.isFollowedByCurrentUser!=0" (click)="unFollow(account.id)" class="btn btn-light rounded-pill">Đã theo dõi</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  <div *ngIf="accounts.length==0">
+      <p>Không có kết quả phù hợp.</p>
+  </div>
+</div>

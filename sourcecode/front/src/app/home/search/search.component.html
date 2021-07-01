@@ -1,13 +1,28 @@
-<div *ngIf="!searchAccount" class="item card-columns">
+<div class="search">
+  <label>Tìm kiếm gần đây</label>
+  <div class="row">
+    <button class="btn btn-light rounded-pill strong">Đồ ăn</button>
+    <button class="btn btn-light rounded-pill strong button-search">Lelush</button>
+  </div>
+  <label class="mt-4">Gợi ý cho bạn</label>
+  <div class="row">
     <div id="1" *ngFor="let post of posts">
-      <a routerLink="detail-post/{{post.id}}/{{post.ownerId}}" class="text-dark card-link" id="1">
-        <div class="card btn-outline-white">
-          <img class="card-img-top img-fluid" [src]="createImgPath(post.imagePath)" alt="Card image cap">
-          <p class="card-title" style="margin: 5px 5px 5px 5px; font-size:15px; font-family: Noto Serif;">{{post.postTitle}}</p>
-        </div> 
-      </a>
-    </div>  
+      <div (click)="search(post.categories)" class="category mr-3 mb-3" style="background-image: url('{{post.path}}');">
+        <div class="cover">
+          <label class="label-cate">{{post.categories}}</label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <label class="mt-4">Phổ biến gần đây</label>
+  <div class="row">
+    <div id="1" *ngFor="let post of postsPopular">
+      <div (click)="search(post.categories)" class="category mr-3 mb-3" style="background-image: url('{{post.path}}');">
+        <div class="cover">
+          <label class="label-cate">{{post.categories}}</label>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-<div *ngIf="searchAccount">
-    <p>chưa làm chờ xí</p>
-</div>
+

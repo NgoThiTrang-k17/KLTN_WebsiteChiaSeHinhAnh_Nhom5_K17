@@ -15,6 +15,7 @@ import { Post, PostToCreate } from '@app/_models';
 export class AddEditPostComponent implements OnInit {
 
   public title: string;
+  public file: any;
   public imagePath: string;
   myForm: FormGroup;
   testForm: any;
@@ -128,18 +129,12 @@ export class AddEditPostComponent implements OnInit {
     }
   }
 
-  // public createImgPath = (serverPath: string) => {
-  //   return `storage.googleapis.com/storage/v1/b/kltn-websitechiasehinhanh.appspot.com/o/${serverPath}`;
-  //   // return `http://localhost:5000/${serverPath}`;
-  // }
-
-  public createImgPath = (path: string) => {
-    this.af.ref(path).getDownloadURL().subscribe((url) => {
-      return url;
-    })
-  }
-
-  ImgPath(path: string){
-    this.downloadURL = this.af.ref(path).getDownloadURL();
+  back() {
+    this.path = localStorage.getItem('path');
+    if(this.path == null){
+      this.router.navigate([''], { relativeTo: this.route });
+    } else {
+      this.router.navigate([this.path]);
+    }
   }
 }

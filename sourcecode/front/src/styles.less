@@ -9,8 +9,26 @@ a { cursor: pointer; }
   font-size: 13px;
   color: rgb(4, 196, 4);
   position: absolute;
-  right: 8px;
-  bottom: 6px;
+}
+
+.mat-dialog-container{
+  border-radius: 25px !important;
+}
+
+.modalSearch .modal-dialog{
+  position: fixed;
+}
+
+.backdropModalSearch{
+  top: 67px !important;
+}
+
+.modalMess .modal-content{
+  border: 0 !important;
+}
+
+.backdropModalMess{
+  opacity: 0 !important;
 }
 
 .btn {
@@ -75,11 +93,11 @@ body {
     transform: translateY(-53%);
 }
 #search-form {
-    border-radius: 20px;
-    background-image: url('assets/images/searchicon.png');
-    background-position: 10px 10px;
-    background-repeat: no-repeat;
-    background-size: 15px 15px;
+  position: relative;
+  border-radius: 20px;
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  background-size: 15px 15px;
 }
 #search-box:focus > #search {
     opacity: 0.2;
@@ -133,6 +151,13 @@ body {
     width: 350px;
     overflow: auto;
 }
+
+.centerAll{
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
 @import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 @import "../node_modules/font-awesome/css/font-awesome.min.css";
 @import "./assets/css/forms.css";

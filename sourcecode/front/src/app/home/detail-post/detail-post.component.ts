@@ -12,6 +12,7 @@ import { Post, Comment, CommentToCreate, commentToCreateForCmt, CommentToUpdate 
 })
 export class DetailPostComponent {
 
+  path: string;
   myForm: FormGroup;
   testForm: any;
   cmtForm: FormGroup;
@@ -314,6 +315,15 @@ export class DetailPostComponent {
 
   closeEdit(){
     this.router.navigate(['../'], { relativeTo: this.route });
+  }
+
+  back() {
+    this.path = localStorage.getItem('path');
+    if(this.path == null){
+      this.router.navigate([''], { relativeTo: this.route });
+    } else {
+      this.router.navigate([this.path]);
+    }
   }
 
   // public createImgPath = (serverPath: string) => {

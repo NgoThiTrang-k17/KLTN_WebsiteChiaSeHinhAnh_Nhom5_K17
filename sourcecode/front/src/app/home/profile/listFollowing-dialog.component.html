@@ -1,8 +1,12 @@
 <div mat-dialog-titile >
-    <div style="text-align: right;">
-        <a type="button"><span><i mat-dialog-close class="fa fa-times" style=" color: rgb(148, 148, 148); font-size:larger;"></i></span></a>
+  <div class=" row">
+    <div class="col">
+      <h3 class="text-center" style="margin-left: 45px;">Đang theo dõi {{data.followingCount}} người</h3>
     </div>
-    <h3 class="text-center">Đang theo dõi {{data.followingCount}} người</h3>
+    <div class="col-1" style="text-align: right;">
+      <a type="button"><span><i mat-dialog-close class="fa fa-times" style=" color: rgb(148, 148, 148); font-size:larger;"></i></span></a>
+    </div>
+  </div>
 </div>
 <div mat-dialog-content >
     <div id="1" *ngFor="let follow of follows" class="mt-2 mb-2 mr-2 ml-2">
@@ -12,10 +16,10 @@
                 <img *ngIf="follow.followerAvatarPath!=null" [src]="follow.followerAvatarPath" style="height: 50px; width: 51px;" class="img-fluid card rounded-circle" alt="">
                 <p class="ml-2 mt-3" routerLink="user/detail/{{follow.subjectId}}" routerLinkActive="active" style="font-weight: bold; font-size: large;" mat-dialog-close>{{follow.followerName}}</p>
             </div>
-            <div class="col-3 mt-2" *ngIf="maccount.id!=follow.subjectId">
+            <div class="col-3 mt-2" *ngIf="maccount.id!=follow.subjectId" style="padding: 0; text-align: right;">
                 <button *ngIf="follow.isSubject_FollowedByCurrentUser==false" (click)="onCreateFollow(follow.subjectId)" class="btn btn-light rounded-pill">Theo dõi</button>
-                <button *ngIf="follow.isSubject_FollowedByCurrentUser==true" (click)="unFollow(follow.subjectId)" class="btn btn-danger rounded-pill">Huỷ theo dõi</button>    
-            </div>       
+                <button *ngIf="follow.isSubject_FollowedByCurrentUser==true" (click)="unFollow(follow.subjectId)" class="btn btn-danger rounded-pill">Huỷ theo dõi</button>
+            </div>
         </div>
     </div>
 </div>

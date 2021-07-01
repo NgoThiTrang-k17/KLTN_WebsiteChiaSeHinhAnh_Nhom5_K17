@@ -11,35 +11,39 @@ const baseUrl = `${environment.apiUrl}/search`;
 
 @Injectable({ providedIn: 'root' })
 export class SearchService {
-    private postSubject: BehaviorSubject<Post>;
-    public post: Observable<Post>;
-    private accountSubject: BehaviorSubject<Account>;
-    public account: Observable<Account>;
+  private postSubject: BehaviorSubject<Post>;
+  public post: Observable<Post>;
+  private accountSubject: BehaviorSubject<Account>;
+  public account: Observable<Account>;
 
-    constructor(
-        private router: Router,
-        private http: HttpClient,
-    ) {
-        this.postSubject = new BehaviorSubject<Post>(null);
-        this.post = this.postSubject.asObservable();
-        this.accountSubject = new BehaviorSubject<Account>(null);
-        this.account = this.accountSubject.asObservable();
-    }
+  constructor(
+      private router: Router,
+      private http: HttpClient,
+  ) {
+      this.postSubject = new BehaviorSubject<Post>(null);
+      this.post = this.postSubject.asObservable();
+      this.accountSubject = new BehaviorSubject<Account>(null);
+      this.account = this.accountSubject.asObservable();
+  }
 
-    public get postValue(): Post {
-        return this.postSubject.value;
-    }
+  public get postValue(): Post {
+      return this.postSubject.value;
+  }
 
-    public get accoutValue(): Account {
-        return this.accountSubject.value;
-    }
+  public get accoutValue(): Account {
+      return this.accountSubject.value;
+  }
 
-    getAllAccount(query):Observable<Account[]> {
-        return this.http.get<Account[]>(`${baseUrl}`, {params: new HttpParams().set('query', query)});
-    }
+  getAllAccount(query):Observable<Account[]> {
+      return this.http.get<Account[]>(`${baseUrl}`, {params: new HttpParams().set('query', query)});
+  }
 
-    getAllPost(query):Observable<Post[]> {
-        return this.http.get<Post[]>(`${baseUrl}`, {params: new HttpParams().set('query', query)});
-    }
+  getAllPost(query):Observable<Post[]> {
+      return this.http.get<Post[]>(`${baseUrl}`, {params: new HttpParams().set('query', query)});
+  }
+
+  getAccountForMessage(query):Observable<Account[]> {
+    return this.http.get<Account[]>(`${baseUrl}/SearchForMessage`, {params: new HttpParams().set('query', query)});
+  }
 
 }

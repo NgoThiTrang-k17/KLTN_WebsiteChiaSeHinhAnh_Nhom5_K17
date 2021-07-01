@@ -6,7 +6,7 @@ import { map, finalize } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
 import { Account } from '@app/_models';
-import { PresenceService, NotificationService } from '../_services';
+import { PresenceService, MessageService } from '../_services';
 
 const baseUrl = `${environment.apiUrl}/Accounts`;
 
@@ -19,55 +19,55 @@ export class AccountService {
         private router: Router,
         private http: HttpClient,
         private presenceService: PresenceService,
-        private notificationService: NotificationService,
+        private messageService: MessageService,
     ) {
         this.accountSubject = new BehaviorSubject<Account>(null);
         this.account = this.accountSubject.asObservable();
     }
 
     public get accountValue(): Account {
-        return this.accountSubject.value;
+      return this.accountSubject.value;
     }
 
     login(model) {
-        return this.http.post<any>(`${baseUrl}/authenticate`, model, { withCredentials: true })
-        .pipe(map(account => {
-          this.accountSubject.next(account);
-          this.presenceService.createHubConnection(account);
-          this.startRefreshTokenTimer();
-          return account;
-        }));
-      }
+      return this.http.post<any>(`${baseUrl}/authenticate`, model, { withCredentials: true })
+      .pipe(map(account => {
+        this.accountSubject.next(account);
+        this.presenceService.createHubConnection(account);
+        this.startRefreshTokenTimer();
+        return account;
+      }));
+    }
 
     loginGoogle(params) {
-        return this.http.post<any>(`${baseUrl}/google-login`, params, { withCredentials: true })
-        .pipe(map(account => {
-            this.accountSubject.next(account);
-            this.startRefreshTokenTimer();
-            return account;
-        }));
+      return this.http.post<any>(`${baseUrl}/google-login`, params, { withCredentials: true })
+      .pipe(map(account => {
+          this.accountSubject.next(account);
+          this.startRefreshTokenTimer();
+          return account;
+      }));
     }
 
     logout() {
-        this.http.post<any>(`${baseUrl}/revoke-token`, {}, { withCredentials: true }).subscribe();
-        this.stopRefreshTokenTimer();
-        this.accountSubject.next(null);
-        this.presenceService.stopHubConnection();
-        this.notificationService.stopHubConnection();
-        this.router.navigate(['/account/login']);
+      this.http.post<any>(`${baseUrl}/revoke-token`, {}, { withCredentials: true }).subscribe();
+      this.stopRefreshTokenTimer();
+      this.accountSubject.next(null);
+      this.presenceService.stopHubConnection();
+      this.messageService.stopHubConnection();
+      this.router.navigate(['/account/login']);
     }
 
     refreshToken() {
-        return this.http.post<any>(`${baseUrl}/refresh-token`, {}, { withCredentials: true })
-            .pipe(map((account) => {
-                this.accountSubject.next(account);
-                this.startRefreshTokenTimer();
-                return account;
-            }));
+      return this.http.post<any>(`${baseUrl}/refresh-token`, {}, { withCredentials: true })
+          .pipe(map((account) => {
+              this.accountSubject.next(account);
+              this.startRefreshTokenTimer();
+              return account;
+          }));
     }
 
     register(account: Account) {
-        return this.http.post(`${baseUrl}/register`, account);
+      return this.http.post(`${baseUrl}/register`, account);
     }
 
     verifyEmail(token: string) {

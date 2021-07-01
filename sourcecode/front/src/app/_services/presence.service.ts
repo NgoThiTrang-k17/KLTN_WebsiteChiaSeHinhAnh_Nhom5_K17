@@ -4,7 +4,7 @@ import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { BehaviorSubject } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-import { Account, Notification } from '../_models';
+import { Account, Notification, Message } from '../_models';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +17,9 @@ export class PresenceService {
 
   public notificationThreadSource = new BehaviorSubject<Notification[]>([]);
   notificationThread$ = this.notificationThreadSource.asObservable();
+
+  private userMessageSource = new BehaviorSubject<Message[]>([]);
+  userMessages$ = this.userMessageSource.asObservable();
 
   constructor(private router: Router) { }
 
@@ -48,17 +51,28 @@ export class PresenceService {
     })
 
     this.hubConnection.on('ReceiveNotificationThread', notifications =>{
-      console.log('hub receive noti'+notifications);
       this.notificationThreadSource.next(notifications);
     })
 
     this.hubConnection.on('NewNotification', notification=>{
-      console.log('hub new noti'+notification);
       this.notificationThread$.pipe(take(1)).subscribe(notifications=>{
        this.notificationThreadSource.next([...notifications, notification])
-       console.log(this.notificationThreadSource.value);
       })
     })
+
+    // Danh sanh nguoi dang nhan tin
+    this.hubConnection.on('ReceiveUserMessages', messages =>{
+      this.userMessageSource.next(messages);
+    })
+
+    this.hubConnection.on('NewMessageReceived', message=>{
+      // Danh sanh nguoi dang nhan tin
+      this.userMessages$.pipe(take(1)).subscribe(messages=>{
+        this.userMessageSource.next([...messages.filter(m =>
+          (m.recipientId + m.senderId ) !== (message.recipientId + message.senderId)), message]);
+      })
+    })
+
     // this.hubConnection.on('NewMessageReceived', ({userId, name})=>{
     //   this.toastr.info(name+ 'has send you a message!')
     //   .onTap
@@ -69,5 +83,27 @@ export class PresenceService {
 
   stopHubConnection(){
     this.hubConnection.stop().catch(error=> console.log(error));
+  }
+
+  updateNotificationStatus(id: number) {
+    const menuItemsUpdated = this.notificationThreadSource.getValue().map((item) => {
+      if(item.id === id) {
+        return {...item, status: 2};
+      }
+      return item;
+    });
+
+    this.notificationThreadSource.next(menuItemsUpdated);
+  }
+
+  updateMessageStatus(id: number) {
+    const menuItemsUpdated = this.userMessageSource.getValue().map((item) => {
+      if(item.id === id) {
+        return {...item, read: new Date()};
+      }
+      return item;
+    });
+
+    this.userMessageSource.next(menuItemsUpdated);
   }
 }

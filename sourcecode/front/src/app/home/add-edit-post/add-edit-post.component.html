@@ -1,13 +1,13 @@
 <div class="p-4 row">
-    <div><a class="btn" routerLink="../"><svg class="Hn_ gUZ pBj" height="20" width="20" viewBox="0 0 24 24" aria-label="Nút quay lại" role="img"><path d="M8.415 4.586a2 2 0 1 1 2.828 2.828L8.657 10H21a2 2 0 0 1 0 4H8.657l2.586 2.586a2 2 0 1 1-2.828 2.828L1 12l7.415-7.414z"></path></svg></a></div>
+    <div><a class="btn" (click)="back()" style="position: fixed;"><svg class="Hn_ gUZ pBj" height="20" width="20" viewBox="0 0 24 24" aria-label="Nút quay lại" role="img"><path d="M8.415 4.586a2 2 0 1 1 2.828 2.828L8.657 10H21a2 2 0 0 1 0 4H8.657l2.586 2.586a2 2 0 1 1-2.828 2.828L1 12l7.415-7.414z"></path></svg></a></div>
     <div class="container">
         <div class="card shadow-lg">
             <div class="row">
                 <div class="col-6" style="justify-content: center; align-items: center; display: flex;">
                     <div class="card mt-4 mb-4 ml-4 mr-4" style="justify-content: center; align-items: center; display: flex; height: 90%; width: 95%">
-                        <img *ngIf="imageSrc!=null" style="height: 100%; width: 100%;" [src]="imageSrc" alt="">
-                        <h6 *ngIf="imageSrc==null && isAddMode">Chưa có hình ảnh được chọn</h6>
-                        <img *ngIf="!isAddMode && imageSrc==null" style="height: 100%; width: 100%;" [src]="post.path" alt="">
+                      <img *ngIf="imageSrc!=null" style="height: 100%; width: 100%;" [src]="imageSrc" alt="">
+                      <h6 *ngIf="imageSrc==null && isAddMode">Chưa có hình ảnh được chọn</h6>
+                      <img *ngIf="!isAddMode && imageSrc==null" style="height: 100%; width: 100%;" [src]="post.path" alt="">
                     </div>
                 </div>
                 <div class="col-6 mt-5 mb-5">
@@ -24,19 +24,19 @@
                                 </div>
                             </div>
                             <div *ngIf="isAddMode" class="form-group">
-                                <label for="file">File</label>     
-                                <input      
-                                    formControlName="file"     
-                                    id="path"      
-                                    type="file"      
-                                    class="form-control"     
+                                <label for="file">File</label>
+                                <input
+                                    formControlName="file"
+                                    id="path"
+                                    type="file"
+                                    class="form-control"
                                     (change)="onFileChange($event)"
                                     accept=".png,.jpg"
                                     style="word-wrap:break-word;"
-                                    [ngClass]="{ 'is-invalid': submitted && f.file.errors }">     
+                                    [ngClass]="{ 'is-invalid': submitted && f.file.errors }">
                                 <div *ngIf="submitted && f.file.errors" class="invalid-feedback">
                                     <div *ngIf="f.title.file.required">Vui lòng tải hình</div>
-                                </div>     
+                                </div>
                             </div>
                             <!-- <img [src]="imageSrc" *ngIf="imageSrc" style="height: auto; width:500px"> -->
                             <!-- <app-upload (onUploadFinished)="uploadFinished($event)"></app-upload> -->
@@ -46,23 +46,23 @@
                                 </div>
                             </div>
                         </form>
-                    </div>                   
+                    </div>
                 </div>
-            </div>          
-        </div>    
+            </div>
+        </div>
     </div>
 </div>
 
 <!-- <div *ngIf="isAddMode">
     <input type="file" (change)="onFileChange($event)" accept=".png,.jpg" id="">
     <button (click)="submit()">Upload</button>
-    <img style="height: 50%; width: 50%;" [src]="createImgPath('/files0.2345243105091137[object File]')" alt=""> 
+    <img style="height: 50%; width: 50%;" [src]="createImgPath('/files0.2345243105091137[object File]')" alt="">
     <div (change)="ImgPath('/files0.2345243105091137[object File]')">
         <div *ngIf="downloadURL | async; let url">
             <img style="height: 100%; width: 100%;" [src]="url" alt="">
         </div>
     </div>
-      
+
 </div> -->
 
 

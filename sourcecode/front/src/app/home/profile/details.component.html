@@ -6,13 +6,13 @@
         <p>
           <span *ngIf="account.followerCount==0" style="font-weight:lighter;">{{account.followerCount}} người theo dõi </span>
           <span *ngIf="account.followerCount!=0" type="button" (click)="openListFollowerDialog(account.followerCount)">{{account.followerCount}} người theo dõi </span>
-           - 
+           -
            <span *ngIf="account.followingCount==0" style="font-weight:lighter;"> Đang theo dõi {{account.followingCount}} người</span>
            <span *ngIf="account.followingCount!=0" type="button" (click)="openListFollowingDialog(account.followingCount)"> Đang theo dõi {{account.followingCount}} người</span>
           </p>
         <div *ngIf="id!=maccount.id" class="mt-2">
-          <button *ngIf="mfollow.isCreated==0" (click)="onCreateFollow()" class="btn btn-light rounded-pill">Theo dõi</button>
-          <button *ngIf="mfollow.isCreated==1" (click)="unFollow()" class="btn btn-danger rounded-pill">Huỷ theo dõi</button>
+          <button *ngIf="mfollow.isCreated==0" (click)="onCreateFollow()" class="btn btn-danger rounded-pill">Theo dõi</button>
+          <button *ngIf="mfollow.isCreated==1" (click)="unFollow()" class="btn btn-light rounded-pill">Huỷ theo dõi</button>
         </div>
         <div class="row">
             <div *ngIf="maccount.id==id" class="container text-center">
@@ -26,7 +26,7 @@
                       <path d="M22 10h-8V2a2 2 0 0 0-4 0v8H2a2 2 0 0 0 0 4h8v8a2 2 0 0 0 4 0v-8h8a2 2 0 0 0 0-4"></path>
                     </svg>
                 </button>
-            </div> 
+            </div>
         </div>
     </div>
     <div class="item card-columns mt-4">
@@ -35,15 +35,15 @@
             <div class="card btn-outline-white">
               <img class="card-img-top img-fluid" [src]="post.path" alt="Card image cap">
               <p class="card-title" style="margin: 5px 5px 5px 5px; font-size:15px;"><strong>{{post.title}}</strong></p>
-            </div> 
+            </div>
           </a>
           <!-- <a *ngIf="id" routerLink="../../detail-post/{{post.id}}/{{post.ownerId}}" class="text-dark card-link" id="1">
             <div class="card btn-outline-white">
               <img class="card-img-top img-fluid" [src]="createImgPath(post.imagePath)" alt="Card image cap">
               <p class="card-title" style="margin: 5px 5px 5px 5px; font-size:15px; font-family: Noto Serif;">{{post.postTitle}}</p>
-            </div> 
+            </div>
           </a> -->
-        </div>  
+        </div>
       </div>
 </div>
 <div *ngIf="maccount.id==id" class="btn btn-fixed" >

@@ -1,0 +1,71 @@
+<div class="messages">
+  <div class="header">
+    <div class="row rowHeader">
+      <div class="col-1 centerAll">
+        <i (click)="closeChat()" class="fas fa-angle-left" style="font-size: 28px;"></i>
+      </div>
+      <div class="col centerAll">
+        <img
+          *ngIf="account.avatarPath == null"
+          src="../../assets/images/default-profile.png"
+          style="height: 40px; width: 41px;" class="img-fluid rounded-circle" alt="">
+        <img
+          *ngIf="account.avatarPath!=null"
+          [src]="account.avatarPath"
+          style="height: 40px; width: 41px;" class="img-fluid rounded-circle" alt="">
+        <span *ngIf = "(presenceService.onlineUsers$ | async).includes(account.id)" class="material-icons is-online" style="right: 168px; bottom: -2px;">circle</span>
+        <label style="font-weight: 500; font-size: 18px; margin: 0 0 0 10px;">{{account.name}}</label>
+      </div>
+      <div class="col-1 centerAll">
+      </div>
+    </div>
+  </div>
+
+  <div class="body" #scrollMe [scrollTop]="scrollMe.scrollHeight">
+    <div *ngFor="let message of (messageService.messageThread$|async)">
+      <div *ngIf="message.senderId == maccount.id">
+        <div class="right">
+          <label class="text-mMess">{{message.content}}</label>
+        </div>
+      </div>
+      <div *ngIf="message.senderId != maccount.id">
+        <div class="left">
+          <div class="row" style="margin:0">
+            <div class="col-2" style="padding: 0; max-width: 13%;">
+              <img
+              *ngIf="message.senderAvatarPath == null"
+              src="../../assets/images/default-profile.png"
+              style="height: 35px; width: 36px;" class="img-fluid rounded-circle" alt="">
+              <img
+              *ngIf="message.senderAvatarPath != null"
+              [src]="message.senderAvatarPath"
+              style="height: 35px; width: 36px;" class="img-fluid rounded-circle" alt="">
+            </div>
+            <div class="col" style="padding: 0;">
+              <label class="text-yMess">{{message.content}}</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <form #messageForm="ngForm" (ngSubmit)="sendMessage()" autocomplete="off">
+      <div class="row rowHeader">
+        <!-- <div class="col-1 centerAll">
+        </div> -->
+        <div class="col centerAll" style="padding: 0;">
+          <input
+          name="messageContent"
+          required
+          [(ngModel)]="messageContent"
+          class="form-control py-2" placeholder="Nhập tin nhắn..." style="border-radius: 20px;">
+        </div>
+        <div class="col-1 centerAll">
+          <i type="submit" class="btn far fa-paper-plane icon"></i>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

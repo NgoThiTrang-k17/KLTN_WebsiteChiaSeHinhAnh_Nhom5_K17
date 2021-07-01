@@ -29,11 +29,13 @@ export class MessageService {
     console.log('Token ' + user.jwtToken);
     this.hubConnection.start().catch(error=> console.log());
 
+    //danh sach tin nhan cua tung nguoi
     this.hubConnection.on('ReceiveMessageThread', messages =>{
       this.messageThreadSource.next(messages);
     })
 
     this.hubConnection.on('NewMessage', message=>{
+      //danh sach tin nhan cua tung nguoi
       this.messageThread$.pipe(take(1)).subscribe(messages=>{
         this.messageThreadSource.next([...messages, message])
       })

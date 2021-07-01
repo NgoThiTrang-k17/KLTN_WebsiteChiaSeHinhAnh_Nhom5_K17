@@ -56,7 +56,7 @@ namespace WebApi.Services
                     }
                 }
             }
-            var result = preferences.OrderByDescending(x => x.Count).Take(10).Select(x => x.Name).ToList();
+            var result = preferences.OrderByDescending(x => x.Count).Select(x => x.Name).Distinct().Take(8).ToList();
             return result;
         }
         public async Task<List<string>> GetUserPreference(int userId)
@@ -81,7 +81,7 @@ namespace WebApi.Services
                     }
                 }
             }
-            var result = preferences.OrderByDescending(x => x.Count).Take(10).Select(x => x.Name).ToList();
+            var result = preferences.OrderByDescending(x => x.Count).Select(x => x.Name).Distinct().Take(8).ToList();
             return result;
         }
 
