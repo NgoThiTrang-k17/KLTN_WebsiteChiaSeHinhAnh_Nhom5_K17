@@ -31,7 +31,6 @@ namespace WebApi.Services
         private readonly IMapper _mapper;
         private readonly IAccountService _accountService;
         private readonly IFollowService _followService;
-        private readonly ISuggestionService _suggestionService;
         private readonly INotificationService _notificationService;
         private readonly IHubContext<PresenceHub> _presenceHub;
         private readonly PresenceTracker _tracker;
@@ -40,7 +39,6 @@ namespace WebApi.Services
             IMapper mapper,
             IAccountService accountService,
             IFollowService followService,
-            ISuggestionService suggestionService,
             INotificationService notificationService,
             IHubContext<PresenceHub> presenceHub,
             PresenceTracker tracker
@@ -51,7 +49,6 @@ namespace WebApi.Services
             _accountService = accountService;
             _notificationService = notificationService;
             _followService = followService;
-            _suggestionService = suggestionService;
             _presenceHub = presenceHub;
             _tracker = tracker;
         }
