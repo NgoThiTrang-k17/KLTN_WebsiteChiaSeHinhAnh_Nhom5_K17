@@ -22,14 +22,21 @@ namespace WebApi.Services
     }
     public class SuggestionService : ISuggestionService
     {
+        private readonly IAccountService _accountService;
+        private readonly IPostService _postService;
         private readonly IReactionService _reactionService;
         private readonly DataContext _context;
         private readonly IMapper _mapper;
 
-        public SuggestionService(IReactionService reactionService,
+        public SuggestionService(
+            IAccountService accountService,
+            IPostService postService,
+            IReactionService reactionService,
             DataContext context,
             IMapper mapper)
         {
+            _accountService = accountService;
+            _postService = postService;
             _reactionService = reactionService;
             _context = context;
             _mapper = mapper;
@@ -99,8 +106,21 @@ namespace WebApi.Services
                     responses.Add(post);
                 }
             }
+            var postResponses = _mapper.Map<IEnumerable<PostResponse>>(responses);
+            foreach (var postResponse in postResponses)
+            {
+                var owner = _accountService.GetById(postResponse.OwnerId);
+                postResponse.OwnerId = owner.Id;
+                postResponse.OwnerName = owner.Name;
+                postResponse.OwnerName = owner.Name;
+                postResponse.OwnerAvatar = owner.AvatarPath;
 
-            return _mapper.Map<IEnumerable<PostResponse>>(responses);
+                postResponse.FollowerCount = _context.Follows.Count(f => f.SubjectId == owner.Id);
+
+                (postResponse.CommentCount, postResponse.ReactionCount) = _postService.GetPostInfor(postResponse.Id);
+            }
+
+            return postResponses;
         }
 
         public async Task<IEnumerable<PostResponse>> GetSearchSuggestion()

@@ -22,6 +22,8 @@ namespace WebApi.Services
         void DeletePost(int id);
         IEnumerable<PostResponse> GetAll();
         IEnumerable<PostResponse> GetByOwnerId(int ownerId);
+
+        (int, int) GetPostInfor(int id);
     }
     public class PostService : IPostService
     {
@@ -188,7 +190,7 @@ namespace WebApi.Services
 
         }
 
-        private (int, int) GetPostInfor(int id)
+        public (int, int) GetPostInfor(int id)
         {
             var commentcount = _context.Comments.Count(c => c.PostId == id);
             var reactioncount = _context.Reactions.Count(r => r.TargetId == id && r.Target == ReactionTarget.Post);
