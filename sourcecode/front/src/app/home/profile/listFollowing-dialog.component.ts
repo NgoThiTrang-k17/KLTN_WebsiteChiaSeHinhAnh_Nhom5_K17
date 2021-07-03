@@ -18,18 +18,19 @@ export class ListFollowingDialogComponent implements OnInit {
     maccount = this.accountService.accountValue;
 
     constructor(
-        public dialogRef: MatDialogRef<ListFollowingDialogComponent>,
-        private followService: FollowService,
-        private accountService: AccountService,
-        @Inject(MAT_DIALOG_DATA) public data: any){}
-    
+      public dialogRef: MatDialogRef<ListFollowingDialogComponent>,
+      private followService: FollowService,
+      private accountService: AccountService,
+      @Inject(MAT_DIALOG_DATA) public data: any
+    ){}
+
     ngOnInit(){
-        console.log(this.data.subjectId)
-        this.followingId = this.data.subjectId;
-        this.followService.getByFollowerId(this.followingId)
-            .subscribe(res =>{
-                this.follows = res as Follow[];
-            })
+      console.log(this.data.subjectId)
+      this.followingId = this.data.subjectId;
+      this.followService.getByFollowerId(this.followingId)
+      .subscribe(res =>{
+        this.follows = res as Follow[];
+      })
     }
 
     onCreateFollow(id:number) {
@@ -46,7 +47,7 @@ export class ListFollowingDialogComponent implements OnInit {
             })
         });
       }
-    
+
     unFollow(id:number) {
         // console.log(this.post.ownerId);
         this.followService.delete(id)
@@ -55,8 +56,8 @@ export class ListFollowingDialogComponent implements OnInit {
           this.followService.getByFollowerId(this.followingId)
             .subscribe(res =>{
                 if(res==null) this.dialogRef.close();
-                this.follows = res as Follow[];               
+                this.follows = res as Follow[];
             })
-        });       
+        });
     }
 }

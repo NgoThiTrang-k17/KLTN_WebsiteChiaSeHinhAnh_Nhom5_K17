@@ -23,13 +23,14 @@ export class DetailsComponent {
   path: string;
 
   constructor(
-      private accountService: AccountService,
-      private postService: PostService,
-      private followService: FollowService,
-      private route: ActivatedRoute,
-      private router: Router,
-      public dialogFollower: MatDialog,
-      public dialogFollowing: MatDialog,) { }
+    private accountService: AccountService,
+    private postService: PostService,
+    private followService: FollowService,
+    private route: ActivatedRoute,
+    private router: Router,
+    public dialogFollower: MatDialog,
+    public dialogFollowing: MatDialog,
+  ) { }
 
   ngOnInit() {
     this.id = this.route.snapshot.params['id'];

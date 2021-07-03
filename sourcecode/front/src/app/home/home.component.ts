@@ -1,153 +1,88 @@
-﻿import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import { HttpClient, HttpEventType } from '@angular/common/http';
-import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
-import { first } from 'rxjs/operators';
+﻿import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 
-import { AccountService, PostService, AlertService } from '@app/_services';
-import { Post } from '../_models/post';
-import { PostToCreate } from '../_models/postToCreate';
+import { ReactionService, PostService, AccountService } from '@app/_services';
+import { Post, ReactionToCreate } from '../_models';
+import { ReportComponent } from './report/report.component';
 
-@Component({ templateUrl: 'home.component.html' })
+@Component({
+  templateUrl: 'home.component.html',
+  styleUrls: ['./home.component.less']
+})
 export class HomeComponent implements OnInit {
-  public isCreate: boolean;
-  public title: string;
-  // public created: string;
-  // public ownerId: number;
-  public post: PostToCreate;
+
+  reaction: ReactionToCreate;
+
   public posts: Post[] = [];
-  public response: { dbPath: '' };
-  imageSrc: string;
-  loading = false;
-  submitted = false;
-  myForm: FormGroup;
-  testForm: any;
-  downloadURL: any;
 
-  account = this.accountService.accountValue;
-  postS = this.postService.postValue;
-
-  // myForm = new FormGroup({
-  //     postTitle: new FormControl('', [Validators.required]),
-  //     file: new FormControl('', [Validators.required]),
-  //     fileSource: new FormControl('', [Validators.required])
-  // });
+  public maccount = this.accountService.accountValue;
 
   constructor(
-      private http: HttpClient,
-      private accountService: AccountService,
-      private postService: PostService,
-      private formBuilder: FormBuilder,
-      private alertService: AlertService,
+    private router: Router,
+    public dialogReport: MatDialog,
+    private postService: PostService,
+    private reactionService: ReactionService,
+    private accountService: AccountService,
   ) { }
 
   ngOnInit() {
     localStorage.removeItem('path');
-    this.myForm = this.formBuilder.group({
-        title: ['', Validators.required],
-        file: ['', Validators.required],
-        fileSource: ['', Validators.required]
+
+    this.postService.getAllByPreference(this.maccount.id)
+    .subscribe(res => {
+      this.posts = res as Post[];
     });
-    this.testForm = new FormData();
-    this.postService.getAll()
-        .subscribe(res => {
-            this.posts = res as Post[];
-        });
   }
 
-  get f() { return this.myForm.controls; }
-  public onUploadFinished = new EventEmitter();
-  onFileChange(event) {
-      const reader = new FileReader();
-
-      if (event.target.files && event.target.files.length) {
-          const [file] = event.target.files;
-          console.log('1');
-
-          console.log(this.myForm.get('title').value);
-          //this.testForm.append("file",file);
-          this.testForm.append("title", this.myForm.get("title").value);
-          reader.readAsDataURL(file);
-          reader.onload = () => {
-              this.imageSrc = reader.result as string;
-              // this.testForm.patchValue({
-              //     fileSource: reader.result
-              // });
-              console.log(this.myForm.value);
-          };
-
-      }
-  }
-
-  submit() {
-      // this.submitted = true;
-
-      // // reset alerts on submit
-      // this.alertService.clear();
-
-      // this.loading = true;
-
-      // this.post = {
-      //     postTitle: this.postTitle,
-      //     imagePath: this.response.dbPath
-      // }
-
-      console.log(this.testForm);
-      this.postService.createPost(this.testForm)
-          .subscribe(res => {
-              console.log(res);
-              this.alertService.success('Image created successfully', { keepAfterRouteChange: true });
-              // this.getPosts();
-              // alert('Uploaded Successfully.');
-          }, error => {
-              console.log(error);
-          })
-      // this.postService.createPost(this.testForm)
-      //     .pipe(first())
-      //     .subscribe({
-      //         next: () => {
-      //             this.alertService.success('Image created successfully', { keepAfterRouteChange: true });
-      //             // this.getPosts();
-      //             // this.router.navigate(['../'], { relativeTo: this.route });
-      //         },
-      //         error: error => {
-      //             this.alertService.error(error);
-      //             this.loading = false;
-      //         }
-      // });
-  }
-
-  // onCreate() {
-  //     this.post = {
-  //       postTitle: this.postTitle,
-  //       created: this.created,
-  //       ownerId: this.ownerId,
-  //       imagePath: this.response.dbPath
-  //     }
-
-  //     this.http.post('https://localhost:5000/posts', this.post)
-  //     .subscribe(res => {
-  //       this.getPosts();
-  //       this.isCreate = false;
-  //     });
-  // }
-
-  private getPosts = () => {
+  onCreateReaction(postId: number) {
+    this.reaction = {
+      targetId: postId,
+    }
+    // console.log(this.reaction);
+    this.reactionService.createReaction(this.reaction)
+    .subscribe(res => {
       this.postService.getAll()
-          .subscribe(res => {
-              this.posts = res as Post[];
-          });
+      .subscribe(res => {
+          this.posts = res as Post[];
+      });
+    });
   }
 
-  // public returnToCreate = () => {
-  //     this.isCreate = true;
-  //     this.postTitle = ''
-  // }
-
-  public uploadFinished = (event) => {
-      this.response = event;
+  unReaction(postId: number) {
+    this.reactionService.deletePost(postId)
+    .subscribe(() => {
+      this.postService.getAll()
+      .subscribe(res => {
+          this.posts = res as Post[];
+      });
+    });
   }
 
-  public createImgPath = (serverPath: string) => {
-      return `http://localhost:5000/${serverPath}`;
+  deletePost(id: number) {
+    var r = confirm("Bạn có chắc chắn muốn xoá bài viết này?");
+    if(r)
+    {
+        try {
+            this.postService.delete(id)
+            .subscribe(() => {
+              this.router.navigate(['user']);
+            });
+          } catch (e) {
+            console.log(e);
+        }
+    }
+  }
+
+  openReportDialog(postId: number): void{
+    let dialogRef1 = this.dialogReport.open(ReportComponent,{
+      width: '500px',
+      minHeight: '200px',
+      maxHeight:'600px',
+      data: {
+        targetId: postId,
+        targetType: 1,
+      }
+    });
   }
 }

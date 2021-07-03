@@ -6,7 +6,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { DataTablesModule } from 'angular-datatables';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { TimeagoModule } from 'ngx-timeago';
 
 import { UserModule } from './home/user.module'

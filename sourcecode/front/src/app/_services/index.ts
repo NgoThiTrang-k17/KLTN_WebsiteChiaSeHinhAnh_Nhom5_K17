@@ -9,3 +9,4 @@ export * from './follow.service';
 export * from './socialLogin.service';
 export * from './presence.service';
 export * from './message.service';
+export * from './report.service';

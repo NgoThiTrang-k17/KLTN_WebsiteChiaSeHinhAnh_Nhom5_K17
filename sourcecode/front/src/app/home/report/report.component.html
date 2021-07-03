@@ -1,0 +1,39 @@
+<div mat-dialog-titile >
+  <div class=" row">
+    <div class="col">
+      <h3 class="text-center" style="margin-left: 45px;">Báo cáo {{title}}</h3>
+    </div>
+    <div class="col-1" style="text-align: right;">
+      <a type="button"><span><i mat-dialog-close class="fa fa-times" style=" color: rgb(148, 148, 148); font-size:larger;"></i></span></a>
+    </div>
+  </div>
+</div>
+<div mat-dialog-content >
+  <mat-radio-group
+    aria-labelledby="example-radio-group-label"
+    class="example-radio-group"
+    [(ngModel)]="reportType">
+    <mat-radio-button class="example-radio-button" *ngFor="let reportPost of reportPosts" [value]="reportPost">
+      <label>{{reportPost}}</label>
+    </mat-radio-button>
+  </mat-radio-group>
+</div>
+<div mat-dialog-footer >
+  <form #reportForm="ngForm" (ngSubmit)="sendReport()" autocomplete="off">
+    <div class="row" style="margin:0;">
+      <div class="col centerAll" style="padding: 0;">
+        <textarea
+        name="detailReport"
+        required
+        [(ngModel)]="detailReport"
+        class="form-control py-2" placeholder="Mô tả chi tiết lý do báo cáo..." style="border-radius: 20px;"></textarea>
+      </div>
+      <div class="col-3 centerAll" style="padding: 0 0 0 10px;">
+        <button type="submit" [disabled]="!reportForm.valid" class="btn btn-danger rounded-pill">
+          Báo cáo
+        </button>
+      </div>
+
+    </div>
+  </form>
+</div>

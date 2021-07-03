@@ -38,7 +38,7 @@ namespace WebApi.Controllers
             var posts = _postService.GetAll();
             foreach (PostResponse post in posts)
             {
-               // post.IsReactedByThisUser = _reactionService.GetState(ReactionTarget.Post, post.Id, Account.Id).IsReactedByThisUser;
+                post.IsReactedByThisUser = _reactionService.GetState(ReactionTarget.Post, post.Id, Account.Id).IsReactedByThisUser;
             }
             return Ok(posts);
 

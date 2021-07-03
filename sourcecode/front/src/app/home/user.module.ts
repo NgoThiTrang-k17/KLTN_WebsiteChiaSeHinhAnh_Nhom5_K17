@@ -7,15 +7,13 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AngularFireModule } from '@angular/fire';
-import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
-import {BrowserModule} from '@angular/platform-browser';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { TimeagoModule } from 'ngx-timeago';
+import { MatRadioModule } from '@angular/material/radio';
 
 import { NavHomeComponent } from './navhome.component';
 import { UserRoutingModule } from './user-routing.module';
@@ -29,6 +27,7 @@ import { SearchComponent } from './search/search.component';
 import { MessageComponent } from './message/message.component';
 import { SearchResultComponent } from './search/search-result/search-result.component';
 import { ChatComponent } from './message/chat/chat.component';
+import { ReportComponent } from './report/report.component';
 
 @NgModule({
   imports: [
@@ -57,6 +56,7 @@ import { ChatComponent } from './message/chat/chat.component';
     MatInputModule,
     MatButtonModule,
     TimeagoModule.forRoot(),
+    MatRadioModule
   ],
   exports:[
     TimeagoModule
@@ -72,6 +72,7 @@ import { ChatComponent } from './message/chat/chat.component';
     MessageComponent,
     SearchResultComponent,
     ChatComponent,
+    ReportComponent,
   ]
 })
 export class UserModule { }

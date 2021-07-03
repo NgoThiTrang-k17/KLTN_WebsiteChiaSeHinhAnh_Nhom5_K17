@@ -11,7 +11,7 @@ namespace WebApi.Models.Reports
         public int OwnerId { get; set; }
         public ReportTarget TargetType { get; set; }
         public int TargetId { get; set; }
-        public ReportType ReportType { get; set; }
+        public string ReportType { get; set; }
         public string Detail { get; set; }
     }
 }

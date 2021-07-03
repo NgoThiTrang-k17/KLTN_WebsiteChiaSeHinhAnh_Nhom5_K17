@@ -5,6 +5,28 @@ a { cursor: pointer; }
     min-height: 320px;
 }
 
+.example-radio-group {
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0;
+}
+
+.example-radio-button {
+  margin: 5px;
+}
+
+.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+  border-color: #000000 !important;
+}
+
+.mat-radio-inner-circle {
+  background-color: #000000 !important;
+}
+
+.mat-radio-label {
+  margin-bottom: 0.8rem;
+}
+
 .is-online{
   font-size: 13px;
   color: rgb(4, 196, 4);
@@ -131,9 +153,10 @@ body {
     }
 }
 .card {
-    border-radius: 15px;
-    outline-color: #fcfcfc;
-    justify-content: center;
+  border-radius: 15px;
+  outline-color: #fcfcfc;
+  justify-content: center;
+  border: 0 !important;
 }
 .card img{
     border-radius: 15px;
