@@ -26,10 +26,9 @@
                                   </svg>
                               </button>
                               <div id="myDropdown" class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                  aria-labelledby="dropdownMenuLink" *dropdownMenu>
-                                  <a class="dropdown-item" href="post.path" download="{{post.title}}.jpg">Tải xuống</a>
-                                  <!-- <a class="dropdown-item" [disabled]="disabled" [ngClass]="{'disabled': disabled}" (click)="download()">Tải xuống</a> -->
-                                  <a class="dropdown-item" href="#">Báo cáo bài viết</a>
+                                aria-labelledby="dropdownMenuLink" *dropdownMenu>
+                                <a class="dropdown-item" href="post.path" download="{{post.title}}.jpg">Tải xuống</a>
+                                <a *ngIf="post.ownerId != maccount.id" class="dropdown-item" (click)="openReportDialog(post.id)">Báo cáo bài viết</a>
                               </div>
                           </div>
                         </div>
@@ -55,13 +54,12 @@
                     </div> -->
                     <br>
                     <br>
-                    <div class="row">
-                        <div class="offset-1 col-10 p-0">
-                            <h3 class="mb-1"><strong>{{post.title}}</strong></h3>
-                        </div>
+                    <div class="p-0" style="margin-left: 31px;">
+                      <h3 class="mb-1"><strong>{{post.title}}</strong></h3>
+                      <p style="margin-top: 22px;">{{post.description}}</p>
                     </div>
-                    <a *ngIf="post.isReactedByThisUser==false" class="btn btn-sm ml-4 mt-3" (click)="onCreateReaction()" ><span style="font-size:medium; color: rgb(148, 148, 148);">{{post.reactionCount}} <i class="fa fa-heart unheart" style=" color: rgb(175, 173, 173);"></i></span></a>
-                    <a *ngIf="post.isReactedByThisUser==true" class="btn btn-sm ml-4 mt-3" (click)="unReaction()"><span style="font-size:medium; color: rgb(148, 148, 148);">{{post.reactionCount}}  <i class="fa fa-heart heart" style=" color: rgba(212, 10, 10, 0.76);"></i></span></a>
+                    <a *ngIf="post.isReactedByThisUser==false" class="btn btn-sm ml-4" (click)="onCreateReaction()" ><span style="font-size:medium; color: rgb(148, 148, 148);">{{post.reactionCount}} <i class="fa fa-heart unheart" style=" color: rgb(175, 173, 173);"></i></span></a>
+                    <a *ngIf="post.isReactedByThisUser==true" class="btn btn-sm ml-4" (click)="unReaction()"><span style="font-size:medium; color: rgb(148, 148, 148);">{{post.reactionCount}}  <i class="fa fa-heart heart" style=" color: rgba(212, 10, 10, 0.76);"></i></span></a>
                     <div class="row mt-3">
                         <div class="offset-1 p-0 mt-1">
                             <img *ngIf="account.avatarPath==null" class="img-fluid rounded-circle" style="height: 45px; width: 46px;" src="../../assets/images/default-profile.png">

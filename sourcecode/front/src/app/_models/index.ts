@@ -6,6 +6,7 @@ export * from './alert';
 export * from './role';
 export * from './post';
 export * from './postToCreate';
+export * from './postToUpdate';
 export * from './comment';
 export * from './commentToCreate';
 export * from './commentToCreateForCmt';

@@ -27,10 +27,6 @@
         <i *ngIf="post.isReactedByThisUser== false" (click)="onCreateReaction(post.id)" class="fa fa-heart btn" style=" color: rgb(175, 173, 173); margin: 0 5px; padding: 0;"></i>
         <i *ngIf="post.isReactedByThisUser==true" (click)="unReaction(post.id)" class="fa fa-heart btn" style=" color: rgba(212, 10, 10, 0.76); margin: 0 5px; padding: 0;"></i>
         <span *ngIf="post.reactionCount!==0" style="margin-left: 1px; color:black; font-size: 13px;">{{post.reactionCount}}</span>
-
-        <!-- <a *ngIf="post.isReactedByThisUser==false" class="btn btn-sm ml-4 mt-3" (click)="onCreateReaction(post.id)" ><span style="font-size:medium; color: rgb(148, 148, 148);"><i class="fa fa-heart unheart" style=" color: rgb(175, 173, 173);"></i> {{post.reactionCount}}</span></a>
-        <a *ngIf="post.isReactedByThisUser==true" class="btn btn-sm ml-4 mt-3" (click)="unReaction(post.id)"><span style="font-size:medium; color: rgb(148, 148, 148);"><i class="fa fa-heart heart" style=" color: rgba(212, 10, 10, 0.76);"></i> {{post.reactionCount}}</span></a> -->
-
       </div>
     </a>
   </div>

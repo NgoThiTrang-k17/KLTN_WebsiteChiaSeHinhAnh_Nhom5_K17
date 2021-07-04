@@ -56,6 +56,7 @@ export class ChatComponent implements OnInit {
   }
 
   closeChat() {
+    this.messageService.stopHubConnection();
     this.activeModal.close();
   }
 

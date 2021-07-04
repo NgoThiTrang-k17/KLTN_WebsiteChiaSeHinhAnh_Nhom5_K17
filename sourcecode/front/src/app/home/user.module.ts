@@ -28,6 +28,7 @@ import { MessageComponent } from './message/message.component';
 import { SearchResultComponent } from './search/search-result/search-result.component';
 import { ChatComponent } from './message/chat/chat.component';
 import { ReportComponent } from './report/report.component';
+import { EditPostDialogComponent } from './detail-post/edit-post-dialog/edit-post-dialog.component';
 
 @NgModule({
   imports: [
@@ -73,6 +74,7 @@ import { ReportComponent } from './report/report.component';
     SearchResultComponent,
     ChatComponent,
     ReportComponent,
+    EditPostDialogComponent,
   ]
 })
 export class UserModule { }

@@ -75,7 +75,7 @@
               </div>
               <div class="col-1" style="padding: 0; align-items: center; display: flex;">
                 <!-- ---------Tin nhắn đã gửi khi đối phương không onl--------- -->
-                <i *ngIf="(presenceService.onlineUsers$ | async).includes(message.recipientId) && message.read == null" class="far fa-check-circle" style="font-size: small; margin-left: 13px;"></i>
+                <i *ngIf="!(presenceService.onlineUsers$ | async).includes(message.recipientId) && message.read == null" class="far fa-check-circle" style="font-size: small; margin-left: 13px;"></i>
                 <!-- ---------Tin nhắn đã gửi khi đối phương onl--------- -->
                 <i *ngIf="(presenceService.onlineUsers$ | async).includes(message.recipientId) && message.read == null" class="fas fa-check-circle" style="font-size: small; margin-left: 13px;"></i>
                 <!-- ---------Tin nhắn đã gửi khi đối phương đã xem--------- -->

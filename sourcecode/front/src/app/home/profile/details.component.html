@@ -11,40 +11,72 @@
            <span *ngIf="account.followingCount!=0" type="button" (click)="openListFollowingDialog(account.followingCount)"> Đang theo dõi {{account.followingCount}} người</span>
           </p>
         <div *ngIf="id!=maccount.id" class="mt-2">
-          <button *ngIf="mfollow.isCreated==0" (click)="onCreateFollow()" class="btn btn-danger rounded-pill">Theo dõi</button>
-          <button *ngIf="mfollow.isCreated==1" (click)="unFollow()" class="btn btn-light rounded-pill">Huỷ theo dõi</button>
+          <button (click)="openReportDialog(id)" class="btn btn-light rounded-pill">Báo cáo</button>
+          <button *ngIf="mfollow.isCreated==0" (click)="onCreateFollow()" class="btn btn-danger rounded-pill ml-2">Theo dõi</button>
+          <button *ngIf="mfollow.isCreated==1" (click)="unFollow()" class="btn btn-light rounded-pill ml-2">Huỷ theo dõi</button>
         </div>
         <div class="row">
-            <div *ngIf="maccount.id==id" class="container text-center">
-                <button routerLink="update" routerLinkActive="active"  data-toggle="tooltip" data-placement="left" title="Chỉnh sửa thông tin" class="btn btn-light btn-outline-white rounded-circle text-center" style="height: 48px; width: 48px;" type="button">
-                    <svg class="gUZ pBj U9O kVc" height="18" width="18" viewBox="0 0 24 24" aria-hidden="true" aria-label="" role="img">
-                        <path d="M13.386 6.018l4.596 4.596L7.097 21.499 1 22.999l1.501-6.096L13.386 6.018zm8.662-4.066a3.248 3.248 0 0 1 0 4.596L19.75 8.848 15.154 4.25l2.298-2.299a3.248 3.248 0 0 1 4.596 0z"></path>
-                    </svg>
-                </button>
-                <button routerLink="../../../add-post" routerLinkActive="active"  data-toggle="tooltip" data-placement="left" title="Thêm bài viết" class="btn btn-light btn-outline-white rounded-circle text-center" style="height: 48px; width: 48px;" type="button">
-                    <svg class="gUZ pBj U9O kVc" height="18" width="18" viewBox="0 0 24 24" aria-hidden="true" aria-label="" role="img">
-                      <path d="M22 10h-8V2a2 2 0 0 0-4 0v8H2a2 2 0 0 0 0 4h8v8a2 2 0 0 0 4 0v-8h8a2 2 0 0 0 0-4"></path>
-                    </svg>
-                </button>
-            </div>
+          <div *ngIf="maccount.id==id" class="container text-center">
+            <button routerLink="update" routerLinkActive="active"  data-toggle="tooltip" data-placement="left" title="Chỉnh sửa thông tin" class="btn btn-light btn-outline-white rounded-circle text-center" style="height: 48px; width: 48px;" type="button">
+                <svg class="gUZ pBj U9O kVc" height="18" width="18" viewBox="0 0 24 24" aria-hidden="true" aria-label="" role="img">
+                    <path d="M13.386 6.018l4.596 4.596L7.097 21.499 1 22.999l1.501-6.096L13.386 6.018zm8.662-4.066a3.248 3.248 0 0 1 0 4.596L19.75 8.848 15.154 4.25l2.298-2.299a3.248 3.248 0 0 1 4.596 0z"></path>
+                </svg>
+            </button>
+            <button routerLink="../../../add-post" routerLinkActive="active"  data-toggle="tooltip" data-placement="left" title="Thêm bài viết" class="btn btn-light btn-outline-white rounded-circle text-center ml-2" style="height: 48px; width: 48px;" type="button">
+                <svg class="gUZ pBj U9O kVc" height="18" width="18" viewBox="0 0 24 24" aria-hidden="true" aria-label="" role="img">
+                  <path d="M22 10h-8V2a2 2 0 0 0-4 0v8H2a2 2 0 0 0 0 4h8v8a2 2 0 0 0 4 0v-8h8a2 2 0 0 0 0-4"></path>
+                </svg>
+            </button>
+          </div>
         </div>
     </div>
     <div class="item card-columns mt-4">
-        <div id="1" *ngFor="let post of posts">
-          <a routerLink="../../../detail-post/{{post.id}}/{{post.ownerId}}" class="text-dark card-link" id="1">
-            <div class="card btn-outline-white">
-              <img class="card-img-top img-fluid" [src]="post.path" alt="Card image cap">
-              <p class="card-title" style="margin: 5px 5px 5px 5px; font-size:15px;"><strong>{{post.title}}</strong></p>
+      <div id="1" *ngFor="let post of posts">
+        <a class="text-dark card-link" id="1">
+          <!-- <div class="card btn-outline-white">
+            <img class="card-img-top img-fluid" [src]="post.path" alt="Card image cap">
+            <p class="card-title" style="margin: 5px 5px 5px 5px; font-size:15px;"><strong>{{post.title}}</strong></p>
+          </div> -->
+          <div class="card btn-outline-white">
+            <div class="card-img">
+              <img class="card-img card-img-top img-fluid" [src]="post.path" alt="Card image cap">
+              <div routerLink="../../../detail-post/{{post.id}}/{{post.ownerId}}" class="card_inner">
+              </div>
+              <div *ngIf="id==maccount.id" class="button-inner" style="text-align: right;">
+                <button (click)="openEditPostDialog(post.id)" class="btn btn-ouline-light rounded-circle">
+                  <i class="fas fa-pen"></i>
+                </button>
+                <button class="btn btn-ouline-light rounded-circle ml-2">
+                  <a href="post.path" download="{{post.title}}.jpg">
+                    <span>
+                      <i class="fas fa-download"></i>
+                    </span>
+                  </a>
+                </button>
+              </div>
+              <div *ngIf="id!=maccount.id" class="button-inner dropdown no-arrow ml-4" dropdown style="text-align: right;">
+                <button class="dropdown-toggle card-link btn btn-ouline-light rounded-circle" role="button"
+                    id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    dropdownToggle>
+                  <i class="fas fa-ellipsis-h"></i>
+                </button>
+                <div id="myDropdown" class="dropdown-menu dropdown-menu-bottom shadow animated--fade-in"
+                    aria-labelledby="dropdownMenuLink" *dropdownMenu>
+                    <a class="dropdown-item" href="post.path" download="{{post.title}}.jpg">Tải xuống</a>
+                    <a class="dropdown-item" (click)="openReportPostDialog(post.id)">Báo cáo bài viết</a>
+                </div>
+              </div>
             </div>
-          </a>
-          <!-- <a *ngIf="id" routerLink="../../detail-post/{{post.id}}/{{post.ownerId}}" class="text-dark card-link" id="1">
-            <div class="card btn-outline-white">
-              <img class="card-img-top img-fluid" [src]="createImgPath(post.imagePath)" alt="Card image cap">
-              <p class="card-title" style="margin: 5px 5px 5px 5px; font-size:15px; font-family: Noto Serif;">{{post.postTitle}}</p>
+            <div routerLink="../../../detail-post/{{post.id}}/{{post.ownerId}}" class="card-title" style="margin: 5px 5px 0 5px; font-size:15px">
+              <strong>{{post.title}}</strong>
             </div>
-          </a> -->
-        </div>
+            <i *ngIf="post.isReactedByThisUser== false" (click)="onCreateReaction(post.id)" class="fa fa-heart btn" style=" color: rgb(175, 173, 173); margin: 0 5px; padding: 0;"></i>
+            <i *ngIf="post.isReactedByThisUser==true" (click)="unReaction(post.id)" class="fa fa-heart btn" style=" color: rgba(212, 10, 10, 0.76); margin: 0 5px; padding: 0;"></i>
+            <span *ngIf="post.reactionCount!==0" style="margin-left: 1px; color:black; font-size: 13px;">{{post.reactionCount}}</span>
+          </div>
+        </a>
       </div>
+    </div>
 </div>
 <div *ngIf="maccount.id==id" class="btn btn-fixed" >
   <button routerLink="../../../add-post" data-toggle="tooltip" data-placement="left" title="Thêm bài viết" class="btn btn-outline-white rounded-circle" style="height: 50px; width: 50px; background-color: rgb(238, 237, 237); box-shadow: 0px 8px 8px -6px black;" type="button">

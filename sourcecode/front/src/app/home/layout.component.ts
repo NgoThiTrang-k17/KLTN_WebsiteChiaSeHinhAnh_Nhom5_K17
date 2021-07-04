@@ -19,6 +19,8 @@ export class LayoutComponent implements OnInit {
   returnURL: any;
   notificationCount: number;
 
+  public countMess: number;
+
   public follow: FollowToCreate;
   public mfollow: Follow;
   public account: Account;
@@ -57,6 +59,9 @@ export class LayoutComponent implements OnInit {
     .pipe()
     .subscribe(notifications => {
     })
+
+    this.countMess = this.presenceService.countNewMess;
+    console.log(this.countMess);
 
   }
 
@@ -135,11 +140,12 @@ export class LayoutComponent implements OnInit {
     this.modalRef = this.modalService.open(SearchComponent, { windowClass: 'modalSearch', backdropClass: 'backdropModalSearch'});
   }
 
+  // MESS
   openMess() {
     this.modalMessRef = this.modalService.open(MessageComponent, { windowClass: 'modalMess', backdropClass: 'backdropModalMess'});
   }
 
-  public createImgPath = (serverPath: string) => {
-      return `http://localhost:5000/${serverPath}`;
+  resetCountMess() {
+    this.presenceService.resetCountNewMess();
   }
 }

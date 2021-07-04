@@ -21,6 +21,8 @@ export class PresenceService {
   private userMessageSource = new BehaviorSubject<Message[]>([]);
   userMessages$ = this.userMessageSource.asObservable();
 
+  countNewMess = 0;
+
   constructor(private router: Router) { }
 
   createHubConnection(user: Account) {
@@ -68,6 +70,7 @@ export class PresenceService {
     this.hubConnection.on('NewMessageReceived', message=>{
       // Danh sanh nguoi dang nhan tin
       this.userMessages$.pipe(take(1)).subscribe(messages=>{
+        this.countNewMess = this.countNewMess + 1;
         this.userMessageSource.next([...messages.filter(m =>
           (m.recipientId + m.senderId ) !== (message.recipientId + message.senderId)), message]);
       })
@@ -79,6 +82,9 @@ export class PresenceService {
     //   .pipe(take(1))
     //   .subscribe(() => this.router.navigateByUrl('/members/'+ userId +'?Tab=1'));
     // })
+    if(this.countNewMess != 0){
+      return this.countNewMess;
+    }
   }
 
   stopHubConnection(){
@@ -99,11 +105,16 @@ export class PresenceService {
   updateMessageStatus(id: number) {
     const menuItemsUpdated = this.userMessageSource.getValue().map((item) => {
       if(item.id === id) {
-        return {...item, read: new Date()};
+        return {...item, read: new Date(Date.now())};
       }
       return item;
     });
+    console.log(menuItemsUpdated);
 
     this.userMessageSource.next(menuItemsUpdated);
+  }
+
+  resetCountNewMess() {
+    this.countNewMess = 0;
   }
 }

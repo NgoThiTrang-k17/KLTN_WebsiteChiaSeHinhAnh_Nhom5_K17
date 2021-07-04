@@ -1,9 +1,35 @@
 <div *ngIf="!searchAccount" class="item card-columns">
   <div id="1" *ngFor="let post of posts">
-    <a routerLink="../../detail-post/{{post.id}}/{{post.ownerId}}" class="text-dark card-link" id="1">
-      <div class="card btn-outline-white">
+    <a class="text-dark card-link" id="1">
+      <!-- <div class="card btn-outline-white">
         <img class="card-img-top img-fluid" [src]="post.path" alt="Card image cap">
         <p class="card-title" style="margin: 5px 5px 5px 5px; font-size:15px;"><strong>{{post.title}}</strong></p>
+      </div> -->
+      <div class="card btn-outline-white">
+        <div class="card-img">
+          <img class="card-img card-img-top img-fluid" [src]="post.path" alt="Card image cap">
+          <div routerLink="../../detail-post/{{post.id}}/{{post.ownerId}}" class="card_inner">
+          </div>
+          <div class="button-inner dropdown no-arrow ml-4" dropdown style="text-align: right;">
+            <button class="dropdown-toggle card-link btn btn-ouline-light rounded-circle" role="button"
+                id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                dropdownToggle>
+              <i class="fas fa-ellipsis-h"></i>
+            </button>
+            <div id="myDropdown" class="dropdown-menu dropdown-menu-bottom shadow animated--fade-in"
+                aria-labelledby="dropdownMenuLink" *dropdownMenu>
+                <a class="dropdown-item" href="post.path" download="{{post.title}}.jpg">Tải xuống</a>
+                <a *ngIf="post.ownerId != maccount.id" class="dropdown-item" (click)="openReportDialog(post.id)">Báo cáo bài viết</a>
+                <a *ngIf="post.ownerId == maccount.id" class="dropdown-item" (click)="deletePost()">Xoá bài viết</a>
+            </div>
+          </div>
+        </div>
+        <div routerLink="../../detail-post/{{post.id}}/{{post.ownerId}}" class="card-title" style="margin: 5px 5px 0 5px; font-size:15px">
+          <strong>{{post.title}}</strong>
+        </div>
+        <i *ngIf="post.isReactedByThisUser== false" (click)="onCreateReaction(post.id)" class="fa fa-heart btn" style=" color: rgb(175, 173, 173); margin: 0 5px; padding: 0;"></i>
+        <i *ngIf="post.isReactedByThisUser==true" (click)="unReaction(post.id)" class="fa fa-heart btn" style=" color: rgba(212, 10, 10, 0.76); margin: 0 5px; padding: 0;"></i>
+        <span *ngIf="post.reactionCount!==0" style="margin-left: 1px; color:black; font-size: 13px;">{{post.reactionCount}}</span>
       </div>
     </a>
   </div>

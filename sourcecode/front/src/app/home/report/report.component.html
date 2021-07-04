@@ -9,12 +9,31 @@
   </div>
 </div>
 <div mat-dialog-content >
-  <mat-radio-group
+  <!-- ------User------- -->
+  <mat-radio-group *ngIf="targetType === 0"
+    aria-labelledby="example-radio-group-label"
+    class="example-radio-group"
+    [(ngModel)]="reportType">
+    <mat-radio-button class="example-radio-button" *ngFor="let reportAccount of reportAccounts" [value]="reportAccount">
+      <label>{{reportAccount}}</label>
+    </mat-radio-button>
+  </mat-radio-group>
+  <!-- ------Post------- -->
+  <mat-radio-group *ngIf="targetType === 1"
     aria-labelledby="example-radio-group-label"
     class="example-radio-group"
     [(ngModel)]="reportType">
     <mat-radio-button class="example-radio-button" *ngFor="let reportPost of reportPosts" [value]="reportPost">
       <label>{{reportPost}}</label>
+    </mat-radio-button>
+  </mat-radio-group>
+  <!-- ------Bình luận------- -->
+  <mat-radio-group *ngIf="targetType === 2"
+    aria-labelledby="example-radio-group-label"
+    class="example-radio-group"
+    [(ngModel)]="reportType">
+    <mat-radio-button class="example-radio-button" *ngFor="let reportComment of reportComments" [value]="reportComment">
+      <label>{{reportComment}}</label>
     </mat-radio-button>
   </mat-radio-group>
 </div>

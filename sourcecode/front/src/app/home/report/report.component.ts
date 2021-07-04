@@ -12,6 +12,13 @@ import { AccountService, ReportService } from '../../_services';
 })
 export class ReportComponent implements OnInit {
 
+  reportAccounts: string[] = [
+    'Giả mạo',
+    'Quấy rối',
+    'Đăng nội dung không phù hợp',
+    'Đây là tài khoản của tôi',
+  ];
+
   reportPosts: string[] = [
     'Spam',
     'Nội dung khiêu dâm',
@@ -21,7 +28,15 @@ export class ReportComponent implements OnInit {
     'Nội dung tiêu cực, bạo lực',
     'Phản động',
     'Hàng hoá nguy hiểm, hàng cấm',
-  ]
+  ];
+
+  reportComments: string[] = [
+    'Spam',
+    'Nội dung khiêu dâm',
+    'Thông tin sai lệch',
+    'Nội dung tiêu cực, bạo lực',
+    'Hàng hoá nguy hiểm, hàng cấm',
+  ];
 
   @ViewChild('reportForm') reportForm: NgForm;
 

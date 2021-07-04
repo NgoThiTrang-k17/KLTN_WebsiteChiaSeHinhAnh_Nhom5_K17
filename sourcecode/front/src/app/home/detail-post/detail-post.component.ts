@@ -1,16 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import 'rxjs/add/operator/filter';
+import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 
 import { AccountService, PostService, AlertService, CommentService, ReactionService, FollowService } from '@app/_services';
 import { Post, Comment, CommentToCreate, commentToCreateForCmt, CommentToUpdate , Reaction, ReactionToCreate, Account, Follow, FollowToCreate, ReactionCmtToCreate } from '@app/_models';
-
+import { ReportComponent } from '../report/report.component';
+import { EditPostDialogComponent } from '../detail-post/edit-post-dialog/edit-post-dialog.component';
 @Component({
   selector: 'app-detail-post',
   templateUrl: './detail-post.component.html'
 })
-export class DetailPostComponent {
+export class DetailPostComponent implements OnInit {
 
   path: string;
   myForm: FormGroup;
@@ -45,6 +46,7 @@ export class DetailPostComponent {
   post = new Post;
   commentEdit = new Comment;
   constructor(
+    public dialog: MatDialog,
     private postService: PostService,
     private route: ActivatedRoute,
     private router: Router,
@@ -255,21 +257,17 @@ export class DetailPostComponent {
     this.follow = {
       subjectId: this.post.ownerId,
     }
-    // console.log(this.follow);
+
     this.followService.createFollow(this.follow)
     .subscribe(res => {
-      // console.log(res);
-      //alert('Follow thành công!');
       this.getRoute(this.post.id);
       this.getFollow(this.post.ownerId);
     });
   }
 
   unFollow() {
-    // console.log(this.post.ownerId);
     this.followService.delete(this.post.ownerId)
     .subscribe(() => {
-      //alert('Bỏ follow thành công!');
       this.getRoute(this.post.id);
       this.getFollow(this.post.ownerId);
     });
@@ -326,7 +324,32 @@ export class DetailPostComponent {
     }
   }
 
-  // public createImgPath = (serverPath: string) => {
-  //   return `http://localhost:5000/${serverPath}`;
-  // }
+  openReportDialog(postId: number) {
+    let dialogRef1 = this.dialog.open(ReportComponent,{
+      width: '500px',
+      minHeight: '200px',
+      maxHeight:'600px',
+      data: {
+        targetId: postId,
+        targetType: 1,
+      }
+    });
+  }
+
+  openEditPostDialog(postId: number){
+    let dialogRef3 = this.dialog.open(EditPostDialogComponent,{
+      width: '700px',
+      minHeight: '200px',
+      maxHeight:'600px',
+      data: {
+        postId: postId,
+      }
+    });
+    dialogRef3.afterClosed().subscribe(() => {
+      this.router.routeReuseStrategy.shouldReuseRoute = () =>{
+        return false;
+      }
+      this.getRoute(this.route.snapshot.params['id']);
+    });
+  }
 }

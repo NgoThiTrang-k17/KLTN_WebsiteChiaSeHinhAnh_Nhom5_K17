@@ -44,8 +44,8 @@ export class PostService {
     return this.http.get<Post[]>(`${baseUrl}/GetSuggestion/${id}`);
   }
 
-  getPostById(id):Observable<Post[]> {
-      return this.http.get<Post[]>(`${baseUrl}/${id}`);
+  getPostById(id):Observable<Post> {
+    return this.http.get<Post>(`${baseUrl}/${id}`);
   }
 
   getAllByUserId(id:number):Observable<Post[]> {

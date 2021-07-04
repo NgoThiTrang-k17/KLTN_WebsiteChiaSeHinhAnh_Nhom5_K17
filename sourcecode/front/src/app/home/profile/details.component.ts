@@ -1,14 +1,18 @@
-﻿import { Component } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 
-import { PostToCreate, Post, Account, Follow, FollowToCreate } from '@app/_models';
-import { AccountService, PostService, FollowService} from '@app/_services';
+import { PostToCreate, Post, Account, Follow, FollowToCreate, ReactionToCreate } from '@app/_models';
+import { AccountService, PostService, FollowService, ReactionService } from '@app/_services';
 import { ListFollowerDialogComponent } from './listFollower-dialog.component';
 import { ListFollowingDialogComponent } from './listFollowing-dialog.component';
-
-@Component({ templateUrl: 'details.component.html' })
-export class DetailsComponent {
+import { ReportComponent } from '../report/report.component';
+import { EditPostDialogComponent } from '../detail-post/edit-post-dialog/edit-post-dialog.component';
+@Component({
+  templateUrl: 'details.component.html',
+  styleUrls: ['./details.component.less']
+})
+export class DetailsComponent implements OnInit{
   maccount = this.accountService.accountValue;
   public post: PostToCreate;
   public posts: Post[] = [];
@@ -16,6 +20,7 @@ export class DetailsComponent {
   account: Account;
   public follow: FollowToCreate;
   public mfollow: Follow;
+  public reaction: ReactionToCreate;
   followerId: number;
   subjectId: number;
   followerCount: number;
@@ -26,10 +31,10 @@ export class DetailsComponent {
     private accountService: AccountService,
     private postService: PostService,
     private followService: FollowService,
+    private reactionService: ReactionService,
     private route: ActivatedRoute,
     private router: Router,
-    public dialogFollower: MatDialog,
-    public dialogFollowing: MatDialog,
+    public dialog: MatDialog,
   ) { }
 
   ngOnInit() {
@@ -40,15 +45,16 @@ export class DetailsComponent {
     }
 
     this.postService.getAllByUserId(this.id)
-        .subscribe(res => {
-            this.posts = res as Post[];
-            console.log(res);
-        });
+    .subscribe(res => {
+      this.posts = res as Post[];
+      console.log(res);
+    });
 
     this.accountService.getById(this.id)
-        .subscribe((res:any)=>{
-            this.account = res;
-        })
+    .subscribe((res:any)=>{
+      this.account = res;
+    })
+
     this.getFollow(this.id);
     localStorage.removeItem('path');
     this.path = 'user/detail/' + this.id;
@@ -56,7 +62,7 @@ export class DetailsComponent {
   }
 
   openListFollowerDialog(followerCount:number): void{
-    let dialogRef1 = this.dialogFollower.open(ListFollowerDialogComponent,{
+    let dialogRef1 = this.dialog.open(ListFollowerDialogComponent,{
       width: '500px',
       minHeight: '200px',
       maxHeight:'600px',
@@ -79,7 +85,7 @@ export class DetailsComponent {
 
   openListFollowingDialog(followingCount:number): void{
       console.log(followingCount);
-      let dialogRef2 = this.dialogFollowing.open(ListFollowingDialogComponent,{
+      let dialogRef2 = this.dialog.open(ListFollowingDialogComponent,{
           width: '500px',
           minHeight: '200px',
           maxHeight:'600px',
@@ -137,7 +143,88 @@ export class DetailsComponent {
     });
   }
 
-  public createImgPath = (serverPath: string) => {
-      return `http://localhost:5000/${serverPath}`;
+  onCreateReaction(postId: number) {
+    this.reaction = {
+      targetId: postId,
+    }
+    // console.log(this.reaction);
+    this.reactionService.createReaction(this.reaction)
+    .subscribe(res => {
+      this.accountService.getById(this.id)
+        .subscribe((res:any)=>{
+            this.account = res;
+        })
+    });
   }
+
+  unReaction(postId: number) {
+    this.reactionService.deletePost(postId)
+    .subscribe(() => {
+      this.accountService.getById(this.id)
+        .subscribe((res:any)=>{
+            this.account = res;
+        })
+    });
+  }
+
+  deletePost(id: number) {
+    var r = confirm("Bạn có chắc chắn muốn xoá bài viết này?");
+    if(r)
+    {
+      try {
+          this.postService.delete(id)
+          .subscribe(() => {
+            this.router.navigate(['user']);
+          });
+        } catch (e) {
+          console.log(e);
+      }
+    }
+  }
+
+  openReportDialog(accountId: number): void{
+    let dialogRef1 = this.dialog.open(ReportComponent,{
+      width: '500px',
+      minHeight: '200px',
+      maxHeight:'600px',
+      data: {
+        targetId: accountId,
+        targetType: 0,
+      }
+    });
+  }
+
+  openReportPostDialog(postId: number): void{
+    let dialogRef2 = this.dialog.open(ReportComponent,{
+      width: '500px',
+      minHeight: '200px',
+      maxHeight:'600px',
+      data: {
+        targetId: postId,
+        targetType: 1,
+      }
+    });
+  }
+
+  openEditPostDialog(postId: number){
+    let dialogRef3 = this.dialog.open(EditPostDialogComponent,{
+      width: '700px',
+      minHeight: '200px',
+      maxHeight:'600px',
+      data: {
+        postId: postId,
+      }
+    });
+    dialogRef3.afterClosed().subscribe(() => {
+      this.router.routeReuseStrategy.shouldReuseRoute = () =>{
+        return false;
+      }
+      this.postService.getAllByUserId(this.id)
+      .subscribe(res => {
+        this.posts = res as Post[];
+        console.log(res);
+      });
+    });
+  }
+
 }
