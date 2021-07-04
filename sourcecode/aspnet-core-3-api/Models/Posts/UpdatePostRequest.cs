@@ -5,13 +5,38 @@ namespace WebApi.Models.Posts
 {
     public class UpdatePostRequest
     {
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public DateTime Created { get; set; }
-        public string Categories { get; set; }
-        public string Path { get; set; }
+        private string _title;
+        private string _description; 
+        private string _categories;
+        private string _path;
 
-        public int OwnerId { get; set; }
 
+
+        public string Title
+        {
+            get => _title;
+            set => _title = replaceEmptyWithNull(value);
+        }
+        public string Description
+        {
+            get => _description;
+            set => _description = replaceEmptyWithNull(value);
+        }
+        public string Categories
+        {
+            get => _categories;
+            set => _categories = replaceEmptyWithNull(value);
+        }
+        public string Path
+        {
+            get => _path;
+            set => _path = replaceEmptyWithNull(value);
+        }
+
+        private string replaceEmptyWithNull(string value)
+        {
+            // replace empty string with null to make field optional
+            return string.IsNullOrEmpty(value) ? null : value;
+        }
     }
 }
