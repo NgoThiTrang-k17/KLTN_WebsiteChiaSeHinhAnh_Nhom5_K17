@@ -66,7 +66,7 @@ namespace WebApi.Services
         public PostResponse UpdatePost(int id, UpdatePostRequest model)
         {
             var post = GetPost(id);
-            post.Title = model.Title;
+            _mapper.Map(model, post);
             _context.Posts.Update(post);
             _context.SaveChanges();
 
