@@ -25,10 +25,11 @@ namespace WebApi.Services
         //SearchResult<Post> SearchByCategory(string query, IEnumerable<string> tags, int page, int pageSize);
 
         //T Get(string id);
-        IEnumerable<PostResponse> SearchForPosts(string query);
-        IEnumerable<PostResponse> SearchByCategories(string query);
+        IEnumerable<PostResponse> SearchForPosts(int id, string query);
+        IEnumerable<PostResponse> SearchByCategories(int id, string query);
         IEnumerable<AccountResponse> SearchForAccounts(int id, string query);
         IEnumerable<AccountResponse> SearchForMessage(int id, string query);
+        Task<IEnumerable<string>> SearchHistory(int id);
     }
     public class SearchService : ISearchService
     {
@@ -45,15 +46,45 @@ namespace WebApi.Services
             _appSettings = appSettings.Value;
         }
 
-        public IEnumerable<PostResponse> SearchForPosts(string query)
+        public IEnumerable<PostResponse> SearchForPosts(int id, string query)
         {
             var posts = _context.Posts.Where(p => p.Title.Contains(query) || p.Categories.Contains(query));
+            var account = _context.Users.Find(id);
+            var history = account.SearchHistory.Split('-');
+            if(history.Count() < 5)
+            {
+                var newHistory = String.Join('-', history.Append(query));
+                account.SearchHistory = newHistory;
+            }
+            else
+            {
+                var newHistory = String.Join('-', history.Take(4).Append(query));
+                account.SearchHistory = newHistory;
+            }
+            _context.Users.Update(account);
+            _context.SaveChanges();
             return _mapper.Map<IList<PostResponse>>(posts);
         }
-        public IEnumerable<PostResponse> SearchByCategories(string query)
+        public IEnumerable<PostResponse> SearchByCategories(int id, string query)
         {
-            if (query.Contains('-')) query = query.Split('-').Take(1).ToString();
+            if (query.Contains('-'))
+                query = query.Split('-').Take(1).ToString();
             var posts = _context.Posts.Where(p => p.Categories.Contains(query));
+
+            var account = _context.Users.Find(id);
+            var history = account.SearchHistory.Split('-');
+            if (history.Count() < 5)
+            {
+                var newHistory = String.Join('-', history.Append(query));
+                account.SearchHistory = newHistory;
+            }
+            else
+            {
+                var newHistory = String.Join('-', history.Take(4).Append(query));
+                account.SearchHistory = newHistory;
+            }
+            _context.Users.Update(account);
+            _context.SaveChanges();
             return _mapper.Map<IList<PostResponse>>(posts);
         }
 
@@ -88,6 +119,13 @@ namespace WebApi.Services
                     accountResponse.IsFollowedByCurrentUser = 0;
             }
             return accountResponses;
+        }
+
+        public async Task<IEnumerable<string>> SearchHistory(int id)
+        {
+            var account = await _context.Users.FindAsync(id);
+             
+            return account.SearchHistory.Split('-',StringSplitOptions.RemoveEmptyEntries);
         }
     }
     //public class ElasticIndexService

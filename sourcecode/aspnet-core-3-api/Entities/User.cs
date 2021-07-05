@@ -24,7 +24,9 @@ namespace WebApi.Entities
         public DateTime LastActive { get; set; }
         public DateTime? Updated { get; set; }
         public List<RefreshToken> RefreshTokens { get; set; }
-       
+
+        public string SearchHistory { get; set; }
+
 
         public bool OwnsToken(string token) 
         {

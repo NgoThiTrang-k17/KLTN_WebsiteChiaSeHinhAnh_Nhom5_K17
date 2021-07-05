@@ -38,11 +38,12 @@ namespace WebApi.Controllers
             }
             else
             {
-                var posts = _searchService.SearchForPosts(query);
+                var posts = _searchService.SearchForPosts(Account.Id, query);
                 return Ok(posts);
             }
 
         }
+
         [HttpGet("SearchForMessage")]
         public ActionResult<IEnumerable<AccountResponse>> SearchForMessage(string query)
         {
@@ -53,8 +54,14 @@ namespace WebApi.Controllers
         [HttpGet("SearchByCategories")]
         public ActionResult<IEnumerable<AccountResponse>> SearchByCategories(string query)
         {
-            var posts = _searchService.SearchForAccounts(Account.Id, query);
+            var posts = _searchService.SearchByCategories(Account.Id, query);
             return Ok(posts);
+        }
+        [HttpGet("SearchHistory/{id:int}")]
+        public async Task<ActionResult<IEnumerable<string>>> Search(int id)
+        { 
+            var history = await _searchService.SearchHistory(id);
+            return Ok(history);
         }
 
     }
