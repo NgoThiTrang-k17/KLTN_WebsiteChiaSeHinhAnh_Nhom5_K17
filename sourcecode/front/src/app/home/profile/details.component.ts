@@ -1,17 +1,21 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { PostToCreate, Post, Account, Follow, FollowToCreate, ReactionToCreate } from '@app/_models';
-import { AccountService, PostService, FollowService, ReactionService } from '@app/_services';
+import { AccountService, PresenceService, PostService, FollowService, ReactionService } from '@app/_services';
 import { ListFollowerDialogComponent } from './listFollower-dialog.component';
 import { ListFollowingDialogComponent } from './listFollowing-dialog.component';
 import { ReportComponent } from '../report/report.component';
 import { EditPostDialogComponent } from '../detail-post/edit-post-dialog/edit-post-dialog.component';
+import { ChatComponent } from '../message/chat/chat.component';
+
 @Component({
   templateUrl: 'details.component.html',
   styleUrls: ['./details.component.less']
 })
+
 export class DetailsComponent implements OnInit{
   maccount = this.accountService.accountValue;
   public post: PostToCreate;
@@ -26,15 +30,18 @@ export class DetailsComponent implements OnInit{
   followerCount: number;
   followingCount: number;
   path: string;
+  modalChatRef :any;
 
   constructor(
     private accountService: AccountService,
     private postService: PostService,
+    public presenceService: PresenceService,
     private followService: FollowService,
     private reactionService: ReactionService,
     private route: ActivatedRoute,
     private router: Router,
     public dialog: MatDialog,
+    private modalService: NgbModal,
   ) { }
 
   ngOnInit() {
@@ -225,6 +232,11 @@ export class DetailsComponent implements OnInit{
         console.log(res);
       });
     });
+  }
+
+  openModalMessage(userId: number) {
+    this.modalChatRef = this.modalService.open(ChatComponent, { windowClass: 'modalMess', backdropClass: 'backdropModalMess'});
+    this.modalChatRef.componentInstance.userId = userId;
   }
 
 }

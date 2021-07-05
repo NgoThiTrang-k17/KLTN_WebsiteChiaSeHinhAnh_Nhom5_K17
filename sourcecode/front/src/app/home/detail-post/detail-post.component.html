@@ -1,283 +1,69 @@
 <div class="row">
-    <div><a class="btn" (click)="back()" style="position: fixed;"><svg class="Hn_ gUZ pBj" height="20" width="20" viewBox="0 0 24 24" aria-label="Nút quay lại" role="img"><path d="M8.415 4.586a2 2 0 1 1 2.828 2.828L8.657 10H21a2 2 0 0 1 0 4H8.657l2.586 2.586a2 2 0 1 1-2.828 2.828L1 12l7.415-7.414z"></path></svg></a></div>
-    <div class="container">
-        <div class="card shadow-lg" tyle="position: relative;">
-            <div class="row" style="display: flex;">
-                <div class="col-6 text-center" style="outline-style: none; ">
-                    <div style="position: relative;" >
-                        <div class="card mt-4 mb-4 ml-4 mr-4 ">
-                            <img style="height: 100%; width: 100%;" [src]="post.path" alt="">
-                        </div>
-                    </div>
-
-                </div>
-                <div class="col-6">
-                    <div class="row mt-3">
-                      <div class="col-1 mr-4">
-                          <div class="dropdown no-arrow ml-4" dropdown>
-                              <button class="dropdown-toggle card-link btn btn-ouline-light rounded-circle" role="button"
-                                  id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                                  dropdownToggle>
-                                  <svg class="gUZ pBj" height="20" width="20" viewBox="0 0 24 24"
-                                      aria-label="Thêm tùy chọn" role="img">
-                                      <path
-                                          d="M12 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3M3 9c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm18 0c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3z">
-                                      </path>
-                                  </svg>
-                              </button>
-                              <div id="myDropdown" class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                aria-labelledby="dropdownMenuLink" *dropdownMenu>
-                                <a class="dropdown-item" href="post.path" download="{{post.title}}.jpg">Tải xuống</a>
-                                <a *ngIf="post.ownerId != maccount.id" class="dropdown-item" (click)="openReportDialog(post.id)">Báo cáo bài viết</a>
-                              </div>
-                          </div>
-                        </div>
-                        <!-- <div class="col-1 mt-2 ml-1"><svg class="gUZ pBj" height="20" width="20" viewBox="0 0 24 24"
-                                aria-label="Gửi" role="img">
-                                <path
-                                    d="M21 14c1.1 0 2 .9 2 2v6c0 1.1-.9 2-2 2H3c-1.1 0-2-.9-2-2v-6c0-1.1.9-2 2-2s2 .9 2 2v4h14v-4c0-1.1.9-2 2-2zM8.82 8.84c-.78.78-2.05.79-2.83 0-.78-.78-.79-2.04-.01-2.82L11.99 0l6.02 6.01c.78.78.79 2.05.01 2.83-.78.78-2.05.79-2.83 0l-1.2-1.19v6.18a2 2 0 1 1-4 0V7.66L8.82 8.84z">
-                                </path>
-                            </svg>
-                        </div> -->
-                        <!-- <div class="offset-7 col-1"><a *ngIf="post.ownerId==account.id" routerLink="edit/{{post.id}}" href="" class="btn btn-danger rounded-pill">Chỉnh sửa</a></div> -->
-                        <div class="offset-6 col-3 btn-group" *ngIf="post.ownerId==maccount.id" style="justify-content: center; align-items: center; display: flex;">
-                            <button routerLink="../../../edit/{{post.id}}" routerLinkActive="router-link-active"  data-toggle="tooltip" data-placement="left" title="Chỉnh sửa thông tin" class="btn btn-outline-white rounded-circle text-center ml-4" style="height: 48px; width: 48px;" type="button">
-                                <svg class="gUZ pBj U9O kVc" height="18" width="18" viewBox="0 0 24 24" aria-hidden="true" aria-label="" role="img">
-                                    <path d="M13.386 6.018l4.596 4.596L7.097 21.499 1 22.999l1.501-6.096L13.386 6.018zm8.662-4.066a3.248 3.248 0 0 1 0 4.596L19.75 8.848 15.154 4.25l2.298-2.299a3.248 3.248 0 0 1 4.596 0z"></path>
-                                </svg>
-                            </button>
-                            <button (click)="deletePost(post.id)" class="btn btn-danger rounded-pill ml-2" style="height: 80%;">Xoá</button>
-                        </div>
-                    </div>
-                    <!-- <div class="row">
-                        <div class="offset-1 col-3 p-0"><a href="" class="dark-link">facebook.com</a></div>
-                    </div> -->
-                    <br>
-                    <br>
-                    <div class="p-0" style="margin-left: 31px;">
-                      <h3 class="mb-1"><strong>{{post.title}}</strong></h3>
-                      <p style="margin-top: 22px;">{{post.description}}</p>
-                    </div>
-                    <a *ngIf="post.isReactedByThisUser==false" class="btn btn-sm ml-4" (click)="onCreateReaction()" ><span style="font-size:medium; color: rgb(148, 148, 148);">{{post.reactionCount}} <i class="fa fa-heart unheart" style=" color: rgb(175, 173, 173);"></i></span></a>
-                    <a *ngIf="post.isReactedByThisUser==true" class="btn btn-sm ml-4" (click)="unReaction()"><span style="font-size:medium; color: rgb(148, 148, 148);">{{post.reactionCount}}  <i class="fa fa-heart heart" style=" color: rgba(212, 10, 10, 0.76);"></i></span></a>
-                    <div class="row mt-3">
-                        <div class="offset-1 p-0 mt-1">
-                            <img *ngIf="account.avatarPath==null" class="img-fluid rounded-circle" style="height: 45px; width: 46px;" src="../../assets/images/default-profile.png">
-                            <img *ngIf="account.avatarPath!=null" class="img-fluid rounded-circle" style="height: 45px; width: 46px;" [src]="account.avatarPath">
-                            <!-- <img src="../../assets/images/fc1cbe7b52ebf837e53383b9d24e1bf2.jpg"
-                                class="img-fluid w-25 rounded-circle" alt=""> -->
-
-                        </div>
-                        <div class="col-7 p-0 mt-1">
-                            <span class="ml-3">
-                                <a *ngIf="editCmt" style="font-weight: bolder;" href="" class="btn" routerLink="../../../../detail/{{account.id}}">{{account.name}} </a>
-                                <a *ngIf="!editCmt" style="font-weight:bolder;" href="" class="btn" routerLink="../../../detail/{{account.id}}">{{account.name}} </a>
-                                <svg class="gUZ lZJ U9O kVc text-danger" height="12" width="12" viewBox="0 0 24 24" aria-label="Biểu tượng xác minh miền" role="img">
-                                <path
-                                    d="M12 0a12 12 0 100 24 12 12 0 000-24zM6.37 11.61a1.25 1.25 0 011.76 0l2.37 2.36 5.37-5.35a1.25 1.25 0 011.76 1.76L10.5 17.5l-4.13-4.13a1.25 1.25 0 010-1.76z">
-                                </path>
-                            </svg>
-                            </span>
-                            <p style="font-size: small; margin-left: 8%;">{{post.followerCount}} người theo dõi</p>
-                        </div>
-                        <div *ngIf="maccount.id!=post.ownerId" class="col-2 p-0 mt-2">
-                            <button *ngIf="mfollow.isCreated==0" (click)="onCreateFollow()" class="btn btn-light rounded-pill">Theo dõi</button>
-                            <button *ngIf="mfollow.isCreated==1" (click)="unFollow()" class="btn btn-danger rounded-pill">Huỷ theo dõi</button>
-                        </div>
-                    </div>
-                    <br>
-                    <br>
-                    <div class="offset-1 mb-3">
-                        <mat-tab-group>
-                            <mat-tab label="{{post.commentCount}} Nhận xét">
-                                <!-- <p style="font-size:small;">Chia sẻ phản hồi, đặt câu hỏi hoặc để lại cảm nghĩ</p> -->
-                                <div class="container mt-2 mb-3" >
-                                    <form [formGroup]="myForm">
-                                        <div class="row">
-                                            <div class="col-log-2">
-                                            <img
-                                                *ngIf="maccount.avatarPath==null"
-                                                src="../../assets/images/default-profile.png"
-                                                style="height: 40px; width: 40px;" class="img-fluid card rounded-circle" alt="">
-                                            <img
-                                                *ngIf="maccount.avatarPath!=null"
-                                                [src]="maccount.avatarPath"
-                                                style="height: 40px; width: 40px;" class="img-fluid card rounded-circle" alt="">
-                                            </div>
-                                            <div class="col-10"> <input (keydown.enter)="createCmt($event)" style="width: 100%;" type="text" class="form-control rounded-pill"
-                                                formControlName="contentCreate" id="contentCreate" placeholder="Viết nhận xét"></div>
-                                        </div>
-                                        <!-- <div class="btn-group" style="float: right; margin-right: 15%;">
-                                            <input type="button" (click)="clearForm()" class="btn btn-light rounded-pill mr-2" value="Hủy">
-                                            <input type="submit" class="btn btn-danger rounded-pill" value="Đã xong">
-                                        </div> -->
-                                    </form>
-                                </div>
-                                <div style="margin-bottom: 2%;">
-                                    <div id="1" *ngFor="let comment of comments">
-                                        <div id="1">
-                                            <!-- Comment -->
-                                            <div *ngIf="comment.isParent==true" class="container">
-                                                <div class="row">
-                                                    <div class="col-log-2">
-                                                        <img *ngIf="comment.ownerAvatar==null" src="../../assets/images/default-profile.png" style="height: 40px; width: 41px;" class="img-fluid card rounded-circle" alt="">
-                                                        <img *ngIf="comment.ownerAvatar!=null" [src]="comment.ownerAvatar" style="height: 40px; width: 41px;" class="img-fluid card rounded-circle" alt="">
-                                                    </div>
-                                                    <div class="col-10">
-                                                        <div *ngIf="!editCmt || comment.id!=editCmtId">
-                                                            <div class="card" style="width: 100%;">
-                                                                <div class="ml-2 mt-2 mr-2">
-                                                                    <div class="row">
-                                                                        <div class="col-sm-9">
-                                                                            <span><a *ngIf="editCmt" href="" class="btn" routerLink="../../../../detail/{{comment.ownerId}}"><strong>{{comment.ownerName}}</strong></a></span>
-                                                                            <span><a *ngIf="!editCmt" href="" class="btn" routerLink="../../../detail/{{comment.ownerId}}"><strong>{{comment.ownerName}}</strong></a></span>
-                                                                        </div>
-                                                                        <div *ngIf="maccount.id==comment.ownerId && !editCmt" class="col-sm-2">
-                                                                            <div class="dropdown no-arrow ml-2" dropdown>
-                                                                                <button class="dropdown-toggle card-link btn btn-ouline-light rounded-circle" role="button"
-                                                                                    id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                                                                                    dropdownToggle>
-                                                                                    <svg class="gUZ pBj" height="20" width="20" viewBox="0 0 24 24"
-                                                                                        aria-label="Thêm tùy chọn" role="img" style=" color: rgb(175, 173, 173);">
-                                                                                        <path
-                                                                                            d="M12 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3M3 9c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm18 0c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3z">
-                                                                                        </path>
-                                                                                    </svg>
-                                                                                </button>
-                                                                                <div id="myDropdown" class="dropdown-menu dropdown-menu-right"
-                                                                                    aria-labelledby="dropdownMenuLink" *dropdownMenu>
-                                                                                    <a class="dropdown-item" routerLink="../../../detail-post/{{post.id}}/{{post.ownerId}}/{{comment.id}}/0" (click)="editComment()">Chỉnh sửa</a>
-                                                                                    <a class="dropdown-item" (click)="deleteComment(comment.id)">Xoá</a>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <p style="font-size: 15px; margin-left: 4%;">{{comment.content}}</p>
-                                                                </div>
-                                                            </div>
-                                                            <a *ngIf="comment.isReactedByThisUser==false" class="btn btn-sm ml-3" (click)="onCreateReactionCmt(comment.id)" ><span style="font-size:medium;"><i class="fa fa-heart unheart" style=" color: rgb(175, 173, 173);"></i><span style="font-size:small; color: rgb(148, 148, 148);"> {{comment.reactionCount}}</span></span></a>
-                                                            <a *ngIf="comment.isReactedByThisUser==true" class="btn btn-sm ml-3" (click)="unCreateReactionCmt(comment.id)"><span style="font-size:medium;"><i class="fa fa-heart heart" style=" color: rgba(212, 10, 10, 0.76);"></i><span style="font-size:small; color: rgb(148, 148, 148);"> {{comment.reactionCount}}</span></span></a>
-                                                            <a *ngIf="editCmtId==null" class="btn btn-sm" (click)="onCmt()" routerLink="../../../detail-post/{{post.id}}/{{post.ownerId}}/{{comment.id}}/1"><span style="font-size:medium;"><i class="fa fa-comment comment" style=" color: rgb(175, 173, 173);"></i><span style="font-size:small; color: rgb(148, 148, 148);"> {{comment.childCount}}</span></span></a>
-                                                            <a *ngIf="editCmtId!=null" class="btn btn-sm" (click)="onCmt()" routerLink="../../../../../detail-post/{{post.id}}/{{post.ownerId}}/{{comment.id}}/1"><span style="font-size:medium;"><i class="fa fa-comment comment" style=" color: rgb(175, 173, 173);"></i><span style="font-size:small; color: rgb(148, 148, 148);"> {{comment.childCount}}</span></span></a>
-                                                        </div>
-                                                        <div *ngIf="editCmt && comment.id==editCmtId" class="mb-3">
-                                                            <form [formGroup]="updateCmtForm">
-                                                                <div class="form-inline">
-                                                                    <div class="form-group" style="width: 100%;">
-                                                                        <input (keydown.enter)="updateCmt($event)" type="text" class="form-control rounded-pill col-12" formControlName="content" value="{{comment.content}}">
-                                                                    </div>
-                                                                </div>
-                                                                <!-- <div class="btn-group mt-1" style="float: right; margin-right: 15%;">
-                                                                    <input type="button" (click)="closeEdit()" class="btn btn-light rounded-pill mr-2" value="Hủy">
-                                                                    <input type="submit" class="btn btn-danger rounded-pill" value="Đã xong">
-                                                                </div> -->
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div *ngIf="comment.isParent==true">
-                                                <div id="1" *ngFor="let commentReply of comments">
-                                                    <div id="1">
-                                                        <div *ngIf="commentReply.isChild==true && commentReply.parrentId==comment.id" class="container">
-                                                            <div class="row" style="margin-left: 9%;">
-                                                                <div class="col-log-2">
-                                                                    <img *ngIf="comment.ownerAvatar==null" src="../../assets/images/default-profile.png" style="height: 40px; width: 41px;" class="img-fluid card rounded-circle" alt="">
-                                                                    <img *ngIf="comment.ownerAvatar!=null" [src]="commentReply.ownerAvatar" style="height: 40px; width: 41px;" class="img-fluid card rounded-circle" alt="">
-                                                                </div>
-                                                                <div class="col-10">
-                                                                    <div *ngIf="!editCmt || commentReply.id!=editCmtId">
-                                                                        <div class="card" style="width: 100%;">
-                                                                            <div class="ml-2 mt-2 mr-2">
-                                                                                <div class="row">
-                                                                                    <div class="col-sm-9">
-                                                                                        <span><a *ngIf="editCmt" href="" class="btn" routerLink="../../../../detail/{{commentReply.ownerId}}"><strong>{{commentReply.ownerName}}</strong></a></span>
-                                                                                        <span><a *ngIf="!editCmt" href="" class="btn" routerLink="../../../detail/{{commentReply.ownerId}}"><strong>{{commentReply.ownerName}}</strong></a></span>
-                                                                                    </div>
-                                                                                    <div *ngIf="maccount.id==commentReply.ownerId && !editCmt" class="col-sm-2">
-                                                                                        <div class="dropdown no-arrow ml-2" dropdown>
-                                                                                            <button class="dropdown-toggle card-link btn btn-ouline-light rounded-circle" role="button"
-                                                                                                id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                                                                                                dropdownToggle>
-                                                                                                <svg class="gUZ pBj" height="20" width="20" viewBox="0 0 24 24"
-                                                                                                    aria-label="Thêm tùy chọn" role="img" style=" color: rgb(175, 173, 173);">
-                                                                                                    <path
-                                                                                                        d="M12 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3M3 9c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm18 0c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3z">
-                                                                                                    </path>
-                                                                                                </svg>
-                                                                                            </button>
-                                                                                            <ul id="myDropdown" class="dropdown-menu dropdown-menu-right shadow animated--fade-in" style="overflow-y: visible;"
-                                                                                                aria-labelledby="dropdownMenuLink" *dropdownMenu>
-                                                                                                <li class="dropdown-item" routerLink="../../../detail-post/{{post.id}}/{{post.ownerId}}/{{commentReply.id}}/0" (click)="editComment()">Chỉnh sửa</li>
-                                                                                                <li class="dropdown-item" (click)="deleteComment(commentReply.id)">Xoá</li>
-                                                                                            </ul>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <p style="font-size: 15px; margin-left: 4%;">{{commentReply.content}}</p>
-                                                                            </div>
-                                                                        </div>
-                                                                        <a *ngIf="commentReply.isReactedByThisUser==false" class="btn btn-sm ml-3" (click)="onCreateReactionCmt(commentReply.id)"><span style="font-size:medium;"><i class="fa fa-heart unheart" style=" color: rgb(175, 173, 173);"></i><span style="font-size:small; color: rgb(148, 148, 148);"> {{commentReply.reactionCount}}</span></span></a>
-                                                                        <a *ngIf="commentReply.isReactedByThisUser==true" class="btn btn-sm ml-3" (click)="unCreateReactionCmt(commentReply.id)"><span style="font-size:medium;"><i class="fa fa-heart heart" style=" color: rgba(212, 10, 10, 0.76);"></i><span style="font-size:small; color: rgb(148, 148, 148);"> {{commentReply.reactionCount}}</span></span></a>
-                                                                        <a *ngIf="editCmtId==null" class="btn btn-sm" (click)="onCmt()" routerLink="../../../detail-post/{{post.id}}/{{post.ownerId}}/{{commentReply.id}}/1"><span style="font-size:medium;"><i class="fa fa-comment comment" style=" color: rgb(175, 173, 173);"></i></span></a>
-                                                                        <a *ngIf="editCmtId!=null" class="btn btn-sm" (click)="onCmt()" routerLink="../../../../../detail-post/{{post.id}}/{{post.ownerId}}/{{commentReply.id}}/1"><span style="font-size:medium;"><i class="fa fa-comment comment" style=" color: rgb(175, 173, 173);"></i></span></a>
-                                                                    </div>
-                                                                    <div *ngIf="editCmt && commentReply.id==editCmtId" class="mb-3">
-                                                                        <form [formGroup]="updateCmtForm">
-                                                                            <div class="form-inline">
-                                                                                <div class="form-group" style="width: 100%;">
-                                                                                    <input (keydown.enter)="updateCmt($event)" type="text" class="form-control rounded-pill col-12" formControlName="content" value="{{commentReply.content}}">
-                                                                                </div>
-                                                                            </div>
-                                                                            <!-- <div class="btn-group mt-1" style="float: right; margin-right: 15%;">
-                                                                                <input type="button" (click)="closeEdit()" class="btn btn-light rounded-pill mr-2" value="Hủy">
-                                                                                <input type="submit" class="btn btn-danger rounded-pill" value="Đã xong">
-                                                                            </div> -->
-                                                                        </form>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- Reply Comment -->
-                                            <div *ngIf="cmt==1 && comment.id==editCmtId" class="container mb-4">
-                                                <form [formGroup]="myForm">
-                                                    <div class="row" style="height: 40px; margin-left: 9%;">
-                                                        <div class="col-log-2" style="height: 50%;">
-                                                            <img
-                                                                *ngIf="maccount.avatarPath==null"
-                                                                src="../../assets/images/default-profile.png"
-                                                                style="height: 40px; width: 40px;" class="img-fluid card rounded-circle" alt="">
-                                                            <img
-                                                                *ngIf="maccount.avatarPath!=null"
-                                                                [src]="maccount.avatarPath"
-                                                                style="height: 40px; width: 40px;" class="img-fluid card rounded-circle" alt="">
-                                                        </div>
-                                                        <div class="col-10 form-group"> <input (keydown.enter)="createCmtForCmt($event)" style="width: 100%;" type="text" class="form-control rounded-pill"
-                                                            formControlName="contentCreate" id="contentCreate" placeholder="Viết nhận xét"></div>
-                                                    </div>
-                                                    <!-- <div class="btn-group" style="float: right; margin-right: 15%;">
-                                                        <input type="button" (click)="clearForm()" class="btn btn-light rounded-pill mr-2" value="Hủy">
-                                                        <input type="submit" class="btn btn-danger rounded-pill" value="Đã xong">
-                                                    </div> -->
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </mat-tab>
-                            <mat-tab label="Ảnh"></mat-tab>
-                        </mat-tab-group>
-                    </div>
-
-                </div>
+  <div><a class="btn" (click)="back()" style="position: fixed;"><svg class="Hn_ gUZ pBj" height="20" width="20" viewBox="0 0 24 24" aria-label="Nút quay lại" role="img"><path d="M8.415 4.586a2 2 0 1 1 2.828 2.828L8.657 10H21a2 2 0 0 1 0 4H8.657l2.586 2.586a2 2 0 1 1-2.828 2.828L1 12l7.415-7.414z"></path></svg></a></div>
+  <div class="container">
+    <div class="card shadow-lg" tyle="position: relative;">
+      <div class="row" style="display: flex;">
+        <div class="col-6 text-center" style="outline-style: none; ">
+          <div style="position: relative;" >
+            <div class="card mt-4 mb-4 ml-4 mr-4 ">
+              <img style="height: 100%; width: 100%;" [src]="post.path" alt="">
             </div>
+          </div>
         </div>
+        <div class="col-6" style="padding: 20px 40px 20px 20px;">
+          <div style="text-align: right; margin-bottom: 20px;">
+            <div class="dropdown no-arrow" dropdown>
+              <button class="dropdown-toggle card-link btn btn-ouline-light rounded-circle" role="button"
+                  id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                  dropdownToggle>
+                  <svg class="gUZ pBj" height="20" width="20" viewBox="0 0 24 24"
+                      aria-label="Thêm tùy chọn" role="img">
+                      <path
+                          d="M12 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3M3 9c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm18 0c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3z">
+                      </path>
+                  </svg>
+              </button>
+              <div id="myDropdown" class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                aria-labelledby="dropdownMenuLink" *dropdownMenu>
+                <a class="dropdown-item" href="post.path" download="{{post.title}}.jpg">Tải xuống</a>
+                <a *ngIf="post.ownerId != maccount.id" class="dropdown-item" (click)="openReportDialog(post.id)">Báo cáo bài viết</a>
+                <a *ngIf="post.ownerId == maccount.id" class="dropdown-item" (click)="openEditPostDialog(post.id)">Chỉnh sửa bài viết</a>
+                <a *ngIf="post.ownerId == maccount.id" class="dropdown-item" (click)="deletePost(post.id)">Xoá bài viết</a>
+              </div>
+            </div>
+          </div>
+          <div class="p-0">
+            <h3 style="font-weight: 600;">{{post.title}}</h3>
+            <p style="margin: 0 0 20px 0; font-size: 14px;">{{post.description}}</p>
+          </div>
+          <a *ngIf="post.isReactedByThisUser==false" (click)="onCreateReaction()" ><span style="font-size:medium; color: rgb(148, 148, 148);"><i class="fa fa-heart unheart" style=" color: rgb(175, 173, 173);"></i> {{post.reactionCount}}</span></a>
+          <a *ngIf="post.isReactedByThisUser==true" (click)="unReaction()"><span style="font-size:medium; color: rgb(148, 148, 148);"><i class="fa fa-heart heart" style=" color: rgba(212, 10, 10, 0.76);"></i> {{post.reactionCount}}</span></a>
+          <a (click)="focusComment()" class="ml-2"><span style="font-size:medium;"><i class="fa fa-comment comment" style=" color: rgb(175, 173, 173);"></i><span style="font-size: medium; color: rgb(148, 148, 148);"> {{post.commentCount}}</span></span></a>
+          <div class="row" style="margin: 20px 0 30px 0;">
+            <div class="col-2 p-0 centerAll" style="max-width: 10%;">
+                <img *ngIf="account.avatarPath==null" class="img-fluid rounded-circle" style="height: 50px; width: 50px; border: 1px solid rgba(0,0,0,.15) !important;" src="../../assets/images/default-profile.png">
+                <img *ngIf="account.avatarPath!=null" class="img-fluid rounded-circle" style="height: 50px; width: 50px; border: 1px solid rgba(0,0,0,.15) !important;" [src]="account.avatarPath">
+                <span *ngIf = "(presenceService.onlineUsers$ | async).includes(account.id)" class="material-icons is-online myOnline" style="right: 2px; bottom: 3px;">circle</span>
+              </div>
+              <div class="col p-0">
+                <span class="m-0">
+                    <a style="font-weight:bolder;" href="" class="btn" routerLink="../../../detail/{{account.id}}">{{account.name}} </a>
+                    <svg class="gUZ lZJ U9O kVc text-danger" height="12" width="12" viewBox="0 0 24 24" aria-label="Biểu tượng xác minh miền" role="img">
+                    <path
+                        d="M12 0a12 12 0 100 24 12 12 0 000-24zM6.37 11.61a1.25 1.25 0 011.76 0l2.37 2.36 5.37-5.35a1.25 1.25 0 011.76 1.76L10.5 17.5l-4.13-4.13a1.25 1.25 0 010-1.76z">
+                    </path>
+                </svg>
+                </span>
+                <p style="font-size: small; margin-left: 3%; margin-bottom: 0;">{{post.followerCount}} người theo dõi</p>
+              </div>
+              <div *ngIf="maccount.id!=post.ownerId" class="col-4" style="text-align: right;">
+                <button *ngIf="mfollow.isCreated==0" (click)="onCreateFollow()" class="btn btn-danger rounded-pill">Theo dõi</button>
+                <button *ngIf="mfollow.isCreated==1" (click)="unFollow()" class="btn btn-light rounded-pill">Huỷ theo dõi</button>
+              </div>
+          </div>
+          <app-comments-post [postId] = "post.id"></app-comments-post>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
-
-<!-- <div class="mat-app-background basic-container">
-    <tabs-overview>loading</tabs-overview>
-</div> -->

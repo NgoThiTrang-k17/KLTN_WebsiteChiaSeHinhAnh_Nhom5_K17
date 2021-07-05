@@ -27,19 +27,23 @@ export class SearchService {
   }
 
   public get postValue(): Post {
-      return this.postSubject.value;
+    return this.postSubject.value;
   }
 
   public get accoutValue(): Account {
-      return this.accountSubject.value;
+    return this.accountSubject.value;
+  }
+
+  getHistorySearch(id) {
+    return this.http.get(`${baseUrl}/SearchHistory/${id}`);
   }
 
   getAllAccount(query):Observable<Account[]> {
-      return this.http.get<Account[]>(`${baseUrl}`, {params: new HttpParams().set('query', query)});
+    return this.http.get<Account[]>(`${baseUrl}`, {params: new HttpParams().set('query', query)});
   }
 
   getAllPost(query):Observable<Post[]> {
-      return this.http.get<Post[]>(`${baseUrl}`, {params: new HttpParams().set('query', query)});
+    return this.http.get<Post[]>(`${baseUrl}`, {params: new HttpParams().set('query', query)});
   }
 
   getAccountForMessage(query):Observable<Account[]> {
