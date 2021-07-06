@@ -50,16 +50,23 @@ namespace WebApi.Services
         {
             var posts = _context.Posts.Where(p => p.Title.Contains(query) || p.Categories.Contains(query));
             var account = _context.Users.Find(id);
-            var history = account.SearchHistory.Split('-');
-            if(history.Count() < 5)
+            if (account.SearchHistory != null)
             {
-                var newHistory = String.Join('-', history.Append(query));
-                account.SearchHistory = newHistory;
+                var history = account.SearchHistory.Split('-');
+                if (history.Count() < 5)
+                {
+                    var newHistory = String.Join('-', history.Append(query));
+                    account.SearchHistory = newHistory;
+                }
+                else
+                {
+                    var newHistory = String.Join('-', history.Take(4).Append(query));
+                    account.SearchHistory = newHistory;
+                }
             }
             else
             {
-                var newHistory = String.Join('-', history.Take(4).Append(query));
-                account.SearchHistory = newHistory;
+                account.SearchHistory = query;
             }
             _context.Users.Update(account);
             _context.SaveChanges();
@@ -72,16 +79,23 @@ namespace WebApi.Services
             var posts = _context.Posts.Where(p => p.Categories.Contains(query));
 
             var account = _context.Users.Find(id);
-            var history = account.SearchHistory.Split('-');
-            if (history.Count() < 5)
+            if (account.SearchHistory != null)
             {
-                var newHistory = String.Join('-', history.Append(query));
-                account.SearchHistory = newHistory;
+                var history = account.SearchHistory.Split('-');
+                if (history.Count() < 5)
+                {
+                    var newHistory = String.Join('-', history.Append(query));
+                    account.SearchHistory = newHistory;
+                }
+                else
+                {
+                    var newHistory = String.Join('-', history.Take(4).Append(query));
+                    account.SearchHistory = newHistory;
+                }
             }
             else
             {
-                var newHistory = String.Join('-', history.Take(4).Append(query));
-                account.SearchHistory = newHistory;
+                account.SearchHistory = query;
             }
             _context.Users.Update(account);
             _context.SaveChanges();
@@ -124,7 +138,7 @@ namespace WebApi.Services
         public async Task<IEnumerable<string>> SearchHistory(int id)
         {
             var account = await _context.Users.FindAsync(id);
-             
+            if (account.SearchHistory == null) return new List<string>();
             return account.SearchHistory.Split('-',StringSplitOptions.RemoveEmptyEntries);
         }
     }
