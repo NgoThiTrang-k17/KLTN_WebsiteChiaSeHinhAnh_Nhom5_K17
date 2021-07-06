@@ -10,6 +10,7 @@ import { ListFollowingDialogComponent } from './listFollowing-dialog.component';
 import { ReportComponent } from '../report/report.component';
 import { EditPostDialogComponent } from '../detail-post/edit-post-dialog/edit-post-dialog.component';
 import { ChatComponent } from '../message/chat/chat.component';
+import { UpdateAvatarComponent } from './update-avatar/update-avatar.component';
 
 @Component({
   templateUrl: 'details.component.html',
@@ -157,20 +158,22 @@ export class DetailsComponent implements OnInit{
     // console.log(this.reaction);
     this.reactionService.createReaction(this.reaction)
     .subscribe(res => {
-      this.accountService.getById(this.id)
-        .subscribe((res:any)=>{
-            this.account = res;
-        })
+      this.postService.getAllByUserId(this.id)
+      .subscribe(res => {
+        this.posts = res as Post[];
+        console.log(res);
+      });
     });
   }
 
   unReaction(postId: number) {
     this.reactionService.deletePost(postId)
     .subscribe(() => {
-      this.accountService.getById(this.id)
-        .subscribe((res:any)=>{
-            this.account = res;
-        })
+      this.postService.getAllByUserId(this.id)
+      .subscribe(res => {
+        this.posts = res as Post[];
+        console.log(res);
+      });
     });
   }
 
@@ -231,6 +234,26 @@ export class DetailsComponent implements OnInit{
         this.posts = res as Post[];
         console.log(res);
       });
+    });
+  }
+
+  openSetAvatarDialog():void {
+    let dialogRef4 = this.dialog.open(UpdateAvatarComponent,{
+      maxWidth: '900px',
+      minWidth: '400px',
+      minHeight: '200px',
+      maxHeight:'600px',
+      data: {
+      }
+    });
+    dialogRef4.afterClosed().subscribe(() => {
+      this.router.routeReuseStrategy.shouldReuseRoute = () =>{
+        return false;
+      }
+      this.accountService.getById(this.id)
+      .subscribe((res:any)=>{
+        this.account = res;
+      })
     });
   }
 

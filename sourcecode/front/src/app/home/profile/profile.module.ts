@@ -9,6 +9,7 @@ import { UpdateComponent } from './update.component';
 import { ListFollowerDialogComponent } from './listFollower-dialog.component';
 import { ListFollowingDialogComponent } from './listFollowing-dialog.component'
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { UpdateAvatarComponent } from './update-avatar/update-avatar.component';
 
 @NgModule({
   imports: [
@@ -22,7 +23,8 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
     DetailsComponent,
     UpdateComponent,
     ListFollowerDialogComponent,
-    ListFollowingDialogComponent
+    ListFollowingDialogComponent,
+    UpdateAvatarComponent
   ],
   entryComponents: [ListFollowerDialogComponent],
 })

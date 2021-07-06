@@ -1,69 +1,95 @@
 <div class="p-4 row">
-    <div><a class="btn" (click)="back()" style="position: fixed;"><svg class="Hn_ gUZ pBj" height="20" width="20" viewBox="0 0 24 24" aria-label="Nút quay lại" role="img"><path d="M8.415 4.586a2 2 0 1 1 2.828 2.828L8.657 10H21a2 2 0 0 1 0 4H8.657l2.586 2.586a2 2 0 1 1-2.828 2.828L1 12l7.415-7.414z"></path></svg></a></div>
-    <div class="container">
-        <div class="card shadow-lg">
-            <div class="row">
-                <div class="col-6" style="justify-content: center; align-items: center; display: flex;">
-                    <div class="card mt-4 mb-4 ml-4 mr-4" style="justify-content: center; align-items: center; display: flex; height: 90%; width: 95%">
-                      <img *ngIf="imageSrc!=null" style="height: 100%; width: 100%;" [src]="imageSrc" alt="">
-                      <h6 *ngIf="imageSrc==null && isAddMode">Chưa có hình ảnh được chọn</h6>
-                      <img *ngIf="!isAddMode && imageSrc==null" style="height: 100%; width: 100%;" [src]="post.path" alt="">
-                    </div>
+  <div><a class="btn" (click)="back()" style="position: fixed; left: 30px;"><svg class="Hn_ gUZ pBj" height="20" width="20" viewBox="0 0 24 24" aria-label="Nút quay lại" role="img"><path d="M8.415 4.586a2 2 0 1 1 2.828 2.828L8.657 10H21a2 2 0 0 1 0 4H8.657l2.586 2.586a2 2 0 1 1-2.828 2.828L1 12l7.415-7.414z"></path></svg></a></div>
+  <div class="container">
+    <div class="card shadow-lg">
+      <form [formGroup]="myForm" (ngSubmit)="submit()">
+        <div class="row">
+          <div class="col-6" style="justify-content: center; align-items: center; display: flex;">
+            <div class="card mt-4 mb-4 ml-4 mr-4" style="justify-content: center; align-items: center; display: flex; height: 90%; width: 95%">
+              <div *ngIf="imageSrc!=null" class="card-img">
+                <img style="height: 100%; width: 100%;" [src]="imageSrc" alt="">
+                <div class="card_inner">
                 </div>
-                <div class="col-6 mt-5 mb-5">
-                    <div class="mr-4">
-                        <h3 class="text-center">Thêm bài viết</h3>
-                        <form [formGroup]="myForm" (ngSubmit)="submit()">
-                          <div class="form-group">
-                            <label for="title">Tiêu đề</label>
-                            <input
-                            type="text" class="form-control py-2" style="border-radius: 20px;"
-                            formControlName="title" id="title"
-                            placeholder="Nhập tiêu đề"
-                            [ngClass]="{ 'is-invalid': submitted && f.title.errors }">
-                            <div *ngIf="submitted && f.title.errors" class="invalid-feedback">
-                              <div *ngIf="f.title.errors.required">Vui lòng nhập tiêu đề</div>
-                            </div>
-                          </div>
-                          <div class="form-group">
-                            <label for="desctription">Mô tả</label>
-                            <textarea
-                            type="text" class="form-control py-2" style="border-radius: 20px;"
-                            formControlName="desctription" id="desctription"
-                            placeholder="Nhập mô tả cho bài viết..."></textarea>
-                          </div>
-                          <div *ngIf="isAddMode" class="form-group">
-                            <label for="file">File</label>
-                            <input
-                            formControlName="file"
-                            id="path"
-                            type="file"
-                            class="form-control py-2"
-                            (change)="onFileChange($event)"
-                            accept=".png,.jpg"
-                            style="border-radius: 20px; word-wrap:break-word;"
-                            [ngClass]="{ 'is-invalid': submitted && f.file.errors }">
-                            <div *ngIf="submitted && f.file.errors" class="invalid-feedback">
-                                <div *ngIf="f.title.file.required">Vui lòng tải hình</div>
-                            </div>
-                          </div>
-                          <label class="custom-file-upload">
-                            <input type="file"/>
-                            <i class="fa fa-cloud-upload"></i> Custom Upload
-                          </label>
-                          <!-- <img [src]="imageSrc" *ngIf="imageSrc" style="height: auto; width:500px"> -->
-                          <!-- <app-upload (onUploadFinished)="uploadFinished($event)"></app-upload> -->
-                          <div class="row">
-                            <div class="offset-md-5 col-md-2 btn-group">
-                              <button type="submit" [disabled]="!myForm.valid" class="btn btn-danger rounded-pill">Đăng</button>
-                            </div>
-                          </div>
-                        </form>
-                    </div>
+                <div class="button-inner">
+                  <label class="custom-file-upload rounded-circle">
+                    <input
+                    formControlName="file"
+                    id="path"
+                    type="file"
+                    accept=".png,.jpg"
+                    (change)="onFileChange($event)"/>
+                    <i class="fas fa-arrow-alt-circle-up icon" style="color: #ffffff;"></i>
+                  </label>
                 </div>
+              </div>
+              <div *ngIf="imageSrc==null" class="upload">
+                <div style="text-align: center;">
+                  <label class="custom-file-upload rounded-circle">
+                    <input
+                    formControlName="file"
+                    id="path"
+                    type="file"
+                    accept=".png,.jpg,.jfif"
+                    (change)="onFileChange($event)"/>
+                    <i class="fas fa-arrow-alt-circle-up icon" style="color: #717171;"></i>
+                  </label>
+                  <h6>Nhấp vào biểu tượng để tải ảnh</h6>
+                </div>
+              </div>
+              <!-- <h6 *ngIf="imageSrc==null && isAddMode">Chưa có hình ảnh được chọn</h6> -->
+              <!-- <img *ngIf="!isAddMode && imageSrc==null" style="height: 100%; width: 100%;" [src]="post.path" alt=""> -->
             </div>
+          </div>
+          <div class="col-6 mt-5 mb-5">
+            <div class="mr-4">
+              <h3 class="text-center">Thêm bài viết</h3>
+              <div class="form-group">
+                <label for="title">Tiêu đề</label>
+                <input
+                type="text" class="form-control py-2" style="border-radius: 20px;"
+                formControlName="title" id="title"
+                placeholder="Nhập tiêu đề"
+                [ngClass]="{ 'is-invalid': submitted && f.title.errors }">
+                <!-- <div *ngIf="submitted && f.title.errors" class="invalid-feedback">
+                  <div *ngIf="f.title.errors.required">Vui lòng nhập tiêu đề</div>
+                </div> -->
+              </div>
+              <div class="form-group">
+                <label for="desctription">Mô tả</label>
+                <textarea
+                type="text" class="form-control py-2" style="border-radius: 20px;"
+                formControlName="desctription" id="desctription"
+                placeholder="Nhập mô tả cho bài viết..."></textarea>
+              </div>
+              <!-- <div class="form-group">
+                <label for="file">File</label>
+                <input
+                formControlName="file"
+                id="path"
+                type="file"
+                class="form-control py-2"
+                (change)="onFileChange($event)"
+                accept=".png,.jpg"
+                style="border-radius: 20px; word-wrap:break-word;"
+                [ngClass]="{ 'is-invalid': submitted && f.file.errors }">
+                <div *ngIf="submitted && f.file.errors" class="invalid-feedback">
+                    <div *ngIf="f.title.file.required">Vui lòng tải hình</div>
+                </div>
+              </div> -->
+
+              <!-- <img [src]="imageSrc" *ngIf="imageSrc" style="height: auto; width:500px"> -->
+              <!-- <app-upload (onUploadFinished)="uploadFinished($event)"></app-upload> -->
+              <div class="row">
+                <div class="offset-md-5 col-md-2 btn-group">
+                  <button type="submit" [disabled]="!myForm.valid" class="btn btn-danger rounded-pill">Đăng</button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </form>
     </div>
+  </div>
 </div>
 
 <!-- <div *ngIf="isAddMode">

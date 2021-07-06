@@ -151,18 +151,20 @@
           </div>
         </div>
         <!-- ---------Comment Reply-------- -->
-        <div *ngIf="comment.childCount>0">
-          <div *ngIf="!onShowCommentReply" (click)="showCommentReply()" class="showReply">
+        <div *ngIf="!onShowCommentReply" (click)="showCommentReply()" class="showReply">
+          <div *ngIf="comment.childCount>0">
             <span>Xem {{comment.childCount}} câu trả lời</span>
             <i class="fas fa-chevron-down ml-2 mb-2"></i>
           </div>
-          <div *ngIf="onShowCommentReply">
-            <div (click)="closeShowCommentReply()" class="showReply">
+        </div>
+        <div *ngIf="onShowCommentReply">
+          <div (click)="closeShowCommentReply()" class="showReply">
+            <div *ngIf="comment.childCount>0">
               <span>Ẩn {{comment.childCount}} câu trả lời</span>
               <i class="fas fa-chevron-up ml-2 mb-2"></i>
             </div>
-            <app-reply-comments-post [postId]="postId" [commentId]="comment.id"></app-reply-comments-post>
           </div>
+          <app-reply-comments-post [postId]="postId" [commentId]="comment.id"></app-reply-comments-post>
         </div>
       </div>
     </div>

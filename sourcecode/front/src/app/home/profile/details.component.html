@@ -3,7 +3,7 @@
         <img *ngIf="account.avatarPath==null" class="rounded-circle" style="height: 120px; width: 121px;" src="../../assets/images/default-profile.png">
         <img *ngIf="account.avatarPath!=null" class="rounded-circle" style="height: 120px; width: 121px;" [src]="account.avatarPath">
         <span *ngIf = "account.id != maccount.id && (presenceService.onlineUsers$ | async).includes(account.id)" class="material-icons is-online">circle</span>
-        <button *ngIf = "account.id == maccount.id" data-toggle="tooltip" data-placement="left" title="Thay đổi ảnh đại diện" class="btn btn-light btn-outline-white rounded-circle centerAll camera" style="height: 30px; width: 30px;" type="button">
+        <button *ngIf = "account.id == maccount.id" (click)="openSetAvatarDialog()" data-toggle="tooltip" data-placement="left" title="Thay đổi ảnh đại diện" class="btn btn-light btn-outline-white rounded-circle centerAll camera" style="height: 30px; width: 30px;" type="button">
           <i class="fas fa-camera"></i>
         </button>
 

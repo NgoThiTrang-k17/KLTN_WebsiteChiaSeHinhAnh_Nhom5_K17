@@ -1,7 +1,7 @@
 <div class="row">
-  <div><a class="btn" (click)="back()" style="position: fixed;"><svg class="Hn_ gUZ pBj" height="20" width="20" viewBox="0 0 24 24" aria-label="Nút quay lại" role="img"><path d="M8.415 4.586a2 2 0 1 1 2.828 2.828L8.657 10H21a2 2 0 0 1 0 4H8.657l2.586 2.586a2 2 0 1 1-2.828 2.828L1 12l7.415-7.414z"></path></svg></a></div>
-  <div class="container">
-    <div class="card shadow-lg" tyle="position: relative;">
+  <div><a class="btn" (click)="back()" style="position: fixed; left: 40px;"><svg class="Hn_ gUZ pBj" height="20" width="20" viewBox="0 0 24 24" aria-label="Nút quay lại" role="img"><path d="M8.415 4.586a2 2 0 1 1 2.828 2.828L8.657 10H21a2 2 0 0 1 0 4H8.657l2.586 2.586a2 2 0 1 1-2.828 2.828L1 12l7.415-7.414z"></path></svg></a></div>
+  <div class="container" style="padding: 0 45px">
+    <div class="card shadow-lg" tyle="position: relative; border-radius: 25px;">
       <div class="row" style="display: flex;">
         <div class="col-6 text-center" style="outline-style: none; ">
           <div style="position: relative;" >
@@ -11,7 +11,7 @@
           </div>
         </div>
         <div class="col-6" style="padding: 20px 40px 20px 20px;">
-          <div style="text-align: right; margin-bottom: 20px;">
+          <div style="text-align: right; margin-bottom: 15px;">
             <div class="dropdown no-arrow" dropdown>
               <button class="dropdown-toggle card-link btn btn-ouline-light rounded-circle" role="button"
                   id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
@@ -32,36 +32,34 @@
               </div>
             </div>
           </div>
-          <div class="p-0">
-            <h3 style="font-weight: 600;">{{post.title}}</h3>
-            <p style="margin: 0 0 20px 0; font-size: 14px;">{{post.description}}</p>
-          </div>
-          <a *ngIf="post.isReactedByThisUser==false" (click)="onCreateReaction()" ><span style="font-size:medium; color: rgb(148, 148, 148);"><i class="fa fa-heart unheart" style=" color: rgb(175, 173, 173);"></i> {{post.reactionCount}}</span></a>
-          <a *ngIf="post.isReactedByThisUser==true" (click)="unReaction()"><span style="font-size:medium; color: rgb(148, 148, 148);"><i class="fa fa-heart heart" style=" color: rgba(212, 10, 10, 0.76);"></i> {{post.reactionCount}}</span></a>
-          <a (click)="focusComment()" class="ml-2"><span style="font-size:medium;"><i class="fa fa-comment comment" style=" color: rgb(175, 173, 173);"></i><span style="font-size: medium; color: rgb(148, 148, 148);"> {{post.commentCount}}</span></span></a>
-          <div class="row" style="margin: 20px 0 30px 0;">
+          <div class="row" style="margin: 15px 0 15px 0;">
             <div class="col-2 p-0 centerAll" style="max-width: 10%;">
                 <img *ngIf="account.avatarPath==null" class="img-fluid rounded-circle" style="height: 50px; width: 50px; border: 1px solid rgba(0,0,0,.15) !important;" src="../../assets/images/default-profile.png">
                 <img *ngIf="account.avatarPath!=null" class="img-fluid rounded-circle" style="height: 50px; width: 50px; border: 1px solid rgba(0,0,0,.15) !important;" [src]="account.avatarPath">
                 <span *ngIf = "(presenceService.onlineUsers$ | async).includes(account.id)" class="material-icons is-online myOnline" style="right: 2px; bottom: 3px;">circle</span>
               </div>
-              <div class="col p-0">
-                <span class="m-0">
-                    <a style="font-weight:bolder;" href="" class="btn" routerLink="../../../detail/{{account.id}}">{{account.name}} </a>
-                    <svg class="gUZ lZJ U9O kVc text-danger" height="12" width="12" viewBox="0 0 24 24" aria-label="Biểu tượng xác minh miền" role="img">
-                    <path
-                        d="M12 0a12 12 0 100 24 12 12 0 000-24zM6.37 11.61a1.25 1.25 0 011.76 0l2.37 2.36 5.37-5.35a1.25 1.25 0 011.76 1.76L10.5 17.5l-4.13-4.13a1.25 1.25 0 010-1.76z">
-                    </path>
-                </svg>
-                </span>
-                <p style="font-size: small; margin-left: 3%; margin-bottom: 0;">{{post.followerCount}} người theo dõi</p>
+              <div class="col p-0" style="margin-left: 2%; align-items: center; display: flex;">
+                <div>
+                  <a style="font-weight:bolder; cursor: pointer; color: black; text-decoration: none !important;" href="" routerLink="../../../detail/{{account.id}}">{{account.name}} </a>
+                  <p style="font-size: small; margin-bottom: 0;">{{post.followerCount}} người theo dõi</p>
+                </div>
               </div>
               <div *ngIf="maccount.id!=post.ownerId" class="col-4" style="text-align: right;">
                 <button *ngIf="mfollow.isCreated==0" (click)="onCreateFollow()" class="btn btn-danger rounded-pill">Theo dõi</button>
                 <button *ngIf="mfollow.isCreated==1" (click)="unFollow()" class="btn btn-light rounded-pill">Huỷ theo dõi</button>
               </div>
           </div>
-          <app-comments-post [postId] = "post.id"></app-comments-post>
+          <div class="p-0">
+            <h3 style="font-weight: 600; margin: 0">{{post.title}}</h3>
+            <p style="margin: 15px 0 15px 0; font-size: 14px;">{{post.description}}</p>
+          </div>
+          <div style="margin-bottom: 20px;">
+            <a *ngIf="post.isReactedByThisUser==false" (click)="onCreateReaction()" ><span style="font-size:medium; color: rgb(148, 148, 148);"><i class="fa fa-heart unheart" style=" color: rgb(175, 173, 173);"></i> {{post.reactionCount}}</span></a>
+            <a *ngIf="post.isReactedByThisUser==true" (click)="unReaction()"><span style="font-size:medium; color: rgb(148, 148, 148);"><i class="fa fa-heart heart" style=" color: rgba(212, 10, 10, 0.76);"></i> {{post.reactionCount}}</span></a>
+            <a *ngIf="!onFocusComment" (click)="focusComment()" class="ml-2"><span style="font-size:medium;"><i class="fa fa-comment comment" style=" color: rgb(175, 173, 173);"></i><span style="font-size: medium; color: rgb(148, 148, 148);"> {{post.commentCount}}</span></span></a>
+            <a *ngIf="onFocusComment" (click)="closeFocusComment()" class="ml-2"><span style="font-size:medium;"><i class="fa fa-comment comment" style=" color: rgb(175, 173, 173);"></i><span style="font-size: medium; color: rgb(148, 148, 148);"> {{post.commentCount}}</span></span></a>
+          </div>
+          <app-comments-post *ngIf="onFocusComment" [postId] = "post.id"></app-comments-post>
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 ﻿export * from './account';
 export * from './accountLogin';
 export * from './accountLoginGoogle';
+export * from './accountUpdateAvatar';
 export * from './socialUsers';
 export * from './alert';
 export * from './role';

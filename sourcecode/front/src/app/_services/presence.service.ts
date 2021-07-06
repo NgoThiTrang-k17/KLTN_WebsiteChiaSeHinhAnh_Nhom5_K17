@@ -109,8 +109,6 @@ export class PresenceService {
       }
       return item;
     });
-    console.log(menuItemsUpdated);
-
     this.userMessageSource.next(menuItemsUpdated);
   }
 

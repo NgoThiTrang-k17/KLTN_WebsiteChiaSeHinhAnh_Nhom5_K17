@@ -1,0 +1,77 @@
+<div mat-dialog-titile >
+  <div class=" row">
+    <div class="col">
+      <h3 class="text-center" style="margin-left: 45px;">Thay đổi ảnh đại diện<noscript></noscript></h3>
+    </div>
+    <div class="col-1" style="text-align: right;">
+      <a type="button"><span><i mat-dialog-close class="fa fa-times" style=" color: rgb(148, 148, 148); font-size:larger;"></i></span></a>
+    </div>
+  </div>
+</div>
+<div mat-dialog-content >
+  <div *ngIf="posts.length==0" class="text-center">
+    <div *ngIf="imageSrc==null">
+      <img *ngIf="account.avatarPath==null" class="rounded-circle" style="height: 135px; width: 135px;" src="../../../../assets/images/default-profile.png">
+      <img *ngIf="account.avatarPath!=null" class="rounded-circle" style="height: 135px; width: 135px;" [src]="account.avatarPath">
+    </div>
+    <div *ngIf="imageSrc!=null">
+      <img class="rounded-circle" style="height: 135px; width: 135px;" [src]="imageSrc">
+    </div>
+    <label class="custom-file-upload rounded-pill">
+      <input
+      id="path"
+      type="file"
+      accept=".png,.jpg"
+      (change)="onFileChange($event)"/>
+      Tải ảnh lên
+    </label>
+  </div>
+  <div *ngIf="posts.length!=0" class="row mt-3">
+    <div class="col-3 text-center">
+      <div *ngIf="imageSrc==null">
+        <img *ngIf="account.avatarPath==null" class="rounded-circle" style="height: 135px; width: 135px;" src="../../../../assets/images/default-profile.png">
+        <img *ngIf="account.avatarPath!=null" class="rounded-circle" style="height: 135px; width: 135px;" [src]="account.avatarPath">
+      </div>
+      <div *ngIf="imageSrc!=null">
+        <img class="rounded-circle" style="height: 135px; width: 135px;" [src]="imageSrc">
+      </div>
+      <label class="custom-file-upload rounded-pill">
+        <input
+        id="path"
+        type="file"
+        accept=".png,.jpg,.jfif"
+        (change)="onFileChange($event)"/>
+        Tải ảnh lên
+      </label>
+    </div>
+    <div class="col">
+      <div class="form-group">
+        <label>Hình của bạn</label>
+        <div class="item card-columns">
+          <div id="1" *ngFor="let post of posts">
+            <a (click)="clickChoseImage(post.path)" class="text-dark card-link" id="1">
+              <div class="card btn-outline-white">
+                <img class="card-img-top img-fluid" [src]="post.path" alt="Card image cap">
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div mat-dialog-footer style="padding: 10px 0;">
+  <div *ngIf="posts.length==0" class="text-center">
+    <button (click)="updateAvatar()" [disabled]="imageSrc==null" class="btn btn-danger rounded-pill">
+      Lưu thay đổi
+    </button>
+  </div>
+  <div *ngIf="posts.length!=0" style="text-align: right;">
+    <button *ngIf="isUpload" (click)="updateAvatar()" [disabled]="imageSrc==null" class="btn btn-danger rounded-pill">
+      Lưu thay đổi
+    </button>
+    <button *ngIf="!isUpload" (click)="updateAvatarChoose()" [disabled]="imageSrc==null" class="btn btn-danger rounded-pill">
+      Lưu thay đổi
+    </button>
+  </div>
+</div>

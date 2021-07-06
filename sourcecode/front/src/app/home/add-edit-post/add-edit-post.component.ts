@@ -42,23 +42,12 @@ export class AddEditPostComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    //this.downloadURL = this.af.ref('/files0.7934253494382291[object File]').getDownloadURL();
-
-    this.id = this.route.snapshot.params['id'];
-    this.isAddMode = !this.id;
-
     this.myForm = this.formBuilder.group({
-      title: ['', Validators.required],
+      title: [''],
       desctription: [''],
       file: ['', this.isAddMode ? Validators.required : Validators.nullValidator]
     });
 
-    if (!this.isAddMode) {
-      this.postService.getPostById(this.id)
-        .subscribe((res:any)=>{
-          this.post = res;
-        })
-    }
     this.testForm = new FormData();
   }
 
@@ -103,7 +92,7 @@ export class AddEditPostComponent implements OnInit {
 
           this.postService.createPost(this.testForm)
           .subscribe(res => {
-              this.router.navigate(['../'], { relativeTo: this.route });
+            this.back();
           }, error => {
               console.log(error);
           })

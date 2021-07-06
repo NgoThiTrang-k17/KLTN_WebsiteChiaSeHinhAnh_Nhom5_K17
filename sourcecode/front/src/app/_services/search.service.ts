@@ -35,7 +35,7 @@ export class SearchService {
   }
 
   getHistorySearch(id) {
-    return this.http.get(`${baseUrl}/SearchHistory/${id}`);
+    return this.http.get<string[]>(`${baseUrl}/SearchHistory/${id}`);
   }
 
   getAllAccount(query):Observable<Account[]> {

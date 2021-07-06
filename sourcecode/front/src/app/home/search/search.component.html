@@ -1,8 +1,9 @@
 <div class="search">
-  <label>Tìm kiếm gần đây</label>
+  <label *ngIf="historySearchs.length>0">Tìm kiếm gần đây</label>
   <div class="row">
-    <button class="btn btn-light rounded-pill strong">Đồ ăn</button>
-    <button class="btn btn-light rounded-pill strong button-search">Lelush</button>
+    <div *ngFor="let search of historySearchs">
+      <button class="btn btn-light rounded-pill strong button-search">{{search}}</button>
+    </div>
   </div>
   <label class="mt-4">Gợi ý cho bạn</label>
   <div class="row">

@@ -15,7 +15,7 @@ export class DetailPostComponent implements OnInit {
 
   path: string;
   id:number;
-  onFocusComment = false;
+  onFocusComment: boolean;
 
   mreaction = new Reaction;
   like = false;
@@ -56,6 +56,8 @@ export class DetailPostComponent implements OnInit {
     .subscribe((res:any)=>{
         this.maccount = res;
     })
+
+    this.onFocusComment = false;
   }
 
   getRoute(id:any){
@@ -175,5 +177,9 @@ export class DetailPostComponent implements OnInit {
 
   focusComment() {
     this.onFocusComment = true;
+  }
+
+  closeFocusComment(){
+    this.onFocusComment = false;
   }
 }

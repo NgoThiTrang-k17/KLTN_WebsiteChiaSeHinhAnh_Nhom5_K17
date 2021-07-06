@@ -19,7 +19,7 @@ export class SearchComponent implements OnInit{
   public posts: Post[] = [];
   public postsPopular: Post[] = [];
 
-  public historySearchs: any;
+  public historySearchs: string[];
 
   maccount = this.accountService.accountValue;
 

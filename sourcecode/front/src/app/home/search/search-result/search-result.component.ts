@@ -52,7 +52,7 @@ export class SearchResultComponent implements OnInit {
     else if(this.query.substr(0,1)!='@'){
         this.searchService.getAllPost(this.query)
         .subscribe(res => {
-            this.posts = res as Post[];
+          this.posts = res as Post[];
         });
     }
   }
@@ -89,20 +89,20 @@ export class SearchResultComponent implements OnInit {
     }
     this.reactionService.createReaction(this.reaction)
     .subscribe(res => {
-      this.searchService.getAllAccount(this.query)
-        .subscribe(res => {
-            this.accounts = res as Account[];
-        });
+      this.searchService.getAllPost(this.query)
+      .subscribe(res => {
+          this.posts = res as Post[];
+      });
     });
   }
 
   unReaction(postId: number) {
     this.reactionService.deletePost(postId)
     .subscribe(() => {
-      this.searchService.getAllAccount(this.query)
-        .subscribe(res => {
-            this.accounts = res as Account[];
-        });
+      this.searchService.getAllPost(this.query)
+      .subscribe(res => {
+          this.posts = res as Post[];
+      });
     });
   }
 

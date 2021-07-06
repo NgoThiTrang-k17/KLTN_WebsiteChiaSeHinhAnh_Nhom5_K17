@@ -1,9 +1,67 @@
 input[type="file"] {
   display: none;
 }
+
 .custom-file-upload {
-  border: 1px solid #ccc;
+  // border: 1px solid #ccc;
   display: inline-block;
   padding: 6px 12px;
   cursor: pointer;
+  color: #a7a7a7;
+}
+
+.icon {
+  font-size: 40px;
+}
+
+.upload{
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  border: 2px dashed #a7a7a7;
+  border-radius: 15px;
+}
+
+.card-img{
+  position: relative;
+  display: block;
+  transition: all 0.4s ease 0s;
+}
+
+.card_inner {
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background-color: #0000005e;
+  border-radius: 15px;
+  z-index: 1;
+  padding: 10px;
+  opacity: 0;
+  transition: all 0.4s ease 0s;
+}
+
+.card-img:hover .card_inner{
+  opacity: 1;
+}
+
+.card-img:hover .button-inner{
+  z-index: 2;
+  opacity: 1;
+}
+
+.button-inner{
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  align-items: center;
+  justify-content: center;
+  display: flex;
 }

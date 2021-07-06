@@ -60,6 +60,10 @@ export class CommentsPostComponent implements OnInit {
     .subscribe(res => {
       this.account = res;
     })
+
+    setTimeout(()=>{
+      this.inputCommentElement.nativeElement.focus();
+    },0);
   }
 
   createCmt(event) {
