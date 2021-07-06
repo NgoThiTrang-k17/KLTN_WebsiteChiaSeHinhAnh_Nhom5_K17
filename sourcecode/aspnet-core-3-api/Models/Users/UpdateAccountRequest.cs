@@ -12,6 +12,7 @@ namespace WebApi.Models.Accounts
         private string _confirmPassword;
         private string _role;
         private string _email;
+        private string _avatarPath;
 
 
     
@@ -40,7 +41,11 @@ namespace WebApi.Models.Accounts
             get => _email;
             set => _email = replaceEmptyWithNull(value);
         }
-
+        public string AvatarPath
+        {
+            get => _avatarPath;
+            set => _avatarPath = replaceEmptyWithNull(value);
+        }
         [MinLength(6)]
         public string Password
         {
