@@ -58,9 +58,9 @@ namespace WebApi.Controllers
             return Ok(posts);
         }
         [HttpGet("SearchHistory/{id:int}")]
-        public async Task<ActionResult<IEnumerable<string>>> Search(int id)
+        public ActionResult<IEnumerable<string>> Search(int id)
         { 
-            var history = await _searchService.SearchHistory(id);
+            var history = _searchService.SearchHistory(id);
             return Ok(history);
         }
 

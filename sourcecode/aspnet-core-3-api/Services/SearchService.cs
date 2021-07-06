@@ -29,7 +29,7 @@ namespace WebApi.Services
         IEnumerable<PostResponse> SearchByCategories(int id, string query);
         IEnumerable<AccountResponse> SearchForAccounts(int id, string query);
         IEnumerable<AccountResponse> SearchForMessage(int id, string query);
-        Task<IEnumerable<string>> SearchHistory(int id);
+        IEnumerable<string> SearchHistory(int id);
     }
     public class SearchService : ISearchService
     {
@@ -135,9 +135,9 @@ namespace WebApi.Services
             return accountResponses;
         }
 
-        public async Task<IEnumerable<string>> SearchHistory(int id)
+        public IEnumerable<string> SearchHistory(int id)
         {
-            var account = await _context.Users.FindAsync(id);
+            var account = _context.Users.Find(id);
             if (account.SearchHistory == null) return new List<string>();
             return account.SearchHistory.Split('-',StringSplitOptions.RemoveEmptyEntries);
         }

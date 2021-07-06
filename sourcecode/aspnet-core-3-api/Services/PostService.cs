@@ -131,7 +131,7 @@ namespace WebApi.Services
         //Get posts for each user
         public IEnumerable<PostResponse> GetByOwnerId(int ownerId)
         {
-            var posts = _context.Posts.Where(post => post.OwnerId == ownerId);
+            var posts = _context.Posts.Where(post => post.OwnerId == ownerId).OrderByDescending(p =>p.Created);
             var postResponses = _mapper.Map<IList<PostResponse>>(posts);
             foreach (PostResponse postResponse in postResponses)
             {
