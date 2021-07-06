@@ -171,15 +171,15 @@ namespace WebApi.Controllers
 
         //[Authorize(Role.Admin)]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AccountResponse>>> GetAll([FromQuery]UserParams accountParams)
+        public ActionResult<IEnumerable<AccountResponse>> GetAll(/*[FromQuery]UserParams accountParams*/)
         {
-            accountParams.CurrentUserId = Account.Id;
-            if (string.IsNullOrEmpty(accountParams.Gender))
-            {
-                accountParams.Gender = Account.Title == "mr" ? "mrs": "mr" ;
-            }
-            var accounts = await _accountService.GetAll(accountParams);
-            Response.AddPaginationHeader(accounts.CurrentPage, accounts.PageSize,accounts.TotalCount, accounts.TotalPages);
+            //accountParams.CurrentUserId = Account.Id;
+            //if (string.IsNullOrEmpty(accountParams.Gender))
+            //{
+            //    accountParams.Gender = Account.Title == "mr" ? "mrs": "mr" ;
+            //}
+            var accounts = _accountService.GetAll(/*accountParams*/);
+            //Response.AddPaginationHeader(accounts.CurrentPage, accounts.PageSize,accounts.TotalCount, accounts.TotalPages);
             return Ok(accounts);
         }
 

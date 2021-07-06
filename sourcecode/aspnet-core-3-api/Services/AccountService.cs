@@ -27,6 +27,7 @@ namespace WebApi.Services
         Task ValidateResetToken(ValidateResetTokenRequest model);
         Task ResetPassword(ResetPasswordRequest model);
         public Task<AccountResponse> SetAvatar(int id, string AvatarPath);
+        IEnumerable<AccountResponse> GetAll();
         Task<PagedList<AccountResponse>> GetAll(UserParams accountParams);
         AccountResponse GetById(int id);
         AccountResponse Create(CreateAccountRequest model);
@@ -306,10 +307,24 @@ namespace WebApi.Services
             return _mapper.Map<AccountResponse>(account);
         }
 
+        public IEnumerable<AccountResponse> GetAll()
+        {
+            var accounts = _context.Users;
+            var accountResponses = _mapper.Map<IEnumerable<AccountResponse>>(accounts);
+            
+            foreach (AccountResponse accountResponse in accountResponses)
+            {
+                accountResponse.FollowerCount = _context.Follows.Count(f => f.SubjectId == accountResponse.Id);
+                accountResponse.FollowingCount = _context.Follows.Count(f => f.FollowerId == accountResponse.Id);
+            };
+
+            return  accountResponses;
+        }
+
         public async Task<PagedList<AccountResponse>> GetAll(UserParams accountParams)
         {
             var accounts = _context.Users;
-            var accountResponses = _mapper.ProjectTo<AccountResponse>(accounts).AsNoTracking().AsQueryable() ;
+            var accountResponses = _mapper.ProjectTo<AccountResponse>(accounts).AsNoTracking().AsQueryable();
             accountResponses = accountResponses.Where(u => u.Id != accountParams.CurrentUserId);
 
             accountResponses = accountResponses.Where(u => u.Title == accountParams.Gender);
