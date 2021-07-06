@@ -19,11 +19,14 @@ namespace WebApi.Controllers
     [Route("[controller]")]
     public class SearchController : BaseController
     {
+        private readonly IReactionService _reactionService;
         private readonly ISearchService _searchService;
 
         public SearchController(
+            IReactionService reactionService,
             ISearchService searchService)
         {
+            _reactionService = reactionService;
             _searchService = searchService;
         }
         [HttpGet]
@@ -34,11 +37,16 @@ namespace WebApi.Controllers
             {
                 query = query.Substring(1);
                 var posts = _searchService.SearchForAccounts(Account.Id, query);
+               
                 return Ok(posts);
             }
             else
             {
                 var posts = _searchService.SearchForPosts(Account.Id, query);
+                foreach (var post in posts)
+                {
+                    post.IsReactedByThisUser = _reactionService.GetState(ReactionTarget.Post, post.Id, Account.Id).IsReactedByThisUser;
+                }
                 return Ok(posts);
             }
 
@@ -47,14 +55,18 @@ namespace WebApi.Controllers
         [HttpGet("SearchForMessage")]
         public ActionResult<IEnumerable<AccountResponse>> SearchForMessage(string query)
         {
-            var posts = _searchService.SearchForAccounts(Account.Id, query);
-            return Ok(posts);
+            var accounts = _searchService.SearchForAccounts(Account.Id, query);
+            return Ok(accounts);
         }
 
         [HttpGet("SearchByCategories")]
         public ActionResult<IEnumerable<AccountResponse>> SearchByCategories(string query)
         {
             var posts = _searchService.SearchByCategories(Account.Id, query);
+            foreach (var post in posts)
+            {
+                post.IsReactedByThisUser = _reactionService.GetState(ReactionTarget.Post, post.Id, Account.Id).IsReactedByThisUser;
+            }
             return Ok(posts);
         }
         [HttpGet("SearchHistory/{id:int}")]
