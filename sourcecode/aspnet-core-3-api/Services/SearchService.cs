@@ -70,7 +70,20 @@ namespace WebApi.Services
             }
             _context.Users.Update(account);
             _context.SaveChanges();
-            return _mapper.Map<IList<PostResponse>>(posts);
+            var postResponses = _mapper.Map<IList<PostResponse>>(posts);
+            foreach (PostResponse postResponse in postResponses)
+            {
+                var owner = _context.Users.Find(postResponse.OwnerId);
+                postResponse.OwnerId = owner.Id;
+                postResponse.OwnerName = owner.Name;
+                postResponse.OwnerName = owner.Name;
+                postResponse.OwnerAvatar = owner.AvatarPath;
+
+                postResponse.FollowerCount = _context.Follows.Count(f => f.SubjectId == owner.Id);
+
+                (postResponse.CommentCount, postResponse.ReactionCount) = GetPostInfor(postResponse.Id);
+            }
+            return postResponses;
         }
         public IEnumerable<PostResponse> SearchByCategories(int id, string query)
         {
@@ -99,7 +112,20 @@ namespace WebApi.Services
             }
             _context.Users.Update(account);
             _context.SaveChanges();
-            return _mapper.Map<IList<PostResponse>>(posts);
+            var postResponses = _mapper.Map<IList<PostResponse>>(posts);
+            foreach (PostResponse postResponse in postResponses)
+            {
+                var owner = _context.Users.Find(postResponse.OwnerId);
+                postResponse.OwnerId = owner.Id;
+                postResponse.OwnerName = owner.Name;
+                postResponse.OwnerName = owner.Name;
+                postResponse.OwnerAvatar = owner.AvatarPath;
+
+                postResponse.FollowerCount = _context.Follows.Count(f => f.SubjectId == owner.Id);
+
+                (postResponse.CommentCount, postResponse.ReactionCount) = GetPostInfor(postResponse.Id);
+            }
+            return postResponses;
         }
 
         public IEnumerable<AccountResponse> SearchForAccounts(int id, string query)
@@ -140,6 +166,13 @@ namespace WebApi.Services
             var account = _context.Users.Find(id);
             if (account.SearchHistory == null) return new List<string>();
             return account.SearchHistory.Split('-',StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        private (int, int) GetPostInfor(int id)
+        {
+            var commentcount = _context.Comments.Count(c => c.PostId == id);
+            var reactioncount = _context.Reactions.Count(r => r.TargetId == id && r.Target == ReactionTarget.Post);
+            return (commentcount, reactioncount);
         }
     }
     //public class ElasticIndexService
