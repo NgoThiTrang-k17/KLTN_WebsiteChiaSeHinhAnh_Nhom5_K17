@@ -10,7 +10,8 @@ import { Post, PostToCreate } from '@app/_models';
 
 @Component({
   selector: 'app-add-edit-post',
-  templateUrl: './add-edit-post.component.html'
+  templateUrl: './add-edit-post.component.html',
+  styleUrls: ['./add-edit-post.component.less']
 })
 export class AddEditPostComponent implements OnInit {
 
@@ -24,9 +25,10 @@ export class AddEditPostComponent implements OnInit {
   isAddMode: boolean;
   loading = false;
   submitted = false;
-  path: string;
+  desctription: string;
   downloadURL: Observable<string>;
   pathImg: string;
+  path: any;
 
   post = new Post;
 
@@ -47,7 +49,7 @@ export class AddEditPostComponent implements OnInit {
 
     this.myForm = this.formBuilder.group({
       title: ['', Validators.required],
-      //path: ['', this.isAddMode ? Validators.required : Validators.nullValidator],
+      desctription: [''],
       file: ['', this.isAddMode ? Validators.required : Validators.nullValidator]
     });
 
@@ -88,45 +90,26 @@ export class AddEditPostComponent implements OnInit {
       return;
     }
 
-    //console.log(this.testForm);
-    //console.log(this.myForm.get('title').value);
-    if (this.isAddMode) {
-      this.imagePath = "/files"+Math.random()+this.path;
-      const fileRef = this.af.ref(this.imagePath);
-      this.af.upload(this.imagePath,this.path).snapshotChanges().pipe(
-        finalize(() => {
-          fileRef.getDownloadURL().subscribe((url) => {
-            this.pathImg = url.toString();
-            console.log(this.pathImg);
-            this.testForm.set("title", this.myForm.get("title").value);
-            this.testForm.set("path",this.pathImg);
+    this.imagePath = "/files"+Math.random()+this.path;
+    const fileRef = this.af.ref(this.imagePath);
+    this.af.upload(this.imagePath,this.path).snapshotChanges().pipe(
+      finalize(() => {
+        fileRef.getDownloadURL().subscribe((url) => {
+          this.pathImg = url.toString();
+          console.log(this.pathImg);
+          this.testForm.set("title", this.myForm.get("title").value);
+          this.testForm.set("description", this.myForm.get("desctription").value);
+          this.testForm.set("path",this.pathImg);
 
-            this.postService.createPost(this.testForm)
-            .subscribe(res => {
-                console.log(res);
-                // this.alertService.success('Image created successfully', { keepAfterRouteChange: true });
-                // this.getPosts();
-                alert('Tạo bài viết thành công!');
-                this.router.navigate(['../'], { relativeTo: this.route });
-            }, error => {
-                console.log(error);
-            })
+          this.postService.createPost(this.testForm)
+          .subscribe(res => {
+              this.router.navigate(['../'], { relativeTo: this.route });
+          }, error => {
+              console.log(error);
           })
         })
-      ).subscribe();
-    } else if (!this.isAddMode) {
-      this.testForm.set("title", this.myForm.get("title").value);
-      this.postService.update(this.id, this.testForm)
-        .subscribe(res => {
-          console.log(res);
-          // this.alertService.success('Image created successfully', { keepAfterRouteChange: true });
-          // this.getPosts();
-          alert('Chỉnh sửa thành công!');
-          this.router.navigate(['../../'], { relativeTo: this.route });
-      }, error => {
-          console.log(error);
       })
-    }
+    ).subscribe();
   }
 
   back() {

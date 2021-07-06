@@ -41,6 +41,7 @@ export class ReportComponent implements OnInit {
   @ViewChild('reportForm') reportForm: NgForm;
 
   targetType: number;
+  targetId: number;
   reportType: string;
   detailReport: string;
 
@@ -75,7 +76,7 @@ export class ReportComponent implements OnInit {
     this.reportToCreate = {
       ownerId: this.maccount.id,
       targetType: this.targetType,
-      targetId: this.data.postId,
+      targetId: this.data.targetId,
       reportType: this.reportType,
       detail: this.detailReport,
     }
@@ -84,6 +85,7 @@ export class ReportComponent implements OnInit {
     this.reportService.createReport(this.reportToCreate)
     .subscribe(res => {
       alert('Báo cáo đã được gửi!');
+      this.dialogRef.close();
     })
 
   }

@@ -2,7 +2,17 @@
     <div class="col-6 m-auto text-center">
         <img *ngIf="account.avatarPath==null" class="rounded-circle" style="height: 120px; width: 121px;" src="../../assets/images/default-profile.png">
         <img *ngIf="account.avatarPath!=null" class="rounded-circle" style="height: 120px; width: 121px;" [src]="account.avatarPath">
-        <h1 class="m-3" style="font-weight: bold;">{{account.name}}</h1>
+        <span *ngIf = "account.id != maccount.id && (presenceService.onlineUsers$ | async).includes(account.id)" class="material-icons is-online">circle</span>
+        <button *ngIf = "account.id == maccount.id" data-toggle="tooltip" data-placement="left" title="Thay đổi ảnh đại diện" class="btn btn-light btn-outline-white rounded-circle centerAll camera" style="height: 30px; width: 30px;" type="button">
+          <i class="fas fa-camera"></i>
+        </button>
+
+        <h1 class="m-3" style="font-weight: bold;">{{account.name}}
+          <span *ngIf="account.id != maccount.id">
+            <i (click)="openReportDialog(id)" class="fas fa-exclamation-circle icon"></i>
+          </span>
+        </h1>
+
         <p>
           <span *ngIf="account.followerCount==0" style="font-weight:lighter;">{{account.followerCount}} người theo dõi </span>
           <span *ngIf="account.followerCount!=0" type="button" (click)="openListFollowerDialog(account.followerCount)">{{account.followerCount}} người theo dõi </span>
@@ -11,7 +21,7 @@
            <span *ngIf="account.followingCount!=0" type="button" (click)="openListFollowingDialog(account.followingCount)"> Đang theo dõi {{account.followingCount}} người</span>
           </p>
         <div *ngIf="id!=maccount.id" class="mt-2">
-          <button (click)="openReportDialog(id)" class="btn btn-light rounded-pill">Báo cáo</button>
+          <button (click)="openModalMessage(id)" class="btn btn-light rounded-pill">Nhắn tin</button>
           <button *ngIf="mfollow.isCreated==0" (click)="onCreateFollow()" class="btn btn-danger rounded-pill ml-2">Theo dõi</button>
           <button *ngIf="mfollow.isCreated==1" (click)="unFollow()" class="btn btn-light rounded-pill ml-2">Huỷ theo dõi</button>
         </div>

@@ -18,7 +18,7 @@ export class EditPostDialogComponent implements OnInit {
   public postId: number;
 
   title: string;
-  destription: string;
+  description: string;
 
   public post = new Post;
 
@@ -35,6 +35,8 @@ export class EditPostDialogComponent implements OnInit {
 
     this.postService.getPostById(this.postId)
     .subscribe(res => {
+      console.log(res);
+
       this.post = res;
     })
   }
@@ -42,13 +44,13 @@ export class EditPostDialogComponent implements OnInit {
   updatePost() {
     this.postToUpdate = {
       title: this.title,
-      description: this.destription,
+      description: this.description,
     }
 
     this.postService.update(this.postId, this.postToUpdate)
     .subscribe(res => {
       this.dialogRef.close();
-      alert('Chỉnh sửa thành công!');
+      // alert('Chỉnh sửa thành công!');
     }, error => {
       console.log(error);
     })

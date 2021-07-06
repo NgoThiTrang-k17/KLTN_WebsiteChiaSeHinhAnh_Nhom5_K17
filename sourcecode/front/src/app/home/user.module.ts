@@ -29,6 +29,8 @@ import { SearchResultComponent } from './search/search-result/search-result.comp
 import { ChatComponent } from './message/chat/chat.component';
 import { ReportComponent } from './report/report.component';
 import { EditPostDialogComponent } from './detail-post/edit-post-dialog/edit-post-dialog.component';
+import { CommentsPostComponent } from './detail-post/comments-post/comments-post.component';
+import { ReplyCommentsPostComponent } from './detail-post/reply-comments-post/reply-comments-post.component';
 
 @NgModule({
   imports: [
@@ -75,6 +77,8 @@ import { EditPostDialogComponent } from './detail-post/edit-post-dialog/edit-pos
     ChatComponent,
     ReportComponent,
     EditPostDialogComponent,
+    CommentsPostComponent,
+    ReplyCommentsPostComponent,
   ]
 })
 export class UserModule { }

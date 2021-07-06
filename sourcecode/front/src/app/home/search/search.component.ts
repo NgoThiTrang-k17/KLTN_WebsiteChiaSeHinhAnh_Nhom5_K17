@@ -19,6 +19,8 @@ export class SearchComponent implements OnInit{
   public posts: Post[] = [];
   public postsPopular: Post[] = [];
 
+  public historySearchs: any;
+
   maccount = this.accountService.accountValue;
 
   constructor(
@@ -31,6 +33,12 @@ export class SearchComponent implements OnInit{
   ) { }
 
   ngOnInit() {
+    // Lịch sử
+    this.searchService.getHistorySearch(this.maccount.id)
+    .subscribe(res => {
+      console.log(res);
+      this.historySearchs = res;
+    })
 
     // Đề xuất cho người dùng
     this.postService.getSuggestionById(this.maccount.id)
