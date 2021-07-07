@@ -42,7 +42,7 @@ namespace WebApi.Services
         {
             var notification = _mapper.Map<Notification>(model);
             if (notification == null) throw new AppException("Create Notification failed");
-            await _context.Notifications.AddAsync(notification);
+            _context.Notifications.Add(notification);
             await _context.SaveChangesAsync();
 
             var notificationResponse = _mapper.Map<NotificationResponse>(notification);

@@ -60,7 +60,7 @@ namespace WebApi.Services
             var post = _mapper.Map<Post>(model);
             _context.Posts.Add(post);
             await _context.SaveChangesAsync();
-            SendNotification(post);
+            await SendNotification(post);
             return _mapper.Map<PostResponse>(post);
         }
 
@@ -162,7 +162,7 @@ namespace WebApi.Services
         }
 
         //Create Notification for posting
-        private async void SendNotification(Post post)
+        private async Task SendNotification(Post post)
         {
             var follows = await _followService.GetBySubjectId(post.OwnerId);
             //Create notification for each follower of Post owner

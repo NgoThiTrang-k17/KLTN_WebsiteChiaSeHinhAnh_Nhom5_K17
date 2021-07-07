@@ -38,7 +38,7 @@ namespace WebApi.Hubs
 
             var currentUserId = Context.User.GetUserId();
 
-            var notifications = _notificationService.GetNotificationThread(currentUserId);
+            var notifications = await _notificationService.GetNotificationThread(currentUserId);
             await Clients.Caller.SendAsync("ReceiveNotificationThread", notifications);
 
             var userMessages = await _messageService.GetMessagesForUser(currentUserId);

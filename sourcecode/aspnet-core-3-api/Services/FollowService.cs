@@ -100,7 +100,7 @@ namespace WebApi.Services
         //Get all Follower of each user
         public async Task<IEnumerable<FollowResponse>> GetBySubjectId(int userId)
         {
-            var follows = _context.Follows.Where(follow => follow.SubjectId == userId);
+            var follows = await _context.Follows.Where(follow => follow.SubjectId == userId).ToListAsync();
             var followers = _mapper.Map<List<FollowResponse>>(follows);
             foreach (FollowResponse follower in followers)
             {
@@ -115,7 +115,7 @@ namespace WebApi.Services
         //Get all Follow of each user
         public async Task<IEnumerable<FollowResponse>> GetByFollowerId(int userId)
         {
-            var follows = _context.Follows.Where(follow => follow.FollowerId == userId);
+            var follows = await _context.Follows.Where(follow => follow.FollowerId == userId).ToListAsync();
             var subjects = _mapper.Map<List<FollowResponse>>(follows);
             foreach (FollowResponse subject in subjects)
             {

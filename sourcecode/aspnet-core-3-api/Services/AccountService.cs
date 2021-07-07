@@ -416,7 +416,7 @@ namespace WebApi.Services
 
         public async Task<User> getAccount(int id)
         {
-            var account = await _context.Users.FirstOrDefaultAsync(u=>u.Id == id);
+            var account = await _context.Users.FindAsync(id);
             if (account == null) throw new KeyNotFoundException("Account not found");
             return account;
         }
