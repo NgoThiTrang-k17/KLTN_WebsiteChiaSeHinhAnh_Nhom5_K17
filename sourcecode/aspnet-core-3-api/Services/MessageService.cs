@@ -119,7 +119,7 @@ namespace WebApi.Services
         public async Task<IEnumerable<MessageResponse>> GetMessagesForUser(int currentUserId)
         {
              
-            var query = await _context.Messages.Where(m=>m.SenderId == currentUserId || m.RecipientId == currentUserId).OrderByDescending(m=>m.Created).ToListAsync();
+            var query = _context.Messages.Where(m=>m.SenderId == currentUserId || m.RecipientId == currentUserId).OrderByDescending(m=>m.Created);
             var messages = _mapper.Map<IEnumerable<MessageResponse>>(query);
 
             List<MessageResponse> response = new List<MessageResponse>();
@@ -147,7 +147,7 @@ namespace WebApi.Services
 
             }
             //return await PagedList<MessageResponse>.CreateAsync(messages, messageParams.PageNumber, messageParams.PageSize);
-            return response.OrderBy(m=>m.Created).ToList();
+            return response.OrderBy(m=>m.Created);
 ;
         }
 
