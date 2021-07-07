@@ -27,64 +27,66 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<CommentResponse>> GetAll()
+        public async Task<ActionResult<IEnumerable<CommentResponse>>> GetAll()
         {
-            var comments = _commentService.GetAll();
+            var comments = await _commentService.GetAll();
             foreach (CommentResponse comment in comments)
             {
-                comment.IsReactedByThisUser = _reactionService.GetState(ReactionTarget.Comment,comment.Id,Account.Id ).IsReactedByThisUser;
+                var reactionState = await _reactionService.GetState(ReactionTarget.Comment, comment.Id, Account.Id);
+                comment.IsReactedByThisUser = reactionState.IsReactedByThisUser;
             }
             return Ok(comments);
         }
 
         [HttpGet("{id:int}")]
-        public ActionResult<CommentResponse> GetById(int id)
+        public async Task<ActionResult<CommentResponse>> GetById(int id)
         {
-            var comment = _commentService.GetById(id);
-            comment.IsReactedByThisUser = _reactionService.GetState(ReactionTarget.Comment, comment.Id, Account.Id).IsReactedByThisUser;
+            var comment = await _commentService.GetById(id);
+            var reactionState = await _reactionService.GetState(ReactionTarget.Comment, comment.Id, Account.Id);
+            comment.IsReactedByThisUser = reactionState.IsReactedByThisUser;
             return Ok(comment);
         }
 
 
         [HttpGet("Post/{id:int}")]
-        public ActionResult<IEnumerable<CommentResponse>> GetAllByPostId(int id)
+        public async Task<ActionResult<IEnumerable<CommentResponse>>> GetAllByPostId(int id)
         {
-            var comments = _commentService.GetByPost(id);
+            var comments = await _commentService.GetByPost(id);
             foreach (CommentResponse comment in comments)
             {
-                comment.IsReactedByThisUser = _reactionService.GetState(ReactionTarget.Comment, comment.Id, Account.Id).IsReactedByThisUser;
-                
+                var reactionState = await _reactionService.GetState(ReactionTarget.Comment, comment.Id, Account.Id);
+                comment.IsReactedByThisUser = reactionState.IsReactedByThisUser;
             }
             return Ok(comments);
         }
 
         [HttpGet("Post/Comment/{id:int}")]
-        public ActionResult<IEnumerable<CommentResponse>> GetAllByCommentId(int id)
+        public async Task<ActionResult<IEnumerable<CommentResponse>>> GetAllByCommentId(int id)
         {
-            var comments = _commentService.GetByComment(id);
+            var comments = await _commentService.GetByComment(id);
             foreach (CommentResponse comment in comments)
             {
-                comment.IsReactedByThisUser = _reactionService.GetState(ReactionTarget.Comment, comment.Id, Account.Id).IsReactedByThisUser;
-
+                var reactionState = await _reactionService.GetState(ReactionTarget.Comment, comment.Id, Account.Id);
+                comment.IsReactedByThisUser = reactionState.IsReactedByThisUser;
             }
             return Ok(comments);
         }
 
         [HttpPost]
-        public ActionResult<CommentResponse> Create( CreateCommentRequest comment)
+        public async Task<ActionResult<CommentResponse>> Create( CreateCommentRequest comment)
         {
 
             comment.Created = DateTime.Now;
             comment.OwnerId = Account.Id;
-            _commentService.CreateComment(comment);
+            await _commentService.CreateComment(comment);
             return Ok(comment);
         }
 
         //[Authorize]
         [HttpPut("{id:int}")]
-        public ActionResult<CommentResponse> Update(int id, UpdateCommentRequest model)
+        public async Task<ActionResult<CommentResponse>> Update(int id, UpdateCommentRequest model)
         {
-            var comment = _commentService.UpdateComment(id, model);
+            var comment = await _commentService.UpdateComment(id, model);
             return Ok(comment);
         }
 

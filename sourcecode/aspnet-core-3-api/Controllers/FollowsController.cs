@@ -22,18 +22,18 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public ActionResult<FollowResponse> Create(CreateFollowRequest model)
+        public async Task<ActionResult<FollowResponse>> Create(CreateFollowRequest model)
         {
             model.FollowerId = Account.Id;
             model.Status = Entities.Status.Created;
-            var follow = _followService.CreateFollow(model);
+            var follow = await _followService.CreateFollow(model);
             return Ok(follow);
         }
 
         [HttpPut("{id:int}")]
-        public ActionResult<FollowResponse> Update(int id, UpdateFollowRequest model)
+        public async Task<ActionResult<FollowResponse>> Update(int id, UpdateFollowRequest model)
         {
-            var follow = _followService.UpdateFollow(id, model);
+            var follow = await _followService.UpdateFollow(id, model);
             return Ok(follow);
         }
 
@@ -53,40 +53,41 @@ namespace WebApi.Controllers
 
 
         [HttpGet("GetAll")]
-        public ActionResult<IEnumerable<FollowResponse>> GetAll()
+        public async Task<ActionResult<IEnumerable<FollowResponse>>> GetAll()
         {
-            var follows = _followService.GetAll();
+            var follows = await _followService.GetAll();
             return Ok(follows);
         }
         [HttpGet("GetBySubjectId/{id:int}")]
-        public ActionResult<IEnumerable<FollowResponse>> GetBySubjectId(int id)
+        public async Task<ActionResult<IEnumerable<FollowResponse>>> GetBySubjectId(int id)
         {
-            var followers = _followService.GetBySubjectId(id);
+            var followers = await _followService.GetBySubjectId(id);
             foreach (FollowResponse follower in followers)
             {
-                follower.isFollower_FollowedByCurrentUser = _followService.GetState(follower.FollowerId, Account.Id).IsCreated;
-
+                var followState = await _followService.GetState(follower.FollowerId, Account.Id);
+                follower.isFollower_FollowedByCurrentUser = followState.IsCreated;
             }
             return Ok(followers);
         }
 
         [HttpGet("GetByFollowerId/{id:int}")]
-        public ActionResult<IEnumerable<FollowResponse>> GetByFollowerId(int id)
+        public async  Task<ActionResult<IEnumerable<FollowResponse>>> GetByFollowerId(int id)
         {
-            var subjects = _followService.GetByFollowerId(id);
+            var subjects = await _followService.GetByFollowerId(id);
             foreach (FollowResponse subject in subjects)
             {
-                subject.isSubject_FollowedByCurrentUser = _followService.GetState(subject.SubjectId, Account.Id).IsCreated;
+                var followState = await _followService.GetState(subject.SubjectId, Account.Id);
+                subject.isSubject_FollowedByCurrentUser = followState.IsCreated;
 
             }
             return Ok(subjects);
         }
 
         [HttpGet("GetState/{subjectId:int}")]
-        public ActionResult<FollowState> GetState(int subjectId)
+        public async Task<ActionResult<FollowState>> GetState(int subjectId)
         {
 
-            var state = _followService.GetState(subjectId,Account.Id);
+            var state = await _followService.GetState(subjectId,Account.Id);
             return Ok(state);
         }
 

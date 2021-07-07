@@ -48,7 +48,7 @@ namespace WebApi.Services
         //Update
         public async Task<ReportResponse> UpdateReport(int id, UpdateReportRequest model)
         {
-            var Report = getReport(id);
+            var Report = await getReport(id);
             if (Report == null) throw new AppException("Update Report failed");
             _mapper.Map(model, Report);
   
@@ -60,7 +60,7 @@ namespace WebApi.Services
         //Delete
         public async void DeleteReport(int id)
         {
-            var Report = getReport(id);
+            var Report = await getReport(id);
             _context.Reports.Remove(Report);
             await _context.SaveChangesAsync();
         }
@@ -85,9 +85,9 @@ namespace WebApi.Services
         }
 
         //Helper methods
-        private Report getReport(int id)
+        private async Task<Report> getReport(int id)
         {
-            var Report = _context.Reports.Find(id);
+            var Report = await _context.Reports.FindAsync(id);
             if (Report == null) throw new KeyNotFoundException("Report not found");
             return Report;
         }

@@ -120,12 +120,12 @@ namespace WebApi.Controllers
 
         //[Authorize]
         [HttpPut("SetAvatar/{id:int}")]
-        public ActionResult<AccountResponse> SetAvatar(int id, string avatarPath)
+        public async Task<ActionResult<AccountResponse>> SetAvatar(int id, string avatarPath)
         {
             // users can update their own account and admins can update any account
             //if (id != Account.Id && Account.Role != Role.Admin)
             //    return Unauthorized(new { message = "Unauthorized" });
-            var account = _accountService.SetAvatar(id, avatarPath);
+            var account = await _accountService.SetAvatar(id, avatarPath);
             return Ok(account);
         }
 
@@ -171,41 +171,37 @@ namespace WebApi.Controllers
 
         //[Authorize(Role.Admin)]
         [HttpGet]
-        public ActionResult<IEnumerable<AccountResponse>> GetAll(/*[FromQuery]UserParams accountParams*/)
+        public async Task<ActionResult<IEnumerable<AccountResponse>>> GetAll(/*[FromQuery]UserParams accountParams*/)
         {
             //accountParams.CurrentUserId = Account.Id;
             //if (string.IsNullOrEmpty(accountParams.Gender))
             //{
             //    accountParams.Gender = Account.Title == "mr" ? "mrs": "mr" ;
             //}
-            var accounts = _accountService.GetAll(/*accountParams*/);
+            var accounts = await _accountService.GetAll(/*accountParams*/);
             //Response.AddPaginationHeader(accounts.CurrentPage, accounts.PageSize,accounts.TotalCount, accounts.TotalPages);
             return Ok(accounts);
         }
 
         
         [HttpGet("{id:int}")]
-        public ActionResult<AccountResponse> GetById(int id)
+        public async Task<ActionResult<AccountResponse>> GetById(int id)
         {
-            // users can get their own account and admins can get any account
-            //if (id != Account.Id && Account.Role != Role.Admin)
-            //    return Unauthorized(new { message = "Unauthorized" });
-
-            var account = _accountService.GetById(id);
+            var account = await _accountService.GetById(id);
             return Ok(account);
         }
 
         //[Authorize]
         [HttpPost]
-        public ActionResult<AccountResponse> Create(CreateAccountRequest model)
+        public async Task<ActionResult<AccountResponse>> Create(CreateAccountRequest model)
         {
-            var account = _accountService.Create(model);
+            var account = await _accountService.Create(model);
             return Ok(account);
         }
 
         [Authorize]
         [HttpPut("{id:int}")]
-        public ActionResult<AccountResponse> Update(int id, UpdateAccountRequest model)
+        public async Task<ActionResult<AccountResponse>> Update(int id, UpdateAccountRequest model)
         {
             // users can update their own account and admins can update any account
             if (id != Account.Id)
@@ -215,7 +211,7 @@ namespace WebApi.Controllers
             //if (Account.Role != UserRole.Admin)
             //    model.Role = null;
 
-            var account = _accountService.Update(id, model);
+            var account = await _accountService.Update(id, model);
             return Ok(account);
         }
 

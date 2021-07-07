@@ -61,8 +61,8 @@ namespace WebApi.Hubs
             {
                 throw new HubException("Cannot send mesage to yourself");
             }
-            var sender = _accountService.GetById(senderId);
-            var recipient = _accountService.GetById(model.RecipientId);
+            var sender = await _accountService.GetById(senderId);
+            var recipient = await _accountService.GetById(model.RecipientId);
             if (recipient == null) throw new HubException("User not found");
 
             model.SenderId = sender.Id;
@@ -76,7 +76,7 @@ namespace WebApi.Hubs
                 model.Read = DateTime.Now;
             }
              
-            var message = _messageService.AddMessage(model);
+            var message =  _messageService.AddMessage(model);
 
             if (await _messageService.SaveAllAsync())
             {

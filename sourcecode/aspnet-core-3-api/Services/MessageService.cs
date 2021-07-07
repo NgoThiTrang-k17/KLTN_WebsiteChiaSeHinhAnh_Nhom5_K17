@@ -23,7 +23,7 @@ namespace WebApi.Services
         Task<Connection> GetConnection(string connectionId);
         Task<Group> GetMessageGroup(string groupName);
         Task<Group> GetGroupForConnection(string connectionId);
-        Message AddMessage(CreateChatMessageRequest model);
+        Task<Message> AddMessage(CreateChatMessageRequest model);
         Task<Message> GetMessage(int id);
         Task<IEnumerable<MessageResponse>> GetMessagesForUser(int currentUserId);
         Task<IEnumerable<MessageResponse>> GetMessageThread(int currentUserId, int recipientId);
@@ -107,10 +107,10 @@ namespace WebApi.Services
         
 
         //
-        public Message AddMessage(CreateChatMessageRequest model)
+        public async Task<Message> AddMessage(CreateChatMessageRequest model)
         {
             var message = _mapper.Map<Message>(model);
-            _context.Messages.Add(message);
+            await _context.Messages.AddAsync(message);
 
             return message;
         }
@@ -130,8 +130,8 @@ namespace WebApi.Services
                     if (!response.Any(m => (m.SenderId == message.RecipientId && m.RecipientId == message.SenderId)))
                     {
 
-                        var sender = _accountService.getAccount(message.SenderId);
-                        var recipient = _accountService.getAccount(message.RecipientId);
+                        var sender = await _accountService.getAccount(message.SenderId);
+                        var recipient = await _accountService.getAccount(message.RecipientId);
                         if (sender != null && recipient != null)
                         {
                             message.SenderName = sender.Name;
@@ -170,8 +170,8 @@ namespace WebApi.Services
             }
 
             var response = _mapper.Map<IEnumerable<MessageResponse>>(messages);
-            var currentUser = _accountService.getAccount(currentUserId);
-            var recipientUser = _accountService.getAccount(recipientId);
+            var currentUser = await _accountService.getAccount(currentUserId);
+            var recipientUser = await _accountService.getAccount(recipientId);
             if (currentUser != null && recipientUser != null)
             {
                 foreach (var message in response)

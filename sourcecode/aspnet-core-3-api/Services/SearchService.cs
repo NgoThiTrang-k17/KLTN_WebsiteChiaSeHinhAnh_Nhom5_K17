@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
@@ -25,11 +26,11 @@ namespace WebApi.Services
         //SearchResult<Post> SearchByCategory(string query, IEnumerable<string> tags, int page, int pageSize);
 
         //T Get(string id);
-        IEnumerable<PostResponse> SearchForPosts(int id, string query);
-        IEnumerable<PostResponse> SearchByCategories(int id, string query);
-        IEnumerable<AccountResponse> SearchForAccounts(int id, string query);
-        IEnumerable<AccountResponse> SearchForMessage(int id, string query);
-        IEnumerable<string> SearchHistory(int id);
+        Task<IEnumerable<PostResponse>> SearchForPosts(int id, string query);
+        Task<IEnumerable<PostResponse>> SearchByCategories(int id, string query);
+        Task<IEnumerable<AccountResponse>> SearchForAccounts(int id, string query);
+        Task<IEnumerable<AccountResponse>> SearchForMessage(int id, string query);
+        Task<IEnumerable<string>> SearchHistory(int id);
     }
     public class SearchService : ISearchService
     {
@@ -46,10 +47,10 @@ namespace WebApi.Services
             _appSettings = appSettings.Value;
         }
 
-        public IEnumerable<PostResponse> SearchForPosts(int id, string query)
+        public async Task<IEnumerable<PostResponse>> SearchForPosts(int id, string query)
         {
-            var posts = _context.Posts.Where(p => p.Title.Contains(query) || p.Categories.Contains(query));
-            var account = _context.Users.Find(id);
+            var posts = await _context.Posts.Where(p => p.Title.Contains(query) || p.Categories.Contains(query)).ToListAsync();
+            var account  = await _context.Users.FindAsync(id);
             if (account.SearchHistory != null)
             {
                 var history = account.SearchHistory.Split('-');
@@ -69,29 +70,29 @@ namespace WebApi.Services
                 account.SearchHistory = query;
             }
             _context.Users.Update(account);
-            _context.SaveChanges();
+             await _context.SaveChangesAsync();
             var postResponses = _mapper.Map<IList<PostResponse>>(posts);
             foreach (PostResponse postResponse in postResponses)
             {
-                var owner = _context.Users.Find(postResponse.OwnerId);
+                var owner = await _context.Users.FindAsync(postResponse.OwnerId);
                 postResponse.OwnerId = owner.Id;
                 postResponse.OwnerName = owner.Name;
                 postResponse.OwnerName = owner.Name;
                 postResponse.OwnerAvatar = owner.AvatarPath;
 
-                postResponse.FollowerCount = _context.Follows.Count(f => f.SubjectId == owner.Id);
+                postResponse.FollowerCount = await _context.Follows.CountAsync(f => f.SubjectId == owner.Id);
 
-                (postResponse.CommentCount, postResponse.ReactionCount) = GetPostInfor(postResponse.Id);
+                (postResponse.CommentCount, postResponse.ReactionCount) = await GetPostInfor(postResponse.Id);
             }
             return postResponses;
         }
-        public IEnumerable<PostResponse> SearchByCategories(int id, string query)
+        public async Task<IEnumerable<PostResponse>> SearchByCategories(int id, string query)
         {
             if (query.Contains('-'))
                 query = query.Split('-').Take(1).ToString();
-            var posts = _context.Posts.Where(p => p.Categories.Contains(query));
+            var posts = await _context.Posts.Where(p => p.Categories.Contains(query)).ToListAsync();
 
-            var account = _context.Users.Find(id);
+            var account = await _context.Users.FindAsync(id);
             if (account.SearchHistory != null)
             {
                 var history = account.SearchHistory.Split('-');
@@ -111,49 +112,49 @@ namespace WebApi.Services
                 account.SearchHistory = query;
             }
             _context.Users.Update(account);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             var postResponses = _mapper.Map<IList<PostResponse>>(posts);
             foreach (PostResponse postResponse in postResponses)
             {
-                var owner = _context.Users.Find(postResponse.OwnerId);
+                var owner = await  _context.Users.FindAsync(postResponse.OwnerId);
                 postResponse.OwnerId = owner.Id;
                 postResponse.OwnerName = owner.Name;
                 postResponse.OwnerName = owner.Name;
                 postResponse.OwnerAvatar = owner.AvatarPath;
 
-                postResponse.FollowerCount = _context.Follows.Count(f => f.SubjectId == owner.Id);
+                postResponse.FollowerCount = await _context.Follows.CountAsync(f => f.SubjectId == owner.Id);
 
-                (postResponse.CommentCount, postResponse.ReactionCount) = GetPostInfor(postResponse.Id);
+                (postResponse.CommentCount, postResponse.ReactionCount) = await GetPostInfor(postResponse.Id);
             }
             return postResponses;
         }
 
-        public IEnumerable<AccountResponse> SearchForAccounts(int id, string query)
+        public async Task<IEnumerable<AccountResponse>> SearchForAccounts(int id, string query)
         {
-            var accounts = _context.Users.Where(p => p.Name.Contains(query));
+            var accounts = await _context.Users.Where(p => p.Name.Contains(query)).ToListAsync();
             var accountResponses = _mapper.Map<IList<AccountResponse>>(accounts);
             foreach (AccountResponse accountResponse in accountResponses)
             {
-                accountResponse.FollowerCount = _context.Follows.Count(f => f.SubjectId == accountResponse.Id);
-                accountResponse.FollowingCount = _context.Follows.Count(f => f.FollowerId == accountResponse.Id);
-
-                if (_context.Follows.Count(f => f.SubjectId == accountResponse.Id && f.FollowerId == id) == 1)
+                accountResponse.FollowerCount = await _context.Follows.CountAsync(f => f.SubjectId == accountResponse.Id);
+                accountResponse.FollowingCount = await _context.Follows.CountAsync(f => f.FollowerId == accountResponse.Id);
+                var isFollowedByCurrentUser = await _context.Follows.CountAsync(f => f.SubjectId == accountResponse.Id && f.FollowerId == id);
+                if (isFollowedByCurrentUser == 1)
                     accountResponse.IsFollowedByCurrentUser = 1;
                 else
                     accountResponse.IsFollowedByCurrentUser = 0;
             }
             return accountResponses;
         }
-        public IEnumerable<AccountResponse> SearchForMessage(int id, string query)
+        public async Task<IEnumerable<AccountResponse>> SearchForMessage(int id, string query)
         {
-            var accounts = _context.Users.Where(p => p.Name.Contains(query));
+            var accounts = await _context.Users.Where(p => p.Name.Contains(query)).ToListAsync();
             var accountResponses = _mapper.Map<IList<AccountResponse>>(accounts);
             foreach (AccountResponse accountResponse in accountResponses)
             {
-                accountResponse.FollowerCount = _context.Follows.Count(f => f.SubjectId == accountResponse.Id);
-                accountResponse.FollowingCount = _context.Follows.Count(f => f.FollowerId == accountResponse.Id);
-
-                if (_context.Follows.Count(f => f.SubjectId == accountResponse.Id && f.FollowerId == id) == 1)
+                accountResponse.FollowerCount = await _context.Follows.CountAsync(f => f.SubjectId == accountResponse.Id);
+                accountResponse.FollowingCount = await _context.Follows.CountAsync(f => f.FollowerId == accountResponse.Id);
+                var isFollowedByCurrentUser = await _context.Follows.CountAsync(f => f.SubjectId == accountResponse.Id && f.FollowerId == id);
+                if (isFollowedByCurrentUser == 1)
                     accountResponse.IsFollowedByCurrentUser = 1;
                 else
                     accountResponse.IsFollowedByCurrentUser = 0;
@@ -161,17 +162,17 @@ namespace WebApi.Services
             return accountResponses;
         }
 
-        public IEnumerable<string> SearchHistory(int id)
+        public async Task<IEnumerable<string>> SearchHistory(int id)
         {
-            var account = _context.Users.Find(id);
+            var account = await _context.Users.FindAsync(id);
             if (account.SearchHistory == null) return new List<string>();
             return account.SearchHistory.Split('-',StringSplitOptions.RemoveEmptyEntries);
         }
 
-        private (int, int) GetPostInfor(int id)
+        private async Task<(int, int)> GetPostInfor(int id)
         {
-            var commentcount = _context.Comments.Count(c => c.PostId == id);
-            var reactioncount = _context.Reactions.Count(r => r.TargetId == id && r.Target == ReactionTarget.Post);
+            var commentcount = await _context.Comments.CountAsync(c => c.PostId == id);
+            var reactioncount = await _context.Reactions.CountAsync(r => r.TargetId == id && r.Target == ReactionTarget.Post);
             return (commentcount, reactioncount);
         }
     }

@@ -26,15 +26,15 @@ namespace WebApi.Services
         Task ForgotPassword(ForgotPasswordRequest model, string origin);
         Task ValidateResetToken(ValidateResetTokenRequest model);
         Task ResetPassword(ResetPasswordRequest model);
-        public Task<AccountResponse> SetAvatar(int id, string AvatarPath);
-        IEnumerable<AccountResponse> GetAll();
+        Task<AccountResponse> SetAvatar(int id, string AvatarPath);
+        Task<IEnumerable<AccountResponse>> GetAll();
         Task<PagedList<AccountResponse>> GetAll(UserParams accountParams);
-        AccountResponse GetById(int id);
-        AccountResponse Create(CreateAccountRequest model);
+        Task<AccountResponse> GetById(int id);
+        Task<AccountResponse> Create(CreateAccountRequest model);
         Task<AccountResponse> Update(int id, UpdateAccountRequest model);
         void Delete(int id);
         Task<bool> SaveAllAsync();
-        User getAccount(int id);
+        Task<User> getAccount(int id);
     }
 
     public class AccountService : IAccountService
@@ -299,7 +299,7 @@ namespace WebApi.Services
 
         public async Task<AccountResponse> SetAvatar(int id, string AvatarPath)
         {
-            var account = getAccount(id);
+            var account = await getAccount(id);
             account.AvatarPath = AvatarPath;
             _context.Users.Update(account);
             await _context.SaveChangesAsync();
@@ -307,9 +307,9 @@ namespace WebApi.Services
             return _mapper.Map<AccountResponse>(account);
         }
 
-        public IEnumerable<AccountResponse> GetAll()
+        public async Task<IEnumerable<AccountResponse>> GetAll()
         {
-            var accounts = _context.Users;
+            var accounts = await _context.Users.ToListAsync();
             var accountResponses = _mapper.Map<IEnumerable<AccountResponse>>(accounts);
             
             foreach (AccountResponse accountResponse in accountResponses)
@@ -344,9 +344,9 @@ namespace WebApi.Services
             return await PagedList<AccountResponse>.CreateAsync(accountResponses, accountParams.PageNumber, accountParams.PageSize);
         }
 
-        public AccountResponse GetById(int id)
+        public async Task<AccountResponse> GetById(int id)
         {
-            var account = getAccount(id);
+            var account = await getAccount(id);
             var accountResponse = _mapper.Map<AccountResponse>(account);
 
             accountResponse.FollowerCount = _context.Follows.Count(f => f.SubjectId == accountResponse.Id);
@@ -356,7 +356,7 @@ namespace WebApi.Services
             return accountResponse;
         }
 
-        public AccountResponse Create(CreateAccountRequest model)
+        public async Task<AccountResponse> Create(CreateAccountRequest model)
         {
             // validate
             if (_context.Users.Any(x => x.Email == model.Email))
@@ -371,15 +371,15 @@ namespace WebApi.Services
             account.PasswordHash = BC.HashPassword(model.Password);
 
             // save account
-            _context.Users.Add(account);
-            _context.SaveChanges();
+            await _context.Users.AddAsync(account);
+            await _context.SaveChangesAsync();
 
             return _mapper.Map<AccountResponse>(account);
         }
 
         public async Task<AccountResponse> Update(int id, UpdateAccountRequest model)
         {
-            var account = getAccount(id);
+            var account = await getAccount(id);
 
             // validate
             if (account.Email != model.Email && _context.Users.Any(x => x.Email == model.Email))
@@ -401,7 +401,7 @@ namespace WebApi.Services
 
         public async void Delete(int id)
         {
-            var account = getAccount(id);
+            var account = await getAccount(id);
             _context.Users.Remove(account);
             await _context.SaveChangesAsync();
             //await _userManager.DeleteAsync(account);
@@ -414,9 +414,9 @@ namespace WebApi.Services
 
         // helper methods
 
-        public User getAccount(int id)
+        public async Task<User> getAccount(int id)
         {
-            var account = _context.Users.FirstOrDefault(u=>u.Id == id);
+            var account = await _context.Users.FirstOrDefaultAsync(u=>u.Id == id);
             if (account == null) throw new KeyNotFoundException("Account not found");
             return account;
         }

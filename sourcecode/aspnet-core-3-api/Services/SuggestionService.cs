@@ -95,7 +95,7 @@ namespace WebApi.Services
         public async Task<IEnumerable<PostResponse>> GetPostByPreference(int userId)
         {
             var userPreference = await GetUserPreference(userId);
-            var posts = _context.Posts;
+            var posts = await _context.Posts.ToListAsync();
             var responses = new List<Post>();
             foreach (var post in posts)
             {
@@ -109,13 +109,13 @@ namespace WebApi.Services
             var postResponses = _mapper.Map<IEnumerable<PostResponse>>(responses);
             foreach (var postResponse in postResponses)
             {
-                var owner = _accountService.GetById(postResponse.OwnerId);
+                var owner = await _accountService.GetById(postResponse.OwnerId);
                 postResponse.OwnerId = owner.Id;
                 postResponse.OwnerName = owner.Name;
                 postResponse.OwnerName = owner.Name;
                 postResponse.OwnerAvatar = owner.AvatarPath;
 
-                postResponse.FollowerCount = _context.Follows.Count(f => f.SubjectId == owner.Id);
+                postResponse.FollowerCount = await _context.Follows.CountAsync(f => f.SubjectId == owner.Id);
 
                 (postResponse.CommentCount, postResponse.ReactionCount) = _postService.GetPostInfor(postResponse.Id);
             }

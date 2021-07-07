@@ -16,7 +16,7 @@ namespace WebApi.Helpers
 
             var accountId = resultContext.HttpContext.User.GetUserId();
             var repo = resultContext.HttpContext.RequestServices.GetService<IAccountService>();
-            var user = repo.getAccount(accountId);
+            var user = await repo.getAccount(accountId);
             user.LastActive = DateTime.Now;
             await repo.SaveAllAsync();
         }

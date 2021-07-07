@@ -11,13 +11,13 @@ namespace WebApi.Services
 {
     public interface INotificationService
     {
-        NotificationResponse CreateNotification(CreateNotificationRequest model);
-        NotificationResponse UpdateNotification(int id, UpdateNotificationRequest model);
-        NotificationResponse UpdateNotificationStatus(int id, Status status);
+        Task<NotificationResponse> CreateNotification(CreateNotificationRequest model);
+        Task<NotificationResponse> UpdateNotification(int id, UpdateNotificationRequest model);
+        Task<NotificationResponse> UpdateNotificationStatus(int id, Status status);
         void DeleteNotification(int id);
-        IEnumerable<NotificationResponse> GetAll();
-        IEnumerable<NotificationResponse> GetNotificationThread(int id);
-        int NewNotificationCount(int id);
+        Task<IEnumerable<NotificationResponse>> GetAll();
+        Task<IEnumerable<NotificationResponse>> GetNotificationThread(int id);
+        Task<int> NewNotificationCount(int id);
         
         Task<bool> SaveAllAsync();
         
@@ -38,84 +38,86 @@ namespace WebApi.Services
         }
 
         //Create
-        public NotificationResponse CreateNotification(CreateNotificationRequest model)
+        public async Task<NotificationResponse> CreateNotification(CreateNotificationRequest model)
         {
             var notification = _mapper.Map<Notification>(model);
             if (notification == null) throw new AppException("Create Notification failed");
-            _context.Notifications.Add(notification);
-            _context.SaveChanges();
+            await _context.Notifications.AddAsync(notification);
+            await _context.SaveChangesAsync();
+
             var notificationResponse = _mapper.Map<NotificationResponse>(notification);
-            var actionOwner = _accountService.GetById(notificationResponse.ActionOwnerId);
+            var actionOwner = await _accountService.GetById(notificationResponse.ActionOwnerId);
             bool IsActionOwnerNameNull = actionOwner.Name == null;
             notificationResponse.ActionOwnerName = IsActionOwnerNameNull ? "" : actionOwner.Name;
 
             notificationResponse.ActionOwnerAvatarPath = actionOwner.AvatarPath;
 
-            var receiver = _accountService.GetById(notificationResponse.ReiceiverId);
+            var receiver = await _accountService.GetById(notificationResponse.ReiceiverId);
             bool IsReceiverNull = receiver.Name == null;
             notificationResponse.ReiceiverName = IsReceiverNull ? "" : receiver.Name;
             return notificationResponse;
         }
 
         //Update
-        public NotificationResponse UpdateNotificationStatus(int id, Status status)
+        public async Task<NotificationResponse> UpdateNotificationStatus(int id, Status status)
         {
-            var notification = getNotification(id);
+            var notification = await getNotification(id);
             if (notification == null) throw new AppException("Update Notification failed");
             notification.Status = status;
             _context.Notifications.Update(notification);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return _mapper.Map<NotificationResponse>(notification);
         }
 
         //Update
-        public NotificationResponse UpdateNotification(int id, UpdateNotificationRequest model)
+        public async Task<NotificationResponse> UpdateNotification(int id, UpdateNotificationRequest model)
         {
-            var notification = getNotification(id);
+            var notification = await getNotification(id);
             if (notification == null) throw new AppException("Update Notification failed");
             //_mapper.Map(model, notification);
             if (notification.Status < model.Status)
                 notification.Status = model.Status;
             _context.Notifications.Update(notification);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             var notificationResponse = _mapper.Map<NotificationResponse>(notification);
-            var actionOwner = _accountService.GetById(notificationResponse.ActionOwnerId);
+
+            var actionOwner = await _accountService.GetById(notificationResponse.ActionOwnerId);
             bool IsActionOwnerNameNull = actionOwner.Name == null;
             notificationResponse.ActionOwnerName = IsActionOwnerNameNull ? "" : actionOwner.Name;
 
             notificationResponse.ActionOwnerAvatarPath = actionOwner.AvatarPath;
 
-            var receiver = _accountService.GetById(notificationResponse.ReiceiverId);
+            var receiver = await _accountService.GetById(notificationResponse.ReiceiverId);
             bool IsReceiverNull = receiver.Name == null;
             notificationResponse.ReiceiverName = IsReceiverNull ? "" : receiver.Name;
             return notificationResponse;
         }
 
         //Delete
-        public void DeleteNotification(int id)
+        public async void DeleteNotification(int id)
         {
-            var notification = getNotification(id);
+            var notification = await getNotification(id);
             _context.Notifications.Remove(notification);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
         }
 
         //Get all notification
-        public IEnumerable<NotificationResponse> GetAll()
+        public async Task<IEnumerable<NotificationResponse>> GetAll()
         {
 
-            var notifications = _context.Notifications;
+            var notifications = await _context.Notifications.ToListAsync();
             var notificationResponses = _mapper.Map<IList<NotificationResponse>>(notifications);
             foreach (NotificationResponse notificationResponse in notificationResponses)
             {
-                var actionOwner = _accountService.GetById(notificationResponse.ActionOwnerId);
+                var actionOwner = await _accountService.GetById(notificationResponse.ActionOwnerId);
 
                 bool IsActionOwnerNameNull = actionOwner.Name == null;
                 notificationResponse.ActionOwnerName = IsActionOwnerNameNull ? "" : actionOwner.Name;
 
                 notificationResponse.ActionOwnerAvatarPath = actionOwner.AvatarPath;
 
-                var receiver = _accountService.GetById(notificationResponse.ReiceiverId);
+                var receiver = await _accountService.GetById(notificationResponse.ReiceiverId);
                 bool IsReceiverNull = receiver.Name == null;
                 notificationResponse.ReiceiverName = IsReceiverNull ? "" : receiver.Name;
             }
@@ -123,20 +125,20 @@ namespace WebApi.Services
         }
 
         //Get notifications for each user
-        public IEnumerable<NotificationResponse> GetNotificationThread(int id)
+        public async Task<IEnumerable<NotificationResponse>> GetNotificationThread(int id)
         {
 
-            var notifications = _context.Notifications.Where(n => n.ReiceiverId == id).OrderBy(n => n.Created);
+            var notifications = await _context.Notifications.Where(n => n.ReiceiverId == id).OrderBy(n => n.Created).ToListAsync();
             var notificationResponses = _mapper.Map<IList<NotificationResponse>>(notifications);
             foreach (NotificationResponse notificationResponse in notificationResponses)
             {
-                var actionOwner = _accountService.GetById(notificationResponse.ActionOwnerId);
+                var actionOwner = await _accountService.GetById(notificationResponse.ActionOwnerId);
                 bool IsActionOwnerNameNull = actionOwner.Name == null;
                 notificationResponse.ActionOwnerName = IsActionOwnerNameNull ? "" : actionOwner.Name;
 
                 notificationResponse.ActionOwnerAvatarPath = actionOwner.AvatarPath;
 
-                var receiver = _accountService.GetById(notificationResponse.ReiceiverId);
+                var receiver = await _accountService.GetById(notificationResponse.ReiceiverId);
                 bool IsReceiverNull = receiver.Name == null;
                 notificationResponse.ReiceiverName = IsReceiverNull ? "" : receiver.Name;
             }
@@ -144,10 +146,10 @@ namespace WebApi.Services
         }
 
         //Get notifications for each user
-        public int NewNotificationCount(int id)
+        public async Task<int> NewNotificationCount(int id)
         {
 
-            var notifications = _context.Notifications.Where(p => p.ReiceiverId == id && p.Status == 0);
+            var notifications = await _context.Notifications.Where(p => p.ReiceiverId == id && p.Status == 0).ToListAsync() ;
             var notificationResponses = _mapper.Map<IList<NotificationResponse>>(notifications);
             return notificationResponses.Count();
         }
@@ -173,8 +175,7 @@ namespace WebApi.Services
             return await _context.Connections.FindAsync(connectionId);
         }
 
-
-
+         
         //public async Task<NotificationGroup> GetNotificationGroup(string groupName)
         //{
         //    return await _context.NotificationGroups
@@ -191,9 +192,9 @@ namespace WebApi.Services
         //}
 
         //Helper methods
-        private Notification getNotification(int id)
+        private async Task<Notification> getNotification(int id)
         {
-            var notification = _context.Notifications.Find(id);
+            var notification = await _context.Notifications.FindAsync(id);
             if (notification == null) throw new KeyNotFoundException("Notification not found");
             return notification;
         }

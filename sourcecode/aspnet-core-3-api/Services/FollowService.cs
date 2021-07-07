@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using WebApi.Entities;
 using WebApi.Helpers;
 using WebApi.Hubs;
@@ -13,16 +15,16 @@ namespace WebApi.Services
 {
     public interface IFollowService
     {
-        FollowResponse CreateFollow(CreateFollowRequest model);
-        FollowResponse UpdateFollow(int id, UpdateFollowRequest model);
+        Task<FollowResponse> CreateFollow(CreateFollowRequest model);
+        Task<FollowResponse> UpdateFollow(int id, UpdateFollowRequest model);
         void DeleteFollow(int id);
         void DeleteFollowBySubjectId(int accountId, int followerId);
 
-        IEnumerable<FollowResponse> GetAll();
-        IEnumerable<FollowResponse> GetBySubjectId(int userId);
-        IEnumerable<FollowResponse> GetByFollowerId(int userId);
+        Task<IEnumerable<FollowResponse>> GetAll();
+        Task<IEnumerable<FollowResponse>> GetBySubjectId(int userId);
+        Task<IEnumerable<FollowResponse>> GetByFollowerId(int userId);
 
-        FollowState GetState(int accountId, int followerId);
+        Task<FollowState> GetState(int accountId, int followerId);
     }
     public class FollowService : IFollowService
     {
@@ -49,83 +51,85 @@ namespace WebApi.Services
         }
 
         //Create
-        public FollowResponse CreateFollow(CreateFollowRequest model)
+        public async Task<FollowResponse> CreateFollow(CreateFollowRequest model)
         {
             var follow = _mapper.Map<Follow>(model);
             if (follow == null) throw new AppException("Create follow failed");
-            _context.Follows.Add(follow);
-            _context.SaveChanges();
+            await _context.Follows.AddAsync(follow);
+            await _context.SaveChangesAsync();
             SendNotification(follow);
             return _mapper.Map<FollowResponse>(follow);
         }
 
         //Update
-        public FollowResponse UpdateFollow(int id, UpdateFollowRequest model)
+        public async Task<FollowResponse> UpdateFollow(int id, UpdateFollowRequest model)
         {
-            var follow = getFollow(id);
+            var follow = await getFollow(id);
             if (follow == null) throw new AppException("Update follow failed");
             _mapper.Map(model, follow);
             _context.Follows.Update(follow);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return _mapper.Map<FollowResponse>(follow); ;
         }
 
         //Delete
-        public void DeleteFollow(int id)
+        public async void DeleteFollow(int id)
         {
             var follow = getFollow(id);
             if (follow == null) throw new KeyNotFoundException("Follow not found");
             _context.Remove(follow);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void DeleteFollowBySubjectId(int accountId, int followerId)
+        public async void DeleteFollowBySubjectId(int accountId, int followerId)
         {
             var follow = _context.Follows.Where(follow => follow.SubjectId == accountId && follow.FollowerId == followerId).FirstOrDefault();
             if (follow == null) throw new KeyNotFoundException("Follow not found");
             _context.Remove(follow);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
+
         //Get all Follow
-        public IEnumerable<FollowResponse> GetAll()
+        public async Task<IEnumerable<FollowResponse>> GetAll()
         {
-            var follows = _context.Follows;
+            var follows = await _context.Follows.ToListAsync();
             return _mapper.Map<List<FollowResponse>>(follows);
         }
 
         //Get all Follower of each user
-        public IEnumerable<FollowResponse> GetBySubjectId(int userId)
+        public async Task<IEnumerable<FollowResponse>> GetBySubjectId(int userId)
         {
             var follows = _context.Follows.Where(follow => follow.SubjectId == userId);
             var followers = _mapper.Map<List<FollowResponse>>(follows);
             foreach (FollowResponse follower in followers)
             {
-                var account = _accountService.GetById(follower.FollowerId);
+                var account = await _accountService.GetById(follower.FollowerId);
                 follower.FollowerName = account.Name;
                 follower.FollowerAvatarPath = account.AvatarPath;
             }
 
             return followers;
         }
+
         //Get all Follow of each user
-        public IEnumerable<FollowResponse> GetByFollowerId(int userId)
+        public async Task<IEnumerable<FollowResponse>> GetByFollowerId(int userId)
         {
             var follows = _context.Follows.Where(follow => follow.FollowerId == userId);
             var subjects = _mapper.Map<List<FollowResponse>>(follows);
             foreach (FollowResponse subject in subjects)
             {
-                var account = _accountService.GetById(subject.SubjectId);
+                var account = await _accountService.GetById(subject.SubjectId);
                 subject.FollowerName = account.Name;
                 subject.FollowerAvatarPath = account.AvatarPath;
             }
             return subjects;
         }
 
-        public FollowState GetState(int subjectId, int followerId)
+        public async Task<FollowState> GetState(int subjectId, int followerId)
         {
 
-            var followCount = _context.Follows.Where(follow => follow.SubjectId == subjectId && follow.FollowerId == followerId).Count();
+            var followCount = await _context.Follows.Where(follow => follow.SubjectId == subjectId && follow.FollowerId == followerId).CountAsync();
             var followState = new FollowState
             {
                 IsCreated = false
@@ -151,7 +155,7 @@ namespace WebApi.Services
                 Created = DateTime.Now,
                 Status = Status.Created
             };
-            _notificationService.CreateNotification(notification);
+           await _notificationService.CreateNotification(notification);
             var connections = await _tracker.GetConnectionForUser(notification.ReiceiverId);
             if (connections != null)
             {
@@ -159,9 +163,9 @@ namespace WebApi.Services
             }
         }
 
-        private Follow getFollow(int id)
+        private async Task<Follow> getFollow(int id)
         {
-            var follow = _context.Follows.Find(id);
+            var follow = await _context.Follows.FindAsync(id);
             if (follow == null) throw new KeyNotFoundException("Follow not found");
             return follow;
         }

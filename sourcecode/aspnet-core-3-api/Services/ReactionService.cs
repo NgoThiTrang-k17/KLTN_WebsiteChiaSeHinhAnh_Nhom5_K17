@@ -8,19 +8,21 @@ using WebApi.Models.Notifications;
 using WebApi.Models.Reactions;
 using Microsoft.AspNetCore.SignalR;
 using WebApi.Hubs;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebApi.Services
 {
     public interface IReactionService
     {
-        ReactionResponse CreateReaction(CreateReactionRequest model);
-        ReactionResponse UpdateReaction(int id, UpdateReactionRequest model);
+        Task<ReactionResponse> CreateReaction(CreateReactionRequest model);
+        Task<ReactionResponse> UpdateReaction(int id, UpdateReactionRequest model);
         void DeleteReaction(int id);
         void DeleteByPostId(int postId, int ownerId);
         void DeleteByCommentId(int commentId, int ownerId);
-        IEnumerable<ReactionResponse> GetAll();
-        IEnumerable<ReactionResponse> GetAllByTargetId(ReactionTarget targetType, int targetId);
-        ReactionState GetState(ReactionTarget targetType, int targetId, int ownerId);
+        Task<IEnumerable<ReactionResponse>> GetAll();
+        Task<IEnumerable<ReactionResponse>> GetAllByTargetId(ReactionTarget targetType, int targetId);
+        Task<ReactionState> GetState(ReactionTarget targetType, int targetId, int ownerId);
     }
     public class ReactionService : IReactionService
     {
@@ -43,77 +45,77 @@ namespace WebApi.Services
             _tracker = tracker;
         }
 
-        public ReactionResponse CreateReaction(CreateReactionRequest model)
+        public async Task<ReactionResponse> CreateReaction(CreateReactionRequest model)
         {
             var reaction = _mapper.Map<Reaction>(model);
             if (reaction == null) throw new AppException("Create reaction failed");
             reaction.Created = DateTime.Now;
 
-            _context.Reactions.Add(reaction);
-            _context.SaveChanges();
+            await _context.Reactions.AddAsync(reaction);
+            await _context.SaveChangesAsync();
             SendNotification(reaction.OwnerId, reaction);
             return _mapper.Map<ReactionResponse>(reaction);
         }
 
-        public ReactionResponse UpdateReaction(int id, UpdateReactionRequest model)
+        public async Task<ReactionResponse> UpdateReaction(int id, UpdateReactionRequest model)
         {
-            var reaction = getReaction(id);
+            var reaction = await getReaction(id);
             if (reaction == null) throw new AppException("Update reaction failed");
             _mapper.Map(model, reaction);
             _context.Reactions.Update(reaction);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return _mapper.Map<ReactionResponse>(reaction); ;
         }
 
 
-        public void DeleteReaction(int id)
+        public async void DeleteReaction(int id)
         {
-            var reaction = getReaction(id);
+            var reaction = await getReaction(id);
             _context.Remove(reaction);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void DeleteByPostId(int postId, int ownerId)
+        public async void DeleteByPostId(int postId, int ownerId)
         {
-            var model = _context.Reactions.Where(reaction => reaction.Target == ReactionTarget.Post
+            var model = await _context.Reactions.Where(reaction => reaction.Target == ReactionTarget.Post
             && reaction.TargetId == postId
-            && reaction.OwnerId == ownerId);
+            && reaction.OwnerId == ownerId).FirstOrDefaultAsync();
 
-            var reaction = getReaction(model.FirstOrDefault().Id);
+            var reaction = await getReaction(model.Id);
             _context.Remove(reaction);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
-        public void DeleteByCommentId(int commentId, int ownerId)
+        public async void DeleteByCommentId(int commentId, int ownerId)
         {
-            var model = _context.Reactions.Where(reaction => reaction.Target == ReactionTarget.Comment
+            var model = await _context.Reactions.Where(reaction => reaction.Target == ReactionTarget.Comment
             && reaction.TargetId == commentId
-            && reaction.OwnerId == ownerId);
+            && reaction.OwnerId == ownerId).FirstOrDefaultAsync() ;
 
-            var reaction = getReaction(model.FirstOrDefault().Id);
+            var reaction = getReaction(model.Id);
             _context.Remove(reaction);
-            _context.SaveChanges();
+             await _context.SaveChangesAsync();
         }
 
 
-        public IEnumerable<ReactionResponse> GetAll()
+        public async Task<IEnumerable<ReactionResponse>> GetAll()
         {
-            var reactions = _context.Reactions;
+            var reactions = await _context.Reactions.ToListAsync();
             return _mapper.Map<List<ReactionResponse>>(reactions);
         }
 
-        public IEnumerable<ReactionResponse> GetAllByTargetId(ReactionTarget targetType, int targetId)
+        public async Task<IEnumerable<ReactionResponse>> GetAllByTargetId(ReactionTarget targetType, int targetId)
         {
-            var reactions = _context.Reactions.Where(reaction => reaction.Target == targetType && reaction.TargetId == targetId);
+            var reactions = await _context.Reactions.Where(reaction => reaction.Target == targetType && reaction.TargetId == targetId).ToListAsync();
             return _mapper.Map<List<ReactionResponse>>(reactions);
         }
-        public ReactionState GetState(ReactionTarget targetType, int targetId, int ownerId)
+        public async Task<ReactionState> GetState(ReactionTarget targetType, int targetId, int ownerId)
         {
 
-            var reaction = _context.Reactions.Where(reaction =>
+            var reaction = await _context.Reactions.Where(reaction =>
             reaction.Target == targetType
             && reaction.TargetId == targetId
-            && reaction.OwnerId == ownerId).Count();
+            && reaction.OwnerId == ownerId).CountAsync();
             var reactionState = new ReactionState
             {
                 IsCreated = 0
@@ -130,9 +132,9 @@ namespace WebApi.Services
         }
 
         //Helper methods
-        private Reaction getReaction(int id)
+        private async Task<Reaction> getReaction(int id)
         {
-            var reaction = _context.Reactions.Find(id);
+            var reaction = await _context.Reactions.FindAsync(id);
             if (reaction == null) throw new KeyNotFoundException("Reaction not found");
             return reaction;
         }
@@ -151,17 +153,20 @@ namespace WebApi.Services
             {
                 notification.NotificationType = NotificationType.ReactedPost;
                 notification.PostId = model.TargetId;
-                notification.ReiceiverId = _context.Posts.Find(model.TargetId).OwnerId;
+                var receiver = await _context.Posts.FindAsync(model.TargetId);
+                notification.ReiceiverId = receiver.OwnerId;
             }
             if (model.Target == ReactionTarget.Comment)
             {
                 notification.NotificationType = NotificationType.ReactedComment;
                 notification.CommentId = model.TargetId;
-                notification.PostId = _context.Comments.Find(model.TargetId).PostId;
-                notification.ReiceiverId = _context.Comments.Find(model.TargetId).OwnerId;
+                var post = await _context.Comments.FindAsync(model.TargetId);
+                notification.PostId = post.PostId;
+                var receiver = await _context.Comments.FindAsync(model.TargetId);
+                notification.ReiceiverId = receiver.OwnerId;
             }
 
-            _notificationService.CreateNotification(notification);
+            await _notificationService.CreateNotification(notification);
 
             var connections = await _tracker.GetConnectionForUser(notification.ReiceiverId);
             if (connections != null)

@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 using WebApi.Models.Reports;
 using WebApi.Services;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace WebApi.Controllers
 {
     [ApiController]
@@ -41,9 +39,10 @@ namespace WebApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
             _reportService.DeleteReport(id);
+            return Ok(new { message = "Report deleted successfully" });
         }
     }
 }

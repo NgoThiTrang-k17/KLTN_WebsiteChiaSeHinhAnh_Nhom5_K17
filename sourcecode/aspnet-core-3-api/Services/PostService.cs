@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using WebApi.Entities;
 using WebApi.Helpers;
 using WebApi.Hubs;
@@ -15,13 +17,13 @@ namespace WebApi.Services
 
     public interface IPostService
     {
-        PostResponse GetById(int postId);
-        PostResponse CreatePost(CreatePostRequest model);
-        PostResponse UpdatePost(int id, UpdatePostRequest model);
+        Task<PostResponse> GetById(int postId);
+        Task<PostResponse> CreatePost(CreatePostRequest model);
+        Task<PostResponse> UpdatePost(int id, UpdatePostRequest model);
         void Share(int id);
         void DeletePost(int id);
-        IEnumerable<PostResponse> GetAll();
-        IEnumerable<PostResponse> GetByOwnerId(int ownerId);
+        Task<IEnumerable<PostResponse>> GetAll();
+        Task<IEnumerable<PostResponse>> GetByOwnerId(int ownerId);
 
         (int, int) GetPostInfor(int id);
     }
@@ -53,34 +55,34 @@ namespace WebApi.Services
             _tracker = tracker;
         }
         //Create
-        public PostResponse CreatePost(CreatePostRequest model)
+        public async Task<PostResponse> CreatePost(CreatePostRequest model)
         {
             var post = _mapper.Map<Post>(model);
             _context.Posts.Add(post);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             SendNotification(post);
             return _mapper.Map<PostResponse>(post);
         }
 
         //Update
-        public PostResponse UpdatePost(int id, UpdatePostRequest model)
+        public async Task<PostResponse> UpdatePost(int id, UpdatePostRequest model)
         {
-            var post = GetPost(id);
+            var post = await GetPost(id);
             _mapper.Map(model, post);
             _context.Posts.Update(post);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return _mapper.Map<PostResponse>(post);
         }
 
         //Delete
-        public void DeletePost(int id)
+        public async void DeletePost(int id)
         {
-            var post = GetPost(id);
+            var post = await GetPost(id);
             _context.RemoveRange(GetComments(id));
             _context.RemoveRange(GetReactions(id));
             _context.Remove(post);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         //Share
@@ -90,13 +92,13 @@ namespace WebApi.Services
         }
 
         //Get all posts
-        public IEnumerable<PostResponse> GetAll()
+        public async Task<IEnumerable<PostResponse>> GetAll()
         {
-            var posts = _context.Posts;
+            var posts = await _context.Posts.ToListAsync();
             var postResponses = _mapper.Map<IList<PostResponse>>(posts);
             foreach (PostResponse postResponse in postResponses)
             {
-                var owner = _accountService.GetById(postResponse.OwnerId);
+                var owner = await _accountService.GetById(postResponse.OwnerId);
                 postResponse.OwnerId = owner.Id;
                 postResponse.OwnerName = owner.Name;
                 postResponse.OwnerName = owner.Name;
@@ -110,10 +112,10 @@ namespace WebApi.Services
         }
 
         //Get specific post by its Id
-        public PostResponse GetById(int postId)
+        public async Task<PostResponse> GetById(int postId)
         {
-            var post = GetPost(postId);
-            var owner = _accountService.GetById(post.OwnerId);
+            var post = await GetPost(postId);
+            var owner = await _accountService.GetById(post.OwnerId);
             var response = _mapper.Map<PostResponse>(post);
             bool IsOwnerNameNull = owner.Name == null;
             response.OwnerName = IsOwnerNameNull ? "" : owner.Name;
@@ -129,13 +131,13 @@ namespace WebApi.Services
         }
 
         //Get posts for each user
-        public IEnumerable<PostResponse> GetByOwnerId(int ownerId)
+        public async Task<IEnumerable<PostResponse>> GetByOwnerId(int ownerId)
         {
             var posts = _context.Posts.Where(post => post.OwnerId == ownerId).OrderByDescending(p =>p.Created);
             var postResponses = _mapper.Map<IList<PostResponse>>(posts);
             foreach (PostResponse postResponse in postResponses)
             {
-                var owner = _accountService.GetById(postResponse.OwnerId);
+                var owner = await _accountService.GetById(postResponse.OwnerId);
                 postResponse.OwnerId = owner.Id;
 
                 bool IsOwnerNameNull = owner.Name == null;
@@ -152,9 +154,9 @@ namespace WebApi.Services
         }
 
         //helper
-        private Post GetPost(int id)
+        private async Task<Post> GetPost(int id)
         {
-            var post = _context.Posts.Find(id);
+            var post = await _context.Posts.FindAsync(id);
             if (post == null) throw new KeyNotFoundException("Post not found");
             return post;
         }
@@ -162,7 +164,7 @@ namespace WebApi.Services
         //Create Notification for posting
         private async void SendNotification(Post post)
         {
-            var follows = _followService.GetBySubjectId(post.OwnerId);
+            var follows = await _followService.GetBySubjectId(post.OwnerId);
             //Create notification for each follower of Post owner
             foreach (FollowResponse follow in follows)
             {
@@ -176,7 +178,7 @@ namespace WebApi.Services
                     Created = DateTime.Now,
                     Status = Status.Created
                 };
-                _notificationService.CreateNotification(notification);
+                await _notificationService.CreateNotification(notification);
                 var connections = await _tracker.GetConnectionForUser(notification.ReiceiverId);
                 if (connections != null)
                 {

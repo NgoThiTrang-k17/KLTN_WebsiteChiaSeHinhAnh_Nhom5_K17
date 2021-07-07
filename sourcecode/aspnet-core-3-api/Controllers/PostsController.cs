@@ -33,12 +33,13 @@ namespace WebApi.Controllers
             _reactionService = reactionService;
         }
         [HttpGet]
-        public ActionResult<IEnumerable<PostResponse>> GetAll()
+        public async Task<ActionResult<IEnumerable<PostResponse>>> GetAll()
         {
-            var posts = _postService.GetAll();
+            var posts = await _postService.GetAll();
             foreach (PostResponse post in posts)
             {
-                post.IsReactedByThisUser = _reactionService.GetState(ReactionTarget.Post, post.Id, Account.Id).IsReactedByThisUser;
+                var reactionState = await _reactionService.GetState(ReactionTarget.Post, post.Id, Account.Id);
+                post.IsReactedByThisUser = reactionState.IsReactedByThisUser;
             }
             return Ok(posts);
 
@@ -50,7 +51,8 @@ namespace WebApi.Controllers
             var posts = await _suggestionService.GetSearchSuggestion();
             foreach (PostResponse post in posts)
             {
-                post.IsReactedByThisUser = _reactionService.GetState(ReactionTarget.Post, post.Id, Account.Id).IsReactedByThisUser;
+                var reactionState = await _reactionService.GetState(ReactionTarget.Post, post.Id, Account.Id);
+                post.IsReactedByThisUser = reactionState.IsReactedByThisUser;
             }
             return Ok(posts);
         }
@@ -61,7 +63,8 @@ namespace WebApi.Controllers
             var posts = await _suggestionService.GetSearchSuggestion(id);
             foreach (PostResponse post in posts)
             {
-                post.IsReactedByThisUser = _reactionService.GetState(ReactionTarget.Post, post.Id, Account.Id).IsReactedByThisUser;
+                var reactionState = await _reactionService.GetState(ReactionTarget.Post, post.Id, Account.Id);
+                post.IsReactedByThisUser = reactionState.IsReactedByThisUser;
             }
             return Ok(posts);
         }
@@ -72,28 +75,30 @@ namespace WebApi.Controllers
             var posts = await _suggestionService.GetPostByPreference(id);
             foreach (PostResponse post in posts)
             {
-                post.IsReactedByThisUser = _reactionService.GetState(ReactionTarget.Post, post.Id, Account.Id).IsReactedByThisUser;
+                var reactionState = await _reactionService.GetState(ReactionTarget.Post, post.Id, Account.Id);
+                post.IsReactedByThisUser = reactionState.IsReactedByThisUser;
             }
             return Ok(posts);
         }
 
         [HttpGet("{id:int}")]
-        public ActionResult<PostResponse> GetById(int id)
+        public async Task<ActionResult<PostResponse>> GetById(int id)
         {
-            var post = _postService.GetById(id);
-
-            post.IsReactedByThisUser = _reactionService.GetState(ReactionTarget.Post, post.Id, Account.Id).IsReactedByThisUser;
+            var post = await _postService.GetById(id);
+            var reactionState = await _reactionService.GetState(ReactionTarget.Post, post.Id, Account.Id);
+            post.IsReactedByThisUser = reactionState.IsReactedByThisUser;
 
             return Ok(post);
         }
 
         [HttpGet("User/{id:int}")]
-        public ActionResult<IEnumerable<PostResponse>> GetByUser(int id)
+        public async Task<ActionResult<IEnumerable<PostResponse>>> GetByUser(int id)
         {
-            var posts = _postService.GetByOwnerId(id);
+            var posts = await _postService.GetByOwnerId(id);
             foreach (PostResponse post in posts)
             {
-                post.IsReactedByThisUser = _reactionService.GetState(ReactionTarget.Post, post.Id, Account.Id).IsReactedByThisUser;
+                var reactionState = await _reactionService.GetState(ReactionTarget.Post, post.Id, Account.Id);
+                post.IsReactedByThisUser = reactionState.IsReactedByThisUser;
             }
             return Ok(posts);
         }
@@ -180,16 +185,16 @@ namespace WebApi.Controllers
         }
 
         [HttpPut("UpdateTags")]
-        public IActionResult UpdateTags()
+        public async Task<IActionResult> UpdateTags()
         {
-            var posts = _postService.GetAll();
+            var posts = await _postService.GetAll();
             foreach(var post in posts)
             {
                 UpdatePostRequest request = new UpdatePostRequest
                 {
                     Categories = GetImageTags(post.Path)
                 };
-                _postService.UpdatePost(post.Id,request);
+                await _postService.UpdatePost(post.Id,request);
             }
             return Ok(posts);
         }
@@ -202,14 +207,14 @@ namespace WebApi.Controllers
         } 
 
         [HttpPost, DisableRequestSizeLimit]
-        public IActionResult Create([FromForm] CreatePostRequest model)
+        public async Task<IActionResult> Create([FromForm] CreatePostRequest model)
         {
             try
             { 
                 model.Created = DateTime.Now;
                 model.OwnerId = Account.Id;
                 model.Categories = GetImageTags(model.Path);
-                var post = _postService.CreatePost(model);
+                var post = await _postService.CreatePost(model);
                 return Ok(post);
                 //}
                 //else
@@ -224,10 +229,10 @@ namespace WebApi.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public ActionResult<PostResponse> Update(int id, UpdatePostRequest model)
+        public async Task<ActionResult<PostResponse>> Update(int id, UpdatePostRequest model)
         {
 
-            var post = _postService.UpdatePost(id, model);
+            var post  = await _postService.UpdatePost(id, model);
 
             return Ok(post);
         }

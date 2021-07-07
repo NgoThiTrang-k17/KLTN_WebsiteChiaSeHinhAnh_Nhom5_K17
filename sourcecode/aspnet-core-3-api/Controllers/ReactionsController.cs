@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Entities;
 using WebApi.Models.Reactions;
@@ -19,39 +20,40 @@ namespace WebApi.Controllers
 
         }
         [HttpGet("GetAll")]
-        public ActionResult<IEnumerable<ReactionResponse>> GetAll()
+        public async Task<ActionResult<IEnumerable<ReactionResponse>>> GetAll()
         {
-            var reactions = _reactionService.GetAll();
+            var reactions = await _reactionService.GetAll();
             return Ok(reactions);
         }
+
         [HttpGet("GetAllByTargetId/{targetType}/{targetId:int}")]
-        public ActionResult<IEnumerable<ReactionResponse>> GetAllByTargetId(ReactionTarget targetType, int targetId)
+        public async Task<ActionResult<IEnumerable<ReactionResponse>>> GetAllByTargetId(ReactionTarget targetType, int targetId)
         {
-            var reactions = _reactionService.GetAllByTargetId(targetType, targetId);
+            var reactions = await _reactionService.GetAllByTargetId(targetType, targetId);
             
             return Ok(reactions);
         }
 
         [HttpGet("GetState/{targetType}/{targetId:int}")]
-        public ActionResult<ReactionState> GetState(ReactionTarget targetType, int targetId)
+        public async Task<ActionResult<ReactionState>> GetState(ReactionTarget targetType, int targetId)
         {
-            var state = _reactionService.GetState(targetType, targetId, Account.Id);
+            var state = await _reactionService.GetState(targetType, targetId, Account.Id);
             return Ok(state);
         }
 
         [HttpPost]
-        public ActionResult<ReactionResponse> Create(CreateReactionRequest model)
+        public async Task<ActionResult<ReactionResponse>> Create(CreateReactionRequest model)
         {
             model.OwnerId = Account.Id;
-            var reaction = _reactionService.CreateReaction(model);
+            var reaction = await _reactionService.CreateReaction(model);
             return Ok(reaction);
         }
 
 
         [HttpPut("{id:int}")]
-        public ActionResult<ReactionResponse> Update(int id, UpdateReactionRequest model)
+        public async Task<ActionResult<ReactionResponse>> Update(int id, UpdateReactionRequest model)
         {
-            var reaction = _reactionService.UpdateReaction(id, model);
+            var reaction = await _reactionService.UpdateReaction(id, model);
             return Ok(reaction);
         }
 
