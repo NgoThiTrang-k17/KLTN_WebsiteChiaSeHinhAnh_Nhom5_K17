@@ -43,7 +43,6 @@ export class MessageComponent implements OnInit {
     .pipe()
     .subscribe(res => {
       console.log(res);
-
     })
     // this.messageService.getMessages()
     // .subscribe(res => {

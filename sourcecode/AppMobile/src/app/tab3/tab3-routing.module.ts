@@ -11,12 +11,14 @@ const routes: Routes = [
   {
     path: '', component: Tab3Page,
     children: [
-      { path: '', component: SearchComponent},
+      { path: '', redirectTo: 'home', pathMatch: 'full'},
+      { path: 'home', component: SearchComponent},
       { path: 'history', component: SearchHistoryComponent},
       { path: 'result/:query', component: SearchResultComponent},
       { path: 'detail/:postId/:ownerId', component: DetailPostPage, },
     ]
-  }
+  },
+  { path: '**', redirectTo: '' },
 ];
 
 @NgModule({

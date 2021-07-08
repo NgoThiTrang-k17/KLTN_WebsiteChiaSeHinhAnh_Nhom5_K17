@@ -43,7 +43,7 @@ namespace WebApi.Helpers
         {
 
             // connect to sqlserver database
-             options.UseSqlServer(Configuration.GetConnectionString("DefaultDesktop"));
+             options.UseSqlServer(Configuration.GetConnectionString("DefaultTrang"));
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

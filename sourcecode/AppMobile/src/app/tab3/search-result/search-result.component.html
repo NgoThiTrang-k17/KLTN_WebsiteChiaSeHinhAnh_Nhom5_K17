@@ -1,4 +1,7 @@
-<ion-content [fullscreen]="true">
+<div style="overflow: auto;">
+  <div *ngIf="posts.length===0 || accounts.length===0" style="text-align: center;">
+    <ion-label>Không có kết quả tương ứng.</ion-label>
+  </div>
   <ion-list *ngIf="!searchAccount" class="card-columns listPost">
     <div *ngFor="let post of posts">
       <ion-card class="card" slot="start">
@@ -39,4 +42,4 @@
       </ion-item>
     </div>
   </ion-list>
-</ion-content>
+</div>

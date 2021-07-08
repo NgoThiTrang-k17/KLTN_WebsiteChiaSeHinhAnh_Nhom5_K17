@@ -5,8 +5,8 @@
   z-index: 660;
   top: 0;
   width: 100%;
-  height: 100px;
-  margin-top: 15px;
+  height: 115px;
+  padding: 15px 0;
 }
 
 .body {
@@ -24,13 +24,13 @@ ion-title{
 }
 
 ion-avatar{
-  width: 50px;
-  height: 50px;
+  width: 60px;
+  height: 60px;
   position: relative;
 }
 
 .name{
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .mess{
@@ -42,9 +42,17 @@ ion-avatar{
   color: rgb(102, 102, 102);
 }
 
-.is-online{
-  color: rgb(2, 168, 2);
-  position: absolute;
+.onlForMess{
   right: 10px;
   bottom: 5px;
 }
+
+.onlForSearch{
+  right: 16px;
+  bottom: 2px;
+}
+
+.itemSearch{
+  --padding-start: 0 !important;
+}
+

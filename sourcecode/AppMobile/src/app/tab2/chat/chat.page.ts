@@ -52,8 +52,6 @@ export class ChatPage implements OnInit {
       console.log(messages);
     });
 
-    console.log(this.messages.length);
-
     if(this.messages.length === 0) {
       this.messageService.createHubConnection(this.maccount, this.accountId);
     }else{
@@ -72,6 +70,7 @@ export class ChatPage implements OnInit {
     this.modalController.dismiss({
       dismissed: true
     });
+    this.messageService.stopHubConnection();
   }
 
   sendMessage(){

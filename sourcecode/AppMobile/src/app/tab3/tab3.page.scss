@@ -1,5 +1,7 @@
 .header-md::after{
+  height: 0 !important;
   background-image: none !important;
+  background-color: white;
 }
 
 ion-item{

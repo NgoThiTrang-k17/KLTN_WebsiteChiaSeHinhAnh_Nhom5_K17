@@ -76,13 +76,23 @@ ion-row{
   word-wrap: break-word;
 }
 
-.footer{
-  position: fixed;
-  box-sizing: border-box;
-  z-index: 660;
-  bottom: 0px;
-  margin: 10px;
-  width: 95%;
+// .footer{
+//   position: fixed;
+//   box-sizing: border-box;
+//   z-index: 660;
+//   bottom: 0px;
+//   margin: 10px;
+//   width: 95%;
+// }
+
+ion-footer{
+  padding: 9px !important;
+  height: 9% !important;
+}
+
+.footer-md::before{
+  background-image: none !important;
+  height: 0 !important;
 }
 
 .input{

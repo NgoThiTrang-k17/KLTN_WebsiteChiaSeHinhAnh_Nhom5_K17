@@ -59,22 +59,22 @@
     </ion-list>
 
   </div>
-  <div class="footer">
-    <form #messageForm="ngForm" (ngSubmit)="sendMessage()" autocomplete="off">
-      <ion-item lines="none" class="ion-form-group input">
-        <ion-input
-        name="messageContent"
-        required
-        [(ngModel)]="messageContent"
-        class="ion-form-control"
-        placeholder="Soạn tin nhắn..."></ion-input>
-        <ion-button [disabled]="!messageForm.valid" type="submit">
-          <span>
-            <ion-icon name="paper-plane" style="width: 23px; height: 23px"></ion-icon>
-          </span>
-        </ion-button>
-      </ion-item>
-    </form>
-  </div>
 
 </ion-content>
+<ion-footer>
+  <form #messageForm="ngForm" (ngSubmit)="sendMessage()" autocomplete="off">
+    <ion-item lines="none" class="ion-form-group input">
+      <ion-input
+      name="messageContent"
+      required
+      [(ngModel)]="messageContent"
+      class="ion-form-control"
+      placeholder="Soạn tin nhắn..."></ion-input>
+      <ion-button [disabled]="!messageForm.valid" type="submit">
+        <span>
+          <ion-icon name="paper-plane" style="width: 23px; height: 23px"></ion-icon>
+        </span>
+      </ion-button>
+    </ion-item>
+  </form>
+</ion-footer>

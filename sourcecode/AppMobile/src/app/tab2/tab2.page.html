@@ -1,91 +1,99 @@
 <ion-content [fullscreen]="true">
   <div class="header">
     <ion-title>Tin nhắn</ion-title>
-    <ion-searchbar *ngIf="!search" (keydown.enter)="onSearch($event)" placeholder="Tìm kiếm bằng tên"></ion-searchbar>
-    <ion-item *ngIf="search" lines="none">
-      <ion-searchbar (keydown.enter)="onSearch($event)"></ion-searchbar>
+    <ion-searchbar *ngIf="!search" (click)="onSearch()" placeholder="Tìm kiếm bằng tên"></ion-searchbar>
+    <ion-item *ngIf="search" lines="none" class="itemSearch">
+      <ion-searchbar #inputSearch (keyup)="startSearch($event)"></ion-searchbar>
       <p (click)="unSearch()" style="margin-top: 5%;">Huỷ</p>
     </ion-item>
   </div>
   <div *ngIf="!search" class="body">
-    <ion-list *ngFor="let message of messages">
+    <ion-list *ngFor="let message of (presenceService.userMessages$ | async).slice().reverse()">
       <!-- ------------Tin nhắn tới----------- -->
-      <ion-row *ngIf="message.senderId === account.id">
-        <ion-col size="2">
-          <ion-avatar *ngIf="message.recipientAvatarPath===null"><img src="../../assets/images/default-profile.png"></ion-avatar>
-          <ion-avatar *ngIf="message.recipientAvatarPath!==null"><img [src]="message.recipientAvatarPath"></ion-avatar>
-          <span *ngIf = "(presenceService.onlineUsers$ | async).includes(message.recipientId)">
-            <ion-icon name="ellipse" class="is-online"></ion-icon>
-          </span>
-        </ion-col>
-        <ion-col size="8">
-          <ion-label (click)="openModalChat(message.recipientId)" class="name">
-            {{message.recipientName}}
-          </ion-label>
-          <p class="mess">{{message.content}} <span class="time">· {{message.created | timeago}}</span></p>
-        </ion-col>
-        <!-- Tin nhắn đã gửi -->
-        <ion-col *ngIf="message.read===null && !(presenceService.onlineUsers$ | async).includes(message.recipientId)" size="1" style="align-items: center; justify-content: center; display: flex;">
-          <ion-icon name="checkmark-circle-outline" style="width: 20px; height: 20px;"></ion-icon>
-        </ion-col>
-        <!-- Tin nhắn đã gửi khi đối tượng đang onl -->
-        <ion-col *ngIf="message.read===null && (presenceService.onlineUsers$ | async).includes(message.recipientId)" size="1" style="align-items: center; justify-content: center; display: flex;">
-          <ion-icon name="checkmark-circle" style="justify-content: center; display: flex; width: 20px; height: 20px;"></ion-icon>
-        </ion-col>
-        <!-- Tin nhắn được gửi đã được đối tượng xem -->
-        <ion-col *ngIf="message.read!==null" size="1" style="align-items: center; justify-content: center; display: flex;">
-          <ion-avatar *ngIf="message.recipientAvatarPath===null" style="justify-content: center; display: flex; width: 20px; height: 20px;"><img src="../../assets/images/default-profile.png"></ion-avatar>
-          <ion-avatar *ngIf="message.recipientAvatarPath!==null" style="justify-content: center; display: flex; width: 20px; height: 20px;"><img [src]="message.recipientAvatarPath"></ion-avatar>
-        </ion-col>
-        <!-- <ion-icon name="ellipse" style="justify-content: center; display: flex; color: blue;"></ion-icon> -->
-      </ion-row>
+      <div *ngIf="message.senderId !== account.id" (click)="updateStatus(message.id)">
+        <ion-row>
+          <ion-col size="2.5">
+            <ion-avatar *ngIf="message.senderId===null"><img src="../../assets/images/default-profile.png"></ion-avatar>
+            <ion-avatar *ngIf="message.senderId!==null"><img [src]="message.senderAvatarPath"></ion-avatar>
+            <span *ngIf = "(presenceService.onlineUsers$ | async).includes(message.senderId)">
+              <ion-icon name="ellipse" class="is-online onlForMess"></ion-icon>
+            </span>
+          </ion-col>
+          <ion-col size="8.5" style="align-items: center; display: flex;">
+            <div>
+              <!-- ---------Tin nhắn tới chưa xem (mới)--------- -->
+              <div *ngIf="message.read === null">
+                <ion-label (click)="openModalChat(message.senderId)" class="name">
+                  {{message.senderName}}
+                </ion-label>
+                <p class="mess" style="font-weight: 600;">{{message.content}} <span class="time" style="color: #4e4e4e;">· {{message.created | timeago}}</span></p>
+              </div>
+              <!-- ---------Tin nhắn tới đã xem--------- -->
+              <div *ngIf="message.read !== null">
+                <ion-label (click)="openModalChat(message.senderId)">
+                  {{message.senderName}}
+                </ion-label>
+                <p class="mess" style="color: #4e4e4e;">{{message.content}} <span class="time">· {{message.created | timeago}}</span></p>
+              </div>
+            </div>
+          </ion-col>
+          <ion-col *ngIf="message.read===null" size="1" style="align-items: center; justify-content: center; display: flex;">
+            <ion-icon name="ellipse-outline ion-text-primary" style="width: 20px; height: 20px;"></ion-icon>
+          </ion-col>
+        </ion-row>
+      </div>
       <!-- ------------Tin nhắn đi----------- -->
-      <ion-row *ngIf="message.senderId === account.id">
-        <ion-col size="2">
-          <ion-avatar *ngIf="message.recipientAvatarPath===null"><img src="../../assets/images/default-profile.png"></ion-avatar>
-          <ion-avatar *ngIf="message.recipientAvatarPath!==null"><img [src]="message.recipientAvatarPath"></ion-avatar>
-          <span *ngIf = "(presenceService.onlineUsers$ | async).includes(message.recipientId)">
-            <ion-icon name="ellipse" class="is-online"></ion-icon>
-          </span>
-        </ion-col>
-        <ion-col size="8">
-          <ion-label (click)="openModalChat(message.recipientId)" class="name">
-            {{message.recipientName}}
-          </ion-label>
-          <p class="mess">{{message.content}} <span class="time">· {{message.created | timeago}}</span></p>
-        </ion-col>
-        <!-- Tin nhắn đã gửi -->
-        <ion-col *ngIf="message.read===null && !(presenceService.onlineUsers$ | async).includes(message.recipientId)" size="1" style="align-items: center; justify-content: center; display: flex;">
-          <ion-icon name="checkmark-circle-outline" style="width: 20px; height: 20px;"></ion-icon>
-        </ion-col>
-        <!-- Tin nhắn đã gửi khi đối tượng đang onl -->
-        <ion-col *ngIf="message.read===null && (presenceService.onlineUsers$ | async).includes(message.recipientId)" size="1" style="align-items: center; justify-content: center; display: flex;">
-          <ion-icon name="checkmark-circle" style="justify-content: center; display: flex; width: 20px; height: 20px;"></ion-icon>
-        </ion-col>
-        <!-- Tin nhắn được gửi đã được đối tượng xem -->
-        <ion-col *ngIf="message.read!==null" size="1" style="align-items: center; justify-content: center; display: flex;">
-          <ion-avatar *ngIf="message.recipientAvatarPath===null" style="justify-content: center; display: flex; width: 20px; height: 20px;"><img src="../../assets/images/default-profile.png"></ion-avatar>
-          <ion-avatar *ngIf="message.recipientAvatarPath!==null" style="justify-content: center; display: flex; width: 20px; height: 20px;"><img [src]="message.recipientAvatarPath"></ion-avatar>
-        </ion-col>
-        <!-- <ion-icon name="ellipse" style="justify-content: center; display: flex; color: blue;"></ion-icon> -->
-      </ion-row>
+      <div *ngIf="message.senderId === account.id" (click)="updateStatus(message.id)">
+        <ion-row *ngIf="message.senderId === account.id" (click)="updateStatus(message.id)">
+          <ion-col size="2.5">
+            <ion-avatar *ngIf="message.recipientAvatarPath===null"><img src="../../assets/images/default-profile.png"></ion-avatar>
+            <ion-avatar *ngIf="message.recipientAvatarPath!==null"><img [src]="message.recipientAvatarPath"></ion-avatar>
+            <span *ngIf = "(presenceService.onlineUsers$ | async).includes(message.recipientId)">
+              <ion-icon name="ellipse" class="is-online onlForMess"></ion-icon>
+            </span>
+          </ion-col>
+          <ion-col size="8.5" style="align-items: center; display: flex;">
+            <div>
+              <ion-label (click)="openModalChat(message.recipientId)" class="name" style="color: #4e4e4e;">
+                {{message.recipientName}}
+              </ion-label>
+              <p class="mess" style="color: #4e4e4e;">Bạn: {{message.content}} <span class="time">· {{message.created | timeago}}</span></p>
+            </div>
+          </ion-col>
+          <!-- Tin nhắn đã gửi -->
+          <ion-col *ngIf="message.read===null && !(presenceService.onlineUsers$ | async).includes(message.recipientId)" size="1" style="align-items: center; justify-content: center; display: flex;">
+            <ion-icon name="checkmark-circle-outline" style="width: 20px; height: 20px;"></ion-icon>
+          </ion-col>
+          <!-- Tin nhắn đã gửi khi đối tượng đang onl -->
+          <ion-col *ngIf="message.read===null && (presenceService.onlineUsers$ | async).includes(message.recipientId)" size="1" style="align-items: center; justify-content: center; display: flex;">
+            <ion-icon name="checkmark-circle" style="justify-content: center; display: flex; width: 20px; height: 20px;"></ion-icon>
+          </ion-col>
+          <!-- Tin nhắn được gửi đã được đối tượng xem -->
+          <ion-col *ngIf="message.read!==null" size="1" style="align-items: center; justify-content: center; display: flex;">
+            <ion-avatar *ngIf="message.recipientAvatarPath===null" style="justify-content: center; display: flex; width: 20px; height: 20px;"><img src="../../assets/images/default-profile.png"></ion-avatar>
+            <ion-avatar *ngIf="message.recipientAvatarPath!==null" style="justify-content: center; display: flex; width: 20px; height: 20px;"><img [src]="message.recipientAvatarPath"></ion-avatar>
+          </ion-col>
+          <!-- <ion-icon name="ellipse" style="justify-content: center; display: flex; color: blue;"></ion-icon> -->
+        </ion-row>
+      </div>
     </ion-list>
   </div>
 
   <div *ngIf="search" class="body">
+    <div *ngIf="accounts.length===0" style="text-align: center;">
+      <ion-label>Không có kết quả phù hợp.</ion-label>
+    </div>
     <ion-list *ngFor="let account of accounts">
       <ion-item lines="none" slot="start">
-        <ion-col size="2">
-
+        <ion-col size="2.5">
           <ion-avatar *ngIf="account.avatarPath!==null"><img [src]="account.avatarPath"></ion-avatar>
           <ion-avatar *ngIf="account.avatarPath===null"><img src="../../assets/images/default-profile.png"></ion-avatar>
+          <span *ngIf = "(presenceService.onlineUsers$ | async).includes(account.id)">
+            <ion-icon name="ellipse" class="is-online onlForSearch"></ion-icon>
+          </span>
         </ion-col>
-        <ion-col size="10">
-          <ion-label (click)="openModalChat(account.id)" style="margin-left:5px;">{{account.name}}
-            <span *ngIf = "(presenceService.onlineUsers$ | async).includes(account.id)">
-              <ion-icon name="ellipse" style="color: blue; width: 15px; height: 15px;"></ion-icon>
-            </span>
-          </ion-label>
+        <ion-col size="9.5">
+          <ion-label (click)="openModalChat(account.id)" style="font-size: 20px;">{{account.name}}</ion-label>
         </ion-col>
       </ion-item>
     </ion-list>

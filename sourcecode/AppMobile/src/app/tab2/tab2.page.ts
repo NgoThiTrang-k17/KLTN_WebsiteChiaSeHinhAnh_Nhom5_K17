@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+/* eslint-disable no-trailing-spaces */
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 
@@ -13,12 +14,14 @@ import { PresenceService, AccountService, SearchService, MessageService } from '
 })
 export class Tab2Page implements OnInit{
 
+  @ViewChild('inputSearch') inputSearch;
+
   public accounts: Account[] = [];
   public messages: Message[] = [];
 
   search = false;
 
-  account = this.accountService.accountValue;;
+  account = this.accountService.accountValue;
 
   constructor(
     public modalController: ModalController,
@@ -34,11 +37,17 @@ export class Tab2Page implements OnInit{
   ngOnInit() {
     this.search = false;
 
+    console.log(this.account);
+
     this.presenceService.userMessages$
     .pipe()
     .subscribe(res => {
       console.log(res);
     });
+  }
+
+  updateStatus(id: number){
+    this.presenceService.updateMessageStatus(id);
   }
 
   async openModalChat(id: number) {
@@ -54,23 +63,26 @@ export class Tab2Page implements OnInit{
     });
 
     modal.onDidDismiss().then(()=>{
-      this.messageService.getMessages()
-      .subscribe(res => {
-        this.messages = res as Message[];
-      });
     });
 
     return await modal.present();
   }
 
-  onSearch(event) {
+  startSearch(event) {
     const str = event.target.value;
     if(str==='') { return; }
-    this.search = true;
+
     this.searchService.getAccountForMessage(str)
     .subscribe(res => {
-        this.accounts = res as Account[];
+      this.accounts = res as Account[];
     });
+  }
+
+  onSearch() {
+    this.search = true;
+    setTimeout(()=>{
+      this.inputSearch.setFocus();
+    },150);
   }
 
   unSearch() {
