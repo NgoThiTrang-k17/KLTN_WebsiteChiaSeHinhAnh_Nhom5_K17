@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { Router } from "@angular/router";
+import { Router } from '@angular/router';
 
 import { ChatPage } from './chat/chat.page';
 import { Account, Message } from '../_models';
@@ -22,11 +22,11 @@ export class Tab2Page implements OnInit{
 
   constructor(
     public modalController: ModalController,
-    public presence: PresenceService,
+    public presenceService: PresenceService,
     public accountService: AccountService,
     private searchService: SearchService,
     private messageService: MessageService,
-    private router : Router,
+    private router: Router,
   ) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
@@ -34,9 +34,10 @@ export class Tab2Page implements OnInit{
   ngOnInit() {
     this.search = false;
 
-    this.messageService.getMessages()
+    this.presenceService.userMessages$
+    .pipe()
     .subscribe(res => {
-      this.messages = res as Message[];
+      console.log(res);
     });
   }
 
@@ -48,7 +49,7 @@ export class Tab2Page implements OnInit{
       component: ChatPage,
       cssClass: 'my-custom-class',
       componentProps: {
-        "accountId": id
+        accountId: id
       }
     });
 
@@ -63,8 +64,8 @@ export class Tab2Page implements OnInit{
   }
 
   onSearch(event) {
-    var str = event.target.value;
-    if(str=='') { return; }
+    const str = event.target.value;
+    if(str==='') { return; }
     this.search = true;
     this.searchService.getAccountForMessage(str)
     .subscribe(res => {
