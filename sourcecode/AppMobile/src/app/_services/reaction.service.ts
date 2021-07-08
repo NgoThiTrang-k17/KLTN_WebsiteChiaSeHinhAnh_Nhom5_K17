@@ -12,6 +12,7 @@ const baseUrl = `${environment.apiUrl}/reactions`;
 @Injectable({ providedIn: 'root' })
 export class ReactionService {
     private postSubject: BehaviorSubject<Reaction>;
+    // eslint-disable-next-line @typescript-eslint/member-ordering
     public post: Observable<Reaction>;
 
     constructor(
@@ -26,7 +27,7 @@ export class ReactionService {
         return this.postSubject.value;
     }
 
-    getAll():Observable<Reaction[]> {
+    getAll(): Observable<Reaction[]> {
         return this.http.get<Reaction[]>(baseUrl);
     }
 
@@ -34,7 +35,7 @@ export class ReactionService {
         return this.http.post(baseUrl, params);
     }
 
-    getReaction(id:number):Observable<Reaction[]>{
+    getReaction(id: number): Observable<Reaction[]>{
         return this.http.get<Reaction[]>(`${baseUrl}/GetAllByPostId/${id}`);
     }
 

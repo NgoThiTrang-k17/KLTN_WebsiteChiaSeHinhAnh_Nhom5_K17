@@ -1,0 +1,42 @@
+<ion-content [fullscreen]="true">
+  <ion-list *ngIf="!searchAccount" class="card-columns listPost">
+    <div *ngFor="let post of posts">
+      <ion-card class="card" slot="start">
+        <ion-img class="img" [src]="post.path" routerLink="detail/{{post.id}}/{{post.ownerId}}"></ion-img>
+        <ion-row>
+          <ion-col size="10" style="text-align: left; justify-self: center; display: flex;">
+            <ion-icon class="iconPost" *ngIf="post.isReactedByThisUser===false" (click)="onCreateReaction(post.id)" name="heart-outline"></ion-icon>
+            <ion-icon class="iconPost" *ngIf="post.isReactedByThisUser===true && post.reactionCount!==0" (click)="unReaction(post.id)" name="heart" style="color: rgba(255, 0, 0, 0.788);"></ion-icon>
+            <span *ngIf="post.reactionCount!==0" style="margin-left: 1px; color: black;">{{post.reactionCount}}</span>
+          </ion-col>
+          <ion-col size="2">
+            <ion-icon class="iconPost" *ngIf="post.ownerId===maccount.id" (click)="openOptinalMyPost(post.path, post.id)" name="ellipsis-horizontal" style="color: black;"></ion-icon>
+            <ion-icon class="iconPost" *ngIf="post.ownerId!==maccount.id" (click)="openOptinal(post.path, post.id)" name="ellipsis-horizontal" style="color: black;"></ion-icon>
+          </ion-col>
+        </ion-row>
+        <ion-label routerLink="detail/{{post.id}}">{{post.title}}</ion-label>
+      </ion-card>
+    </div>
+  </ion-list>
+  <ion-list *ngIf="searchAccount">
+    <div *ngFor="let account of accounts" style="margin-bottom: 10px;">
+      <ion-item lines="none" slot="start">
+        <ion-col size="2">
+          <ion-avatar *ngIf="account.avatarPath!==null"><img [src]="account.avatarPath"></ion-avatar>
+          <ion-avatar *ngIf="account.avatarPath===null"><img src="../../../assets/images/default-profile.png"></ion-avatar>
+          <span *ngIf = "(presence.onlineUsers$ | async).includes(account.id)">
+            <ion-icon name="ellipse" class="is-online" style="bottom: -1px; right: 7px"></ion-icon>
+          </span>
+        </ion-col>
+        <ion-col size="6">
+          <ion-label style="margin-left:15px;">{{account.name}}</ion-label>
+          <ion-label style="margin-left:15px; font-size: small; font-weight: 500;">{{account.followerCount}} người theo dõi</ion-label>
+        </ion-col>
+        <ion-col size="4" style="text-align: right;">
+          <ion-button *ngIf="account.isFollowedByCurrentUser===0 && account.id!==maccount.id" (click)="onCreateFollow(account.id)" class="unFollow" shape="round">Theo dõi</ion-button>
+          <ion-button *ngIf="account.isFollowedByCurrentUser!==0 && account.id!==maccount.id" (click)="unFollow(account.id)" class="onFollow" shape="round">Đã theo dõi</ion-button>
+        </ion-col>
+      </ion-item>
+    </div>
+  </ion-list>
+</ion-content>

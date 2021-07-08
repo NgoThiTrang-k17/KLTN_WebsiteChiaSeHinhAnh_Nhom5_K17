@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-shadow */
 import { Component, Input, OnInit } from '@angular/core';
 
 import { Comment, ReactionCmtToCreate } from '../../../_models';
@@ -23,35 +24,35 @@ export class ReplyCommentPage implements OnInit {
 
   ngOnInit() {
     this.commentService.getAllByCommentId(this.commentId)
-      .subscribe((res:any)=>{
+      .subscribe((res: any)=>{
         console.log(res);
 
         this.comments = res as Comment[];
-      })
+      });
   }
 
   onCreateReactionComment(id: number){
     this.reaction = {
       target: 1,
       targetId: id
-    }
+    };
     this.reactionService.createReaction(this.reaction)
     .subscribe(res => {
       this.commentService.getAllByCommentId(this.commentId)
-      .subscribe((res:any)=>{
+      .subscribe((res: any)=>{
         this.comments = res as Comment[];
-      })
-    })
+      });
+    });
   }
 
   unReactionComment(id: number){
     this.reactionService.deleteCmt(id)
     .subscribe(res => {
       this.commentService.getAllByCommentId(this.commentId)
-      .subscribe((res:any)=>{
+      .subscribe((res: any)=>{
         this.comments = res as Comment[];
-      })
-    })
+      });
+    });
   }
 
 }

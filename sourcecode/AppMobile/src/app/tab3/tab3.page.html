@@ -1,17 +1,12 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Tab 3
-    </ion-title>
-  </ion-toolbar>
+<ion-header lines="none" [translucent]="true">
+  <ion-searchbar *ngIf="!search" (click)="onSearch()"></ion-searchbar>
+
+  <ion-item *ngIf="search">
+    <ion-searchbar #inputSearch (keydown.enter)="starSearch($event)"></ion-searchbar>
+    <p (click)="unSearch()" style="margin-top: 5%;">Huỷ</p>
+  </ion-item>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 3</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <app-explore-container name="Tab 3 page"></app-explore-container>
+  <ion-router-outlet></ion-router-outlet>
 </ion-content>

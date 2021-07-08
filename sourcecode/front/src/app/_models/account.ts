@@ -7,6 +7,7 @@ export class Account {
     name: string;
     email: string;
     role: string;
+    created: Date;
     jwtToken?: string;
     followerCount: number;
     followingCount: number;

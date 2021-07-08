@@ -1,0 +1,53 @@
+<div class="p-4 row">
+  <div class="col-12 m-auto">
+    <h2 class="text-left mb-4">
+      <span>
+        <i class="fas fa-exclamation-circle mr-2" style="font-size: 24px;"></i>
+      </span>
+      Reports
+    </h2>
+    <!-- <p>All accounts from secure (admin only) api end point:</p> -->
+    <!-- <a routerLink="add" class="btn btn-sm btn-success mb-2 pull-right mr-2"><span><i class="fa fa-plus"></i></span> Create Post</a> -->
+    <table datatable [dtOptions]="dtOptions" class="row-border hover" [dtTrigger]="dtTrigger">
+      <thead class="thead-light">
+        <tr>
+          <th style="width:5%">Id</th>
+          <th style="width:5%">Owner Id</th>
+          <th style="width:5%">Target Id</th>
+          <th style="width:10%">Target Type</th>
+          <th style="width:25%">Content</th>
+          <th style="width:25%">Detail</th>
+          <th style="width:15%">Created Date</th>
+          <th style="width:10%"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let report of reports">
+          <td>{{report.id}}</td>
+          <td>{{report.ownerId}}</td>
+          <td>{{report.targetId}}</td>
+          <td *ngIf="report.targetType===0">Tài khoản</td>
+          <td *ngIf="report.targetType===1">Bài viết</td>
+          <td *ngIf="report.targetType===2">Bình luận</td>
+          <td>{{report.reportType}}</td>
+          <td>{{report.detail}}</td>
+          <td>{{report.created | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+          <td style="white-space: nowrap">
+            <i (click)="deleteReport(report.id)" class="far fa-trash-alt mr-2" style="font-size: 18px; color: #DF2C2C; cursor: pointer;"></i>
+            <!-- <i *ngIf="maccount.id===post.ownerId" (click)="openEditPostDialog(post.id)" class="far fa-edit" style="font-size: 18px; cursor: pointer;"></i> -->
+            <!-- <a routerLink="edit/{{post.id}}" class="btn btn-sm btn-primary mr-1">Edit</a> -->
+            <!-- <button (click)="deletePost(post.id)" class="btn btn-sm btn-danger btn-delete-post" [disabled]="post.isDeleting">
+              <span *ngIf="post.isDeleting" class="spinner-border spinner-border-sm"></span>
+              <span *ngIf="!post.isDeleting"><i class="fa fa-trash"></i></span>
+            </button> -->
+          </td>
+        </tr>
+        <tr *ngIf="!reports">
+          <td colspan="4" class="text-center">
+            <span class="spinner-border spinner-border-lg align-center"></span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

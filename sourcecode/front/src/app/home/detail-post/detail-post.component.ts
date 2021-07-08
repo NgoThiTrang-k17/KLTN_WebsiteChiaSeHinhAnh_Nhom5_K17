@@ -7,6 +7,7 @@ import { AccountService, PresenceService, PostService, CommentService, ReactionS
 import { Post, Reaction, ReactionToCreate, Account, Follow, FollowToCreate } from '@app/_models';
 import { ReportComponent } from '../report/report.component';
 import { EditPostDialogComponent } from '../detail-post/edit-post-dialog/edit-post-dialog.component';
+
 @Component({
   selector: 'app-detail-post',
   templateUrl: './detail-post.component.html'

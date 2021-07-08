@@ -25,4 +25,24 @@
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
 
+.is-online{
+  font-size: 13px;
+  color: rgb(4, 196, 4);
+  position: absolute;
+}
+
+.sc-ion-searchbar-md-h{
+  --border-radius: 25px !important;
+}
+
+ion-card {
+  margin: 0 0 0 5px !important;
+  -webkit-column-break-inside: avoid;
+     -moz-column-break-inside: avoid;
+      -ms-column-break-inside: avoid;
+        --column-break-inside: avoid;
+            page-break-inside: avoid;
+                 break-inside: avoid;
+}
+
 

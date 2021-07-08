@@ -1,17 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+/* eslint-disable @typescript-eslint/no-shadow */
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ActionSheetController, AlertController } from '@ionic/angular';
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
+import { IonInfiniteScroll } from '@ionic/angular';
 
 import { Post, Account, FollowToCreate, ReactionToCreate } from '../_models';
 import { PostService, SearchService, FollowService, AccountService, ReactionService, PresenceService } from '../_services';
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'app-tabHome',
   templateUrl: 'tabHome.page.html',
   styleUrls: ['tabHome.page.scss']
 })
 export class TabHomePage implements OnInit {
+  @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
   public posts: Post[] = [];
   public accounts: Account[] = [];
@@ -23,6 +27,7 @@ export class TabHomePage implements OnInit {
 
   search = false;
   searchAccount = false;
+  str: string;
 
   maccount = this.accountService.accountValue;
 
@@ -44,28 +49,28 @@ export class TabHomePage implements OnInit {
   ngOnInit() {
     this.search = false;
 
-    this.postService.getAll()
+    this.postService.getAllByPreference(this.maccount.id)
     .subscribe(res => {
       this.posts = res as Post[];
     });
   }
 
   onSearch(event) {
-    var str = event.target.value;
-    if(str=='') { return; }
+    this.str = event.target.value;
+    if(this.str==='') { return; }
     this.search = true;
     console.log(event.target.value);
-    console.log(str);
-    if(str.substr(0,1)=='@')
+    console.log(this.str);
+    if(this.str.substr(0,1)==='@')
     {
         this.searchAccount = true;
-        this.searchService.getAllAccount(str)
+        this.searchService.getAllAccount(this.str)
         .subscribe(res => {
             this.accounts = res as Account[];
         });
     }
-    else if(str.substr(0,1)!='@'){
-        this.searchService.getAllPost(str)
+    else if(this.str.substr(0,1)!=='@'){
+        this.searchService.getAllPost(this.str)
         .subscribe(res => {
             this.posts = res as Post[];
         });
@@ -78,45 +83,10 @@ export class TabHomePage implements OnInit {
     this.search = false;
   }
 
-  onCreateFollow(id:any) {
-    this.follow = {
-      subjectId: id,
-    }
-    console.log(this.follow);
-    this.followService.createFollow(this.follow)
-    .subscribe(res => {
-      console.log(res);
-      //alert('Follow thành công!');
-      this.accountService.getById(id)
-        .subscribe((res:any)=>{
-            this.account = res;
-            console.log(this.account.isFollowedByCurrentUser);
-            this.router.routeReuseStrategy.shouldReuseRoute = () =>{
-                return false;
-            }
-        })
-    });
-  }
-
-  unFollow(id:any) {
-    this.followService.delete(id)
-    .subscribe(() => {
-      //alert('Bỏ follow thành công!');
-      this.accountService.getById(id)
-        .subscribe((res:any)=>{
-            this.account = res;
-            console.log(this.account.isFollowedByCurrentUser);
-            this.router.routeReuseStrategy.shouldReuseRoute = () =>{
-                return false;
-            }
-        })
-    });
-  }
-
-  onCreateReaction(id:number) {
+  onCreateReaction(id: number) {
     this.reaction = {
       targetId: id,
-    }
+    };
     // console.log(this.reaction);
     this.reactionService.createReaction(this.reaction)
     .subscribe(res => {
@@ -129,7 +99,7 @@ export class TabHomePage implements OnInit {
     });
   }
 
-  unReaction(id:number){
+  unReaction(id: number){
     this.reactionService.deletePost(id)
     .subscribe(() => {
       //alert('Bỏ tim thành công!');
@@ -150,13 +120,15 @@ export class TabHomePage implements OnInit {
           console.log('Download!');
           this.download(path);
         }
-      },{
-        text: 'Chia sẻ',
-        icon: 'share-social-outline',
-        handler: () => {
-          console.log('Share clicked');
-        }
-      },{
+      },
+      // {
+      //   text: 'Chia sẻ',
+      //   icon: 'share-social-outline',
+      //   handler: () => {
+      //     console.log('Share clicked');
+      //   }
+      // },
+      {
         text: 'Chỉnh sửa',
         icon: 'create-outline',
         handler: () => {
@@ -184,13 +156,15 @@ export class TabHomePage implements OnInit {
           console.log('Download!');
           this.download(path);
         }
-      },{
-        text: 'Chia sẻ',
-        icon: 'share-social-outline',
-        handler: () => {
-          console.log('Share clicked');
-        }
-      }]
+      },
+      // {
+      //   text: 'Chia sẻ',
+      //   icon: 'share-social-outline',
+      //   handler: () => {
+      //     console.log('Share clicked');
+      //   }
+      // }
+    ]
     });
     await actionSheet.present();
   }
@@ -228,8 +202,20 @@ export class TabHomePage implements OnInit {
         }
       ]
     });
-
     await alert.present();
+  }
+
+  loadData(event) {
+    setTimeout(() => {
+      console.log('Done');
+      event.target.complete();
+
+      // App logic to determine if all data is loaded
+      // and disable the infinite scroll
+      if (this.posts.length === 1000) {
+        event.target.disabled = true;
+      }
+    }, 500);
   }
 
 }

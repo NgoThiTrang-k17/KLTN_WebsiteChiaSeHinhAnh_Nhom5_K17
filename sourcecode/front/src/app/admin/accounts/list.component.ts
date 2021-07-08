@@ -1,16 +1,25 @@
-﻿import { Component, OnInit, OnDestroy } from '@angular/core';
+﻿import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { DataTableDirective } from 'angular-datatables';
 
 import { AccountService } from '@app/_services';
 import { Account } from '@app/_models';
 
-@Component({ templateUrl: 'list.component.html' })
-export class ListComponent implements OnInit {
+@Component({
+  templateUrl: 'list.component.html',
+  styleUrls: ['./list.component.less'],
+})
+export class ListComponent implements OnInit, OnDestroy {
+
+  @ViewChild(DataTableDirective, {static: false})
+  dtElement: DataTableDirective;
 
   dtOptions: DataTables.Settings = {};
   dtTrigger: Subject<any> = new Subject();
   accounts: Account[] = [];
+
+  changeRole: any;
 
   maccount = this.accountService.accountValue;
 
@@ -20,7 +29,7 @@ export class ListComponent implements OnInit {
     this.dtOptions = {
       pagingType: 'full_numbers',
       pageLength: 5,
-      lengthMenu : [5, 10, 25],
+      lengthMenu : [5, 10, 25, 50, 75, 100],
       processing: true
     };
 
@@ -41,16 +50,28 @@ export class ListComponent implements OnInit {
     {
       try {
         const account = this.accounts.find(x => x.id === id);
-        // account.isDeleting = true;
         this.accountService.delete(id)
         .pipe(first())
         .subscribe(() => {
-            this.accounts = this.accounts.filter(x => x.id !== id)
+          this.accounts = this.accounts.filter(x => x.id !== id);
         });
       } catch (e) {
         console.log(e);
       }
     }
+  }
 
+  updateRole(id: number, role: string){
+    console.log(role);
+
+    this.changeRole = {
+      role: role
+    }
+    console.log(this.changeRole);
+
+    this.accountService.update(id, this.changeRole)
+    .subscribe(res => {
+      console.log(res);
+    })
   }
 }

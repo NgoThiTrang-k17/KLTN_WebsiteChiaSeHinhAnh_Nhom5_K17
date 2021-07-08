@@ -59,22 +59,19 @@ export class AddEditPostComponent implements OnInit {
 
     const reader = new FileReader();
     if ($event.target.files && $event.target.files.length) {
-        const [file] = $event.target.files;
-        console.log('1');
-        //this.testForm.append("file",file);
-        //this.testForm.append("postTitle", this.myForm.get("postTitle").value);
+      const [file] = $event.target.files;
 
-        reader.readAsDataURL(file);
-        reader.onload = () => {
-            this.imageSrc = reader.result as string;
-            //console.log(this.myForm.value);
-        };
-        //console.log(this.myForm.get('title').value);
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        this.imageSrc = reader.result as string;
+      };
     }
   }
 
   submit() {
     this.submitted = true;
+    this.loading = true;
+
     if (this.myForm.invalid) {
       return;
     }
@@ -92,9 +89,11 @@ export class AddEditPostComponent implements OnInit {
 
           this.postService.createPost(this.testForm)
           .subscribe(res => {
+            this.loading = false;
             this.back();
           }, error => {
-              console.log(error);
+            this.loading = false;
+            console.log(error);
           })
         })
       })

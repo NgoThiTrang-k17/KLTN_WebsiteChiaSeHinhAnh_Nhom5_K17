@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-shadow */
+/* eslint-disable @angular-eslint/component-selector */
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AlertController, ModalController, ActionSheetController } from '@ionic/angular';
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 
-import { Post, Account, Follow, FollowToCreate, ReactionToCreate } from '../../_models'
+import { Post, Account, Follow, FollowToCreate, ReactionToCreate } from '../../_models';
 import { AccountService, PostService, FollowService, ReactionService } from '../../_services';
 import { CommentPage } from '../comment/comment.page';
 
@@ -16,10 +18,11 @@ export class DetailPostPage implements OnInit {
 
   postId: number;
   owner: number;
+  path: string;
 
-  post = new Post;
-  account = new Account;
-  mfollow = new Follow;
+  post = new Post();
+  account = new Account();
+  mfollow = new Follow();
 
   public posts: Post[] = [];
 
@@ -43,73 +46,73 @@ export class DetailPostPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.postId = this.route.snapshot.params['postId'];
-    this.owner = this.route.snapshot.params['ownerId'];
+    this.postId = this.route.snapshot.params.postId;
+    this.owner = this.route.snapshot.params.ownerId;
 
     this.postService.getPostById(this.postId)
-    .subscribe((res:any)=>{
+    .subscribe((res: any)=>{
       this.post = res;
-    })
+    });
 
     this.accountService.getById(this.owner)
-    .subscribe((res:any)=>{
+    .subscribe((res: any)=>{
       this.account = res;
-    })
+    });
 
     this.followService.getFollow(this.owner)
-    .subscribe((res:any)=>{
+    .subscribe((res: any)=>{
         this.mfollow = res;
-    })
+    });
   }
 
-  onCreateFollow(id:any) {
+  onCreateFollow(id: any) {
     this.follow = {
       subjectId: id,
-    }
+    };
     console.log(this.follow);
     this.followService.createFollow(this.follow)
     .subscribe(res => {
       console.log(res);
       //alert('Follow thành công!');
       this.postService.getPostById(this.postId)
-      .subscribe((res:any)=>{
+      .subscribe((res: any)=>{
         this.post = res;
-      })
+      });
       this.followService.getFollow(this.owner)
-      .subscribe((res:any)=>{
+      .subscribe((res: any)=>{
           this.mfollow = res;
-      })
+      });
     });
   }
 
-  unFollow(id:any) {
+  unFollow(id: any) {
     this.followService.delete(id)
     .subscribe(() => {
       //alert('Bỏ follow thành công!');
       this.postService.getPostById(this.postId)
-      .subscribe((res:any)=>{
+      .subscribe((res: any)=>{
         this.post = res;
-      })
+      });
       this.followService.getFollow(this.owner)
-      .subscribe((res:any)=>{
+      .subscribe((res: any)=>{
           this.mfollow = res;
-      })
+      });
     });
   }
 
   onCreateReaction() {
     this.reaction = {
       targetId: this.post.id,
-    }
+    };
     // console.log(this.reaction);
     this.reactionService.createReaction(this.reaction)
     .subscribe(res => {
       // console.log(res);
       //alert('Tim thành công!');
       this.postService.getPostById(this.postId)
-      .subscribe((res:any)=>{
+      .subscribe((res: any)=>{
         this.post = res;
-      })
+      });
     });
   }
 
@@ -118,9 +121,9 @@ export class DetailPostPage implements OnInit {
     .subscribe(() => {
       //alert('Bỏ tim thành công!');
       this.postService.getPostById(this.postId)
-      .subscribe((res:any)=>{
+      .subscribe((res: any)=>{
         this.post = res;
-      })
+      });
     });
   }
 
@@ -187,9 +190,18 @@ export class DetailPostPage implements OnInit {
       component: CommentPage,
       cssClass: 'my-custom-class',
       componentProps: {
-        "postId": this.post.id
+        postId: this.post.id,
       }
     });
     return await modal.present();
+  }
+
+  back() {
+    this.path = localStorage.getItem('path');
+    if(this.path == null){
+      this.router.navigate([''], { relativeTo: this.route });
+    } else {
+      this.router.navigate([this.path]);
+    }
   }
 }

@@ -1,38 +1,51 @@
 <div class="p-4 row">
-    <div class="col-10 m-auto">
-        <h1 class="text-center">Comments</h1>
-        <!-- <p>All accounts from secure (admin only) api end point:</p> -->
-        <!-- <a routerLink="add" class="btn btn-sm btn-success mb-2 pull-right mr-2"><span><i class="fa fa-plus"></i></span> Create Comment</a> -->
-        <table class="table table-striped">
-            <thead class="thead-light text-center">
-                <tr>
-                    <th style="width:15%">Post Id</th>
-                    <th style="width:15%">Owner Id</th>
-                    <th style="width:40%">Content</th>
-                    <th style="width:20%">Created Date</th>
-                    <th style="width:10%"></th>
-                </tr>
-            </thead>
-            <tbody class="text-center">
-                <tr *ngFor="let comment of comments">
-                    <td>{{comment.postId}}</td>
-                    <td>{{comment.ownerId}}</td>
-                    <td>{{comment.content}}</td>
-                    <td>{{comment.dateCreated | date:'dd/MM/yyyy HH:mm:ss'}}</td>
-                    <td style="white-space: nowrap">
-                        <!-- <a routerLink="edit/{{account.id}}" class="btn btn-sm btn-primary mr-1"><span><i class="fa fa-edit"></i></span></a> -->
-                        <button (click)="deleteComment(comment.id)" class="btn btn-sm btn-danger" [disabled]="comment.isDeleting">
-                            <span *ngIf="comment.isDeleting" class="spinner-border spinner-border-sm"></span>
-                            <span *ngIf="!comment.isDeleting"><i class="fa fa-trash"></i></span>
-                        </button>
-                    </td>
-                </tr>
-                <tr *ngIf="!comments">
-                    <td colspan="4" class="text-center">
-                        <span class="spinner-border spinner-border-lg align-center"></span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+  <div class="col-12 m-auto">
+    <h2 class="text-left mb-4">
+      <span>
+        <i class="material-icons mr-2">comment</i>
+      </span>
+      Comments
+    </h2>
+    <!-- <p>All accounts from secure (admin only) api end point:</p> -->
+    <!-- <a routerLink="add" class="btn btn-sm btn-success mb-2 pull-right mr-2"><span><i class="fa fa-plus"></i></span> Create Comment</a> -->
+    <table datatable [dtOptions]="dtOptions" class="row-border hover" [dtTrigger]="dtTrigger">
+      <thead class="thead-light">
+        <tr>
+          <th style="width:5%">Id</th>
+          <th style="width:7%">Owner Id</th>
+          <th style="width:6%">Post Id</th>
+          <th style="width:10%">Type</th>
+          <th style="width:7%">Parent Id</th>
+          <th style="width:25%">Content</th>
+          <th style="width:10%">Created Date</th>
+          <th style="width:10%"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let comment of comments">
+          <td>{{comment.postId}}</td>
+          <td>{{comment.ownerId}}</td>
+          <td>{{comment.postId}}</td>
+          <td *ngIf="comment.isParent===true">Parent</td>
+          <td *ngIf="comment.isParent===false">Child</td>
+          <td>{{comment.parrentId}}</td>
+          <td>{{comment.content}}</td>
+          <td>{{comment.created | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+          <td style="white-space: nowrap">
+            <i (click)="deleteComment(comment.id)" class="far fa-trash-alt mr-2" style="font-size: 18px; color: #DF2C2C; cursor: pointer;"></i>
+            <!-- <a routerLink="edit/{{account.id}}" class="btn btn-sm btn-primary mr-1"><span><i class="fa fa-edit"></i></span></a> -->
+            <!-- <button (click)="deleteComment(comment.id)" class="btn btn-sm btn-danger" [disabled]="comment.isDeleting">
+              <span *ngIf="comment.isDeleting" class="spinner-border spinner-border-sm"></span>
+              <span *ngIf="!comment.isDeleting"><i class="fa fa-trash"></i></span>
+            </button> -->
+          </td>
+        </tr>
+        <tr *ngIf="!comments">
+          <td colspan="4" class="text-center">
+            <span class="spinner-border spinner-border-lg align-center"></span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

@@ -1,3 +1,4 @@
+/* eslint-disable no-trailing-spaces */
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient, HttpRequest, HttpEvent, HttpResponse } from '@angular/common/http';
@@ -10,67 +11,83 @@ const baseUrl = `${environment.apiUrl}/posts`;
 
 @Injectable({ providedIn: 'root' })
 export class PostService {
-    private postSubject: BehaviorSubject<Post>;
-    public post: Observable<Post>;
+  private postSubject: BehaviorSubject<Post>;
+  // eslint-disable-next-line @typescript-eslint/member-ordering
+  public post: Observable<Post>;
 
-    private postSource = new BehaviorSubject<Post[]>([]);
-    post$ = this.postSource.asObservable();
+  private postSource = new BehaviorSubject<Post[]>([]);
+  // eslint-disable-next-line @typescript-eslint/member-ordering
+  post$ = this.postSource.asObservable();
 
-    constructor(
-        private router: Router,
-        private http: HttpClient
-    ) {
-        this.postSubject = new BehaviorSubject<Post>(null);
-        this.post = this.postSubject.asObservable();
-    }
+  constructor(
+      private router: Router,
+      private http: HttpClient
+  ) {
+      this.postSubject = new BehaviorSubject<Post>(null);
+      this.post = this.postSubject.asObservable();
+  }
 
-    public get postValue(): Post {
-        return this.postSubject.value;
-    }
+  public get postValue(): Post {
+    return this.postSubject.value;
+  }
 
-    getAll():Observable<Post[]> {
-        return this.http.get<Post[]>(baseUrl);
-    }
+  getAll(): Observable<Post[]> {
+    return this.http.get<Post[]>(baseUrl);
+  }
 
-    getPostById(id):Observable<Post[]> {
-        return this.http.get<Post[]>(`${baseUrl}/${id}`);
-    }
+  getAllByPreference(id: number): Observable<Post[]> {
+    return this.http.get<Post[]>(`${baseUrl}/GetByPreference/${id}`);
+  }
 
-    getAllByUserId(id:number):Observable<Post[]> {
-        return this.http.get<Post[]>(`${baseUrl}/User/${id}`);
-    }
+  getPostById(id): Observable<Post[]> {
+    return this.http.get<Post[]>(`${baseUrl}/${id}`);
+  }
 
-    getDownloadImage(id:number): Observable<HttpEvent<Blob>> {
-        return this.http.request(new HttpRequest(
-            'GET',
-            `${baseUrl}/DownloadImage/${id}`,
-            null,
-            {
-              reportProgress: true,
-              responseType: 'blob'
-            }));
-        // return this.http.get<Post>(`${baseUrl}/DownloadImage/${id}`);
-    }
+  getAllByUserId(id: number): Observable<Post[]> {
+    return this.http.get<Post[]>(`${baseUrl}/User/${id}`);
+  }
 
-    createPost(params) {
-        return this.http.post(baseUrl, params);
-    }
+    // get đề xuất phổ biến
+  getSuggestion(): Observable<Post[]> {
+    return this.http.get<Post[]>(`${baseUrl}/GetSuggestion`);
+  }
 
-    delete(id: number) {
-        return this.http.delete(`${baseUrl}/${id}`)
-    }
+  // get đề xuất cho người dùng
+  getSuggestionById(id: number): Observable<Post[]> {
+    return this.http.get<Post[]>(`${baseUrl}/GetSuggestion/${id}`);
+  }
 
-    update(id, params) {
-        return this.http.put(`${baseUrl}/${id}`, params)
-    }
+  getDownloadImage(id: number): Observable<HttpEvent<Blob>> {
+      return this.http.request(new HttpRequest(
+          'GET',
+          `${baseUrl}/DownloadImage/${id}`,
+          null,
+          {
+            reportProgress: true,
+            responseType: 'blob'
+          }));
+      // return this.http.get<Post>(`${baseUrl}/DownloadImage/${id}`);
+  }
 
-    // createPost(posts) {
-    //     const formData: FormData = new FormData();
-    //     formData.append('postTitle', posts.postTitle)
-    //     if (posts.imagePath)
-    //     {
-    //         formData.append('dbPath', posts.imagePath)
-    //     }
-    //     return this.http.post(baseUrl, formData);
-    // }
+  createPost(params) {
+      return this.http.post(baseUrl, params);
+  }
+
+  delete(id: number) {
+      return this.http.delete(`${baseUrl}/${id}`);
+  }
+
+  update(id, params) {
+      return this.http.put(`${baseUrl}/${id}`, params);
+  }
+
+  // createPost(posts) {
+  //     const formData: FormData = new FormData();
+  //     formData.append('postTitle', posts.postTitle)
+  //     if (posts.imagePath)
+  //     {
+  //         formData.append('dbPath', posts.imagePath)
+  //     }
+  //     return this.http.post(baseUrl, formData);
+  // }
 }

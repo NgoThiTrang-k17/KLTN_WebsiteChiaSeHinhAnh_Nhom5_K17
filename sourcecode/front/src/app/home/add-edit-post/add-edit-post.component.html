@@ -81,7 +81,10 @@
               <!-- <app-upload (onUploadFinished)="uploadFinished($event)"></app-upload> -->
               <div class="row">
                 <div class="offset-md-5 col-md-2 btn-group">
-                  <button type="submit" [disabled]="!myForm.valid" class="btn btn-danger rounded-pill">Đăng</button>
+                  <button type="submit" [disabled]="!myForm.valid || loading" class="btn btn-danger rounded-pill">
+                    <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                    Lưu
+                  </button>
                 </div>
               </div>
             </div>

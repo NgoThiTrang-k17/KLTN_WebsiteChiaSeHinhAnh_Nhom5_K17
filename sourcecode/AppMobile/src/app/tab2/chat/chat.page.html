@@ -6,8 +6,8 @@
       </ion-col>
       <ion-col size="8">
         <ion-item lines="none" class="center" style="align-items: center;">
-          <ion-avatar *ngIf="account.avatarPath==null"><img src="../../assets/images/default-profile.png"></ion-avatar>
-          <ion-avatar *ngIf="account.avatarPath!=null"><img [src]="account.avatarPath"></ion-avatar>
+          <ion-avatar *ngIf="account.avatarPath===null"><img src="../../assets/images/default-profile.png"></ion-avatar>
+          <ion-avatar *ngIf="account.avatarPath!==null"><img [src]="account.avatarPath"></ion-avatar>
           <ion-title class="title">{{account.name}}</ion-title>
           <span *ngIf = "(presence.onlineUsers$ | async).includes(account.id)">
             <ion-icon name="ellipse" style="color: blue; width: 15px; height: 15px;"></ion-icon>
@@ -33,7 +33,7 @@
     </div>
     <ion-list *ngIf="(messageService.messageThread$|async)?.length>0">
       <div *ngFor="let message of (messageService.messageThread$|async)">
-        <div *ngIf="message.recipientId==account.id" class="right">
+        <div *ngIf="message.recipientId===account.id" class="right">
           <ion-row>
             <ion-col size="4">
             </ion-col>
@@ -42,11 +42,11 @@
             </ion-col>
           </ion-row>
         </div>
-        <div *ngIf="message.recipientId!=account.id" class="left">
+        <div *ngIf="message.recipientId!==account.id" class="left">
           <ion-row>
             <ion-col size="2">
-              <ion-avatar *ngIf="message.senderAvatarPath==null" class="avatar"><img src="../../assets/images/default-profile.png"></ion-avatar>
-              <ion-avatar *ngIf="message.senderAvatarPath!=null" class="avatar"><img [src]="message.senderAvatarPath"></ion-avatar>
+              <ion-avatar *ngIf="message.senderAvatarPath===null" class="avatar"><img src="../../assets/images/default-profile.png"></ion-avatar>
+              <ion-avatar *ngIf="message.senderAvatarPath!==null" class="avatar"><img [src]="message.senderAvatarPath"></ion-avatar>
             </ion-col>
             <ion-col size="6">
               <ion-label class="text-yMess">{{message.content}}</ion-label>

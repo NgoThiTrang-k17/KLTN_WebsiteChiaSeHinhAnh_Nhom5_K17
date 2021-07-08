@@ -1,0 +1,9 @@
+<ion-content [fullscreen]="true">
+  <ion-list>
+    <div *ngFor="let history of historySearchs">
+      <ion-item (click)="startSearch(history)">
+        <ion-label>{{history}}</ion-label>
+      </ion-item>
+    </div>
+  </ion-list>
+</ion-content>

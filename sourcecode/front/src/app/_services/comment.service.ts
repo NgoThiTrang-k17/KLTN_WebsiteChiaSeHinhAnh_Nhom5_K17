@@ -27,7 +27,7 @@ export class CommentService {
     }
 
     getAll():Observable<Comment[]> {
-      return this.http.get<Comment[]>(`${baseUrl}/GetAll`);
+      return this.http.get<Comment[]>(baseUrl);
     }
 
     getAllByPostId(id:number):Observable<Comment[]> {

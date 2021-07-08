@@ -9,7 +9,7 @@
 
         <h1 class="m-3" style="font-weight: bold;">{{account.name}}
           <span *ngIf="account.id != maccount.id">
-            <i (click)="openReportDialog(id)" class="fas fa-exclamation-circle icon"></i>
+            <i (click)="openReportDialog(account.id)" class="fas fa-exclamation-circle icon"></i>
           </span>
         </h1>
 

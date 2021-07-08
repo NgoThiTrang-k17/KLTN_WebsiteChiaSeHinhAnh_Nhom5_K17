@@ -20,5 +20,5 @@ export class AuthService {
     else{
       return true;
     }
-  }
+  };
 }

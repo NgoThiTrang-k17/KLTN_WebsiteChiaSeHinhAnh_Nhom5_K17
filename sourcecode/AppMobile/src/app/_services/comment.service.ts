@@ -12,6 +12,7 @@ const baseUrl = `${environment.apiUrl}/comment`;
 @Injectable({ providedIn: 'root' })
 export class CommentService {
     private commentSubject: BehaviorSubject<Comment>;
+    // eslint-disable-next-line @typescript-eslint/member-ordering
     public comment: Observable<Comment>;
 
     constructor(
@@ -26,19 +27,19 @@ export class CommentService {
       return this.commentSubject.value;
     }
 
-    getAll():Observable<Comment[]> {
+    getAll(): Observable<Comment[]> {
       return this.http.get<Comment[]>(`${baseUrl}/GetAll`);
     }
 
-    getAllByPostId(id:number):Observable<Comment[]> {
+    getAllByPostId(id: number): Observable<Comment[]> {
       return this.http.get<Comment[]>(`${baseUrl}/Post/${id}`);
     }
 
-    getAllByCommentId(id:number):Observable<Comment[]> {
+    getAllByCommentId(id: number): Observable<Comment[]> {
       return this.http.get<Comment[]>(`${baseUrl}/Post/Comment/${id}`);
     }
 
-    getById(id:number):Observable<Comment[]> {
+    getById(id: number): Observable<Comment[]> {
       return this.http.get<Comment[]>(`${baseUrl}/GetById/${id}`);
     }
 
@@ -47,7 +48,7 @@ export class CommentService {
     }
 
     update(id, params) {
-      return this.http.put(`${baseUrl}/${id}`, params)
+      return this.http.put(`${baseUrl}/${id}`, params);
     }
 
     delete(id: number) {

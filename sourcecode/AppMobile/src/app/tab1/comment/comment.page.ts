@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-shadow */
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { NgForm } from '@angular/forms';
@@ -23,6 +24,7 @@ export class CommentPage implements OnInit {
   replyCommentContent: string;
   commentId: number;
   ownerName: string;
+  input: any;
 
   public comments: Comment[] = [];
 
@@ -44,51 +46,51 @@ export class CommentPage implements OnInit {
     this.seenReplyComment = false;
 
     this.commentService.getAllByPostId(this.postId)
-      .subscribe((res:any)=>{
-        this.comments = res as Comment[];
-      })
+    .subscribe(res=>{
+      this.comments = res as Comment[];
+    });
   }
 
   onCreateReactionComment(id: number){
     this.reaction = {
       target: 1,
       targetId: id
-    }
+    };
     this.reactionService.createReaction(this.reaction)
     .subscribe(res => {
       this.commentService.getAllByPostId(this.postId)
-      .subscribe((res:any)=>{
+      .subscribe((res: any)=>{
         this.comments = res as Comment[];
-      })
-    })
+      });
+    });
   }
 
   unReactionComment(id: number){
     this.reactionService.deleteCmt(id)
     .subscribe(res => {
       this.commentService.getAllByPostId(this.postId)
-      .subscribe((res:any)=>{
+      .subscribe((res: any)=>{
         this.comments = res as Comment[];
-      })
-    })
+      });
+    });
   }
 
   sendComment() {
     this.comment = {
       postId: this.postId,
       content: this.commentContent
-    }
+    };
 
     this.commentService.create(this.comment)
     .subscribe(res => {
       this.commentForm.reset();
       this.commentService.getAllByPostId(this.postId)
-      .subscribe((res:any)=>{
+      .subscribe((res: any)=>{
         this.comments = res as Comment[];
-      })
+      });
     }, error => {
-          console.log(error);
-    })
+      console.log(error);
+    });
   }
 
   sendReplyComment(){
@@ -96,22 +98,22 @@ export class CommentPage implements OnInit {
       content: this.replyCommentContent,
       parrentId: this.commentId,
       postId: this.postId
-    }
+    };
     console.log(this.replyComment);
     this.commentService.create(this.replyComment)
     .subscribe(res => {
       console.log(res);
       this.replyCommentForm.reset();
       this.commentService.getAllByPostId(this.postId)
-      .subscribe((res:any)=>{
+      .subscribe((res: any)=>{
         this.comments = res as Comment[];
-      })
+      });
     }, error => {
-          console.log(error);
-    })
+      console.log(error);
+    });
   }
 
-  focusInputReplyComment(commentId:number, ownerName: string, input) {
+  focusInputReplyComment(commentId: number, ownerName: string, input) {
     this.onReplyComment = true;
     this.commentId = commentId;
     this.ownerName = ownerName;
@@ -132,7 +134,7 @@ export class CommentPage implements OnInit {
 
   closeModalCmt() {
     this.modalController.dismiss({
-      'dismissed': true
+      dismissed: true
     });
   }
 

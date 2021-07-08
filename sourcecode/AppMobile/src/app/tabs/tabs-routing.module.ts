@@ -12,16 +12,20 @@ const routes: Routes = [
         loadChildren: () => import('../tab1/tabHome.module').then(m => m.TabHomePageModule)
       },
       {
+        path: 'search',
+        loadChildren: () => import('../tab3/tab3.module').then(m => m.Tab3PageModule)
+      },
+      {
         path: 'message',
         loadChildren: () => import('../tab2/tab2.module').then(m => m.Tab2PageModule)
       },
       {
         path: 'notification',
-        loadChildren: () => import('../tab3/tab3.module').then(m => m.Tab3PageModule)
+        loadChildren: () => import('../tab4/tab4.module').then( m => m.Tab4PageModule)
       },
       {
         path: 'account',
-        loadChildren: () => import('../tab4/tab4.module').then( m => m.Tab4PageModule)
+        loadChildren: () => import('../tab5/tab5.module').then( m => m.Tab5PageModule)
       },
       {
         path: '',

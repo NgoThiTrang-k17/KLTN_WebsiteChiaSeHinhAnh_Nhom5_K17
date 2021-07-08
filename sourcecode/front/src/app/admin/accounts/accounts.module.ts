@@ -8,15 +8,15 @@ import { ListComponent } from './list.component';
 import { AddEditComponent } from './add-edit.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        AccountsRoutingModule,
-        DataTablesModule
-    ],
-    declarations: [
-        ListComponent,
-        AddEditComponent
-    ]
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    AccountsRoutingModule,
+    DataTablesModule
+  ],
+  declarations: [
+    ListComponent,
+    AddEditComponent
+  ]
 })
 export class AccountsModule { }

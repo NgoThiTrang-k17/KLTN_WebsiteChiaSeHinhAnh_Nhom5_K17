@@ -53,7 +53,7 @@ export class SearchComponent implements OnInit{
     })
   }
 
-  search(query:string) {
+  search(query: string) {
     console.log(query);
 
     this.activeModal.close();

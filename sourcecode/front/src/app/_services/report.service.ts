@@ -33,7 +33,7 @@ export class ReportService {
     return this.http.post(baseUrl, model);
   }
 
-  update(id, params) {
-    return this.http.put(`${baseUrl}/${id}`, params);
+  delete(id){
+    return this.http.delete(`${baseUrl}/${id}`);
   }
 }

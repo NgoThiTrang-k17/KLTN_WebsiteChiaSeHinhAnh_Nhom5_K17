@@ -1,0 +1,25 @@
+<ion-content [fullscreen]="true">
+  <div style="padding: 10px;">
+    <ion-label *ngIf="posts.length!==0" class="label">Gợi ý cho bạn</ion-label>
+    <ion-list class="card-columns">
+      <div *ngFor="let post of posts">
+        <ion-card (click)="starSearch(post.categories)" class="card category" slot="start" style="background-image: url('{{post.path}}');">
+          <div class="cover">
+            <label class="label-cate">{{post.categories}}</label>
+          </div>
+        </ion-card>
+      </div>
+    </ion-list>
+    <ion-label *ngIf="postsPopular.length!==0" class="label">Phổ biến gần đây</ion-label>
+    <ion-list class="card-columns">
+      <div *ngFor="let post of postsPopular">
+        <ion-card (click)="starSearch(post.categories)" class="card category" slot="start" style="background-image: url('{{post.path}}');">
+          <div class="cover">
+            <label class="label-cate">{{post.categories}}</label>
+          </div>
+        </ion-card>
+      </div>
+    </ion-list>
+  </div>
+</ion-content>
+

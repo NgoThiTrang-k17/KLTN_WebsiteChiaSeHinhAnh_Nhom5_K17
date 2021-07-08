@@ -15,41 +15,43 @@ export class MessageService {
   hubUrl = environment.hubUrl;
   private hubConnection: HubConnection;
   private messageThreadSource = new BehaviorSubject<Message[]>([]);
+  // eslint-disable-next-line @typescript-eslint/member-ordering
   messageThread$ = this.messageThreadSource.asObservable();
 
-  constructor(private http:HttpClient) { }
+  constructor(private http: HttpClient) { }
 
-  createHubConnection(user :Account, otherUserId : number){
+  createHubConnection(user: Account, otherUserId: number){
     this.hubConnection = new HubConnectionBuilder()
     .withUrl(this.hubUrl +'message?userId=' + otherUserId, {
       accessTokenFactory: () => user.jwtToken
     })
     .withAutomaticReconnect()
-    .build()
+    .build();
     console.log('Token ' + user.jwtToken);
     this.hubConnection.start().catch(error=> console.log());
 
     this.hubConnection.on('ReceiveMessageThread', messages =>{
       this.messageThreadSource.next(messages);
-    })
+    });
 
     this.hubConnection.on('NewMessage', message=>{
       this.messageThread$.pipe(take(1)).subscribe(messages=>{
-        this.messageThreadSource.next([...messages, message])
-      })
-    })
-    this.hubConnection.on('UpdatedGroup',(group:Group) =>{
+        this.messageThreadSource.next([...messages, message]);
+      });
+    });
+
+    this.hubConnection.on('UpdatedGroup',(group: Group) =>{
       if(group.connections.some(x=> x.userId === otherUserId)){
         this.messageThread$.pipe(take(1)).subscribe(messages=>{
           messages.forEach(message =>{
             if(!message.read){
-              message.read= new Date(Date.now())
+              message.read= new Date(Date.now());
             }
-          })
+          });
           this.messageThreadSource.next([...messages]);
-        })
+        });
       }
-    })
+    });
   }
 
   stopHubConnection(){
@@ -64,7 +66,7 @@ export class MessageService {
     return this.http.get<Message[]>(baseUrl);
   }
 
-  getMessageThread(userId: number):Observable<Message[]> {
+  getMessageThread(userId: number): Observable<Message[]> {
     return this.http.get<Message[]>(`${baseUrl}/thread/${userId}`);
   }
 
@@ -73,7 +75,7 @@ export class MessageService {
     .catch(error=> console.log(error));
   }
 
-  deleteMessage(id:number){
+  deleteMessage(id: number){
     return this.http.delete(`${baseUrl}/${id}`);
   }
 }

@@ -1,5 +1,5 @@
 <ion-content [fullscreen]="true">
-  <ion-avatar routerLink="" class="btn-back">
+  <ion-avatar (click)="back()" class="btn-back">
     <ion-icon name="chevron-back-outline"></ion-icon>
   </ion-avatar>
   <ion-card class="card">
@@ -7,30 +7,30 @@
     <div>
       <ion-row>
         <ion-col size="2">
-          <ion-avatar *ngIf="account.avatarPath!=null"><img [src]="account.avatarPath"></ion-avatar>
-          <ion-avatar *ngIf="account.avatarPath==null"><img src="../../assets/images/default-profile.png"></ion-avatar>
+          <ion-avatar *ngIf="account.avatarPath!==null"><img [src]="account.avatarPath"></ion-avatar>
+          <ion-avatar *ngIf="account.avatarPath===null"><img src="../../assets/images/default-profile.png"></ion-avatar>
         </ion-col>
         <ion-col size="7">
           <ion-label class="accountName">{{account.name}}</ion-label>
           <p>{{post.followerCount}} người theo dõi</p>
         </ion-col>
         <ion-col size="3">
-          <ion-button *ngIf="mfollow.isCreated==0" (click)="onCreateFollow(account.id)" class="unFollow" shape="round">Theo dõi</ion-button>
-          <ion-button *ngIf="mfollow.isCreated==1" (click)="unFollow(account.id)" class="onFollow" shape="round">Đã theo dõi</ion-button>
+          <ion-button *ngIf="mfollow.isCreated===0" (click)="onCreateFollow(account.id)" class="unFollow" shape="round">Theo dõi</ion-button>
+          <ion-button *ngIf="mfollow.isCreated===1" (click)="unFollow(account.id)" class="onFollow" shape="round">Đã theo dõi</ion-button>
         </ion-col>
       </ion-row>
       <div style="text-align: center; margin-top: 10px;">
         <ion-label class="title">{{post.title}}</ion-label>
         <div style="justify-content: center; display: flex;">
-          <ion-icon *ngIf="post.reactionCount!=0" name="heart" style="color: rgba(255, 0, 0, 0.788);"></ion-icon>
+          <ion-icon *ngIf="post.reactionCount!==0" name="heart" style="color: rgba(255, 0, 0, 0.788);"></ion-icon>
           <span class="black">{{post.reactionCount}} người</span>
         </div>
       </div>
       <ion-row class="action">
         <!-- Tim -->
         <ion-col>
-          <ion-icon class="icon-action" *ngIf="post.isReactedByThisUser==false" (click)="onCreateReaction(post.id)" name="heart-outline"></ion-icon>
-          <ion-icon class="icon-action" *ngIf="post.isReactedByThisUser==true && post.reactionCount!=0" (click)="unReaction(post.id)" name="heart" style="color: rgba(255, 0, 0, 0.788);"></ion-icon>
+          <ion-icon class="icon-action" *ngIf="post.isReactedByThisUser===false" (click)="onCreateReaction()" name="heart-outline"></ion-icon>
+          <ion-icon class="icon-action" *ngIf="post.isReactedByThisUser===true && post.reactionCount!==0" (click)="unReaction()" name="heart" style="color: rgba(255, 0, 0, 0.788);"></ion-icon>
         </ion-col>
         <!-- Nhận xét -->
         <ion-col>
@@ -49,7 +49,7 @@
           </a>
         </ion-col>
         <!-- Xoá -->
-        <ion-col *ngIf="post.ownerId==maccount.id">
+        <ion-col *ngIf="post.ownerId===maccount.id">
           <ion-icon (click)="openOptinalMyPost(post.id)" class="icon-action" name="ellipsis-horizontal"></ion-icon>
         </ion-col>
       </ion-row>

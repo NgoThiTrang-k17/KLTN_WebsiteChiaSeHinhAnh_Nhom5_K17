@@ -12,6 +12,7 @@ const baseUrl = `${environment.apiUrl}/follows`;
 @Injectable({ providedIn: 'root' })
 export class FollowService {
     private followSubject: BehaviorSubject<Follow>;
+    // eslint-disable-next-line @typescript-eslint/member-ordering
     public follow: Observable<Follow>;
 
     constructor(
@@ -26,7 +27,7 @@ export class FollowService {
         return this.followSubject.value;
     }
 
-    getAll():Observable<Follow[]> {
+    getAll(): Observable<Follow[]> {
         return this.http.get<Follow[]>(baseUrl);
     }
 
@@ -39,12 +40,12 @@ export class FollowService {
     }
 
     // Danh sách người đang mình đang follow
-    getByFollowerId(id:number):Observable<Follow[]> {
+    getByFollowerId(id: number): Observable<Follow[]> {
         return this.http.get<Follow[]>(`${baseUrl}/GetByFollowerId/${id}`);
     }
 
     // Danh sách người đang follow mình
-    getBySubjectId(id:number):Observable<Follow[]> {
+    getBySubjectId(id: number): Observable<Follow[]> {
         return this.http.get<Follow[]>(`${baseUrl}/GetBySubjectId/${id}`);
     }
 

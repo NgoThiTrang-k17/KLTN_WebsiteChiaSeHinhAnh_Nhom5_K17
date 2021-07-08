@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { Account } from './_models';
-import { AccountService, PresenceService, AuthService } from './_services';
+import { AccountService, NotificationService, PresenceService, AuthService } from './_services';
 
 @Component({
   selector: 'app-root',
@@ -18,16 +18,20 @@ export class AppComponent implements OnInit{
     private accountService: AccountService,
     private activatedRoute: ActivatedRoute,
     private authService: AuthService,
-    private presenceService:PresenceService
+    private presenceService: PresenceService,
+    public notificationService: NotificationService,
   ) {
     this.accountService.account.subscribe(x => this.account = x);
   }
 
-  ngOnInit(): void {
-    this.presenceService.createHubConnection(this.account);
+  ngOnInit(){
+    this.users = localStorage.getItem('account');
+    this.presenceService.createHubConnection(this.accountService.accountValue);
   }
 
-  auth = () => {
-    return this.authService.loggedin();
+  logout() {
+    this.accountService.logout();
   }
+
+  auth = () => this.authService.loggedin();
 }

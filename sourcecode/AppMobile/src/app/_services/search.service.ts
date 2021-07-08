@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/member-ordering */
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
@@ -17,35 +18,37 @@ export class SearchService {
   public account: Observable<Account>;
 
   constructor(
-      private router: Router,
-      private http: HttpClient,
+    private router: Router,
+    private http: HttpClient,
   ) {
-      this.postSubject = new BehaviorSubject<Post>(null);
-      this.post = this.postSubject.asObservable();
-      this.accountSubject = new BehaviorSubject<Account>(null);
-      this.account = this.accountSubject.asObservable();
+  this.postSubject = new BehaviorSubject<Post>(null);
+  this.post = this.postSubject.asObservable();
+  this.accountSubject = new BehaviorSubject<Account>(null);
+  this.account = this.accountSubject.asObservable();
   }
 
   public get postValue(): Post {
-      return this.postSubject.value;
+    return this.postSubject.value;
   }
 
   public get accoutValue(): Account {
-      return this.accountSubject.value;
+    return this.accountSubject.value;
   }
 
-  getAllAccount(query):Observable<Account[]> {
-      return this.http.get<Account[]>(`${baseUrl}`, {params: new HttpParams().set('query', query)});
+  getHistorySearch(id) {
+    return this.http.get<string[]>(`${baseUrl}/SearchHistory/${id}`);
   }
 
-  getAllPost(query):Observable<Post[]> {
-      return this.http.get<Post[]>(`${baseUrl}`, {params: new HttpParams().set('query', query)});
+  getAllAccount(query): Observable<Account[]> {
+    return this.http.get<Account[]>(`${baseUrl}`, {params: new HttpParams().set('query', query)});
   }
 
-  getAccountForMessage(query):Observable<Account[]> {
+  getAllPost(query): Observable<Post[]> {
+    return this.http.get<Post[]>(`${baseUrl}`, {params: new HttpParams().set('query', query)});
+  }
+
+  getAccountForMessage(query): Observable<Account[]> {
     return this.http.get<Account[]>(`${baseUrl}/SearchForMessage`, {params: new HttpParams().set('query', query)});
   }
-
-
 
 }

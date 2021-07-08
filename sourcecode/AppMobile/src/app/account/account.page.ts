@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
-import { AccountLogin } from '../_models'
+import { AccountLogin } from '../_models';
 import { AccountService } from '../_services/account.service';
 
 @Component({
@@ -49,7 +49,7 @@ export class AccountPage implements OnInit {
     this.accountLogin = {
       email: this.f.email.value,
       password: this.f.password.value
-    }
+    };
 
     this.loading = true;
     this.accountService.login(this.accountLogin)
@@ -57,6 +57,7 @@ export class AccountPage implements OnInit {
     .subscribe({
         next: () => {
             // get return url from query parameters or default to home page
+            // eslint-disable-next-line @typescript-eslint/dot-notation
             const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
             this.router.navigateByUrl(returnUrl);
         },

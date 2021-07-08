@@ -8,10 +8,10 @@
 
   <div class="body">
     <ion-list *ngFor="let comment of comments">
-      <ion-row *ngIf="comment.parrentId==0" slot="start">
+      <ion-row *ngIf="comment.parrentId===0" slot="start">
         <ion-col size="2">
-          <ion-avatar *ngIf="comment.ownerAvatar!=null" class="avatar"><img [src]="comment.ownerAvatar"></ion-avatar>
-          <ion-avatar *ngIf="comment.ownerAvatar==null" class="avatar"><img src="../../assets/images/default-profile.png"></ion-avatar>
+          <ion-avatar *ngIf="comment.ownerAvatar!==null" class="avatar"><img [src]="comment.ownerAvatar"></ion-avatar>
+          <ion-avatar *ngIf="comment.ownerAvatar===null" class="avatar"><img src="../../assets/images/default-profile.png"></ion-avatar>
         </ion-col>
         <ion-col>
           <div class="comment">
@@ -19,17 +19,17 @@
             <ion-text style="padding-inline: 15px; font-size: 16px; padding-bottom: 10px;">{{comment.content}}</ion-text>
           </div>
           <ion-item lines="none">
-            <ion-icon *ngIf="comment.isReactedByThisUser==false" (click)="onCreateReactionComment(comment.id)" name="heart-outline" class="icon-comment"></ion-icon>
-            <ion-icon *ngIf="comment.isReactedByThisUser==true" (click)="unReactionComment(comment.id)" name="heart" style="color: rgba(255, 0, 0, 0.788);" class="icon-comment"></ion-icon>
-            <span *ngIf="comment.reactionCount!=0" style="margin-left: 1px; color:black;">{{comment.reactionCount}}</span>
+            <ion-icon *ngIf="comment.isReactedByThisUser===false" (click)="onCreateReactionComment(comment.id)" name="heart-outline" class="icon-comment"></ion-icon>
+            <ion-icon *ngIf="comment.isReactedByThisUser===true" (click)="unReactionComment(comment.id)" name="heart" style="color: rgba(255, 0, 0, 0.788);" class="icon-comment"></ion-icon>
+            <span *ngIf="comment.reactionCount!==0" style="margin-left: 1px; color:black;">{{comment.reactionCount}}</span>
             <ion-icon class="icon-comment" (click)="focusInputReplyComment(comment.id, comment.ownerName, input)" name="chatbox-outline" style="margin-left: 5px;"></ion-icon>
             <ion-icon class="icon-comment" name="ellipsis-horizontal" style="margin-left: 5px;"></ion-icon>
           </ion-item>
-          <div *ngIf="comment.childCount!=0 && !seenReplyComment" (click)="onSeenReplyComment()" style="align-items: center; display: flex;">
+          <div *ngIf="comment.childCount!==0 && !seenReplyComment" (click)="onSeenReplyComment()" style="align-items: center; display: flex;">
             <span style="font-size: 14px;">Xem {{comment.childCount}} câu trả lời</span>
             <ion-icon name="chevron-down-outline" style="width: 15px; height: 15px; margin-left: 5px;"></ion-icon>
           </div>
-          <div *ngIf="comment.childCount!=0 && seenReplyComment" (click)="unSeenReplyComment()">
+          <div *ngIf="comment.childCount!==0 && seenReplyComment" (click)="unSeenReplyComment()">
             <div style="align-items: center; display: flex;">
               <span style="font-size: 14px;">Ẩn câu trả lời</span>
               <ion-icon name="chevron-up-outline" style="width: 15px; height: 15px; margin-left: 5px;"></ion-icon>
@@ -45,8 +45,8 @@
     <form *ngIf="!onReplyComment" #commentForm="ngForm" (ngSubmit)="sendComment()" autocomplete="off">
       <ion-row>
         <ion-col size="2">
-          <ion-avatar *ngIf="maccount.avatarPath!=null" class="avatar"><img [src]="maccount.avatarPath"></ion-avatar>
-          <ion-avatar *ngIf="maccount.avatarPath==null" class="avatar"><img src="../../assets/images/default-profile.png"></ion-avatar>
+          <ion-avatar *ngIf="maccount.avatarPath!==null" class="avatar"><img [src]="maccount.avatarPath"></ion-avatar>
+          <ion-avatar *ngIf="maccount.avatarPath===null" class="avatar"><img src="../../assets/images/default-profile.png"></ion-avatar>
         </ion-col>
         <ion-col>
           <ion-item lines="none" class="ion-form-group input">
@@ -76,8 +76,8 @@
       </ion-row>
       <ion-row>
         <ion-col size="2">
-          <ion-avatar *ngIf="maccount.avatarPath!=null" class="avatar"><img [src]="maccount.avatarPath"></ion-avatar>
-          <ion-avatar *ngIf="maccount.avatarPath==null" class="avatar"><img src="../../assets/images/default-profile.png"></ion-avatar>
+          <ion-avatar *ngIf="maccount.avatarPath!==null" class="avatar"><img [src]="maccount.avatarPath"></ion-avatar>
+          <ion-avatar *ngIf="maccount.avatarPath===null" class="avatar"><img src="../../assets/images/default-profile.png"></ion-avatar>
         </ion-col>
         <ion-col>
           <ion-item lines="none" class="ion-form-group input">

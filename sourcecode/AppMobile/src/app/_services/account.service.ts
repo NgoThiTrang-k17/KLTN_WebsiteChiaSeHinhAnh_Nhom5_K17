@@ -1,4 +1,6 @@
-﻿import { Injectable } from '@angular/core';
+﻿/* eslint-disable no-trailing-spaces */
+/* eslint-disable @typescript-eslint/member-ordering */
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
@@ -6,7 +8,7 @@ import { map, finalize } from 'rxjs/operators';
 
 import { environment } from '../../environments/environment';
 import { Account } from '../_models';
-import { PresenceService } from '../_services';
+import { PresenceService, MessageService } from '../_services';
 
 const baseUrl = `${environment.apiUrl}/Accounts`;
 
@@ -21,7 +23,8 @@ export class AccountService {
     constructor(
         private router: Router,
         private http: HttpClient,
-        private presenceService: PresenceService
+        private presenceService: PresenceService,
+        private messageService: MessageService,
     ) {
         this.accountSubject = new BehaviorSubject<Account>(null);
         this.account = this.accountSubject.asObservable();
@@ -32,13 +35,14 @@ export class AccountService {
     }
 
     login(model) {
-        return this.http.post<any>(`${baseUrl}/authenticate`, model, { withCredentials: true })
-            .pipe(map(account => {
-                this.presenceService.createHubConnection(account);
-                this.accountSubject.next(account);
-                this.startRefreshTokenTimer();
-                return account;
-            }));
+      return this.http.post<any>(`${baseUrl}/authenticate`, model, { withCredentials: true })
+      .pipe(map(account => {
+        localStorage.setItem('account', account);
+        this.accountSubject.next(account);
+        this.presenceService.createHubConnection(account);
+        this.startRefreshTokenTimer();
+        return account;
+      }));
     }
 
     loginGoogle(params) {
@@ -62,29 +66,27 @@ export class AccountService {
     // }
 
     logout() {
-        this.http.post<any>(`${baseUrl}/revoke-token`, {}, { withCredentials: true }).subscribe();
-        this.stopRefreshTokenTimer();
-        this.accountSubject.next(null);
-
-        // localStorage.removeItem('socialUser')
-        // localStorage.removeItem('user');
-        // this.currentUserSource.next(null);
-        // this.presenceService.stopHubConnection();
-
-        this.router.navigate(['/account/login']);
+      this.http.post<any>(`${baseUrl}/revoke-token`, {}, { withCredentials: true }).subscribe();
+      this.stopRefreshTokenTimer();
+      localStorage.removeItem('account');
+      this.accountSubject.next(null);
+      this.presenceService.stopHubConnection();
+      this.messageService.stopHubConnection();
+      this.router.navigate(['/account/login']);
     }
 
     refreshToken() {
-        return this.http.post<any>(`${baseUrl}/refresh-token`, { withCredentials: true })
-            .pipe(map((account) => {
-                this.accountSubject.next(account);
-                this.startRefreshTokenTimer();
-                return account;
-            }));
+      return this.http.post<any>(`${baseUrl}/refresh-token`, { withCredentials: true })
+      .pipe(map((account) => {
+        localStorage.setItem('account', account);
+        this.accountSubject.next(account);
+        this.startRefreshTokenTimer();
+        return account;
+      }));
     }
 
     register(account: Account) {
-      return this.http.post(`${baseUrl}/register`, account)
+      return this.http.post(`${baseUrl}/register`, account);
       // .pipe(map((user: Account) => {
       //   if(user){
       //     localStorage.setItem('user',JSON.stringify(user));
@@ -138,16 +140,18 @@ export class AccountService {
     }
 
     delete(id: number) {
-        return this.http.delete(`${baseUrl}/${id}`)
-            .pipe(finalize(() => {
-                // auto logout if the logged in account was deleted
-                if (id === this.accountValue.id)
-                    this.logout();
-            }));
+      return this.http.delete(`${baseUrl}/${id}`)
+      .pipe(finalize(() => {
+        // auto logout if the logged in account was deleted
+        if(id === this.accountValue.id){
+          this.logout();
+        }
+      }));
     }
 
     // helper methods
 
+    // eslint-disable-next-line @typescript-eslint/member-ordering
     private refreshTokenTimeout;
 
     private startRefreshTokenTimer() {
