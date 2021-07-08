@@ -39,9 +39,9 @@ namespace WebApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            _reportService.DeleteReport(id);
+            await _reportService.DeleteReport(id);
             return Ok(new { message = "Report deleted successfully" });
         }
     }

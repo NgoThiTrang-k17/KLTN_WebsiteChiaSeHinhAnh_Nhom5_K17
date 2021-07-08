@@ -217,7 +217,7 @@ namespace WebApi.Controllers
 
         [Authorize]
         [HttpDelete("{id:int}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             // users cant delete their own account and admins can delete any account
             if (id == Account.Id)
@@ -225,7 +225,7 @@ namespace WebApi.Controllers
                 //if (Account.Role != UserRole.Admin)
                 //    return Unauthorized(new { message = "Unauthorized" });
             }
-            _accountService.Delete(id);
+            await _accountService.Delete(id);
             return Ok(new { message = "Account deleted successfully" });
         }
 

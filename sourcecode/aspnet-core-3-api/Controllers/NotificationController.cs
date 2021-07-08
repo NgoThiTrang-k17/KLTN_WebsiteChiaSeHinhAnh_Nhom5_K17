@@ -63,9 +63,9 @@ namespace WebApi.Controllers
 
         //[Authorize]
         [HttpDelete("{id:int}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            _notificationService.DeleteNotification(id);
+            await _notificationService.DeleteNotification(id);
             return Ok(new { message = "Notification deleted successfully" });
         }
     }

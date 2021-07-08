@@ -17,8 +17,8 @@ namespace WebApi.Services
     {
         Task<FollowResponse> CreateFollow(CreateFollowRequest model);
         Task<FollowResponse> UpdateFollow(int id, UpdateFollowRequest model);
-        void DeleteFollow(int id);
-        void DeleteFollowBySubjectId(int accountId, int followerId);
+        Task DeleteFollow(int id);
+        Task DeleteFollowBySubjectId(int accountId, int followerId);
 
         Task<IEnumerable<FollowResponse>> GetAll();
         Task<IEnumerable<FollowResponse>> GetBySubjectId(int userId);
@@ -57,7 +57,7 @@ namespace WebApi.Services
             if (follow == null) throw new AppException("Create follow failed");
             await _context.Follows.AddAsync(follow);
             await _context.SaveChangesAsync();
-            SendNotification(follow);
+            await SendNotification(follow);
             return _mapper.Map<FollowResponse>(follow);
         }
 
@@ -74,18 +74,22 @@ namespace WebApi.Services
         }
 
         //Delete
-        public async void DeleteFollow(int id)
+        public async Task DeleteFollow(int id)
         {
-            var follow = getFollow(id);
+            var follow = await getFollow(id);
             if (follow == null) throw new KeyNotFoundException("Follow not found");
+            var notifications = _context.Notifications.Where(n => n.NotificationType == NotificationType.FollowRequest && n.ActionOwnerId == follow.FollowerId && n.ReiceiverId == follow.SubjectId);
+            _context.Notifications.RemoveRange(notifications);
             _context.Remove(follow);
             await _context.SaveChangesAsync();
         }
 
-        public async void DeleteFollowBySubjectId(int accountId, int followerId)
+        public async Task DeleteFollowBySubjectId(int accountId, int followerId)
         {
             var follow = _context.Follows.Where(follow => follow.SubjectId == accountId && follow.FollowerId == followerId).FirstOrDefault();
             if (follow == null) throw new KeyNotFoundException("Follow not found");
+            var notifications = _context.Notifications.Where(n => n.NotificationType == NotificationType.FollowRequest && n.ActionOwnerId == follow.FollowerId && n.ReiceiverId == follow.SubjectId);
+            _context.Notifications.RemoveRange(notifications);
             _context.Remove(follow);
             await _context.SaveChangesAsync();
         }
@@ -144,7 +148,7 @@ namespace WebApi.Services
 
         //Helper methods
 
-        private async void SendNotification(Follow model)
+        private async Task SendNotification(Follow model)
         {
             var notification = new CreateNotificationRequest
             {

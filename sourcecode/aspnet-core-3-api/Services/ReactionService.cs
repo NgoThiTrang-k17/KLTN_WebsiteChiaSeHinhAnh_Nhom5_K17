@@ -17,9 +17,9 @@ namespace WebApi.Services
     {
         Task<ReactionResponse> CreateReaction(CreateReactionRequest model);
         Task<ReactionResponse> UpdateReaction(int id, UpdateReactionRequest model);
-        void DeleteReaction(int id);
-        void DeleteByPostId(int postId, int ownerId);
-        void DeleteByCommentId(int commentId, int ownerId);
+        Task DeleteReaction(int id);
+        Task DeleteByPostId(int postId, int ownerId);
+        Task DeleteByCommentId(int commentId, int ownerId);
         Task<IEnumerable<ReactionResponse>> GetAll();
         Task<IEnumerable<ReactionResponse>> GetAllByTargetId(ReactionTarget targetType, int targetId);
         Task<ReactionState> GetState(ReactionTarget targetType, int targetId, int ownerId);
@@ -53,7 +53,7 @@ namespace WebApi.Services
 
             await _context.Reactions.AddAsync(reaction);
             await _context.SaveChangesAsync();
-            SendNotification(reaction.OwnerId, reaction);
+            await SendNotification(reaction.OwnerId, reaction);
             return _mapper.Map<ReactionResponse>(reaction);
         }
 
@@ -69,14 +69,14 @@ namespace WebApi.Services
         }
 
 
-        public async void DeleteReaction(int id)
+        public async Task DeleteReaction(int id)
         {
             var reaction = await getReaction(id);
             _context.Remove(reaction);
             await _context.SaveChangesAsync();
         }
 
-        public async void DeleteByPostId(int postId, int ownerId)
+        public async Task DeleteByPostId(int postId, int ownerId)
         {
             var model = await _context.Reactions.Where(reaction => reaction.Target == ReactionTarget.Post
             && reaction.TargetId == postId
@@ -86,7 +86,7 @@ namespace WebApi.Services
             _context.Remove(reaction);
             await _context.SaveChangesAsync();
         }
-        public async void DeleteByCommentId(int commentId, int ownerId)
+        public async Task DeleteByCommentId(int commentId, int ownerId)
         {
             var model = await _context.Reactions.Where(reaction => reaction.Target == ReactionTarget.Comment
             && reaction.TargetId == commentId
@@ -139,7 +139,7 @@ namespace WebApi.Services
             return reaction;
         }
 
-        private async void SendNotification(int reactionOwnerId, Reaction model)
+        private async Task SendNotification(int reactionOwnerId, Reaction model)
         {
             var notification = new CreateNotificationRequest
             {

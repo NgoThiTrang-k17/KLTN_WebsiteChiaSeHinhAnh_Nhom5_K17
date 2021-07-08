@@ -14,7 +14,7 @@ namespace WebApi.Services
     {
         Task<ReportResponse> CreateReport(CreateReportRequest model);
         Task<ReportResponse> UpdateReport(int id, UpdateReportRequest model); 
-        void DeleteReport(int id);
+        Task DeleteReport(int id);
         Task<IEnumerable<ReportResponse>> GetAll();  
         Task<bool> SaveAllAsync();
         Task<Connection> GetConnection(string connectionId);
@@ -58,7 +58,7 @@ namespace WebApi.Services
         }
 
         //Delete
-        public async void DeleteReport(int id)
+        public async Task DeleteReport(int id)
         {
             var Report = await getReport(id);
             _context.Reports.Remove(Report);

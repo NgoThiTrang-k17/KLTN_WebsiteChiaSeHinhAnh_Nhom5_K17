@@ -58,22 +58,22 @@ namespace WebApi.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            _reactionService.DeleteReaction(id);
+            await _reactionService.DeleteReaction(id);
             return Ok(new { message = "Reaction deleted successfully" });
         }
         [HttpDelete("DeleteByPostId{id:int}")]
-        public IActionResult DeleteByPostId(int id)
+        public async Task<IActionResult> DeleteByPostId(int id)
         {
-            _reactionService.DeleteByPostId(id, Account.Id);
+            await _reactionService.DeleteByPostId(id, Account.Id);
             return Ok(new { message = "Reaction deleted successfully" });
         }
 
         [HttpDelete("DeleteByCommentId{id:int}")]
-        public IActionResult DeleteByCommentId(int id)
+        public async Task<IActionResult> DeleteByCommentId(int id)
         {
-            _reactionService.DeleteByCommentId(id, Account.Id);
+            await _reactionService.DeleteByCommentId(id, Account.Id);
             return Ok(new { message = "Reaction deleted successfully" });
         }
     }

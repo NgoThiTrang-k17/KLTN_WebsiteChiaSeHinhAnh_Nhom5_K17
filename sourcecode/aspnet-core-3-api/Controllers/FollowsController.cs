@@ -38,16 +38,16 @@ namespace WebApi.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            _followService.DeleteFollow(id);
+            await _followService.DeleteFollow(id);
             return Ok(new { message = "Follow deleted successfully" });
         }
 
         [HttpDelete("DeleteByAccountId/{id:int}")]
-        public IActionResult DeleteByAccountId(int id)
+        public async Task<IActionResult> DeleteByAccountId(int id)
         {
-            _followService.DeleteFollowBySubjectId(id, Account.Id);
+            await _followService.DeleteFollowBySubjectId(id, Account.Id);
             return Ok(new { message = "Follow deleted successfully" });
         }
 

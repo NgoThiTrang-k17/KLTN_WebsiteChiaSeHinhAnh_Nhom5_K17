@@ -32,7 +32,7 @@ namespace WebApi.Services
         Task<AccountResponse> GetById(int id);
         Task<AccountResponse> Create(CreateAccountRequest model);
         Task<AccountResponse> Update(int id, UpdateAccountRequest model);
-        void Delete(int id);
+        Task Delete(int id);
         Task<bool> SaveAllAsync();
         Task<User> getAccount(int id);
     }
@@ -399,9 +399,60 @@ namespace WebApi.Services
             return _mapper.Map<AccountResponse>(account);
         }
 
-        public async void Delete(int id)
+        public async Task Delete(int id)
         {
             var account = await getAccount(id);
+            var posts = await _context.Posts.Where(p => p.OwnerId == id).ToListAsync();
+            //post
+            foreach (var post in posts)
+            {
+                var postComments = await _context.Comments.Where(c => c.PostId == post.Id).ToListAsync();
+                _context.RemoveRange(postComments);
+
+                var postReactions = await _context.Reactions.Where(r => r.Target == ReactionTarget.Post && r.TargetId == post.Id).ToListAsync();
+                _context.RemoveRange(postReactions);
+
+                var postReports = await _context.Reports.Where(report => report.TargetType == ReportTarget.Post && report.TargetId == post.Id).ToListAsync();
+                _context.RemoveRange(postReports);
+
+                var postNotifications = await _context.Notifications.Where(n => n.PostId == post.Id).ToListAsync();
+                _context.RemoveRange(postNotifications);
+            }
+            _context.RemoveRange(posts);
+            //comment
+            var comments = await _context.Comments.Where(c => c.OwnerId == id).ToListAsync();
+            foreach (var comment in comments)
+            {
+                var childComments = await _context.Comments.Where(c => c.ParrentId == comment.Id).ToListAsync();
+                foreach (var childComment in childComments)
+                {
+                    var childNotifications = await _context.Notifications.Where(noti => noti.NotificationType == NotificationType.Commented && noti.PostId == childComment.PostId).ToListAsync();
+                    _context.RemoveRange(childNotifications);
+
+                    var childReactions = await _context.Reactions.Where(reaction => reaction.Target == ReactionTarget.Comment && reaction.TargetId == childComment.Id).ToListAsync();
+                    _context.RemoveRange(childReactions);
+
+                    var childReports = await _context.Reports.Where(report => report.TargetType == ReportTarget.Comment && report.TargetId == childComment.Id).ToListAsync();
+                    _context.RemoveRange(childReports);
+                }
+            }
+            _context.RemoveRange(comments);
+            //reaction
+            var reactions = await _context.Reactions.Where(c => c.OwnerId == id).ToListAsync();
+            _context.RemoveRange(reactions);
+            //folow
+            var follows = await _context.Follows.Where(f => f.SubjectId == id || f.FollowerId == id).ToListAsync();
+            _context.RemoveRange(follows);
+            //notification
+            var notifications = await _context.Notifications.Where(n => n.ActionOwnerId == id).ToListAsync();
+            _context.RemoveRange(notifications);
+            //Message
+            var messages = await _context.Messages.Where(m => m.SenderId == id || m.RecipientId == id).ToListAsync();
+            _context.RemoveRange(messages);
+            //report
+            var reports = await _context.Reports.Where(r => r.TargetType == ReportTarget.User && r.TargetId == id).ToListAsync();
+            _context.RemoveRange(reports);
+
             _context.Users.Remove(account);
             await _context.SaveChangesAsync();
             //await _userManager.DeleteAsync(account);

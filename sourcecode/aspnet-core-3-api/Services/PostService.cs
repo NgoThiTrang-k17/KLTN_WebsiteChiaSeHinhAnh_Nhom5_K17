@@ -21,7 +21,7 @@ namespace WebApi.Services
         Task<PostResponse> CreatePost(CreatePostRequest model);
         Task<PostResponse> UpdatePost(int id, UpdatePostRequest model);
         void Share(int id);
-        void DeletePost(int id);
+        Task DeletePost(int id);
         Task<IEnumerable<PostResponse>> GetAll();
         Task<IEnumerable<PostResponse>> GetByOwnerId(int ownerId);
 
@@ -76,11 +76,18 @@ namespace WebApi.Services
         }
 
         //Delete
-        public async void DeletePost(int id)
+        public async Task DeletePost(int id)
         {
             var post = await GetPost(id);
             _context.RemoveRange(GetComments(id));
             _context.RemoveRange(GetReactions(id));
+
+            var reports = await _context.Reports.Where(report => report.TargetType == ReportTarget.Post && report.TargetId == id).ToListAsync();
+            _context.RemoveRange(reports);
+
+            var notifications = await _context.Notifications.Where(n => n.PostId == id).ToListAsync();
+            _context.RemoveRange(notifications);
+
             _context.Remove(post);
             await _context.SaveChangesAsync();
         }

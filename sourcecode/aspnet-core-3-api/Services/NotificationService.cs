@@ -14,7 +14,7 @@ namespace WebApi.Services
         Task<NotificationResponse> CreateNotification(CreateNotificationRequest model);
         Task<NotificationResponse> UpdateNotification(int id, UpdateNotificationRequest model);
         Task<NotificationResponse> UpdateNotificationStatus(int id, Status status);
-        void DeleteNotification(int id);
+        Task DeleteNotification(int id);
         Task<IEnumerable<NotificationResponse>> GetAll();
         Task<IEnumerable<NotificationResponse>> GetNotificationThread(int id);
         Task<int> NewNotificationCount(int id);
@@ -40,6 +40,8 @@ namespace WebApi.Services
         //Create
         public async Task<NotificationResponse> CreateNotification(CreateNotificationRequest model)
         {
+            var oldNotification = await _context.Notifications.Where(n => n.NotificationType == model.NotificationType && n.ActionOwnerId == model.ActionOwnerId && n.ReiceiverId == model.ReiceiverId).ToListAsync();
+            _context.RemoveRange(oldNotification);
             var notification = _mapper.Map<Notification>(model);
             if (notification == null) throw new AppException("Create Notification failed");
             _context.Notifications.Add(notification);
@@ -94,7 +96,7 @@ namespace WebApi.Services
         }
 
         //Delete
-        public async void DeleteNotification(int id)
+        public async Task DeleteNotification(int id)
         {
             var notification = await getNotification(id);
             _context.Notifications.Remove(notification);

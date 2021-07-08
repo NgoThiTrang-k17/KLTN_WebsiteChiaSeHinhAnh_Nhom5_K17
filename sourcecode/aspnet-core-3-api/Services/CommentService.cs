@@ -22,7 +22,7 @@ namespace WebApi.Services
         Task<IEnumerable<CommentResponse>> GetByParent(int parentId);
         Task<CommentResponse> CreateComment(CreateCommentRequest model);
         Task<CommentResponse> UpdateComment(int id, UpdateCommentRequest model);
-        void DeleteComment(int id);
+        Task DeleteComment(int id);
        
     }
     public class CommentService : ICommentService
@@ -60,9 +60,9 @@ namespace WebApi.Services
             //Get post by postId then map it to new Post model
             var postrespone = await _postService.GetById(model.PostId);
             var post = _mapper.Map<Post>(postrespone);
-            await _context.Comments.AddAsync(comment);
+            _context.Comments.Add(comment);
             await _context.SaveChangesAsync();
-            SendNotification(comment.OwnerId, post);
+            await SendNotification(comment.OwnerId, post);
             return _mapper.Map<CommentResponse>(comment);
         }
         
@@ -80,9 +80,33 @@ namespace WebApi.Services
         }
 
         //Delete
-        public async void DeleteComment(int id)
+        public async Task DeleteComment(int id)
         {
             var comment = await GetComment(id);
+
+            var childComments = await _context.Comments.Where(c => c.ParrentId == id).ToListAsync();
+            foreach(var childComment in childComments)
+            {
+                var childNotifications = await _context.Notifications.Where(noti => noti.NotificationType == NotificationType.Commented && noti.PostId == childComment.PostId).ToListAsync();
+                _context.RemoveRange(childNotifications);
+
+                var childReactions = await _context.Reactions.Where(reaction => reaction.Target == ReactionTarget.Comment && reaction.TargetId == childComment.Id).ToListAsync();
+                _context.RemoveRange(childReactions);
+
+                var childReports = await _context.Reports.Where(report => report.TargetType == ReportTarget.Comment && report.TargetId == childComment.Id).ToListAsync();
+                _context.RemoveRange(childReports);
+            }
+            _context.RemoveRange(childComments);
+            //notification
+            var notification = await _context.Notifications.Where(n => n.NotificationType == NotificationType.Commented && n.PostId == comment.PostId).ToListAsync();
+            _context.RemoveRange(notification);
+            //reaction
+            var reactions = await _context.Reactions.Where(n => n.Target == ReactionTarget.Comment && n.TargetId == id).ToListAsync();
+            _context.RemoveRange(reactions);
+            //report
+            var reports = await _context.Reports.Where(report => report.TargetType == ReportTarget.Comment && report.TargetId == id).ToListAsync();
+            _context.RemoveRange(reports);
+
             _context.Remove(comment);
             await _context.SaveChangesAsync();
         }
@@ -159,7 +183,7 @@ namespace WebApi.Services
             return (childcount, reactioncount);
         }
 
-        private async void SendNotification(int commentOwnerId,Post model)
+        private async Task SendNotification(int commentOwnerId,Post model)
         {
             var createnotificationRequest = new CreateNotificationRequest
             {

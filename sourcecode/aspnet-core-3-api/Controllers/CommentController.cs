@@ -92,10 +92,10 @@ namespace WebApi.Controllers
 
         //[Authorize]
         [HttpDelete("{id:int}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
 
-            _commentService.DeleteComment(id);
+           await _commentService.DeleteComment(id);
             return Ok(new { message = "Comment deleted successfully" });
         }
     }
