@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TimeagoModule } from 'ngx-timeago';
+import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 
 import { IonicModule } from '@ionic/angular';
 
@@ -13,8 +15,12 @@ import { Tab4Page } from './tab4.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    Tab4PageRoutingModule
+    Tab4PageRoutingModule,
+    TimeagoModule.forRoot(),
   ],
-  declarations: [Tab4Page]
+  declarations: [Tab4Page],
+  providers: [
+    FileTransfer
+  ]
 })
 export class Tab4PageModule {}

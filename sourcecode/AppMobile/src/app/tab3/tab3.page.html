@@ -1,12 +1,34 @@
 <ion-header lines="none" [translucent]="true">
-  <ion-searchbar *ngIf="!search" (click)="onSearch()"></ion-searchbar>
+  <ion-searchbar *ngIf="!search" (click)="onSearch()" placeholder="@tên để tìm tài khoản"></ion-searchbar>
 
   <ion-item *ngIf="search">
-    <ion-searchbar #inputSearch (keydown.enter)="starSearch($event)"></ion-searchbar>
+    <ion-searchbar #inputSearch (keydown.enter)="starSearch($event)" placeholder="@tên để tìm tài khoản"></ion-searchbar>
     <p (click)="unSearch()" style="margin-top: 5%;">Huỷ</p>
   </ion-item>
 </ion-header>
 
 <ion-content>
-  <ion-router-outlet></ion-router-outlet>
+  <div *ngIf="!search" style="padding: 0 10px; overflow: auto;">
+    <ion-label *ngIf="posts.length!==0" class="label">Gợi ý cho bạn</ion-label>
+    <ion-list class="card-columns">
+      <div *ngFor="let post of posts">
+        <ion-card (click)="starSearchCate(post.categories)" class="card category" slot="start" style="background-image: url('{{post.path}}');">
+          <div class="cover">
+            <label class="label-cate">{{post.categories}}</label>
+          </div>
+        </ion-card>
+      </div>
+    </ion-list>
+    <ion-label *ngIf="postsPopular.length!==0" class="label">Phổ biến gần đây</ion-label>
+    <ion-list class="card-columns">
+      <div *ngFor="let post of postsPopular">
+        <ion-card (click)="starSearchCate(post.categories)" class="card category" slot="start" style="background-image: url('{{post.path}}');">
+          <div class="cover">
+            <label class="label-cate">{{post.categories}}</label>
+          </div>
+        </ion-card>
+      </div>
+    </ion-list>
+  </div>
+  <ion-router-outlet *ngIf="search"></ion-router-outlet>
 </ion-content>

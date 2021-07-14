@@ -2,7 +2,7 @@
   <label *ngIf="historySearchs.length>0">Tìm kiếm gần đây</label>
   <div class="row">
     <div *ngFor="let history of historySearchs">
-      <button (click)="search(history)" class="btn btn-light rounded-pill strong button-search">{{search}}</button>
+      <button (click)="search(history)" class="btn btn-light rounded-pill strong button-search">{{history}}</button>
     </div>
   </div>
   <label class="mt-4">Gợi ý cho bạn</label>

@@ -8,6 +8,7 @@ import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ng
 import { Post, Account, Follow, FollowToCreate, ReactionToCreate } from '../../_models';
 import { AccountService, PostService, FollowService, ReactionService } from '../../_services';
 import { CommentPage } from '../comment/comment.page';
+import { AddEditPostComponent } from '../../add-edit-post/add-edit-post.component';
 
 @Component({
   selector: 'app-detailPost',
@@ -135,6 +136,7 @@ export class DetailPostPage implements OnInit {
         icon: 'create-outline',
         handler: () => {
           console.log('Edit clicked');
+          this.openEditPost(postId);
         }
       },{
         text: 'Xoá',
@@ -196,12 +198,36 @@ export class DetailPostPage implements OnInit {
     return await modal.present();
   }
 
+  async openEditPost(id: number) {
+    const modal = await this.modalController.create({
+      component: AddEditPostComponent,
+      cssClass: 'my-custom-class',
+      componentProps: {
+        postId: id,
+      }
+    });
+
+    modal.onDidDismiss().then(data => {
+      this.postService.getPostById(this.postId)
+      .subscribe((res: any)=>{
+        this.post = res;
+      });
+    });
+    return await modal.present();
+  }
+
   back() {
     this.path = localStorage.getItem('path');
-    if(this.path == null){
-      this.router.navigate([''], { relativeTo: this.route });
-    } else {
-      this.router.navigate([this.path]);
+    const pathAccount = localStorage.getItem('pathPost');
+
+    if( pathAccount == null ){
+      if(this.path == null){
+        this.router.navigate([''], { relativeTo: this.route });
+      } else if(this.path != null){
+        this.router.navigate([this.path]);
+      }
+    } else if( pathAccount != null ) {
+      this.router.navigate([pathAccount], { relativeTo: this.route });
     }
   }
 }

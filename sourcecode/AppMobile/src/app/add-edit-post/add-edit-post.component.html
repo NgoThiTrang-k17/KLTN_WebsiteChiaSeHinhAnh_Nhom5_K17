@@ -1,0 +1,73 @@
+<ion-content [fullscreen]="true">
+  <div class="header">
+    <ion-row class="centerColumn">
+      <ion-icon (click)="closeModalCmt()" class="close" style="text-align: right;" name="close-outline"></ion-icon>
+      <ion-title *ngIf="!onEdit" class="title">Thêm bài viết</ion-title>
+      <ion-title *ngIf="onEdit" class="title">Sửa bài viết</ion-title>
+      <ion-button *ngIf="!onEdit" [disabled]="createForm.valid" (click)="submit()" shape="round" class="buttonSubmit">Lưu</ion-button>
+      <ion-button *ngIf="onEdit" (click)="updatePost()" shape="round" class="buttonSubmit">Lưu</ion-button>
+    </ion-row>
+  </div>
+
+  <div class="body">
+    <form #createForm="ngForm" autocomplete="off">
+      <ion-row>
+        <ion-col *ngIf="!onEdit" size="6" style="padding-left: 15px;">
+          <div *ngIf="imageSrc===null" class="upload">
+            <div>
+              <div class="ion-text-center">
+                <label class="custom-file-upload rounded-circle">
+                  <input
+                  required
+                  name="file"
+                  [(ngModel)]="file"
+                  id="path"
+                  type="file"
+                  accept=".png,.jpg,.jfif"
+                  (change)="onFileChange($event)"/>
+                  <ion-icon name="arrow-up-circle-outline" style="font-size: 40px;"></ion-icon>
+                </label>
+              </div>
+              <div class="ion-text-center">
+                <ion-label>Nhấp vào biểu tượng để tải hình ảnh</ion-label>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="imageSrc!==null">
+            <ion-img [src]="imageSrc" style="position: relative;"></ion-img>
+            <label class="custom-file-upload rounded-circle" style="position: absolute; width: 100%; bottom: 4px;">
+              <input
+              required
+              name="file"
+              [(ngModel)]="file"
+              id="path"
+              type="file"
+              accept=".png,.jpg,.jfif"
+              (change)="onFileChange($event)"/>
+              <ion-icon name="arrow-up-circle" style="font-size: 40px; color: white;"></ion-icon>
+            </label>
+          </div>
+        </ion-col>
+        <ion-col *ngIf="onEdit" size="6" style="padding-left: 15px;">
+          <ion-img [src]="post.path"></ion-img>
+        </ion-col>
+      </ion-row>
+      <ion-item>
+        <ion-label position="stacked">Tiêu đề</ion-label>
+        <ion-input
+        name="title"
+        [(ngModel)]="title"
+        type="text"
+        placeholder="Nhập tiêu đề của hình..."></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Mô tả</ion-label>
+        <ion-textarea
+        name="desctription"
+        [(ngModel)]="desctription"
+        type="text"
+        placeholder="Nhập mô tả chi tiết cho hình ảnh..."></ion-textarea>
+      </ion-item>
+    </form>
+  </div>
+</ion-content>

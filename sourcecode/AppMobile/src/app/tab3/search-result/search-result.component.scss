@@ -1,13 +1,15 @@
 .listPost{
-  width: 95%;
+  width: 100%;
+  padding: 8px 14px;
 }
 
 .card {
+  margin: 0 0 10px 0 !important;
   box-shadow:none !important;
   border: none !important;
   margin-left: none !important;
   justify-content: center;
-  width: 95%;
+  width: 100%;
   height: auto;
 }
 
@@ -46,7 +48,7 @@ ion-button{
 }
 
 .unFollow{
-  --background: #aaaaaa;
+  --background: #cacaca;
 }
 
 ion-select::part(icon) {

@@ -7,6 +7,7 @@ const accountsModule = () => import('./accounts/accounts.module').then(x => x.Ac
 const postsModule = () => import('./posts/posts.module').then(x => x.PostsModule);
 const commentsModule = () => import('./comments/comments.module').then(x => x.CommentsModule);
 const reportsModule = () => import('./reports/reports.module').then(x => x.ReportsModule);
+const userModule = () => import('../home/user.module').then(x=>x.UserModule);
 
 const routes: Routes = [
   {
@@ -19,7 +20,8 @@ const routes: Routes = [
       { path: 'comments', loadChildren: commentsModule },
       { path: 'reports', loadChildren: reportsModule},
     ]
-  }
+  },
+  { path: 'user', loadChildren: userModule},
 ];
 
 @NgModule({

@@ -92,7 +92,7 @@ namespace WebApi.Services
             && reaction.TargetId == commentId
             && reaction.OwnerId == ownerId).FirstOrDefaultAsync() ;
 
-            var reaction = getReaction(model.Id);
+            var reaction = await getReaction(model.Id);
             _context.Remove(reaction);
              await _context.SaveChangesAsync();
         }

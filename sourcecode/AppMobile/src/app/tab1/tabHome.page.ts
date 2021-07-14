@@ -1,12 +1,16 @@
+/* eslint-disable no-trailing-spaces */
 /* eslint-disable @typescript-eslint/no-shadow */
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ActionSheetController, AlertController } from '@ionic/angular';
+import { File } from '@ionic-native/file/ngx';
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 import { IonInfiniteScroll } from '@ionic/angular';
 
 import { Post, Account, FollowToCreate, ReactionToCreate } from '../_models';
 import { PostService, SearchService, FollowService, AccountService, ReactionService, PresenceService } from '../_services';
+import { pipe } from 'rxjs';
+import { first } from 'rxjs/operators';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
@@ -40,6 +44,7 @@ export class TabHomePage implements OnInit {
     public presence: PresenceService,
     private router: Router,
     public actionSheetController: ActionSheetController,
+    private file: File,
     private transfer: FileTransfer,
     public alertController: AlertController,
   ) {
@@ -53,6 +58,9 @@ export class TabHomePage implements OnInit {
     .subscribe(res => {
       this.posts = res as Post[];
     });
+
+    localStorage.removeItem('path');
+    localStorage.removeItem('pathPost');
   }
 
   onSearch(event) {
@@ -89,24 +97,39 @@ export class TabHomePage implements OnInit {
     };
     // console.log(this.reaction);
     this.reactionService.createReaction(this.reaction)
-    .subscribe(res => {
-      // console.log(res);
-      //alert('Tim thành công!');
-      this.postService.getAll()
-      .subscribe(res => {
-          this.posts = res as Post[];
-      });
+    .pipe(first())
+    .subscribe({
+      next: () => {
+        const post = this.posts.find((x: Post) => {
+          if(x.id === id){
+            x.isReactedByThisUser = true;
+            x.reactionCount++;
+          }
+        });
+        this.posts = this.posts;
+      },
+      error: error => {
+        console.log(error);
+      }
     });
   }
 
   unReaction(id: number){
     this.reactionService.deletePost(id)
-    .subscribe(() => {
-      //alert('Bỏ tim thành công!');
-      this.postService.getAll()
-      .subscribe(res => {
-          this.posts = res as Post[];
-      });
+    .pipe(first())
+    .subscribe({
+      next: () => {
+        const post = this.posts.find((x: Post) => {
+          if(x.id === id){
+            x.isReactedByThisUser = false;
+            x.reactionCount--;
+          }
+        });
+        this.posts = this.posts;
+      },
+      error: error => {
+        console.log(error);
+      }
     });
   }
 
@@ -170,8 +193,11 @@ export class TabHomePage implements OnInit {
   }
 
   download(path){
+    const pathh = this.file.dataDirectory;
+
     const fileTransfer: FileTransferObject = this.transfer.create();
-    fileTransfer.download(path, path).then((entry) => {
+    fileTransfer.download(path, this.file.dataDirectory+'hinh.jpg').then((entry) => {
+      const url = entry.toURL();
       console.log('download complete: ' + entry.toURL());
     }, (error) => {
       console.log(error);
@@ -192,11 +218,9 @@ export class TabHomePage implements OnInit {
           text: 'Xoá',
           handler: () => {
             this.postService.delete(id)
+            .pipe(first())
             .subscribe(() => {
-              this.postService.getAll()
-              .subscribe(res => {
-                this.posts = res as Post[];
-              });
+              this.posts = this.posts.filter(x => x.id !== id);
             });
           }
         }

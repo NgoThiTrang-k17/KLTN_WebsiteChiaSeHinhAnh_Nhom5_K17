@@ -1,22 +1,39 @@
+/* eslint-disable @typescript-eslint/quotes */
 import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
+import { FormsModule } from '@angular/forms';
+import { AngularFireModule } from '@angular/fire';
 
 import { JwtInterceptor, ErrorInterceptor, appInitializer } from './_helpers';
 import { AccountService } from './_services';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { AddEditPostComponent } from './add-edit-post/add-edit-post.component';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [
+    AppComponent,
+    AddEditPostComponent
+  ],
   entryComponents: [],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
     HttpClientModule,
     AppRoutingModule,
+    FormsModule,
+    AngularFireModule.initializeApp({
+      apiKey: "AIzaSyAD6FMqMf0DSIHhcg22zoihBCxmYHvC_Og",
+      authDomain: "kltn-websitechiasehinhanh.firebaseapp.com",
+      projectId: "kltn-websitechiasehinhanh",
+      storageBucket: "kltn-websitechiasehinhanh.appspot.com",
+      messagingSenderId: "505653862664",
+      appId: "1:505653862664:web:258fb90458859a842b8cbd",
+      measurementId: "G-4DJ7TDJKGG"
+    }),
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },

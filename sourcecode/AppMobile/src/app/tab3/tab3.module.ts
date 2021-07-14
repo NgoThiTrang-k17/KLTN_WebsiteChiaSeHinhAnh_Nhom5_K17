@@ -23,7 +23,7 @@ import { SearchResultComponent } from './search-result/search-result.component';
     Tab3Page,
     SearchComponent,
     SearchHistoryComponent,
-    SearchResultComponent
+    SearchResultComponent,
   ],
   providers: [
     FileTransfer

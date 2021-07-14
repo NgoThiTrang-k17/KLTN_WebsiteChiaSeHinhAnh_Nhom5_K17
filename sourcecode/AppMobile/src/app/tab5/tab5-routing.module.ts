@@ -2,12 +2,11 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { Tab5Page } from './tab5.page';
+import { DetailPostPage } from '../tab1/detailPost/detailPost.page';
 
 const routes: Routes = [
-  {
-    path: '',
-    component: Tab5Page
-  }
+  { path: '', component: Tab5Page },
+  { path: 'detail/:postId/:ownerId', component: DetailPostPage}
 ];
 
 @NgModule({

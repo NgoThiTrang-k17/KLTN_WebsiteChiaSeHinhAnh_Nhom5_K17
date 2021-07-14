@@ -38,6 +38,7 @@ export class SearchHistoryComponent implements OnInit {
     localStorage.removeItem('path');
     this.path = 'tab/tabs/search/result/'+ query;
     localStorage.setItem('path', this.path);
+    localStorage.setItem('search', 'true');
   }
 
 }

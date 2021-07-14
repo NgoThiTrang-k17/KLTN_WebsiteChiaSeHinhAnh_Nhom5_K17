@@ -1,3 +1,6 @@
+<!-- <div *ngIf="posts.length!=0">
+  <h4 class="text-center" style="margin-bottom: 15px;">Kết quả tìm kiếm {{query}}</h4>
+</div> -->
 <div *ngIf="!searchAccount" class="item card-columns">
   <div id="1" *ngFor="let post of posts">
     <a class="text-dark card-link" id="1">
@@ -56,9 +59,9 @@
                       <a href="" class="btn" routerLink="../../detail/{{account.id}}"><strong>{{account.name}}</strong></a>
                       <p style="font-size: small; margin-left: 4%;">{{account.followerCount}} người theo dõi</p>
                   </div>
-                  <div class="col-lg-3">
-                      <button *ngIf="account.isFollowedByCurrentUser==0" (click)="onCreateFollow(account.id)" class="btn btn-danger rounded-pill">Theo dõi</button>
-                      <button *ngIf="account.isFollowedByCurrentUser!=0" (click)="unFollow(account.id)" class="btn btn-light rounded-pill">Đã theo dõi</button>
+                  <div class="col-lg-3 text-right">
+                      <button *ngIf="account.isFollowedByCurrentUser==0 && account.id!=maccount.id" (click)="onCreateFollow(account.id)" class="btn btn-danger rounded-pill">Theo dõi</button>
+                      <button *ngIf="account.isFollowedByCurrentUser!=0 && account.id!=maccount.id" (click)="unFollow(account.id)" class="btn btn-light rounded-pill">Đã theo dõi</button>
                   </div>
               </div>
           </div>

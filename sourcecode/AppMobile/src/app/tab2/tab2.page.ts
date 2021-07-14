@@ -63,6 +63,7 @@ export class Tab2Page implements OnInit{
     });
 
     modal.onDidDismiss().then(()=>{
+
     });
 
     return await modal.present();

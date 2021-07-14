@@ -11,13 +11,13 @@ const routes: Routes = [
   {
     path: '', component: Tab3Page,
     children: [
-      { path: '', redirectTo: 'home', pathMatch: 'full'},
-      { path: 'home', component: SearchComponent},
+      // { path: '', component: SearchComponent},
       { path: 'history', component: SearchHistoryComponent},
       { path: 'result/:query', component: SearchResultComponent},
-      { path: 'detail/:postId/:ownerId', component: DetailPostPage, },
     ]
   },
+  { path: 'detail/:postId/:ownerId', component: DetailPostPage},
+  { path: 'account/:id/:postId', loadChildren: () => import('../tab5/tab5.module').then(m => m.Tab5PageModule)},
   { path: '**', redirectTo: '' },
 ];
 

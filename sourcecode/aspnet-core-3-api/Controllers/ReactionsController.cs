@@ -70,7 +70,7 @@ namespace WebApi.Controllers
             return Ok(new { message = "Reaction deleted successfully" });
         }
 
-        [HttpDelete("DeleteByCommentId{id:int}")]
+        [HttpDelete("DeleteByCommentId/{id:int}")]
         public async Task<IActionResult> DeleteByCommentId(int id)
         {
             await _reactionService.DeleteByCommentId(id, Account.Id);

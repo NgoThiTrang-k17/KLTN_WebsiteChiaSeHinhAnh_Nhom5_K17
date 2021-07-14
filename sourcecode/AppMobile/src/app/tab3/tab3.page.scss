@@ -4,6 +4,59 @@
   background-color: white;
 }
 
+.sc-ion-searchbar-md-h{
+  padding-inline-start: 10px;
+  padding-inline-end: 10px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
 ion-item{
   --padding-start: 0 !important;
 }
+
+.card-columns {
+  column-count: 2;
+}
+.category{
+  position: relative;
+  width: 100%;
+  height: 80px;
+  background-size: cover;
+  background-position: 50%;
+  background-repeat: no-repeat;
+  border-radius: 16px;
+  margin: 0 0 15px 0px !important;
+}
+
+.cover {
+  position: absolute;
+  width: 100%;
+  height: 80px;
+  background-color: rgba(0, 0, 0, 0.281);
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  display:flex;
+  border-radius: 16px;
+}
+
+.label-cate{
+  color: #ffffff;
+  font-weight: 550;
+  font-size: 18px;
+  margin-bottom: 0 !important;
+}
+
+.label{
+  font-size: 20px;
+  font-weight: 600;
+  justify-content: center;
+  display: flex;
+}
+
+ion-card{
+  box-shadow: none !important;
+}
+
+

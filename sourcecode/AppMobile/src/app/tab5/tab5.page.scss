@@ -1,0 +1,86 @@
+.btn-back {
+  background-color: #d3d3d37c;
+  position: fixed;
+  box-sizing: border-box;
+  z-index: 660;
+  top: 30px;
+  left: 30px;
+  width: 50px;
+  height: 50px;
+  align-items: center;
+  justify-content: center;
+  display:flex;
+}
+
+.header-md::after{
+  height: 0 !important;
+  background-image: none !important;
+  background-color: white;
+}
+
+ion-avatar{
+  width: 100px;
+  height: 100px;
+}
+
+ion-title{
+  font-weight: 600;
+  font-size: 30px;
+}
+
+.onFollow{
+  --background: #cacaca;
+}
+
+.unFollow{
+  --background: rgba(230, 33, 33, 0.986);
+}
+
+.listPost{
+  width: 100%;
+  padding: 8px 14px;
+}
+
+.card {
+  margin: 0 0 10px 0 !important;
+  box-shadow:none !important;
+  border: none !important;
+  margin-left: none !important;
+  justify-content: center;
+  width: 100%;
+  height: auto;
+}
+
+ion-img::part(image) {
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.labelPost {
+  text-align: left;
+  color: black;
+  font-weight: bold;
+}
+
+.card-columns {
+  column-count: 2;
+}
+
+ion-select::part(icon) {
+  display: none !important;
+}
+
+.iconPost{
+  width: 20px;
+  height: 20px;
+}
+
+ion-col{
+  padding-bottom: 0 !important;
+  padding-inline-start: 0 !important;
+  padding-inline-end: 0 !important;
+}
+
+ion-button{
+  --box-shadow: none !important
+}

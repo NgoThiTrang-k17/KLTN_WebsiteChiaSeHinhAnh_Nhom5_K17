@@ -36,7 +36,7 @@
 }
 
 ion-card {
-  margin: 0 0 0 5px !important;
+  margin: 0 0 10px 5px !important;
   -webkit-column-break-inside: avoid;
      -moz-column-break-inside: avoid;
       -ms-column-break-inside: avoid;
@@ -45,4 +45,19 @@ ion-card {
                  break-inside: avoid;
 }
 
+.centerAll{
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
+.centerColumn{
+  align-items: center;
+  display: flex;
+}
+
+.centerRow{
+  justify-content: center;
+  display: flex;
+}
 

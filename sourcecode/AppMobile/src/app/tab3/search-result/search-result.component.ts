@@ -2,12 +2,13 @@
 /* eslint-disable no-trailing-spaces */
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ActionSheetController, AlertController } from '@ionic/angular';
+import { ActionSheetController, AlertController, ModalController } from '@ionic/angular';
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 import { first } from 'rxjs/operators';
 
 import { Account, Post, ReactionToCreate, FollowToCreate } from '../../_models';
 import { AccountService, PresenceService, SearchService, FollowService, ReactionService, PostService } from '../../_services';
+import { AddEditPostComponent } from '../../add-edit-post/add-edit-post.component';
 
 @Component({
   selector: 'app-search-result',
@@ -33,6 +34,7 @@ export class SearchResultComponent implements OnInit {
     public actionSheetController: ActionSheetController,
     private transfer: FileTransfer,
     public alertController: AlertController,
+    public modalController: ModalController,
     private route: ActivatedRoute,
     private router: Router,
     private accountService: AccountService,
@@ -69,33 +71,27 @@ export class SearchResultComponent implements OnInit {
     };
     console.log(this.follow);
     this.followService.createFollow(this.follow)
+    .pipe(first())
     .subscribe(res => {
       const account = this.accounts.find((x: Account) => {
         if(x.id === id){
           x.isFollowedByCurrentUser = 1;
         }
       });
-      this.searchService.getAllAccount(this.query)
-      .pipe(first())
-      .subscribe(res => {
-        this.accounts = this.accounts;
-      });
+      this.accounts = this.accounts;
     });
   }
 
   unFollow(id) {
     this.followService.delete(id)
+    .pipe(first())
     .subscribe(() => {
       const account = this.accounts.find((x: Account) => {
         if(x.id === id){
           x.isFollowedByCurrentUser = 0;
         }
       });
-      this.searchService.getAllAccount(this.query)
-      .pipe(first())
-      .subscribe(res => {
-        this.accounts = this.accounts;
-      });
+      this.accounts = this.accounts;
     });
   }
 
@@ -110,13 +106,10 @@ export class SearchResultComponent implements OnInit {
       const post = this.posts.find((x: Post) => {
         if(x.id === id){
           x.isReactedByThisUser = true;
+          x.reactionCount++;
         }
       });
-      this.searchService.getAllPost(this.query)
-      .pipe(first())
-      .subscribe(res => {
-        this.posts = this.posts;
-      });
+      this.posts = this.posts;
     });
   }
 
@@ -126,13 +119,10 @@ export class SearchResultComponent implements OnInit {
       const post = this.posts.find((x: Post) => {
         if(x.id === id){
           x.isReactedByThisUser = false;
+          x.reactionCount--;
         }
       });
-      this.searchService.getAllPost(this.query)
-      .pipe(first())
-      .subscribe(res => {
-        this.posts = this.posts;
-      });
+      this.posts = this.posts;
     });
   }
 
@@ -159,6 +149,7 @@ export class SearchResultComponent implements OnInit {
         icon: 'create-outline',
         handler: () => {
           console.log('Edit clicked');
+          this.openEditPost(postId);
         }
       },{
         text: 'Xoá',
@@ -232,4 +223,21 @@ export class SearchResultComponent implements OnInit {
     await alert.present();
   }
 
+  async openEditPost(id: number) {
+    const modal = await this.modalController.create({
+      component: AddEditPostComponent,
+      cssClass: 'my-custom-class',
+      componentProps: {
+        postId: id,
+      }
+    });
+
+    modal.onDidDismiss().then(data => {
+      this.searchService.getAllPost(this.query)
+      .subscribe(res => {
+        this.posts = res as Post[];
+      });
+    });
+    return await modal.present();
+  }
 }

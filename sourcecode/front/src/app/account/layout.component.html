@@ -1,44 +1,39 @@
 ﻿<app-nav></app-nav>
+<!-- <div style="background-image: url('../../assets/images/99ea29b7-0a19-4150-be05-dcc0132521f.jpg'); position: relative; width: 100%; height: 100%;">
+  <div style="
+  position: absolute;
+  background-color: rgb(255, 255, 255);
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  display: flex;
+  min-width: 20%;
+  max-width: 50%;
+  min-height: 20%;
+  max-height: 50%;">
+  <router-outlet></router-outlet>
+
+  </div>
+</div> -->
 <div class="container m-auto">
-    <div class="row" style="margin-top: 3%;">
-        <div class="col-6 mt-5" >
+    <div class="row">
+        <div class="col-8" style="margin-top: 75px;">
             <div id="banner" class="carousel slide mb-5 rounded" data-ride="carousel" >
-                <!-- Indicators -->
-                <!-- The slideshow -->
                 <carousel [isAnimated]="true" >
                     <slide class="carousel-item active">
-                        <img src="../../assets/images/hinh1.png" class="rounded" alt="banner1" style="height: 450px; width: auto;">
+                        <img src="../../assets/images/hinh1.png" class="rounded" alt="banner1" style="height: 500px; width: 100%;">
                     </slide>
-                    <slide class="carousel-item"> <img src="../../assets/images/hinh2.png" class="rounded" alt="banner2" style="height: 450px; width: auto;">
-                        <!-- <div class="carousel-caption mx-auto">
-                            <h1 class="text-uppercase dh-tieude2 text-dark">Blah blah</h1>
-                            <button class="btn btn-primary mt-3 dh-btn2">Tham gia ngay</button>
-                        </div> -->
+                    <slide class="carousel-item"> <img src="../../assets/images/hinh2.png" class="rounded" alt="banner2" style="height: 500px; width: 100%;">
                     </slide>
-                    <slide class="carousel-item"> <img src="../../assets/images/hinh3.png" class="rounded" alt="banner3" style="height: 450px; width: auto;">
-                        <!-- <div class="carousel-caption mx-auto">
-                            <h1 class="text-uppercase dh-tieude3 text-dark">Blah blah</h1>
-                            <button class="btn btn-primary mt-3 dh-btn3">Tham gia ngay</button>
-                        </div> -->
+                    <slide class="carousel-item"> <img src="../../assets/images/hinh3.png" class="rounded" alt="banner3" style="height: 500px; width: 100%;">
                     </slide>
                 </carousel>
-                <!-- Left and right controls -->
             </div>
         </div>
-        <div class="col-4 mt-5">
+        <div class="col-4" style="margin-top: 75px;">
             <router-outlet></router-outlet>
-            
-            <!-- <div class="container">
-                <div class="row">
-                    <div class="col-sm-8 offset-sm-2 mt-5">
-                        <div class="card m-3">
-                            
-                        </div>
-                    </div>
-                </div>
-            </div> -->
         </div>
     </div>
-    
+
 </div>
 

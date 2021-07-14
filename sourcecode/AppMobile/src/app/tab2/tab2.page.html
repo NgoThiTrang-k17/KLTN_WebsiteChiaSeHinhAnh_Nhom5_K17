@@ -26,11 +26,11 @@
                 <ion-label (click)="openModalChat(message.senderId)" class="name">
                   {{message.senderName}}
                 </ion-label>
-                <p class="mess" style="font-weight: 600;">{{message.content}} <span class="time" style="color: #4e4e4e;">· {{message.created | timeago}}</span></p>
+                <p class="mess" style="font-weight: 600;">{{message.content}} <span class="time">· {{message.created | timeago}}</span></p>
               </div>
               <!-- ---------Tin nhắn tới đã xem--------- -->
               <div *ngIf="message.read !== null">
-                <ion-label (click)="openModalChat(message.senderId)">
+                <ion-label (click)="openModalChat(message.senderId)" class="name" style="color: #4e4e4e;">
                   {{message.senderName}}
                 </ion-label>
                 <p class="mess" style="color: #4e4e4e;">{{message.content}} <span class="time">· {{message.created | timeago}}</span></p>
@@ -38,13 +38,13 @@
             </div>
           </ion-col>
           <ion-col *ngIf="message.read===null" size="1" style="align-items: center; justify-content: center; display: flex;">
-            <ion-icon name="ellipse-outline ion-text-primary" style="width: 20px; height: 20px;"></ion-icon>
+            <ion-icon name="ellipse ion-text-primary" style="width: 15px; height: 15px;"></ion-icon>
           </ion-col>
         </ion-row>
       </div>
       <!-- ------------Tin nhắn đi----------- -->
-      <div *ngIf="message.senderId === account.id" (click)="updateStatus(message.id)">
-        <ion-row *ngIf="message.senderId === account.id" (click)="updateStatus(message.id)">
+      <div *ngIf="message.senderId === account.id">
+        <ion-row>
           <ion-col size="2.5">
             <ion-avatar *ngIf="message.recipientAvatarPath===null"><img src="../../assets/images/default-profile.png"></ion-avatar>
             <ion-avatar *ngIf="message.recipientAvatarPath!==null"><img [src]="message.recipientAvatarPath"></ion-avatar>

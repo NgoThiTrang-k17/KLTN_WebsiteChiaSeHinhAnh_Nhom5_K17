@@ -1,0 +1,25 @@
+ion-item{
+  --padding-start: 5px !important;
+  --inner-padding-end: 5px !important;
+  margin: 10px 0;
+}
+
+ion-header{
+  padding: 10px 0;
+}
+
+.header-md::after{
+  height: 0 !important;
+  background-image: none !important;
+  background-color: white;
+}
+
+ion-list{
+  padding-top: 0 !important;
+}
+
+.is-online{
+  font-size:  17px;
+  top: 60px;
+  right: 12px;
+}

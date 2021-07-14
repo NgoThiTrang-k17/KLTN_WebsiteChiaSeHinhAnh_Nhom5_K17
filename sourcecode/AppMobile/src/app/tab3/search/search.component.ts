@@ -1,9 +1,9 @@
 /* eslint-disable no-trailing-spaces */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Post } from '../../_models';
-import { AccountService, PostService } from '../../_services';
+import { AccountService, PostService, DataService } from '../../_services';
 
 @Component({
   selector: 'app-search',
@@ -11,6 +11,8 @@ import { AccountService, PostService } from '../../_services';
   styleUrls: ['./search.component.scss'],
 })
 export class SearchComponent implements OnInit {
+
+  @Output() searchCategori = new EventEmitter<boolean>();
 
   path: string;
 
@@ -22,10 +24,12 @@ export class SearchComponent implements OnInit {
   constructor(
     private router: Router,
     private accountService: AccountService,
-    private postService: PostService
+    private postService: PostService,
+    private dataService: DataService,
   ) {};
 
   ngOnInit(){
+    this.searchCategori.emit(false);
     // Đề xuất cho người dùng
     this.postService.getSuggestionById(this.maccount.id)
     .subscribe(res => {
@@ -44,5 +48,7 @@ export class SearchComponent implements OnInit {
     localStorage.removeItem('path');
     this.path = 'tab/tabs/search/result/'+ query;
     localStorage.setItem('path', this.path);
+    this.dataService.setData('true');
+    this.searchCategori.emit(true);
   }
 }

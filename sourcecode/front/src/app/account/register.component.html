@@ -1,72 +1,77 @@
-﻿<h3 class="text-center">Register</h3>
-<div class="mt-4">
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
-        <div class="form-row">
-            <div class="form-group col">
-                <label>Giới tính</label>
-                <select formControlName="title" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.title.errors }">
-                    <option value=""></option>
-                    <option value="Nam">Name</option>
-                    <option value="Nữ">Nữ</option>
-                    <!-- <option value="Miss">Miss</option>
-                    <option value="Ms">Ms</option> -->
-                </select>
-                <div *ngIf="submitted && f.title.errors" class="invalid-feedback">
-                    <div *ngIf="f.title.errors.required">Vui lòng chọn giới tính.</div>
-                </div>
-            </div>
-            <div class="form-group col-9">
-                <label>Tên</label>
-                <input type="text" formControlName="name" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.name.errors }" />
-                <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
-                    <div *ngIf="f.name.errors.required">Vui lòng nhập tên.</div>
-                </div>
-            </div>
-            <!-- <div class="form-group col-5">
-                <label>Last Name</label>
-                <input type="text" formControlName="lastName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" />
-                <div *ngIf="submitted && f.lastName.errors" class="invalid-feedback">
-                    <div *ngIf="f.lastName.errors.required">Last Name is required</div>
-                </div>
-            </div> -->
-        </div>
-        <div class="form-group">
-            <label>Email</label>
-            <input type="text" formControlName="email" class="form-control" placeholder="ten@gmail.com" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
-            <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
-                <div *ngIf="f.email.errors.required">Vui lòng nhập email.</div>
-                <div *ngIf="f.email.errors.email">Email không hợp lệ.</div>
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group col">
-                <label>Mật khẩu</label>
-                <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
-                <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
-                    <div *ngIf="f.password.errors.required">Vui lòng nhập mật khẩu</div>
-                    <div *ngIf="f.password.errors.minlength">Mật khẩu có ít nhất 6 kí tự.</div>
-                </div>
-            </div>
-            <div class="form-group col">
-                <label>Nhập lại mật khẩu</label>
-                <input type="password" formControlName="confirmPassword" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }" />
-                <div *ngIf="submitted && f.confirmPassword.errors" class="invalid-feedback">
-                    <div *ngIf="f.confirmPassword.errors.required">Vui lòng nhập lại mật khẩu.</div>
-                    <div *ngIf="f.confirmPassword.errors.mustMatch">Mật khẩu không trùng khớp.</div>
-                </div>
-            </div>
-        </div>
-        <div class="form-group form-check">
-            <input type="checkbox" formControlName="acceptTerms" id="acceptTerms" class="form-check-input" [ngClass]="{ 'is-invalid': submitted && f.acceptTerms.errors }" />
-            <label for="acceptTerms" class="form-check-label">Đồng ý với các điều khoản và dịch vụ.</label>
-            <div *ngIf="submitted && f.acceptTerms.errors" class="invalid-feedback">Vui lòng đồng ý với các điều kiện và dịch vụ để tiếp.</div>
-        </div>
-        <div class="form-group">
-            <button [disabled]="loading" class="btn btn-primary">
+﻿<div class="col-11">
+  <h3 class="text-center">Đăng ký</h3>
+  <div class="mt-4">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="form-row">
+              <div class="form-group col">
+                  <label>Giới tính</label>
+                  <select formControlName="title" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.title.errors }">
+                      <option value=""></option>
+                      <option value="Nam">Name</option>
+                      <option value="Nữ">Nữ</option>
+                      <!-- <option value="Miss">Miss</option>
+                      <option value="Ms">Ms</option> -->
+                  </select>
+                  <div *ngIf="submitted && f.title.errors" class="invalid-feedback">
+                      <div *ngIf="f.title.errors.required">Vui lòng chọn giới tính.</div>
+                  </div>
+              </div>
+              <div class="form-group col-9">
+                  <label>Tên</label>
+                  <input type="text" formControlName="name" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.name.errors }" />
+                  <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                      <div *ngIf="f.name.errors.required">Vui lòng nhập tên.</div>
+                  </div>
+              </div>
+              <!-- <div class="form-group col-5">
+                  <label>Last Name</label>
+                  <input type="text" formControlName="lastName" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" />
+                  <div *ngIf="submitted && f.lastName.errors" class="invalid-feedback">
+                      <div *ngIf="f.lastName.errors.required">Last Name is required</div>
+                  </div>
+              </div> -->
+          </div>
+          <div class="form-group">
+              <label>Email</label>
+              <input type="text" formControlName="email" class="form-control" placeholder="ten@gmail.com" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
+              <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                  <div *ngIf="f.email.errors.required">Vui lòng nhập email.</div>
+                  <div *ngIf="f.email.errors.email">Email không hợp lệ.</div>
+              </div>
+          </div>
+          <div class="form-group">
+              <label>Mật khẩu</label>
+              <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+              <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                  <div *ngIf="f.password.errors.required">Vui lòng nhập mật khẩu</div>
+                  <div *ngIf="f.password.errors.minlength">Mật khẩu có ít nhất 6 kí tự.</div>
+              </div>
+          </div>
+          <div class="form-group">
+              <label>Nhập lại mật khẩu</label>
+              <input type="password" formControlName="confirmPassword" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }" />
+              <div *ngIf="submitted && f.confirmPassword.errors" class="invalid-feedback">
+                  <div *ngIf="f.confirmPassword.errors.required">Vui lòng nhập lại mật khẩu.</div>
+                  <div *ngIf="f.confirmPassword.errors.mustMatch">Mật khẩu không trùng khớp.</div>
+              </div>
+          </div>
+          <div class="form-group form-check">
+              <input type="checkbox" formControlName="acceptTerms" id="acceptTerms" class="form-check-input" [ngClass]="{ 'is-invalid': submitted && f.acceptTerms.errors }" />
+              <label for="acceptTerms" class="form-check-label">Đồng ý với các điều khoản và dịch vụ.</label>
+              <div *ngIf="submitted && f.acceptTerms.errors" class="invalid-feedback">Vui lòng đồng ý với các điều kiện và dịch vụ để tiếp.</div>
+          </div>
+          <div class="form-group">
+            <button [disabled]="loading" class="btn btn-danger rounded-pill col-12 mt-3" style="font-size: 100%;">
                 <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
                 Đăng ký
             </button>
-            <a routerLink="../login" href="" class="btn btn-link">Đã tham gia? Đăng nhập.</a>
-        </div>
-    </form>
+          </div>
+          <!-- <div class="form-group col-12 text-center" style="font-size: 100%;">
+            <a routerLink="../register" class="btn" ><span style="font-size: small; font-weight: bold;">Chưa tham gia?Đăng ký</span></a>
+          </div> -->
+          <div class="text-center">
+            <a routerLink="../login" href="" class="btn btn-link text-dark"><span style="font-size: 14px; font-weight: bold;">Đã tham gia?Đăng nhập</span></a>
+          </div>
+      </form>
+  </div>
 </div>
