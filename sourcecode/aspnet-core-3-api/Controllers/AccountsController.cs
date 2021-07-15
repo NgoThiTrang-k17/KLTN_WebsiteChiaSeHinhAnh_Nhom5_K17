@@ -16,12 +16,15 @@ namespace WebApi.Controllers
     public class AccountsController : BaseController
     {
         private readonly IAccountService _accountService;
+        private readonly IFollowService _followService;
 
         public AccountsController(
-            IAccountService accountService
+            IAccountService accountService,
+            IFollowService followService
             )
         {
             _accountService = accountService;
+            _followService = followService;
         }
 
         [HttpPost("authenticate")]
@@ -173,13 +176,14 @@ namespace WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AccountResponse>>> GetAll(/*[FromQuery]UserParams accountParams*/)
         {
-            //accountParams.CurrentUserId = Account.Id;
-            //if (string.IsNullOrEmpty(accountParams.Gender))
-            //{
-            //    accountParams.Gender = Account.Title == "mr" ? "mrs": "mr" ;
-            //}
-            var accounts = await _accountService.GetAll(/*accountParams*/);
-            //Response.AddPaginationHeader(accounts.CurrentPage, accounts.PageSize,accounts.TotalCount, accounts.TotalPages);
+            
+            var accounts = await _accountService.GetAll();
+            foreach(var account in accounts)
+            {
+                var state = await _followService.GetState(account.Id, Account.Id);
+                if(state.IsCreated)
+                account.IsFollowedByCurrentUser = 1;
+            }
             return Ok(accounts);
         }
 
@@ -188,6 +192,9 @@ namespace WebApi.Controllers
         public async Task<ActionResult<AccountResponse>> GetById(int id)
         {
             var account = await _accountService.GetById(id);
+            var state = await _followService.GetState(account.Id, Account.Id);
+            if (state.IsCreated)
+                account.IsFollowedByCurrentUser = 1;
             return Ok(account);
         }
 
