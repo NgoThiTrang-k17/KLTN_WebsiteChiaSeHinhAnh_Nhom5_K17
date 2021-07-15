@@ -61,10 +61,14 @@ p{
 }
 
 ion-button{
-  --background: #000000;
-  height: 35px;
-  width: 100%;
+  --box-shadow: none !important;
   text-transform: none !important;
+  letter-spacing: none !important;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  --padding-start: 12px;
+  --padding-end: 12px;
 }
 
 .onFollow{
@@ -96,4 +100,11 @@ ion-icon{
 .icon-action-cmt {
   width: 30px;
   height: 30px;
+}
+
+.is-online{
+  width: 13px;
+  height: 13px;
+  top: 40px;
+  right: 15px;
 }

@@ -30,85 +30,90 @@
                   <ul class="dropdown-menu dropdownNotification dropdown-menu-right shadow-sm rounded-lg" *dropdownMenu>
                     <li class="text-center mb-3" style="font-weight: bold; font-size: 20px;">Thông báo</li>
                     <div id="1" *ngFor="let notification of (presenceService.notificationThread$|async).slice().reverse()">
-                      <li id="1" *ngIf="notification.notificationType==0 && notification.actionOwnerId!=maccount.id" (click)="updateNotification(notification.id)" class="dropdown-item" routerLink="detail-post/{{notification.postId}}/{{notification.actionOwnerId}}" >
+                      <li id="1" *ngIf="notification.notificationType==0 && notification.actionOwnerId!=maccount.id" (click)="updateNotification(notification.id)" class="dropdown-item" routerLink="detail-post/{{notification.postId}}/{{notification.actionOwnerId}}" style="padding: 0.55rem 1.5rem !important;">
                         <div class="row" style="justify-content: center; align-items: center; display: flex;">
                           <div class="col-3">
                             <img *ngIf="notification.actionOwnerAvatarPath==null" class="card rounded-circle" style="height: 60px; width: 60px;" src="../../assets/images/default-profile.png">
                             <img *ngIf="notification.actionOwnerAvatarPath!=null" class="card rounded-circle" style="height: 60px; width: 60px;" [src]="notification.actionOwnerAvatarPath">
+                            <span *ngIf = "(presenceService.onlineUsers$ | async).includes(notification.actionOwnerId)" class="material-icons is-online" style="left: 55px; bottom: -2px;">circle</span>
                           </div>
                           <div class="col" style="padding-right: 0;">
                             <p *ngIf="notification.status==0" style="width:190px; display:block; white-space: normal; word-break: break-word; margin: 0;"><strong>{{notification.actionOwnerName}}</strong> đã thêm bài viết mới</p>
                             <p *ngIf="notification.status==2" style="width:190px; display:block; white-space: normal; word-break: break-word; color: rgb(143, 143, 143); margin: 0;"><strong>{{notification.actionOwnerName}}</strong> đã thêm bài viết mới</p>
-                            <p *ngIf="notification.status==0" style="font-size: 13px; color: #4e4e4e; margin: 0;">{{notification.created | timeago}}</p>
-                            <p *ngIf="notification.status==2" style="font-size: 13px; color: #9e9e9e; margin: 0;">{{notification.created | timeago}}</p>
+                            <p *ngIf="notification.status==0" style="font-size: 13px; color: #4e4e4e; margin: 0;">{{notification.created | dateAgoExample}}</p>
+                            <p *ngIf="notification.status==2" style="font-size: 13px; color: #9e9e9e; margin: 0;">{{notification.created | dateAgoExample}}</p>
                           </div>
                           <div class="col-1">
                             <i *ngIf="notification.status==0" class="fa fa-circle text-primary" style="font-size:small;"></i>
                           </div>
                         </div>
                       </li>
-                      <li id="1" *ngIf="notification.notificationType==1 && notification.actionOwnerId!=maccount.id" (click)="updateNotification(notification.id)" class="dropdown-item" routerLink="detail-post/{{notification.postId}}/{{notification.actionOwnerId}}">
+                      <li id="1" *ngIf="notification.notificationType==1 && notification.actionOwnerId!=maccount.id" (click)="updateNotification(notification.id)" class="dropdown-item" routerLink="detail-post/{{notification.postId}}/{{notification.actionOwnerId}}" style="padding: 0.55rem 1.5rem !important;">
                         <div class="row" style="justify-content: center; align-items: center; display: flex;">
                           <div class="col-3">
                             <img *ngIf="notification.actionOwnerAvatarPath==null" class="card rounded-circle" style="height: 60px; width: 60px;" src="../../assets/images/default-profile.png">
                             <img *ngIf="notification.actionOwnerAvatarPath!=null" class="card rounded-circle" style="height: 60px; width: 60px;" [src]="notification.actionOwnerAvatarPath">
+                            <span *ngIf = "(presenceService.onlineUsers$ | async).includes(notification.actionOwnerId)" class="material-icons is-online" style="left: 55px; bottom: -2px;">circle</span>
                           </div>
                           <div class="col" style="padding-right: 0;">
                             <p *ngIf="notification.status==0" style="width:190px; display:block; white-space: normal; word-break: break-word; margin: 0 !important;"><strong>{{notification.actionOwnerName}}</strong> đã thích bài viết của bạn</p>
                             <p *ngIf="notification.status==2" style="width:190px; display:block; white-space: normal; word-break: break-word; color: rgb(143, 143, 143); margin: 0 !important;"><strong>{{notification.actionOwnerName}}</strong> đã thích bài viết của bạn</p>
-                            <p *ngIf="notification.status==0" style="font-size: 13px; color: #4e4e4e; margin: 0;">{{notification.created | timeago}}</p>
-                            <p *ngIf="notification.status==2" style="font-size: 13px; color: #9e9e9e; margin: 0;">{{notification.created | timeago}}</p>
+                            <p *ngIf="notification.status==0" style="font-size: 13px; color: #4e4e4e; margin: 0;">{{notification.created | dateAgoExample}}</p>
+                            <p *ngIf="notification.status==2" style="font-size: 13px; color: #9e9e9e; margin: 0;">{{notification.created | dateAgoExample}}</p>
                           </div>
                           <div class="col-1" style="padding-right: 0;">
                             <i *ngIf="notification.status==0" class="fa fa-circle text-primary" style="font-size:small;"></i>
                           </div>
                         </div>
                       </li>
-                      <li id="1" *ngIf="notification.notificationType==2 && notification.actionOwnerId!=maccount.id" (click)="updateNotification(notification.id)" class="dropdown-item" routerLink="detail-post/{{notification.postId}}/{{notification.actionOwnerId}}"  >
+                      <li id="1" *ngIf="notification.notificationType==2 && notification.actionOwnerId!=maccount.id" (click)="updateNotification(notification.id)" class="dropdown-item" routerLink="detail-post/{{notification.postId}}/{{notification.actionOwnerId}}" style="padding: 0.55rem 1.5rem !important;" >
                         <div class="row" style="justify-content: center; align-items: center; display: flex;">
                           <div class="col-3">
                             <img *ngIf="notification.actionOwnerAvatarPath==null" class="card rounded-circle" style="height: 60px; width: 60px;" src="../../assets/images/default-profile.png">
                             <img *ngIf="notification.actionOwnerAvatarPath!=null" class="card rounded-circle" style="height: 60px; width: 60px;" [src]="notification.actionOwnerAvatarPath">
+                            <span *ngIf = "(presenceService.onlineUsers$ | async).includes(notification.actionOwnerId)" class="material-icons is-online" style="left: 55px; bottom: -2px;">circle</span>
                           </div>
                           <div class="col" style="padding-right: 0;">
                             <p *ngIf="notification.status==0" style="width:190px; display:block; white-space: normal; word-break: break-word; margin: 0;"><strong>{{notification.actionOwnerName}}</strong> đã bình luận bài viết của bạn</p>
                             <p *ngIf="notification.status==2" style="width:190px; display:block; white-space: normal; word-break: break-word; color: rgb(143, 143, 143); margin: 0;"><strong>{{notification.actionOwnerName}}</strong> đã bình luận bài viết của bạn</p>
-                            <p *ngIf="notification.status==0" style="font-size: 13px; color: #4e4e4e; margin: 0;">{{notification.created | timeago}}</p>
-                            <p *ngIf="notification.status==2" style="font-size: 13px; color: #9e9e9e; margin: 0;">{{notification.created | timeago}}</p>
+                            <p *ngIf="notification.status==0" style="font-size: 13px; color: #4e4e4e; margin: 0;">{{notification.created | dateAgoExample}}</p>
+                            <p *ngIf="notification.status==2" style="font-size: 13px; color: #9e9e9e; margin: 0;">{{notification.created | dateAgoExample}}</p>
                           </div>
                           <div class="col-1">
                             <i *ngIf="notification.status==0" class="fa fa-circle text-primary" style="font-size:small;"></i>
                           </div>
                         </div>
                       </li>
-                      <li id="1" *ngIf="notification.notificationType==3 && notification.actionOwnerId!=maccount.id" (click)="updateNotification(notification.id)" class="dropdown-item" routerLink="detail/{{notification.actionOwnerId}}" >
+                      <li id="1" *ngIf="notification.notificationType==3 && notification.actionOwnerId!=maccount.id" (click)="updateNotification(notification.id)" class="dropdown-item" routerLink="detail/{{notification.actionOwnerId}}" style="padding: 0.55rem 1.5rem !important;" >
                         <div class="row" style="justify-content: center; align-items: center; display: flex;">
                           <div class="col-3">
                             <img *ngIf="notification.actionOwnerAvatarPath==null" class="card rounded-circle" style="height: 60px; width: 60px;" src="../../assets/images/default-profile.png">
                             <img *ngIf="notification.actionOwnerAvatarPath!=null" class="card rounded-circle" style="height: 60px; width: 60px;" [src]="notification.actionOwnerAvatarPath">
+                            <span *ngIf = "(presenceService.onlineUsers$ | async).includes(notification.actionOwnerId)" class="material-icons is-online" style="left: 55px; bottom: -2px;">circle</span>
                           </div>
                           <div class="col" style="padding-right: 0;">
                             <p *ngIf="notification.status==0" style="width:190px; display:block; white-space: normal; word-break: break-word; margin: 0;"><strong>{{notification.actionOwnerName}}</strong> đã theo dõi bạn</p>
                             <p *ngIf="notification.status==2" style="width:190px; display:block; white-space: normal; word-break: break-word; color: rgb(143, 143, 143); margin: 0;"><strong>{{notification.actionOwnerName}}</strong> đã theo dõi bạn</p>
-                            <p *ngIf="notification.status==0" style="font-size: 13px; color: #4e4e4e; margin: 0;">{{notification.created | timeago}}</p>
-                            <p *ngIf="notification.status==2" style="font-size: 13px; color: #9e9e9e; margin: 0;">{{notification.created | timeago}}</p>
+                            <p *ngIf="notification.status==0" style="font-size: 13px; color: #4e4e4e; margin: 0;">{{notification.created | dateAgoExample}}</p>
+                            <p *ngIf="notification.status==2" style="font-size: 13px; color: #9e9e9e; margin: 0;">{{notification.created | dateAgoExample}}</p>
                           </div>
                           <div class="col-1">
                             <i *ngIf="notification.status==0" class="fa fa-circle text-primary" style="font-size:small;"></i>
                           </div>
                         </div>
                       </li>
-                      <li id="1" *ngIf="notification.notificationType==5 && notification.actionOwnerId!=maccount.id" (click)="updateNotification(notification.id)" class="dropdown-item" routerLink="detail-post/{{notification.postId}}/{{notification.actionOwnerId}}" >
+                      <li id="1" *ngIf="notification.notificationType==5 && notification.actionOwnerId!=maccount.id" (click)="updateNotification(notification.id)" class="dropdown-item" routerLink="detail-post/{{notification.postId}}/{{notification.actionOwnerId}}" style="padding: 0.55rem 1.5rem !important;">
                         <div class="row" style="justify-content: center; align-items: center; display: flex;">
                           <div class="col-3">
                             <img *ngIf="notification.actionOwnerAvatarPath==null" class="card rounded-circle" style="height: 60px; width: 60px;" src="../../assets/images/default-profile.png">
                             <img *ngIf="notification.actionOwnerAvatarPath!=null" class="card rounded-circle" style="height: 60px; width: 60px;" [src]="notification.actionOwnerAvatarPath">
+                            <span *ngIf = "(presenceService.onlineUsers$ | async).includes(notification.actionOwnerId)" class="material-icons is-online" style="left: 55px; bottom: -2px;">circle</span>
                           </div>
                           <div class="col" style="padding-right: 0;">
                             <p *ngIf="notification.status==0" style="width:190px; display:block; white-space: normal; word-break: break-word; margin: 0;"><strong>{{notification.actionOwnerName}}</strong> đã thích bình luận của bạn</p>
                             <p *ngIf="notification.status==2" style="width:190px; display:block; white-space: normal; word-break: break-word; color: rgb(143, 143, 143); margin: 0;"><strong>{{notification.actionOwnerName}}</strong> đã thích bình luận của bạn</p>
-                            <p *ngIf="notification.status==0" style="font-size: 13px; color: #4e4e4e; margin: 0;">{{notification.created | timeago}}</p>
-                            <p *ngIf="notification.status==2" style="font-size: 13px; color: #9e9e9e; margin: 0;">{{notification.created | timeago}}</p>
+                            <p *ngIf="notification.status==0" style="font-size: 13px; color: #4e4e4e; margin: 0;">{{notification.created | dateAgoExample}}</p>
+                            <p *ngIf="notification.status==2" style="font-size: 13px; color: #9e9e9e; margin: 0;">{{notification.created | dateAgoExample}}</p>
                           </div>
                           <div class="col-1">
                             <i *ngIf="notification.status==0" class="fa fa-circle text-primary" style="font-size:small;"></i>
@@ -126,7 +131,7 @@
           <div class="nav-item dropdown br-xam text-center" style="width: 420px,">
             <a (click)="openMess()" class="nav-link dropdown-toggle" data-toggle="dropdown" dropdownToggle>
               <i class="fas fa-comment-dots mt-1" style="font-size:x-large; position: relative;"></i>
-              <span *ngIf="countMess!=0" class="badge rounded-pill bg-danger" style="position: absolute;">{{countMess}}</span>
+              <span *ngIf="countMess!=0" class="badge rounded-pill bg-danger" style="position: absolute;">{{(presenceService.countNewMess|async).slice().reverse()}}</span>
             </a>
 
           </div>

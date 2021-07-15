@@ -8,25 +8,33 @@
   </ion-avatar>
   <div class="ion-text-center" style="padding: 15px 10px;">
     <div class="centerRow">
-      <ion-avatar *ngIf="account.avatarPath===null"><img src="../../../assets/images/default-profile.png"></ion-avatar>
-      <ion-avatar *ngIf="account.avatarPath!==null"><img [src]="account.avatarPath"></ion-avatar>
+      <ion-avatar *ngIf="account.avatarPath===null" style="position: relative;"><img src="../../../assets/images/default-profile.png"></ion-avatar>
+      <ion-avatar *ngIf="account.avatarPath!==null" style="position: relative;"><img [src]="account.avatarPath"></ion-avatar>
+      <span *ngIf="account.id===maccount.id" (click)="openUpdateAvatar()">
+        <ion-avatar class="updateAvatar centerAll">
+          <ion-icon name="camera-outline" style="font-size: 20px;"></ion-icon>
+        </ion-avatar>
+      </span>
+      <span *ngIf="account.id!==maccount.id && (presenceService.onlineUsers$ | async).includes(account.id)">
+        <ion-icon name="ellipse" class="is-online"></ion-icon>
+      </span>
     </div>
     <ion-title class="ion-text-center">{{account.name}}</ion-title>
     <ion-label>
       <span *ngIf="account.followerCount===0">0 người theo dõi</span>
-      <span *ngIf="account.followerCount!==0" style="font-weight: 600;">{{account.followerCount}} người theo dõi</span>
+      <span *ngIf="account.followerCount!==0" (click)="openFollowerList()" style="font-weight: 600;">{{account.followerCount}} người theo dõi</span>
       ·
       <span *ngIf="account.followingCount===0">0 người đang theo dõi</span>
-      <span *ngIf="account.followingCount!==0" style="font-weight: 600;">{{account.followingCount}} người đang theo dõi</span>
+      <span *ngIf="account.followingCount!==0" (click)="openFollowingList()" style="font-weight: 600;">{{account.followingCount}} người đang theo dõi</span>
     </ion-label>
     <div *ngIf="accountId===maccount.id" class="centerRow" style="font-size: 30px;">
-      <ion-icon name="create-outline"></ion-icon>
+      <ion-icon (click)="openEditProfile(maccount.id)" name="create-outline"></ion-icon>
       <span style="margin-left: 5px; height: 30px;">
         <ion-icon (click)="openAddPost()" name="add-circle-outline"></ion-icon>
       </span>
     </div>
     <div *ngIf="accountId!==maccount.id" class="ion-text-center">
-      <ion-button class="onFollow" shape="round">Báo cáo</ion-button>
+      <ion-button (click)="openReport()" class="onFollow" shape="round">Báo cáo</ion-button>
       <ion-button *ngIf="account.isFollowedByCurrentUser===0" (click)="onCreateFollow(account.id)" class="unFollow" shape="round">Theo dõi</ion-button>
       <ion-button *ngIf="account.isFollowedByCurrentUser!==0" (click)="unFollow(account.id)" class="onFollow" shape="round">Huỷ theo dõi</ion-button>
     </div>

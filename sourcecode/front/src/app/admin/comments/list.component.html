@@ -4,7 +4,7 @@
       <span>
         <i class="material-icons mr-2">comment</i>
       </span>
-      Comments
+      Bình luận
     </h2>
     <!-- <p>All accounts from secure (admin only) api end point:</p> -->
     <!-- <a routerLink="add" class="btn btn-sm btn-success mb-2 pull-right mr-2"><span><i class="fa fa-plus"></i></span> Create Comment</a> -->
@@ -12,12 +12,12 @@
       <thead class="thead-light">
         <tr>
           <th style="width:5%">Id</th>
-          <th style="width:7%">Owner Id</th>
-          <th style="width:6%">Post Id</th>
-          <th style="width:10%">Type</th>
-          <th style="width:7%">Parent Id</th>
-          <th style="width:25%">Content</th>
-          <th style="width:10%">Created Date</th>
+          <th style="width:7%">Id tác giả</th>
+          <th style="width:6%">Id bài viết</th>
+          <th style="width:7%">Loại</th>
+          <th style="width:10%">Id bình luận cha</th>
+          <th style="width:25%">Nội dung</th>
+          <th style="width:10%">Ngày tạo</th>
           <th style="width:10%"></th>
         </tr>
       </thead>
@@ -26,8 +26,8 @@
           <td>{{comment.postId}}</td>
           <td>{{comment.ownerId}}</td>
           <td>{{comment.postId}}</td>
-          <td *ngIf="comment.isParent===true">Parent</td>
-          <td *ngIf="comment.isParent===false">Child</td>
+          <td *ngIf="comment.isParent===true">Cha</td>
+          <td *ngIf="comment.isParent===false">Con</td>
           <td>{{comment.parrentId}}</td>
           <td>{{comment.content}}</td>
           <td>{{comment.created | date:'dd/MM/yyyy HH:mm:ss'}}</td>

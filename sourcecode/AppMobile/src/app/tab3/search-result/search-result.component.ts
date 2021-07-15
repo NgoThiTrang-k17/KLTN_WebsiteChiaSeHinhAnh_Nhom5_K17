@@ -8,7 +8,7 @@ import { first } from 'rxjs/operators';
 
 import { Account, Post, ReactionToCreate, FollowToCreate } from '../../_models';
 import { AccountService, PresenceService, SearchService, FollowService, ReactionService, PostService } from '../../_services';
-import { AddEditPostComponent } from '../../add-edit-post/add-edit-post.component';
+import { AddEditPostComponent } from '../../components-share/add-edit-post/add-edit-post.component';
 
 @Component({
   selector: 'app-search-result',

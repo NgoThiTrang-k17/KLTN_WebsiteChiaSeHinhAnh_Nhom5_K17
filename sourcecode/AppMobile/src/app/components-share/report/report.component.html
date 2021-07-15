@@ -1,0 +1,53 @@
+<ion-header no-shadow>
+  <ion-toolbar>
+    <ion-row>
+      <ion-col size="1.5" class="centerColumn">
+        <ion-icon (click)="closeModal()" class="icon-close" style="text-align: left;" name="close-outline"></ion-icon>
+      </ion-col>
+      <ion-col size="7" class="centerColumn">
+        <ion-title>Báo cáo {{title}}</ion-title>
+      </ion-col>
+      <ion-col size="3.5">
+        <ion-button [disabled]="detailReport==='' || reportType===undefined" (click)="sendReport()" shape="round" class="buttonSubmit">Báo cáo</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+  <form #reportForm="ngForm" autocomplete="off">
+    <ion-textarea
+    required
+    name="detailReport"
+    [(ngModel)]="detailReport"
+    placeholder="Nhập mô tả chi tiết lý do báo cáo..."></ion-textarea>
+  </form>
+</ion-header>
+<ion-content>
+  <ion-radio-group
+  *ngIf="targetType === 0"
+  name="reportType"
+  [(ngModel)]="reportType">
+    <ion-item lines="none" *ngFor="let reportAccount of reportAccounts">
+      <ion-label>{{reportAccount}}</ion-label>
+      <ion-radio slot="start" color="dark" [value]="reportAccount"></ion-radio>
+    </ion-item>
+  </ion-radio-group>
+
+  <ion-radio-group
+  *ngIf="targetType === 1"
+  name="reportType"
+  [(ngModel)]="reportType">
+    <ion-item lines="none" *ngFor="let reportPost of reportPosts">
+      <ion-label>{{reportPost}}</ion-label>
+      <ion-radio slot="start" color="dark" [value]="reportPost"></ion-radio>
+    </ion-item>
+  </ion-radio-group>
+
+  <ion-radio-group
+  *ngIf="targetType === 2"
+  name="reportType"
+  [(ngModel)]="reportType">
+    <ion-item lines="none" *ngFor="let reportComment of reportComments">
+      <ion-label>{{reportComment}}</ion-label>
+      <ion-radio slot="start" color="dark" [value]="reportComment"></ion-radio>
+    </ion-item>
+  </ion-radio-group>
+</ion-content>

@@ -2,6 +2,7 @@
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { first } from 'rxjs/operators';
 
 import { PostToCreate, Post, Account, Follow, FollowToCreate, ReactionToCreate } from '@app/_models';
 import { AccountService, PresenceService, PostService, FollowService, ReactionService } from '@app/_services';
@@ -55,11 +56,11 @@ export class DetailsComponent implements OnInit{
     this.postService.getAllByUserId(this.id)
     .subscribe(res => {
       this.posts = res as Post[];
-      console.log(res);
     });
 
     this.accountService.getById(this.id)
     .subscribe((res:any)=>{
+      console.log(res);
       this.account = res;
     })
 
@@ -87,7 +88,6 @@ export class DetailsComponent implements OnInit{
         .subscribe((res:any)=>{
             this.account = res;
         })
-        this.getFollow(this.id);
     });
     }
 
@@ -110,7 +110,6 @@ export class DetailsComponent implements OnInit{
           .subscribe((res:any)=>{
               this.account = res;
           })
-          this.getFollow(this.id);
       });
   }
 
@@ -127,27 +126,20 @@ export class DetailsComponent implements OnInit{
     }
     console.log(this.follow);
     this.followService.createFollow(this.follow)
-    .subscribe(res => {
-      console.log(res);
-      //alert('Follow thành công!');
-      this.accountService.getById(this.id)
-        .subscribe((res:any)=>{
-            this.account = res;
-        })
-      this.getFollow(this.id);
+    .pipe(first())
+    .subscribe(() => {
+      this.account.isFollowedByCurrentUser = 1;
+      this.account.followerCount++;
     });
   }
 
   unFollow() {
     console.log(this.id);
     this.followService.delete(this.id)
+    .pipe(first())
     .subscribe(() => {
-      //alert('Bỏ follow thành công!');
-      this.accountService.getById(this.id)
-        .subscribe((res:any)=>{
-            this.account = res;
-        })
-      this.getFollow(this.id);
+      this.account.isFollowedByCurrentUser = 0;
+      this.account.followerCount--;
     });
   }
 
@@ -157,23 +149,29 @@ export class DetailsComponent implements OnInit{
     }
     // console.log(this.reaction);
     this.reactionService.createReaction(this.reaction)
+    .pipe(first())
     .subscribe(res => {
-      this.postService.getAllByUserId(this.id)
-      .subscribe(res => {
-        this.posts = res as Post[];
-        console.log(res);
+      const post = this.posts.find((x: Post) => {
+        if(x.id == postId){
+          x.isReactedByThisUser = true;
+          x.reactionCount++;
+        }
       });
+      this.posts = this.posts;
     });
   }
 
   unReaction(postId: number) {
     this.reactionService.deletePost(postId)
+    .pipe(first())
     .subscribe(() => {
-      this.postService.getAllByUserId(this.id)
-      .subscribe(res => {
-        this.posts = res as Post[];
-        console.log(res);
+      const post = this.posts.find((x: Post) => {
+        if(x.id === postId){
+          x.isReactedByThisUser = false;
+          x.reactionCount--;
+        }
       });
+      this.posts = this.posts;
     });
   }
 

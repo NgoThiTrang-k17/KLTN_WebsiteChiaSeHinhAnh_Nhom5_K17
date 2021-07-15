@@ -1,0 +1,32 @@
+<ion-content [fullscreen]="true">
+  <div class="header">
+    <ion-row class="centerColumn">
+      <ion-icon (click)="closeModalCmt()" class="close" style="text-align: right;" name="close-outline"></ion-icon>
+      <ion-title *ngIf="isFollower" class="title">Có {{count}} người theo dõi</ion-title>
+      <ion-title *ngIf="!isFollower" class="title">Đang theo dõi {{count}} người</ion-title>
+    </ion-row>
+  </div>
+  <div class="body">
+    <div *ngFor="let follow of follows">
+      <ion-row slot="start">
+        <ion-col size="2.5">
+          <ion-avatar *ngIf="follow.followerAvatarPath===null"><img src="../../../assets/images/default-profile.png"></ion-avatar>
+          <ion-avatar *ngIf="follow.followerAvatarPath!==null"><img [src]="follow.followerAvatarPath"></ion-avatar>
+        </ion-col>
+        <ion-col size="5.5" class="centerColumn">
+          <ion-label>{{follow.followerName}}</ion-label>
+        </ion-col>
+        <ion-col size="4" class="centerColumn">
+          <div *ngIf="isFollower && follow.followerId !== maccount.id" style="width: 100%; text-align: right;">
+            <ion-button *ngIf="follow.isFollower_FollowedByCurrentUser===false" (click)="onCreateFollow(follow.followerId)" shape="round" class="unFollow">Theo dõi</ion-button>
+            <ion-button *ngIf="follow.isFollower_FollowedByCurrentUser===true" (click)="unFollow(follow.followerId)" shape="round" class="onFollow">Huỷ theo dõi</ion-button>
+          </div>
+          <div *ngIf="!isFollower && follow.subjectId !== maccount.id" style="width: 100%; text-align: right;">
+            <ion-button *ngIf="follow.isSubject_FollowedByCurrentUser===false" (click)="onCreateFollow(follow.subjectId)" shape="round" class="unFollow">Theo dõi</ion-button>
+            <ion-button *ngIf="follow.isSubject_FollowedByCurrentUser===true" (click)="unFollow(follow.subjectId)" shape="round" class="onFollow">Huỷ theo dõi</ion-button>
+          </div>
+        </ion-col>
+      </ion-row>
+    </div>
+  </div>
+</ion-content>

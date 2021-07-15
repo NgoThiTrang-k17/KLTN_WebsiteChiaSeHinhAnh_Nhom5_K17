@@ -2,15 +2,15 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { ActionSheetController, AlertController } from '@ionic/angular';
+import { ActionSheetController, AlertController, ModalController } from '@ionic/angular';
 import { File } from '@ionic-native/file/ngx';
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 import { IonInfiniteScroll } from '@ionic/angular';
+import { first } from 'rxjs/operators';
 
 import { Post, Account, FollowToCreate, ReactionToCreate } from '../_models';
 import { PostService, SearchService, FollowService, AccountService, ReactionService, PresenceService } from '../_services';
-import { pipe } from 'rxjs';
-import { first } from 'rxjs/operators';
+import { ReportComponent } from '../components-share/report/report.component';
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
@@ -47,6 +47,7 @@ export class TabHomePage implements OnInit {
     private file: File,
     private transfer: FileTransfer,
     public alertController: AlertController,
+    public modalController: ModalController,
   ) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
@@ -179,14 +180,14 @@ export class TabHomePage implements OnInit {
           console.log('Download!');
           this.download(path);
         }
-      },
-      // {
-      //   text: 'Chia sẻ',
-      //   icon: 'share-social-outline',
-      //   handler: () => {
-      //     console.log('Share clicked');
-      //   }
-      // }
+      },{
+        text: 'Báo cáo',
+        icon: 'alert-outline',
+        handler: () => {
+          console.log('Report clicked');
+          this.openReport(postId);
+        }
+      }
     ]
     });
     await actionSheet.present();
@@ -240,6 +241,18 @@ export class TabHomePage implements OnInit {
         event.target.disabled = true;
       }
     }, 500);
+  }
+
+  async openReport(postId) {
+    const modal = await this.modalController.create({
+      component: ReportComponent,
+      cssClass: 'my-custom-class',
+      componentProps: {
+        targetId: postId,
+        targetType: 1,
+      }
+    });
+    return await modal.present();
   }
 
 }

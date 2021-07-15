@@ -12,7 +12,6 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { TimeagoModule } from 'ngx-timeago';
 import { MatRadioModule } from '@angular/material/radio';
 
 import { NavHomeComponent } from './navhome.component';
@@ -31,6 +30,7 @@ import { ReportComponent } from './report/report.component';
 import { EditPostDialogComponent } from './detail-post/edit-post-dialog/edit-post-dialog.component';
 import { CommentsPostComponent } from './detail-post/comments-post/comments-post.component';
 import { ReplyCommentsPostComponent } from './detail-post/reply-comments-post/reply-comments-post.component';
+import { DateAgoExaple } from '../_shareModule/dateAgoExample';
 
 @NgModule({
   imports: [
@@ -58,11 +58,7 @@ import { ReplyCommentsPostComponent } from './detail-post/reply-comments-post/re
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    TimeagoModule.forRoot(),
-    MatRadioModule
-  ],
-  exports:[
-    TimeagoModule
+    MatRadioModule,
   ],
   declarations: [
     HomeComponent,
@@ -79,6 +75,10 @@ import { ReplyCommentsPostComponent } from './detail-post/reply-comments-post/re
     EditPostDialogComponent,
     CommentsPostComponent,
     ReplyCommentsPostComponent,
+    DateAgoExaple
+  ],
+  providers: [
+    // TimeagoIntl
   ]
 })
 export class UserModule { }

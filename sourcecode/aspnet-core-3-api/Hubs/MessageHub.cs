@@ -76,7 +76,7 @@ namespace WebApi.Hubs
                 model.Read = DateTime.Now;
             }
              
-            var message =  _messageService.AddMessage(model);
+            var message = await _messageService.AddMessage(model);
 
             if (await _messageService.SaveAllAsync())
             {

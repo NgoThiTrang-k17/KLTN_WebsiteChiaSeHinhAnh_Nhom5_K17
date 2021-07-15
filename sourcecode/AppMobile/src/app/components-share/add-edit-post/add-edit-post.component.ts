@@ -6,8 +6,8 @@ import { finalize } from 'rxjs/operators';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { NgForm } from '@angular/forms';
 
-import { Post, PostToUpdate} from '../_models';
-import { PostService } from '../_services';
+import { Post, PostToUpdate} from '../../_models';
+import { PostService } from '../../_services';
 
 @Component({
   selector: 'app-add-edit-post',

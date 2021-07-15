@@ -40,11 +40,12 @@ export class ListFollowingDialogComponent implements OnInit {
         // console.log(this.follow);
         this.followService.createFollow(this.follow)
         .subscribe(res => {
-          //alert('Follow thành công!');
-          this.followService.getByFollowerId(this.followingId)
-            .subscribe(res =>{
-                this.follows = res as Follow[];
-            })
+          const follow = this.follows.find( (x: Follow) => {
+            if(x.subjectId == id){
+              x.isSubject_FollowedByCurrentUser = true;
+            }
+          });
+          this.follows = this.follows;
         });
       }
 
@@ -52,12 +53,16 @@ export class ListFollowingDialogComponent implements OnInit {
         // console.log(this.post.ownerId);
         this.followService.delete(id)
         .subscribe(() => {
-          //alert('Bỏ follow thành công!');
-          this.followService.getByFollowerId(this.followingId)
-            .subscribe(res =>{
-                if(res==null) this.dialogRef.close();
-                this.follows = res as Follow[];
-            })
+          if(this.followingId == this.maccount.id){
+            this.follows = this.follows.filter( x => x.subjectId != id);
+            return;
+          }
+          const follow = this.follows.find( (x: Follow) => {
+            if(x.subjectId == id){
+              x.isSubject_FollowedByCurrentUser = false;
+            }
+          });
+          this.follows = this.follows;
         });
     }
 }

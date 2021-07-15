@@ -1,7 +1,7 @@
 <div mat-dialog-titile >
   <div class=" row">
     <div class="col">
-      <h3 class="text-center" style="margin-left: 45px;">Edit post</h3>
+      <h3 class="text-center" style="margin-left: 45px;">Chỉnh sửa bài viết</h3>
     </div>
     <div class="col-1" style="text-align: right;">
       <a type="button"><span><i mat-dialog-close class="fa fa-times" style=" color: rgb(148, 148, 148); font-size:larger;"></i></span></a>
@@ -16,15 +16,17 @@
       </div>
       <div class="col">
         <div class="form-group">
-          <label for="title">Title</label>
+          <label for="title">Tiêu đề</label>
           <input
+          placeholder="Nhập tiêu đề"
           name="title"
           [(ngModel)]="title"
           class="form-control py-2" value="{{post.title}}" style="border-radius: 20px;">
         </div>
         <div class="form-group">
-          <label for="destription">Desctription</label>
+          <label for="destription">Mô tả</label>
           <textarea
+          placeholder="Nhập mô tả cho bài viết..."
           name="description"
           [(ngModel)]="description"
           class="form-control py-2" value="{{post.description}}" placeholder="Desctription for your image..." style="border-radius: 20px;"></textarea>
@@ -34,7 +36,7 @@
   </div>
   <div mat-dialog-footer style="text-align: right;">
     <button type="submit" [disabled]="!editPostForm.valid" class="btn btn-danger rounded-pill">
-      Save
+      Lưu thay đổi
     </button>
   </div>
 </form>

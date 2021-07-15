@@ -15,8 +15,8 @@
         </ion-col>
         <ion-col>
           <div class="comment">
-            <ion-title style="padding-inline: 15px; font-size: 16px; font-weight: 700; padding-top: 10px;">{{comment.ownerName}}</ion-title>
-            <ion-text style="padding-inline: 15px; font-size: 16px; padding-bottom: 10px; margin-left: 20px;">{{comment.content}}</ion-text>
+            <ion-title style="padding-inline: 15px; font-size: 16px; font-weight: 700; padding-top: 10px; transform: none !important;">{{comment.ownerName}}<span class="time">{{comment.created | dateAgoExample}}</span></ion-title>
+            <ion-text style="padding-inline: 15px; font-size: 16px; padding-bottom: 10px;">{{comment.content}}</ion-text>
           </div>
           <ion-item lines="none">
             <ion-icon *ngIf="comment.isReactedByThisUser===false" (click)="onCreateReactionComment(comment.id)" name="heart-outline" class="icon-comment"></ion-icon>
@@ -24,6 +24,7 @@
             <span *ngIf="comment.reactionCount!==0" style="margin-left: 1px; color:black;">{{comment.reactionCount}}</span>
             <ion-icon class="icon-comment" (click)="focusInputReplyComment(comment.id, comment.ownerName)" name="chatbox-outline" style="margin-left: 5px;"></ion-icon>
             <ion-icon *ngIf="comment.ownerId===maccount.id" (click)="openOptinalForCmt(comment.id, comment.content)" class="icon-comment" name="ellipsis-horizontal" style="margin-left: 5px;"></ion-icon>
+            <ion-icon *ngIf="comment.ownerId!==maccount.id" (click)="openOptinalForCmtId(comment.id)" class="icon-comment" name="ellipsis-horizontal" style="margin-left: 5px;"></ion-icon>
           </ion-item>
           <div *ngIf="comment.childCount!==0 && !seenReplyComment" (click)="onSeenReplyComment()" style="align-items: center; display: flex;">
             <span style="font-size: 14px;">Xem {{comment.childCount}} câu trả lời</span>

@@ -11,7 +11,7 @@
 
   <div class="body">
     <form #createForm="ngForm" autocomplete="off">
-      <ion-row>
+      <ion-row class="centerRow">
         <ion-col *ngIf="!onEdit" size="6" style="padding-left: 15px;">
           <div *ngIf="imageSrc===null" class="upload">
             <div>
@@ -52,7 +52,7 @@
           <ion-img [src]="post.path"></ion-img>
         </ion-col>
       </ion-row>
-      <ion-item>
+      <ion-item lines="none">
         <ion-label position="stacked">Tiêu đề</ion-label>
         <ion-input
         name="title"
@@ -60,7 +60,7 @@
         type="text"
         placeholder="Nhập tiêu đề của hình..."></ion-input>
       </ion-item>
-      <ion-item>
+      <ion-item lines="none">
         <ion-label position="stacked">Mô tả</ion-label>
         <ion-textarea
         name="desctription"

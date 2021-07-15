@@ -30,7 +30,22 @@ export class ListComponent implements OnInit, OnDestroy {
       pagingType: 'full_numbers',
       pageLength: 5,
       lengthMenu : [5, 10, 25, 50, 75, 100],
-      processing: true
+      processing: true,
+      language: {
+        search: "Tìm kiếm:",
+        info: "Đang hiển thị dòng _START_ tới dòng _END_ trong tổng số _TOTAL_ mục",
+        emptyTable: "Không có dữ liệu",
+        // info: "Hiển thị _START_ tới _END_ của _TOTAL_ dữ liệu",
+        infoEmpty: "Hiển thị 0 tới 0 của 0 dữ liệu",
+        lengthMenu: "Hiển thị _MENU_ dữ liệu",
+        loadingRecords: "Đang tải...",
+        paginate: {
+          first: "Đầu tiên",
+          last: "Cuối cùng",
+          next: "Sau",
+          previous: "Trước"
+        },
+      },
     };
 
     this.accountService.getAll()

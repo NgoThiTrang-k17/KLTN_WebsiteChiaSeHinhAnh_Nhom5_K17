@@ -1,6 +1,8 @@
 ﻿export * from './account';
 export * from './accountLogin';
 export * from './accountLoginGoogle';
+export * from './accountToUpdate';
+export * from './accountUpdateAvatar';
 export * from './socialUsers';
 export * from './alert';
 export * from './role';
@@ -20,3 +22,5 @@ export * from './follow';
 export * from './followToCreate';
 export * from './message';
 export * from './group';
+export * from './report';
+export * from './reportToCreate';

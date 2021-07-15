@@ -6,10 +6,11 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { NgForm } from '@angular/forms';
 import { ActionSheetController, AlertController } from '@ionic/angular';
+import { first } from 'rxjs/operators';
 
 import { CommentToCreate, Comment, ReactionCmtToCreate, CommentToCreateForCmt, CommentToUpdate, Account } from '../../_models';
 import { CommentService, AccountService, ReactionService } from '../../_services';
-import { first } from 'rxjs/operators';
+import { ReportComponent } from '../../components-share/report/report.component';
 
 @Component({
   selector: 'app-comment',
@@ -292,6 +293,33 @@ export class CommentPage implements OnInit {
       ]
     });
     await alert.present();
+  }
+
+  async openOptinalForCmtId(commentId: number) {
+    const actionSheet = await this.actionSheetController.create({
+      cssClass: 'optinal',
+      buttons: [{
+        text: 'Báo cáo',
+        icon: 'alert-outline',
+        handler: () => {
+          console.log('Report clicked');
+          this.openReport(commentId);
+        }
+      }]
+    });
+    await actionSheet.present();
+  }
+
+  async openReport(commentId) {
+    const modal = await this.modalController.create({
+      component: ReportComponent,
+      cssClass: 'my-custom-class',
+      componentProps: {
+        targetId: commentId,
+        targetType: 2,
+      }
+    });
+    return await modal.present();
   }
 
 }

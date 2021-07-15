@@ -1,0 +1,63 @@
+<ion-content [fullscreen]="true">
+  <div class="header">
+    <ion-row class="centerColumn">
+      <ion-icon (click)="closeModalCmt()" class="close" style="text-align: right;" name="close-outline"></ion-icon>
+      <ion-title class="title">Chỉnh sửa hồ sơ</ion-title>
+      <ion-button (click)="submit()" shape="round" class="buttonSubmit">Lưu</ion-button>
+    </ion-row>
+    <div class="body">
+      <form #updateProfileForm="ngForm" autocomplete="off">
+        <ion-item>
+          <ion-label>Giới tính*</ion-label>
+          <ion-select [value]="title" interface="popover">
+            <ion-select-option value="Nam">Nam</ion-select-option>
+            <ion-select-option value="Nữ">Nữ</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Tên*</ion-label>
+          <ion-input
+          required
+          name="name"
+          [(ngModel)]="name"
+          type="text"
+          placeholder="Nhập tên"></ion-input>
+        </ion-item>
+        <ion-text class="error">{{errorName}}</ion-text>
+        <ion-item>
+          <ion-label position="stacked">Email*</ion-label>
+          <ion-input
+          required
+          name="email"
+          [(ngModel)]="email"
+          type="email"
+          placeholder="Nhập email"></ion-input>
+        </ion-item>
+        <ion-text class="error">{{errorEmail}}</ion-text>
+        <div style="margin: 16px 0 0 15px;">
+          <ion-label style="margin: 0; font-size: 18px; font-weight: 600;">Thay đổi mật khẩu</ion-label>
+          <div style="font-size: small;">
+            <ion-text>Để trống khi không thay đổi</ion-text>
+          </div>
+        </div>
+        <ion-item>
+          <ion-label position="stacked">Mật khẩu</ion-label>
+          <ion-input
+          name="password"
+          [(ngModel)]="password"
+          type="password"
+          placeholder="Nhập mật khẩu tối thiểu 6 kí tự"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Nhập lại mật khẩu</ion-label>
+          <ion-input
+          name="confirmPassword"
+          [(ngModel)]="confirmPassword"
+          type="password"
+          placeholder="Nhập lại mật khẩu"></ion-input>
+        </ion-item>
+        <ion-text class="error">{{error}}</ion-text>
+      </form>
+    </div>
+  </div>
+</ion-content>

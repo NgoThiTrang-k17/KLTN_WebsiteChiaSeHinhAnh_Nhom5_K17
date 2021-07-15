@@ -7,23 +7,32 @@
     <div>
       <ion-row>
         <ion-col size="2">
-          <ion-avatar *ngIf="account.avatarPath!==null"><img [src]="account.avatarPath"></ion-avatar>
-          <ion-avatar *ngIf="account.avatarPath===null"><img src="../../assets/images/default-profile.png"></ion-avatar>
+          <ion-avatar *ngIf="account.avatarPath!==null" style="position: relative;"><img [src]="account.avatarPath"></ion-avatar>
+          <ion-avatar *ngIf="account.avatarPath===null" style="position: relative;"><img src="../../assets/images/default-profile.png"></ion-avatar>
+          <span *ngIf = "account.id!==maccount.id && (presenceService.onlineUsers$ | async).includes(account.id)">
+            <ion-icon name="ellipse" class="is-online"></ion-icon>
+          </span>
         </ion-col>
-        <ion-col size="7">
+        <ion-col size="6.5">
           <ion-label routerLink="../../../account/{{account.id}}/{{post.id}}" class="accountName">{{account.name}}</ion-label>
           <p>{{post.followerCount}} người theo dõi</p>
         </ion-col>
-        <ion-col size="3">
-          <ion-button *ngIf="mfollow.isCreated===0" (click)="onCreateFollow(account.id)" class="unFollow" shape="round">Theo dõi</ion-button>
-          <ion-button *ngIf="mfollow.isCreated===1" (click)="unFollow(account.id)" class="onFollow" shape="round">Đã theo dõi</ion-button>
+        <ion-col size="3.5">
+          <div style="text-align: right; width: 100%;">
+            <ion-button *ngIf="account.isFollowedByCurrentUser===0" (click)="onCreateFollow(account.id)" class="unFollow" shape="round">Theo dõi</ion-button>
+            <ion-button *ngIf="account.isFollowedByCurrentUser===1" (click)="unFollow(account.id)" class="onFollow" shape="round">Đã theo dõi</ion-button>
+          </div>
         </ion-col>
       </ion-row>
       <div style="text-align: center; margin-top: 10px;">
         <ion-label class="title">{{post.title}}</ion-label>
-        <div style="justify-content: center; display: flex;">
+        <div class="centerRow">
           <ion-icon *ngIf="post.reactionCount!==0" name="heart" style="color: rgba(255, 0, 0, 0.788);"></ion-icon>
-          <span class="black">{{post.reactionCount}} người</span>
+          <span *ngIf="post.reactionCount!==0" class="black">{{post.reactionCount}} người</span>
+          <span *ngIf="post.commentCount!==0" (click)="openComment()" class="black centerRow" style="padding-left: 10px;">
+            <ion-icon name="chatbox-outline"></ion-icon>
+            {{post.commentCount}} bình luận
+          </span>
         </div>
       </div>
       <ion-row class="action">
@@ -47,6 +56,10 @@
               <ion-icon class="icon-action" name="cloud-download-outline"></ion-icon>
             </span>
           </a>
+        </ion-col>
+        <!-- Báo cáo -->
+        <ion-col>
+          <ion-icon (click)="openReport(post.id)" class="icon-action" name="alert-circle-outline"></ion-icon>
         </ion-col>
         <!-- Tuỳ chọn -->
         <ion-col *ngIf="post.ownerId===maccount.id">

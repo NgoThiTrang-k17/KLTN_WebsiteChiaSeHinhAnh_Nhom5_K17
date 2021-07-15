@@ -98,6 +98,9 @@ export class PresenceService {
       }
       return item;
     });
+    if(this.countNewMess != 0){
+      return this.countNewMess--;
+    }
 
     this.notificationThreadSource.next(menuItemsUpdated);
   }

@@ -8,6 +8,7 @@ import { Tab2Page } from './tab2.page';
 
 import { Tab2PageRoutingModule } from './tab2-routing.module';
 import { ChatPage } from './chat/chat.page';
+import { DateAgoExaple } from './dateAgoExample';
 
 @NgModule({
   imports: [
@@ -22,7 +23,8 @@ import { ChatPage } from './chat/chat.page';
   ],
   declarations: [
     Tab2Page,
-    ChatPage
+    ChatPage,
+    DateAgoExaple
   ]
 })
 export class Tab2PageModule {}

@@ -3,7 +3,7 @@
 </ion-header>
 
 <ion-content>
-  <ion-list>
+  <ion-list style="margin-top: -13px;">
     <div *ngFor="let notification of (presenceService.notificationThread$|async).slice().reverse()" >
       <div *ngIf="notification.actionOwnerId !== maccount.id" slot="start">
         <ion-item lines="none" (click)="updateNotification(notification.id, notification.notificationType, notification.postId, notification.actionOwnerId)">
@@ -19,55 +19,55 @@
             <div *ngIf="notification.notificationType === 0">
               <div *ngIf="notification.status===0">
                 <ion-label style="white-space: normal; word-break: break-word; font-size: 17px;"><span style="font-weight: 600;">{{notification.actionOwnerName}}</span> đã thêm bài viết mới</ion-label>
-                <ion-label style="white-space: normal; word-break: break-word; font-size: 14px; font-weight: 500;">{{notification.created | timeago}}</ion-label>
+                <ion-label style="white-space: normal; word-break: break-word; font-size: 14px; font-weight: 500;">{{notification.created | dateAgoExample}}</ion-label>
               </div>
               <div *ngIf="notification.status===2" style="color: rgb(119, 119, 119);">
                 <ion-label style="white-space: normal; word-break: break-word; font-size: 17px;"><span style="font-weight: 600;">{{notification.actionOwnerName}}</span> đã thêm bài viết mới</ion-label>
-                <ion-label style="white-space: normal; word-break: break-word; font-size: 14px; font-weight: 500;">{{notification.created | timeago}}</ion-label>
+                <ion-label style="white-space: normal; word-break: break-word; font-size: 14px; font-weight: 500;">{{notification.created | dateAgoExample}}</ion-label>
               </div>
             </div>
             <!-- Thích bài viết của bạn -->
             <div *ngIf="notification.notificationType === 1">
               <div *ngIf="notification.status===0">
                 <ion-label style="white-space: normal; word-break: break-word; font-size: 17px;"><span style="font-weight: 600;">{{notification.actionOwnerName}}</span> đã thích bài viết của bạn</ion-label>
-                <ion-label style="white-space: normal; word-break: break-word; font-size: 14px; font-weight: 500;">{{notification.created | timeago}}</ion-label>
+                <ion-label style="white-space: normal; word-break: break-word; font-size: 14px; font-weight: 500;">{{notification.created | dateAgoExample}}</ion-label>
               </div>
               <div *ngIf="notification.status===2" style="color: rgb(119, 119, 119);">
                 <ion-label style="white-space: normal; word-break: break-word; font-size: 17px;"><span style="font-weight: 600;">{{notification.actionOwnerName}}</span> đã thích bài viết của bạn</ion-label>
-                <ion-label style="white-space: normal; word-break: break-word; font-size: 14px; font-weight: 500;">{{notification.created | timeago}}</ion-label>
+                <ion-label style="white-space: normal; word-break: break-word; font-size: 14px; font-weight: 500;">{{notification.created | dateAgoExample}}</ion-label>
               </div>
             </div>
             <!-- Bình luận bài viết của bạn -->
             <div *ngIf="notification.notificationType === 2">
               <div *ngIf="notification.status===0">
                 <ion-label style="white-space: normal; word-break: break-word; font-size: 17px;"><span style="font-weight: 600;">{{notification.actionOwnerName}}</span> đã bình luận bài viết của bạn</ion-label>
-                <ion-label style="white-space: normal; word-break: break-word; font-size: 14px; font-weight: 500;">{{notification.created | timeago}}</ion-label>
+                <ion-label style="white-space: normal; word-break: break-word; font-size: 14px; font-weight: 500;">{{notification.created | dateAgoExample}}</ion-label>
               </div>
               <div *ngIf="notification.status===2" style="color: rgb(119, 119, 119);">
                 <ion-label style="white-space: normal; word-break: break-word; font-size: 17px;"><span style="font-weight: 600;">{{notification.actionOwnerName}}</span> đã bình luận bài viết của bạn</ion-label>
-                <ion-label style="white-space: normal; word-break: break-word; font-size: 14px; font-weight: 500;">{{notification.created | timeago}}</ion-label>
+                <ion-label style="white-space: normal; word-break: break-word; font-size: 14px; font-weight: 500;">{{notification.created | dateAgoExample}}</ion-label>
               </div>
             </div>
             <!-- Theo dõi bạn -->
             <div *ngIf="notification.notificationType === 3">
               <div *ngIf="notification.status===0">
                 <ion-label style="white-space: normal; word-break: break-word; font-size: 17px;"><span style="font-weight: 600;">{{notification.actionOwnerName}}</span> đã theo dõi bạn</ion-label>
-                <ion-label style="white-space: normal; word-break: break-word; font-size: 14px; font-weight: 500;">{{notification.created | timeago}}</ion-label>
+                <ion-label style="white-space: normal; word-break: break-word; font-size: 14px; font-weight: 500;">{{notification.created | dateAgoExample}}</ion-label>
               </div>
               <div *ngIf="notification.status===2" style="color: rgb(119, 119, 119);">
                 <ion-label style="white-space: normal; word-break: break-word; font-size: 17px;"><span style="font-weight: 600;">{{notification.actionOwnerName}}</span> đã theo dõi bạn</ion-label>
-                <ion-label style="white-space: normal; word-break: break-word; font-size: 14px; font-weight: 500;">{{notification.created | timeago}}</ion-label>
+                <ion-label style="white-space: normal; word-break: break-word; font-size: 14px; font-weight: 500;">{{notification.created | dateAgoExample}}</ion-label>
               </div>
             </div>
             <!-- Thích bình luận của bạn -->
             <div *ngIf="notification.notificationType === 5">
               <div *ngIf="notification.status===0">
                 <ion-label style="white-space: normal; word-break: break-word; font-size: 17px;"><span style="font-weight: 600;">{{notification.actionOwnerName}}</span> đã thích bình luận của bạn</ion-label>
-                <ion-label style="white-space: normal; word-break: break-word; font-size: 14px; font-weight: 500;">{{notification.created | timeago}}</ion-label>
+                <ion-label style="white-space: normal; word-break: break-word; font-size: 14px; font-weight: 500;">{{notification.created | dateAgoExample}}</ion-label>
               </div>
               <div *ngIf="notification.status===2" style="color: rgb(119, 119, 119);">
                 <ion-label style="white-space: normal; word-break: break-word; font-size: 17px;"><span style="font-weight: 600;">{{notification.actionOwnerName}}</span> đã thích bình luận của bạn</ion-label>
-                <ion-label style="white-space: normal; word-break: break-word; font-size: 14px; font-weight: 500;">{{notification.created | timeago}}</ion-label>
+                <ion-label style="white-space: normal; word-break: break-word; font-size: 14px; font-weight: 500;">{{notification.created | dateAgoExample}}</ion-label>
               </div>
             </div>
           </ion-col>

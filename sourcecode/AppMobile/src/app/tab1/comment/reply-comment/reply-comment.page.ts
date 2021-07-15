@@ -1,11 +1,12 @@
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable @typescript-eslint/no-shadow */
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-import { ActionSheetController, AlertController } from '@ionic/angular';
+import { ActionSheetController, AlertController, ModalController } from '@ionic/angular';
 import { first } from 'rxjs/operators';
 
 import { Comment, ReactionCmtToCreate } from '../../../_models';
-import { CommentService, ReactionService } from '../../../_services';
+import { AccountService, CommentService, ReactionService } from '../../../_services';
+import { ReportComponent } from '../../../components-share/report/report.component';
 
 @Component({
   selector: 'app-reply-comment',
@@ -25,9 +26,13 @@ export class ReplyCommentPage implements OnInit {
 
   reaction: ReactionCmtToCreate;
 
+  maccount = this.accountService.accountValue;
+
   constructor(
     public actionSheetController: ActionSheetController,
     public alertController: AlertController,
+    public modalController: ModalController,
+    private accountService: AccountService,
     public commentService: CommentService,
     public reactionService: ReactionService,
   ) { }
@@ -124,6 +129,33 @@ export class ReplyCommentPage implements OnInit {
       ]
     });
     await alert.present();
+  }
+
+  async openOptinalForCmtId(commentId: number) {
+    const actionSheet = await this.actionSheetController.create({
+      cssClass: 'optinal',
+      buttons: [{
+        text: 'Báo cáo',
+        icon: 'alert-outline',
+        handler: () => {
+          console.log('Report clicked');
+          this.openReport(commentId);
+        }
+      }]
+    });
+    await actionSheet.present();
+  }
+
+  async openReport(commentId) {
+    const modal = await this.modalController.create({
+      component: ReportComponent,
+      cssClass: 'my-custom-class',
+      componentProps: {
+        targetId: commentId,
+        targetType: 2,
+      }
+    });
+    return await modal.present();
   }
 
 }

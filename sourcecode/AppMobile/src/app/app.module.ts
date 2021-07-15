@@ -11,12 +11,20 @@ import { JwtInterceptor, ErrorInterceptor, appInitializer } from './_helpers';
 import { AccountService } from './_services';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AddEditPostComponent } from './add-edit-post/add-edit-post.component';
+import { AddEditPostComponent } from './components-share/add-edit-post/add-edit-post.component';
+import { EditProfileComponent } from './components-share/edit-profile/edit-profile.component';
+import { UpdateAvatarComponent } from './components-share/update-avatar/update-avatar.component';
+import { ListFollowComponent } from './components-share/list-follow/list-follow.component';
+import { ReportComponent } from './components-share/report/report.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    AddEditPostComponent
+    AddEditPostComponent,
+    EditProfileComponent,
+    UpdateAvatarComponent,
+    ListFollowComponent,
+    ReportComponent,
   ],
   entryComponents: [],
   imports: [

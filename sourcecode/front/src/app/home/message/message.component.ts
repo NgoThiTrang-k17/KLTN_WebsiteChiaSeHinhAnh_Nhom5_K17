@@ -16,6 +16,7 @@ export class MessageComponent implements OnInit {
   @ViewChild('searchInput') searchElement: ElementRef;
 
   modalChatRef :any;
+  public live: boolean;
 
   public searchMess: boolean;
 
@@ -38,18 +39,14 @@ export class MessageComponent implements OnInit {
 
   ngOnInit(): void {
     this.searchMess = false;
+    this.live = true;
 
     this.presenceService.userMessages$
     .pipe()
     .subscribe(res => {
       console.log(res);
     })
-    // this.messageService.getMessages()
-    // .subscribe(res => {
-    //   console.log(res);
 
-    //   this.messages = res as Message[];
-    // })
   }
 
   onSearchForMessage() {
@@ -79,5 +76,11 @@ export class MessageComponent implements OnInit {
   openChat(userId: number) {
     this.modalChatRef = this.modalService.open(ChatComponent, { windowClass: 'modalMess', backdropClass: 'backdropModalMess'});
     this.modalChatRef.componentInstance.userId = userId;
+
+    this.modalChatRef.result.then((data) => {
+      // on close
+    }, (reason) => {
+      this.messageService.stopHubConnection();
+    });
   }
 }

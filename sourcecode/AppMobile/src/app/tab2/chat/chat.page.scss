@@ -28,7 +28,7 @@ ion-row{
 
 .chat{
   margin: 10px 10px 0px 10px;
-  flex-direction: column-reverse;
+  overflow: auto;
   // transform: rotate(180deg); //Lật ngược
 }
 

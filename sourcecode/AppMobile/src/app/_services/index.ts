@@ -10,3 +10,4 @@ export * from './message.service';
 export * from './comment.service';
 export * from './notification.service';
 export * from './data.service';
+export * from './report.service';

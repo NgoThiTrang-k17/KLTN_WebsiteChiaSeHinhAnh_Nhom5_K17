@@ -26,14 +26,14 @@
                 <ion-label (click)="openModalChat(message.senderId)" class="name">
                   {{message.senderName}}
                 </ion-label>
-                <p class="mess" style="font-weight: 600;">{{message.content}} <span class="time">· {{message.created | timeago}}</span></p>
+                <p class="mess" style="font-weight: 600;">{{message.content}} <span class="time">· {{message.created | dateAgoExample}}</span></p>
               </div>
               <!-- ---------Tin nhắn tới đã xem--------- -->
               <div *ngIf="message.read !== null">
                 <ion-label (click)="openModalChat(message.senderId)" class="name" style="color: #4e4e4e;">
                   {{message.senderName}}
                 </ion-label>
-                <p class="mess" style="color: #4e4e4e;">{{message.content}} <span class="time">· {{message.created | timeago}}</span></p>
+                <p class="mess" style="color: #4e4e4e;">{{message.content}} <span class="time">· {{message.created | dateAgoExample}}</span></p>
               </div>
             </div>
           </ion-col>
@@ -57,7 +57,7 @@
               <ion-label (click)="openModalChat(message.recipientId)" class="name" style="color: #4e4e4e;">
                 {{message.recipientName}}
               </ion-label>
-              <p class="mess" style="color: #4e4e4e;">Bạn: {{message.content}} <span class="time">· {{message.created | timeago}}</span></p>
+              <p class="mess" style="color: #4e4e4e;">Bạn: {{message.content}} <span class="time">· {{message.created | dateAgoExample}}</span></p>
             </div>
           </ion-col>
           <!-- Tin nhắn đã gửi -->

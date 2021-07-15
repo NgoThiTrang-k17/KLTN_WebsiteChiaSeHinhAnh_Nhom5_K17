@@ -87,7 +87,6 @@ export class ReportComponent implements OnInit {
       alert('Báo cáo đã được gửi!');
       this.dialogRef.close();
     })
-
   }
 
 }

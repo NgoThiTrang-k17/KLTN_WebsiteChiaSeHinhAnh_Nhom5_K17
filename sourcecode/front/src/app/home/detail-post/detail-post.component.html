@@ -36,7 +36,7 @@
             <div class="col-2 p-0 centerAll" style="max-width: 10%;">
                 <img *ngIf="account.avatarPath==null" class="img-fluid rounded-circle" style="height: 50px; width: 50px; border: 1px solid rgba(0,0,0,.15) !important;" src="../../assets/images/default-profile.png">
                 <img *ngIf="account.avatarPath!=null" class="img-fluid rounded-circle" style="height: 50px; width: 50px; border: 1px solid rgba(0,0,0,.15) !important;" [src]="account.avatarPath">
-                <span *ngIf = "(presenceService.onlineUsers$ | async).includes(account.id)" class="material-icons is-online myOnline" style="right: 2px; bottom: 3px;">circle</span>
+                <span *ngIf = "(presenceService.onlineUsers$ | async).includes(account.id)" class="material-icons is-online myOnline" style="right: 4px; bottom: -1px;">circle</span>
               </div>
               <div class="col p-0" style="margin-left: 2%; align-items: center; display: flex;">
                 <div>

@@ -19,8 +19,8 @@
 }
 
 ion-avatar{
-  width: 100px;
-  height: 100px;
+  width: 120px;
+  height: 120px;
 }
 
 ion-title{
@@ -83,4 +83,20 @@ ion-col{
 
 ion-button{
   --box-shadow: none !important
+}
+
+.is-online{
+  font-size:  17px;
+  right: 171px;
+  top: 121px;
+}
+
+.updateAvatar{
+  position:absolute;
+  width: 31px;
+  height: 30px;
+  background-color: #f1f1f1;
+  top: 108px;
+  right: 160px;
+  border: 1px solid #ffffff;
 }

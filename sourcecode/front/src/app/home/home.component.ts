@@ -1,6 +1,7 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { first } from 'rxjs/operators';
 
 import { ReactionService, PostService, AccountService } from '@app/_services';
 import { Post, ReactionToCreate } from '../_models';
@@ -41,21 +42,29 @@ export class HomeComponent implements OnInit {
     }
     // console.log(this.reaction);
     this.reactionService.createReaction(this.reaction)
+    .pipe(first())
     .subscribe(res => {
-      this.postService.getAll()
-      .subscribe(res => {
-          this.posts = res as Post[];
-      });
+      const post = this.posts.find((x: Post) => {
+        if(x.id === postId){
+          x.isReactedByThisUser = true;
+          x.reactionCount++;
+        }
+      })
+      this.posts = this.posts;
     });
   }
 
   unReaction(postId: number) {
     this.reactionService.deletePost(postId)
+    .pipe(first())
     .subscribe(() => {
-      this.postService.getAll()
-      .subscribe(res => {
-          this.posts = res as Post[];
-      });
+      const post = this.posts.find((x: Post) => {
+        if(x.id === postId){
+          x.isReactedByThisUser = false;
+          x.reactionCount--;
+        }
+      })
+      this.posts = this.posts;
     });
   }
 

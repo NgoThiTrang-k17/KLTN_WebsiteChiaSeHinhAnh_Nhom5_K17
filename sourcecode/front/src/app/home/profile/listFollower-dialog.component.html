@@ -17,8 +17,8 @@
                 <p class="ml-2 mt-3" routerLink="user/detail/{{follow.followerId}}" routerLinkActive="active" style="font-weight: bold; font-size: large;" mat-dialog-close>{{follow.followerName}}</p>
             </div>
             <div class="col-3 mt-2" *ngIf="maccount.id!=follow.followerId" style="padding: 0; text-align: right;">
-                <button *ngIf="follow.isFollower_FollowedByCurrentUser==false" (click)="onCreateFollow(follow.followerId)" class="btn btn-light rounded-pill">Theo dõi</button>
-                <button *ngIf="follow.isFollower_FollowedByCurrentUser==true" (click)="unFollow(follow.followerId)" class="btn btn-danger rounded-pill">Huỷ theo dõi</button>
+                <button *ngIf="follow.isFollower_FollowedByCurrentUser==false" (click)="onCreateFollow(follow.followerId)" class="btn btn-danger rounded-pill">Theo dõi</button>
+                <button *ngIf="follow.isFollower_FollowedByCurrentUser==true" (click)="unFollow(follow.followerId)" class="btn btn-light rounded-pill">Huỷ theo dõi</button>
             </div>
         </div>
     </div>

@@ -1,0 +1,43 @@
+<ion-content [fullscreen]="true">
+  <div class="header">
+    <ion-row class="centerColumn">
+      <ion-icon (click)="closeModalCmt()" class="close" style="text-align: right;" name="close-outline"></ion-icon>
+      <ion-title class="title">Thay đổi ảnh đại diện</ion-title>
+      <ion-button *ngIf="isUpload" [disabled]="imageSrc === ''" (click)="updateAvatar()" shape="round" class="buttonSubmit">Lưu</ion-button>
+      <ion-button *ngIf="!isUpload" [disabled]="imageSrc === ''" (click)="updateAvatarChoose()" shape="round" class="buttonSubmit">Lưu</ion-button>
+    </ion-row>
+    <form #updateAvatarForm="ngForm" autocomplete="off">
+      <div class="centerRow">
+        <div *ngIf="imageSrc === ''">
+          <ion-avatar *ngIf="account.avatarPath===null" style="position: relative;"><img src="../../../assets/images/default-profile.png"></ion-avatar>
+          <ion-avatar *ngIf="account.avatarPath!==null" style="position: relative;"><img [src]="account.avatarPath"></ion-avatar>
+        </div>
+        <div *ngIf="imageSrc !== ''">
+          <ion-avatar style="position: relative;"><img [src]="imageSrc"></ion-avatar>
+        </div>
+        <span>
+          <label class="custom-file-upload rounded-circle" style="position: absolute; top: 212px; left: 228px">
+            <input
+            required
+            name="file"
+            [(ngModel)]="file"
+            id="path"
+            type="file"
+            accept=".png,.jpg,.jfif"
+            (change)="onFileChange($event)"/>
+            <ion-icon name="arrow-up-circle" style="font-size: 40px;"></ion-icon>
+          </label>
+        </span>
+      </div>
+    </form>
+  </div>
+  <div class="body">
+    <ion-list class="card-columns listPost">
+      <div *ngFor="let post of posts">
+        <ion-card class="card" slot="start">
+          <img (click)="clickChoseImage(post.path)" class="img" [src]="post.path">
+        </ion-card>
+      </div>
+    </ion-list>
+  </div>
+</ion-content>

@@ -7,7 +7,11 @@ import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ng
 
 import { Account, Post, FollowToCreate, ReactionToCreate } from '../_models';
 import { AccountService, PresenceService, PostService, FollowService, ReactionService } from '../_services';
-import { AddEditPostComponent } from '../add-edit-post/add-edit-post.component';
+import { AddEditPostComponent } from '../components-share/add-edit-post/add-edit-post.component';
+import { EditProfileComponent } from '../components-share/edit-profile/edit-profile.component';
+import { UpdateAvatarComponent } from '../components-share/update-avatar/update-avatar.component';
+import { ListFollowComponent } from '../components-share/list-follow/list-follow.component';
+import { ReportComponent } from '../components-share/report/report.component';
 
 @Component({
   selector: 'app-tab5',
@@ -36,32 +40,32 @@ export class Tab5Page implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private accountService: AccountService,
-    private presenceService: PresenceService,
+    public presenceService: PresenceService,
     private postService: PostService,
     private followService: FollowService,
     private reactionService: ReactionService,
-  ) { }
+  ) {
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+  }
 
   ngOnInit() {
     this.id = this.route.snapshot.params.id;
     this.postId = this.route.snapshot.params.postId;
 
     localStorage.removeItem('pathPost');
+    localStorage.setItem('path', 'tab/tabs/account');
 
     if(this.id !== undefined){
       this.accountId = this.id;
 
+      localStorage.removeItem('path');
       localStorage.setItem('pathPost', '../../../account/'+ this.id + '/' + this.postId);
     } else if(this.id === undefined){
       this.accountId = this.maccount.id;
-
-      localStorage.setItem('path', 'tab/tabs/account');
     }
 
     this.accountService.getById(this.accountId)
     .subscribe(res => {
-      console.log(res);
-
       this.account = res;
     });
 
@@ -89,6 +93,7 @@ export class Tab5Page implements OnInit {
     .pipe(first())
     .subscribe(() => {
       this.account.isFollowedByCurrentUser = 1;
+      this.account.followerCount++;
     });
   }
 
@@ -97,6 +102,7 @@ export class Tab5Page implements OnInit {
     .pipe(first())
     .subscribe(() => {
       this.account.isFollowedByCurrentUser = 0;
+      this.account.followerCount--;
     });
   }
 
@@ -119,6 +125,7 @@ export class Tab5Page implements OnInit {
 
   unReaction(id: number){
     this.reactionService.deletePost(id)
+    .pipe(first())
     .subscribe(() => {
       const post = this.posts.find((x: Post) => {
         if(x.id === id){
@@ -257,6 +264,93 @@ export class Tab5Page implements OnInit {
       .subscribe(res => {
         this.posts = res as Post[];
       });
+    });
+    return await modal.present();
+  }
+
+  async openEditProfile(id: number) {
+    const modal = await this.modalController.create({
+      component: EditProfileComponent,
+      cssClass: 'my-custom-class',
+      componentProps: {
+        accountId: id,
+      }
+    });
+
+    modal.onDidDismiss().then(data => {
+      this.accountService.getById(this.accountId)
+      .subscribe(res => {
+        this.account = res;
+      });
+    });
+    return await modal.present();
+  }
+
+  async openUpdateAvatar() {
+    const modal = await this.modalController.create({
+      component: UpdateAvatarComponent,
+      cssClass: 'my-custom-class',
+      componentProps: {
+      }
+    });
+
+    modal.onDidDismiss().then(data => {
+      this.accountService.getById(this.accountId)
+      .subscribe(res => {
+        this.account = res;
+      });
+    });
+    return await modal.present();
+  }
+
+  async openFollowerList() {
+    const modal = await this.modalController.create({
+      component: ListFollowComponent,
+      cssClass: 'my-custom-class',
+      componentProps: {
+        accountId: this.accountId,
+        count: this.account.followerCount,
+        isFollower: true,
+      }
+    });
+
+    modal.onDidDismiss().then(data => {
+      this.accountService.getById(this.accountId)
+      .subscribe(res => {
+        this.account = res;
+      });
+    });
+    return await modal.present();
+  }
+
+  async openFollowingList() {
+    const modal = await this.modalController.create({
+      component: ListFollowComponent,
+      cssClass: 'my-custom-class',
+      componentProps: {
+        accountId: this.accountId,
+        count: this.account.followingCount,
+        isFollower: false,
+      }
+    });
+
+    modal.onDidDismiss().then(data => {
+      this.accountService.getById(this.accountId)
+      .subscribe(res => {
+        this.account = res;
+      });
+    });
+    return await modal.present();
+  }
+
+  async openReport() {
+    const modal = await this.modalController.create({
+      component: ReportComponent,
+      cssClass: 'my-custom-class',
+      componentProps: {
+        targetId: this.accountId,
+        targetType: 0,
+      }
     });
     return await modal.present();
   }

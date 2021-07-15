@@ -6,9 +6,11 @@ import { AlertController, ModalController, ActionSheetController } from '@ionic/
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 
 import { Post, Account, Follow, FollowToCreate, ReactionToCreate } from '../../_models';
-import { AccountService, PostService, FollowService, ReactionService } from '../../_services';
+import { PresenceService, AccountService, PostService, FollowService, ReactionService } from '../../_services';
+
 import { CommentPage } from '../comment/comment.page';
-import { AddEditPostComponent } from '../../add-edit-post/add-edit-post.component';
+import { AddEditPostComponent } from '../../components-share/add-edit-post/add-edit-post.component';
+import { ReportComponent } from '../../components-share/report/report.component';
 
 @Component({
   selector: 'app-detailPost',
@@ -38,6 +40,7 @@ export class DetailPostPage implements OnInit {
     private router: Router,
     public alertController: AlertController,
     public modalController: ModalController,
+    public presenceService: PresenceService,
     private accountService: AccountService,
     private postService: PostService,
     private followService: FollowService,
@@ -70,34 +73,19 @@ export class DetailPostPage implements OnInit {
     this.follow = {
       subjectId: id,
     };
-    console.log(this.follow);
+
     this.followService.createFollow(this.follow)
     .subscribe(res => {
-      console.log(res);
-      //alert('Follow thành công!');
-      this.postService.getPostById(this.postId)
-      .subscribe((res: any)=>{
-        this.post = res;
-      });
-      this.followService.getFollow(this.owner)
-      .subscribe((res: any)=>{
-          this.mfollow = res;
-      });
+      this.account.isFollowedByCurrentUser = 1;
+      this.account.followerCount++;
     });
   }
 
   unFollow(id: any) {
     this.followService.delete(id)
     .subscribe(() => {
-      //alert('Bỏ follow thành công!');
-      this.postService.getPostById(this.postId)
-      .subscribe((res: any)=>{
-        this.post = res;
-      });
-      this.followService.getFollow(this.owner)
-      .subscribe((res: any)=>{
-          this.mfollow = res;
-      });
+      this.account.isFollowedByCurrentUser = 0;
+      this.account.followerCount--;
     });
   }
 
@@ -229,5 +217,17 @@ export class DetailPostPage implements OnInit {
     } else if( pathAccount != null ) {
       this.router.navigate([pathAccount], { relativeTo: this.route });
     }
+  }
+
+  async openReport(postId) {
+    const modal = await this.modalController.create({
+      component: ReportComponent,
+      cssClass: 'my-custom-class',
+      componentProps: {
+        targetId: postId,
+        targetType: 1,
+      }
+    });
+    return await modal.present();
   }
 }

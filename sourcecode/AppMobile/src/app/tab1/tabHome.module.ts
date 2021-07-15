@@ -10,6 +10,7 @@ import { TabHomePageRoutingModule } from './tabHome-routing.module';
 import { DetailPostPage } from './detailPost/detailPost.page';
 import { CommentPage } from './comment/comment.page';
 import { ReplyCommentPage } from './comment/reply-comment/reply-comment.page';
+import { DateAgoExaple } from './dateAgoExample';
 
 @NgModule({
   imports: [
@@ -26,6 +27,7 @@ import { ReplyCommentPage } from './comment/reply-comment/reply-comment.page';
     DetailPostPage,
     CommentPage,
     ReplyCommentPage,
+    DateAgoExaple
   ],
   providers: [
     File,
