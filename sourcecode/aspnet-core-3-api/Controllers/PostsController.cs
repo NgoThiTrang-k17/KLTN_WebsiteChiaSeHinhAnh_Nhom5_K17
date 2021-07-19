@@ -115,6 +115,18 @@ namespace WebApi.Controllers
             return Ok(posts);
         }
 
+        [HttpGet("UserLikedPost")]
+        public async Task<ActionResult<IEnumerable<PostResponse>>> GetLikedPostByUser()
+        {
+            var posts = await _postService.GetLikedPost(Account.Id);
+            foreach (PostResponse post in posts)
+            {
+                var reactionState = await _reactionService.GetState(ReactionTarget.Post, post.Id, Account.Id);
+                post.IsReactedByThisUser = reactionState.IsReactedByThisUser;
+            }
+            return Ok(posts);
+        }
+
         private string GetImageTags(string imageUrl)
         {
             //Hosted web API REST Service base url  
