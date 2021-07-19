@@ -187,7 +187,7 @@ namespace WebApi.Services
         }
         public async Task<IEnumerable<PostResponse>> GetLikedPost(int ownerId)
         {
-            var reactions = _context.Reactions.Where(r => r.OwnerId == ownerId && r.Target == ReactionTarget.Post);
+            var reactions = _context.Reactions.Where(r => r.OwnerId == ownerId && r.Target == ReactionTarget.Post).OrderByDescending(r => r.Created);
             var posts = new List<Post>();
             foreach (var reaction in reactions)
             {
