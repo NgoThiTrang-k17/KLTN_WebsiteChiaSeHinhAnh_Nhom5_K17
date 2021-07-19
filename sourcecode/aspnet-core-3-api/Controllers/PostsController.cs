@@ -103,6 +103,18 @@ namespace WebApi.Controllers
             return Ok(posts);
         }
 
+        [HttpGet("UserPrivatePost")]
+        public async Task<ActionResult<IEnumerable<PostResponse>>> GetPrivatePostByUser()
+        {
+            var posts = await _postService.GetPrivatePost(Account.Id);
+            foreach (PostResponse post in posts)
+            {
+                var reactionState = await _reactionService.GetState(ReactionTarget.Post, post.Id, Account.Id);
+                post.IsReactedByThisUser = reactionState.IsReactedByThisUser;
+            }
+            return Ok(posts);
+        }
+
         private string GetImageTags(string imageUrl)
         {
             //Hosted web API REST Service base url  

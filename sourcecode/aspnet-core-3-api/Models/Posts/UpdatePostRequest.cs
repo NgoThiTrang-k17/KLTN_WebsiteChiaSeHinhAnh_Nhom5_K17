@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using WebApi.Entities;
 
 namespace WebApi.Models.Posts
 {
@@ -9,7 +10,7 @@ namespace WebApi.Models.Posts
         private string _description; 
         private string _categories;
         private string _path;
-
+        public Status Status { get; set; }
 
 
         public string Title

@@ -24,6 +24,8 @@ namespace WebApi.Services
         Task DeletePost(int id);
         Task<IEnumerable<PostResponse>> GetAll();
         Task<IEnumerable<PostResponse>> GetByOwnerId(int ownerId);
+        Task<IEnumerable<PostResponse>> GetPrivatePost(int ownerId);
+        Task<IEnumerable<PostResponse>> GetLikedPost(int ownerId);
 
         (int, int) GetPostInfor(int id);
     }
@@ -60,7 +62,10 @@ namespace WebApi.Services
             var post = _mapper.Map<Post>(model);
             _context.Posts.Add(post);
             await _context.SaveChangesAsync();
-            await SendNotification(post);
+            if (model.Status == Status.Public) 
+            { 
+                await SendNotification(post); 
+            }
             return _mapper.Map<PostResponse>(post);
         }
 
@@ -140,7 +145,58 @@ namespace WebApi.Services
         //Get posts for each user
         public async Task<IEnumerable<PostResponse>> GetByOwnerId(int ownerId)
         {
-            var posts = _context.Posts.Where(post => post.OwnerId == ownerId).OrderByDescending(p =>p.Created);
+            var posts = _context.Posts.Where(post => post.OwnerId == ownerId && post.Status == Status.Public).OrderByDescending(p =>p.Created);
+            var postResponses = _mapper.Map<IList<PostResponse>>(posts);
+            foreach (PostResponse postResponse in postResponses)
+            {
+                var owner = await _accountService.GetById(postResponse.OwnerId);
+                postResponse.OwnerId = owner.Id;
+
+                bool IsOwnerNameNull = owner.Name == null;
+                postResponse.OwnerName = IsOwnerNameNull ? "" : owner.Name;
+
+                bool IsAvatarPathNull = owner.AvatarPath == null;
+                postResponse.OwnerAvatar = IsAvatarPathNull ? "" : owner.AvatarPath;
+
+                postResponse.FollowerCount = _context.Follows.Count(f => f.SubjectId == owner.Id);
+
+                (postResponse.CommentCount, postResponse.ReactionCount) = GetPostInfor(postResponse.Id);
+            }
+            return postResponses;
+        }
+        public async Task<IEnumerable<PostResponse>> GetPrivatePost(int ownerId)
+        {
+            var posts = _context.Posts.Where(post => post.OwnerId == ownerId && post.Status == Status.Private).OrderByDescending(p => p.Created);
+            var postResponses = _mapper.Map<IList<PostResponse>>(posts);
+            foreach (PostResponse postResponse in postResponses)
+            {
+                var owner = await _accountService.GetById(postResponse.OwnerId);
+                postResponse.OwnerId = owner.Id;
+
+                bool IsOwnerNameNull = owner.Name == null;
+                postResponse.OwnerName = IsOwnerNameNull ? "" : owner.Name;
+
+                bool IsAvatarPathNull = owner.AvatarPath == null;
+                postResponse.OwnerAvatar = IsAvatarPathNull ? "" : owner.AvatarPath;
+
+                postResponse.FollowerCount = _context.Follows.Count(f => f.SubjectId == owner.Id);
+
+                (postResponse.CommentCount, postResponse.ReactionCount) = GetPostInfor(postResponse.Id);
+            }
+            return postResponses;
+        }
+        public async Task<IEnumerable<PostResponse>> GetLikedPost(int ownerId)
+        {
+            var reactions = _context.Reactions.Where(r => r.OwnerId == ownerId && r.Target == ReactionTarget.Post);
+            var posts = new List<Post>();
+            foreach (var reaction in reactions)
+            {
+                var  post =  _context.Posts.Where(p => p.Id == reaction.TargetId && p.Status == Status.Public).FirstOrDefault();
+                if(post != null)
+                {
+                    posts.Add(post);
+                }
+            }
             var postResponses = _mapper.Map<IList<PostResponse>>(posts);
             foreach (PostResponse postResponse in postResponses)
             {

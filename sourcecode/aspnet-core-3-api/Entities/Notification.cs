@@ -21,7 +21,9 @@ namespace WebApi.Entities
         Opened,
         Sent, //đã gửi
         Accepted,
-        Declined
+        Declined,
+        Public,
+        Private
     }
     public class Notification
     {

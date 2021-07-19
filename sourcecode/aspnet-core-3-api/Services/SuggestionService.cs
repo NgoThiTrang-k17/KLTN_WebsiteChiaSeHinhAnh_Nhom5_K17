@@ -95,7 +95,7 @@ namespace WebApi.Services
         public async Task<IEnumerable<PostResponse>> GetPostByPreference(int userId)
         {
             var userPreference = await GetUserPreference(userId);
-            var posts = await _context.Posts.ToListAsync();
+            var posts = await _context.Posts.Where(p=>p.Status == Status.Public).ToListAsync();
             var responses = new List<Post>();
             foreach (var post in posts)
             {
@@ -130,7 +130,7 @@ namespace WebApi.Services
             var responses = new List<Post>();
             foreach (var userPreference in userPreferences)
             {
-                var post = _context.Posts.Where(x => x.Categories.StartsWith(userPreference)).FirstOrDefault();
+                var post = _context.Posts.Where(x => x.Categories.StartsWith(userPreference) && x.Status == Status.Public).FirstOrDefault();
                 if (post != null)
                 {
                     post.Categories = userPreference;
@@ -147,7 +147,7 @@ namespace WebApi.Services
             var responses = new List<Post>();
             foreach (var userPreference in userPreferences)
             {
-                var post = _context.Posts.Where(x => x.Categories.StartsWith(userPreference)).FirstOrDefault();
+                var post = _context.Posts.Where(x => x.Categories.StartsWith(userPreference) && x.Status == Status.Public).FirstOrDefault();
                 if (post != null)
                 {
                     post.Categories = userPreference;

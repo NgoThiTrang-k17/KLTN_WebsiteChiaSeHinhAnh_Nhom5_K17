@@ -13,7 +13,7 @@ namespace WebApi.Entities
         public DateTime Created { get; set; }
         public string Categories { get; set; }
         public string Path { get; set; }
-
+        public Status Status { get; set; }
         public int OwnerId { get; set; }
     }
 
