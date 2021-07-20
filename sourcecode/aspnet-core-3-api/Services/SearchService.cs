@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApi.Entities;
+using WebApi.Extension;
 using WebApi.Helpers;
 using WebApi.Models.Accounts;
 using WebApi.Models.Posts;
@@ -50,6 +51,7 @@ namespace WebApi.Services
         public async Task<IEnumerable<PostResponse>> SearchForPosts(int id, string query)
         {
             var posts = await _context.Posts.Where(p => (p.Title.Contains(query) || p.Categories.Contains(query)) && p.Status == Status.Public).ToListAsync();
+            posts.Shuffle();
             var account  = await _context.Users.FindAsync(id);
             if (account.SearchHistory != null)
             {
@@ -91,7 +93,7 @@ namespace WebApi.Services
             if (query.Contains('-'))
                 query = query.Split('-').Take(1).ToString();
             var posts = await _context.Posts.Where(p => p.Categories.Contains(query) && p.Status == Status.Public).ToListAsync();
-
+            posts.Shuffle();
             var account = await _context.Users.FindAsync(id);
             if (account.SearchHistory != null)
             {

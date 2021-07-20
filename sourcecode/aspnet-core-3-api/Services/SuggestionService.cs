@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApi.Entities;
+using WebApi.Extension;
 using WebApi.Helpers;
 using WebApi.Models.Posts;
 
@@ -106,6 +107,9 @@ namespace WebApi.Services
                     responses.Add(post);
                 }
             }
+
+            responses.Shuffle();
+
             var postResponses = _mapper.Map<IEnumerable<PostResponse>>(responses);
             foreach (var postResponse in postResponses)
             {
