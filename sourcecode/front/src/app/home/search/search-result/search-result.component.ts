@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Account, Post, FollowToCreate, ReactionToCreate } from '../../../_models';
 import { AccountService, SearchService, FollowService, ReactionService, PostService } from '../../../_services';
 import { ReportComponent } from '../../report/report.component';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-search-result',
@@ -63,23 +64,29 @@ export class SearchResultComponent implements OnInit {
     }
     console.log(this.follow);
     this.followService.createFollow(this.follow)
+    .pipe(first())
     .subscribe(res => {
-      //alert('Follow thành công!');
-      this.searchService.getAllAccount(this.query)
-        .subscribe(res => {
-            this.accounts = res as Account[];
-        });
+      const account = this.accounts.find((x: Account) => {
+        if(x.id == id){
+          x.isFollowedByCurrentUser = 1;
+          x.followerCount++;
+        }
+      })
+      this.accounts = this.accounts;
     });
   }
 
   unFollow(id:any) {
     this.followService.delete(id)
-    .subscribe(() => {
-      //alert('Bỏ follow thành công!');
-      this.searchService.getAllAccount(this.query)
-        .subscribe(res => {
-            this.accounts = res as Account[];
-        });
+    .pipe(first())
+    .subscribe(res => {
+      const account = this.accounts.find((x: Account) => {
+        if(x.id == id){
+          x.isFollowedByCurrentUser = 0;
+          x.followerCount--;
+        }
+      })
+      this.accounts = this.accounts;
     });
   }
 
@@ -88,21 +95,29 @@ export class SearchResultComponent implements OnInit {
       targetId: postId,
     }
     this.reactionService.createReaction(this.reaction)
+    .pipe(first())
     .subscribe(res => {
-      this.searchService.getAllPost(this.query)
-      .subscribe(res => {
-          this.posts = res as Post[];
-      });
+      const post = this.posts.find((x: Post) => {
+        if(x.id == postId){
+          x.isReactedByThisUser = true;
+          x.reactionCount++;
+        }
+      })
+      this.posts = this.posts;
     });
   }
 
   unReaction(postId: number) {
     this.reactionService.deletePost(postId)
+    .pipe(first())
     .subscribe(() => {
-      this.searchService.getAllPost(this.query)
-      .subscribe(res => {
-          this.posts = res as Post[];
-      });
+      const post = this.posts.find((x: Post) => {
+        if(x.id == postId){
+          x.isReactedByThisUser = false;
+          x.reactionCount--;
+        }
+      })
+      this.posts = this.posts;
     });
   }
 

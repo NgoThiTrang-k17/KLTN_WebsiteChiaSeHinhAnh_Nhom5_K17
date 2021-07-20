@@ -137,14 +137,15 @@ export class TabHomePage implements OnInit {
   async openOptinalMyPost(path: string, postId: number) {
     const actionSheet = await this.actionSheetController.create({
       cssClass: 'optinal',
-      buttons: [{
-        text: 'Tải ảnh xuống',
-        icon: 'cloud-download-outline',
-        handler: () => {
-          console.log('Download!');
-          this.download(path);
-        }
-      },
+      buttons: [
+      //   {
+      //   text: 'Tải ảnh xuống',
+      //   icon: 'cloud-download-outline',
+      //   handler: () => {
+      //     console.log('Download!');
+      //     this.download(path);
+      //   }
+      // },
       // {
       //   text: 'Chia sẻ',
       //   icon: 'share-social-outline',
@@ -173,14 +174,16 @@ export class TabHomePage implements OnInit {
   async openOptinal(path: string, postId: number) {
     const actionSheet = await this.actionSheetController.create({
       cssClass: 'optinal',
-      buttons: [{
-        text: 'Tải ảnh xuống',
-        icon: 'cloud-download-outline',
-        handler: () => {
-          console.log('Download!');
-          this.download(path);
-        }
-      },{
+      buttons: [
+      //   {
+      //   text: 'Tải ảnh xuống',
+      //   icon: 'cloud-download-outline',
+      //   handler: () => {
+      //     console.log('Download!');
+      //     this.download(path);
+      //   }
+      // },
+      {
         text: 'Báo cáo',
         icon: 'alert-outline',
         handler: () => {

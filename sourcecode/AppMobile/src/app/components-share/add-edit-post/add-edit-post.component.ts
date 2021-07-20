@@ -24,7 +24,9 @@ export class AddEditPostComponent implements OnInit {
   public desctription: string;
   public file: any;
   public imagePath: string;
+  public isPrivate: boolean;
 
+  statusPost: number;
   imageSrc: string;
   pathImg: string;
   path: any;
@@ -46,6 +48,7 @@ export class AddEditPostComponent implements OnInit {
 
     if(this.postId==null){
       this.onEdit = false;
+      this.isPrivate = false;
     } else if(this.postId!=null){
       this.onEdit = true;
       this.postService.getPostById(this.postId)
@@ -53,6 +56,11 @@ export class AddEditPostComponent implements OnInit {
         this.post = res;
         this.title = res.title;
         this.desctription = res.description;
+        if(res.status===6){
+          this.isPrivate = false;
+        } else if(res.status===7){
+          this.isPrivate = true;
+        }
       });
     }
 
@@ -97,6 +105,9 @@ export class AddEditPostComponent implements OnInit {
           if(this.desctription !== undefined){
             this.testForm.set("description", this.desctription);
           }
+          if(this.isPrivate === true){
+            this.testForm.set("status", 7);
+          }
           this.testForm.set("path",this.pathImg);
           console.log(this.testForm);
 
@@ -124,10 +135,16 @@ export class AddEditPostComponent implements OnInit {
     if(this.desctription === undefined){
       this.desctription = '';
     }
+    if(this.isPrivate===true){
+      this.statusPost = 7;
+    } else if(this.isPrivate===false){
+      this.statusPost = 6;
+    }
 
     this.postToUpdate = {
       title: this.title,
       description: this.desctription,
+      status: this.statusPost,
     };
 
     this.postService.update(this.postId, this.postToUpdate)

@@ -60,7 +60,7 @@ export class LayoutComponent implements OnInit {
     .subscribe(notifications => {
     })
 
-    this.countMess = this.presenceService.countNewMess;
+    this.countMess = this.presenceService.countNewMessage();
     console.log(this.countMess);
 
   }
@@ -147,5 +147,13 @@ export class LayoutComponent implements OnInit {
 
   resetCountMess() {
     this.presenceService.resetCountNewMess();
+  }
+
+  goHomeUser(){
+    this.router.navigate(['admin/user']);
+  }
+
+  goAdmin(){
+    this.router.navigate(['admin']);
   }
 }

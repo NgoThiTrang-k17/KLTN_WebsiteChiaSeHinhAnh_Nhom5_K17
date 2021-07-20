@@ -24,11 +24,16 @@ export class Tab5Page implements OnInit {
   id: number;
   postId: number;
 
+  public isPrivate: boolean;
+  public isLike: boolean;
+
   follow: FollowToCreate;
   reaction: ReactionToCreate;
 
   public account = new Account();
   public posts: Post[] = [];
+  public privatePosts: Post[] = [];
+  public likePosts: Post[] = [];
 
   maccount = this.accountService.accountValue;
 
@@ -51,6 +56,8 @@ export class Tab5Page implements OnInit {
   ngOnInit() {
     this.id = this.route.snapshot.params.id;
     this.postId = this.route.snapshot.params.postId;
+    this.isPrivate = false;
+    this.isLike = false;
 
     localStorage.removeItem('pathPost');
     localStorage.setItem('path', 'tab/tabs/account');
@@ -72,6 +79,31 @@ export class Tab5Page implements OnInit {
     this.postService.getAllByUserId(this.accountId)
     .subscribe(res => {
       this.posts = res as Post[];
+    });
+  }
+
+  openPublic(){
+    this.isPrivate = false;
+    this.isLike = false;
+  }
+
+  openPrivate(){
+    this.isPrivate = true;
+    this.isLike = false;
+
+    this.postService.getAllPrivatePost()
+    .subscribe(res => {
+      this.privatePosts = res as Post[];
+    });
+  }
+
+  openLike(){
+    this.isPrivate = false;
+    this.isLike = true;
+
+    this.postService.getAllLikePost()
+    .subscribe(res => {
+      this.likePosts = res as Post[];
     });
   }
 
@@ -140,14 +172,15 @@ export class Tab5Page implements OnInit {
   async openOptinalMyPost(path: string, postId: number) {
     const actionSheet = await this.actionSheetController.create({
       cssClass: 'optinal',
-      buttons: [{
-        text: 'Tải ảnh xuống',
-        icon: 'cloud-download-outline',
-        handler: () => {
-          console.log('Download!');
-          this.download(path);
-        }
-      },
+      buttons: [
+      //   {
+      //   text: 'Tải ảnh xuống',
+      //   icon: 'cloud-download-outline',
+      //   handler: () => {
+      //     console.log('Download!');
+      //     this.download(path);
+      //   }
+      // },
       // {
       //   text: 'Chia sẻ',
       //   icon: 'share-social-outline',
@@ -177,14 +210,15 @@ export class Tab5Page implements OnInit {
   async openOptinal(path: string, postId: number) {
     const actionSheet = await this.actionSheetController.create({
       cssClass: 'optinal',
-      buttons: [{
-        text: 'Tải ảnh xuống',
-        icon: 'cloud-download-outline',
-        handler: () => {
-          console.log('Download!');
-          this.download(path);
-        }
-      },
+      buttons: [
+      //   {
+      //   text: 'Tải ảnh xuống',
+      //   icon: 'cloud-download-outline',
+      //   handler: () => {
+      //     console.log('Download!');
+      //     this.download(path);
+      //   }
+      // },
       // {
       //   text: 'Chia sẻ',
       //   icon: 'share-social-outline',

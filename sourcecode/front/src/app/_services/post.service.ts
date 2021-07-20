@@ -49,7 +49,15 @@ export class PostService {
   }
 
   getAllByUserId(id:number):Observable<Post[]> {
-      return this.http.get<Post[]>(`${baseUrl}/User/${id}`);
+    return this.http.get<Post[]>(`${baseUrl}/User/${id}`);
+  }
+
+  getAllPrivatePost():Observable<Post[]> {
+    return this.http.get<Post[]>(`${baseUrl}/UserPrivatePost`);
+  }
+
+  getAllLikePost():Observable<Post[]> {
+    return this.http.get<Post[]>(`${baseUrl}/UserLikedPost`);
   }
 
   getDownloadImage(id:number): Observable<HttpEvent<Blob>> {

@@ -29,10 +29,15 @@ export class AddEditPostComponent implements OnInit {
   downloadURL: Observable<string>;
   pathImg: string;
   path: any;
+  isPrivate: boolean;
+  statusPost: number;
 
   post = new Post;
 
+  maccount = this.accountService.accountValue;
+
   constructor(
+    private accountService: AccountService,
     private postService: PostService,
     private formBuilder: FormBuilder,
     private alertService: AlertService,
@@ -42,6 +47,8 @@ export class AddEditPostComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.isPrivate = false;
+
     this.myForm = this.formBuilder.group({
       title: [''],
       desctription: [''],
@@ -68,12 +75,23 @@ export class AddEditPostComponent implements OnInit {
     }
   }
 
+  private(){
+    this.isPrivate = true;
+  }
+
   submit() {
     this.submitted = true;
     this.loading = true;
 
     if (this.myForm.invalid) {
       return;
+    }
+
+    console.log(this.isPrivate);
+
+    if(this.isPrivate == true){
+      this.statusPost = 7;
+      this.testForm.set("status",this.statusPost);
     }
 
     this.imagePath = "/files"+Math.random()+this.path;
@@ -86,6 +104,8 @@ export class AddEditPostComponent implements OnInit {
           this.testForm.set("title", this.myForm.get("title").value);
           this.testForm.set("description", this.myForm.get("desctription").value);
           this.testForm.set("path",this.pathImg);
+
+          console.log(this.testForm.value);
 
           this.postService.createPost(this.testForm)
           .subscribe(res => {
@@ -103,7 +123,11 @@ export class AddEditPostComponent implements OnInit {
   back() {
     this.path = localStorage.getItem('path');
     if(this.path == null){
-      this.router.navigate([''], { relativeTo: this.route });
+      if(this.maccount.role == 'User'){
+        this.router.navigate([''], { relativeTo: this.route });
+      } else if(this.maccount.role == 'Admin'){
+        this.router.navigate(['admin/user']);
+      }
     } else {
       this.router.navigate([this.path]);
     }

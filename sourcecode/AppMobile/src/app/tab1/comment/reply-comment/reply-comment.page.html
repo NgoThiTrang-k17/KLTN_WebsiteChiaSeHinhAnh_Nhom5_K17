@@ -7,7 +7,7 @@
     <ion-col>
       <div class="comment">
         <ion-title style="padding-inline: 15px; font-size: 16px; font-weight: 700; padding-top: 10px; transform: none !important;">{{comment.ownerName}}<span class="time">{{comment.created | dateAgoExample}}</span></ion-title>
-        <ion-text style="padding-inline: 15px; font-size: 16px; padding-bottom: 10px;">{{comment.content}}</ion-text>
+        <ion-text style="padding-inline: 15px; font-size: 16px; padding-bottom: 10px; padding-left: 20px;">{{comment.content}}</ion-text>
       </div>
       <ion-item lines="none">
         <ion-icon *ngIf="comment.isReactedByThisUser===false" (click)="onCreateReactionComment(comment.id)" name="heart-outline" class="icon-comment"></ion-icon>

@@ -3,7 +3,27 @@
     <div class="text-center mt-3">
         <img *ngIf="account.avatarPath==null" class="rounded-circle" style="height: 80px; width: 81px;" src="../../assets/images/default-profile.png">
         <img *ngIf="account.avatarPath!=null" class="rounded-circle" style="height: 80px; width: 81px;" [src]="account.avatarPath">
-        <p style="font-weight: bold; font-size: large;">{{account.name}}<span><i (click)="logout()" class="fas fa-sign-out-alt ml-2" style="cursor: pointer;"></i></span></p>
+        <p style="font-weight: bold; font-size: large; position: relative;">{{account.name}}
+          <span style="position: absolute;">
+            <div class="dropdown no-arrow" dropdown>
+              <i class="fas fa-angle-double-right ml-2" style="cursor: pointer;" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" dropdownToggle></i>
+              <div id="myDropdown" class="dropdown-menu dropdown-menu-left shadow animated--fade-in"
+                aria-labelledby="dropdownMenuLink" *dropdownMenu>
+                <a (click)="goUser()" class="dropdown-item">Chuyển sang User</a>
+                <a (click)="logout()" class="dropdown-item">Đăng xuất</a>
+              </div>
+            </div>
+            <!-- <div ngbDropdown placement="right-top" class="d-inline-block">
+              <button class="btn btn-outline-primary" id="dropdownBasic2" ngbDropdownToggle>Toggle dropup</button>
+              <i class="fas fa-angle-double-right ml-2" style="cursor: pointer;" id="dropdownBasic2" ngbDropdownToggle></i>
+              <div ngbDropdownMenu aria-labelledby="dropdownBasic2">
+                <button (click)="goUser()" ngbDropdownItem>Chuyển sang User</button>
+                <button (click)="logout()" ngbDropdownItem>Đăng xuất</button>
+              </div>
+            </div> -->
+          </span>
+        </p>
+        <!-- <p (click)="goUser()" style="cursor: pointer;">Chuyển sang User</p> -->
     </div>
     <hr>
     <div class="sidebar-wrapper">
@@ -19,7 +39,7 @@
             <li class="nav-item active">
                 <a routerLink="accounts" routerLinkActive="active" class="nav-link" style="justify-content: left; align-items: center; display: flex;">
                     <i class="material-icons">person</i>
-                    <span class="ml-2">Accounts</span>
+                    <span class="ml-2">Tài khoản</span>
                 </a>
             </li>
         </ul>
@@ -27,7 +47,7 @@
             <li class="nav-item active">
                 <a routerLink="posts" routerLinkActive="active" class="nav-link" style="justify-content: left; align-items: center; display: flex;">
                   <i class="material-icons">library_books</i>
-                  <span class="ml-2">Posts</span>
+                  <span class="ml-2">Bài viết</span>
                 </a>
             </li>
         </ul>
@@ -35,7 +55,7 @@
           <li class="nav-item active">
               <a routerLink="comments" routerLinkActive="active" class="nav-link" style="justify-content: left; align-items: center; display: flex;">
                 <i class="material-icons">comment</i>
-                <span class="ml-2">Comments</span>
+                <span class="ml-2">Bình luận</span>
               </a>
           </li>
         </ul>
@@ -43,7 +63,7 @@
           <li class="nav-item active">
               <a routerLink="reports" routerLinkActive="active" class="nav-link" style="justify-content: left; align-items: center; display: flex;">
                 <i class="fas fa-exclamation-circle" style="font-size: 24px;"></i>
-                <span class="ml-2">Reports</span>
+                <span class="ml-2">Báo cáo</span>
               </a>
           </li>
         </ul>

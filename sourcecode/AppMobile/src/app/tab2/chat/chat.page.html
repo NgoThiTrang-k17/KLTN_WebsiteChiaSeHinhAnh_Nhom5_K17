@@ -9,9 +9,6 @@
           <ion-avatar *ngIf="account.avatarPath===null"><img src="../../assets/images/default-profile.png"></ion-avatar>
           <ion-avatar *ngIf="account.avatarPath!==null"><img [src]="account.avatarPath"></ion-avatar>
           <ion-title class="title">{{account.name}}</ion-title>
-          <span *ngIf = "(presence.onlineUsers$ | async).includes(account.id)">
-            <ion-icon name="ellipse" style="color: blue; width: 15px; height: 15px;"></ion-icon>
-          </span>
         </ion-item>
         <!-- <ion-avatar class="center"><img src="../../assets/images/default-profile.png"></ion-avatar><span class="title">Lê Huy Hiệp</span> -->
       </ion-col>

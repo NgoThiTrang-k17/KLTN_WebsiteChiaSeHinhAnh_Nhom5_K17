@@ -12,7 +12,7 @@
   <div mat-dialog-content >
     <div class="row">
       <div class="col-3">
-        <img style="height: 100%; width: 100%; border-radius: 15px;" [src]="post.path">
+        <img style="height: auto; width: 100%; border-radius: 15px;" [src]="post.path">
       </div>
       <div class="col">
         <div class="form-group">
@@ -20,7 +20,8 @@
           <input
           name="title"
           [(ngModel)]="title"
-          class="form-control py-2" value="{{post.title}}" style="border-radius: 20px;">
+          class="form-control py-2" value="{{post.title}}" style="border-radius: 20px;"
+          placeholder="Nhập tiêu đề của hình ảnh...">
         </div>
         <div class="form-group">
           <label for="destription">Mô tả</label>
@@ -28,6 +29,12 @@
           name="description"
           [(ngModel)]="description"
           class="form-control py-2" value="{{post.description}}" placeholder="Mô tả về hình ảnh của bạn..." style="border-radius: 20px;"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="setting">Cài đặt</label>
+          <div>
+            <mat-slide-toggle [(ngModel)]="isPrivate" name="isPrivate">Riêng tư</mat-slide-toggle>
+          </div>
         </div>
       </div>
     </div>

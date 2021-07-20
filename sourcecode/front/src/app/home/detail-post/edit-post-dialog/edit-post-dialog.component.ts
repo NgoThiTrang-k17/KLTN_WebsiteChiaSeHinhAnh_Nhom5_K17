@@ -4,7 +4,6 @@ import { NgForm } from "@angular/forms";
 
 import { Post, PostToUpdate } from '../../../_models';
 import { PostService } from '../../../_services';
-import { title } from 'process';
 
 @Component({
   selector: 'app-edit-post-dialog',
@@ -19,6 +18,8 @@ export class EditPostDialogComponent implements OnInit {
 
   title: string;
   description: string;
+  isPrivate: boolean;
+  statusPost: number;
 
   public post = new Post;
 
@@ -35,16 +36,26 @@ export class EditPostDialogComponent implements OnInit {
 
     this.postService.getPostById(this.postId)
     .subscribe(res => {
-      console.log(res);
-
       this.post = res;
+      if(this.post.status == 6){
+        this.isPrivate = false;
+      } else if(this.post.status == 7){
+        this.isPrivate = true;
+      }
     })
   }
 
   updatePost() {
+    if(this.isPrivate == true){
+      this.statusPost = 7
+    } else if(this.isPrivate == false){
+      this.statusPost = 6;
+    }
+
     this.postToUpdate = {
       title: this.title,
       description: this.description,
+      status: this.statusPost,
     }
 
     this.postService.update(this.postId, this.postToUpdate)

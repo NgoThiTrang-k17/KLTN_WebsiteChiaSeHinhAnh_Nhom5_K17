@@ -127,21 +127,25 @@ export class DetailPostComponent implements OnInit {
     var r = confirm("Bạn có chắc chắn muốn xoá bài viết này?");
     if(r)
     {
-        try {
-            this.postService.delete(id)
-            .subscribe(() => {
-              this.router.navigate(['../../../'], { relativeTo: this.route });
-            });
-          } catch (e) {
-            console.log(e);
-        }
+      try {
+          this.postService.delete(id)
+          .subscribe(() => {
+            this.back();
+          });
+        } catch (e) {
+          console.log(e);
+      }
     }
   }
 
   back() {
     this.path = localStorage.getItem('path');
     if(this.path == null){
-      this.router.navigate([''], { relativeTo: this.route });
+      if(this.maccount.role == 'User'){
+        this.router.navigate([''], { relativeTo: this.route });
+      } else if(this.maccount.role == 'Admin'){
+        this.router.navigate(['admin/user']);
+      }
     } else {
       this.router.navigate([this.path]);
     }

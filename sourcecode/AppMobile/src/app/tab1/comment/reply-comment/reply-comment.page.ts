@@ -63,21 +63,39 @@ export class ReplyCommentPage implements OnInit {
       targetId: id
     };
     this.reactionService.createReaction(this.reaction)
-    .subscribe(res => {
-      this.commentService.getAllByCommentId(this.commentId)
-      .subscribe((res: any)=>{
-        this.comments = res as Comment[];
-      });
+    .pipe(first())
+    .subscribe({
+      next: () => {
+        const comment = this.comments.find((x: Comment) => {
+          if(x.id === id){
+            x.isReactedByThisUser = true;
+            x.reactionCount++;
+          }
+        });
+        this.comments = this.comments;
+      },
+      error: error => {
+        console.log(error);
+      }
     });
   }
 
   unReactionComment(id: number){
     this.reactionService.deleteCmt(id)
-    .subscribe(res => {
-      this.commentService.getAllByCommentId(this.commentId)
-      .subscribe((res: any)=>{
-        this.comments = res as Comment[];
-      });
+    .pipe(first())
+    .subscribe({
+      next: () => {
+        const comment = this.comments.find((x: Comment) => {
+          if(x.id === id){
+            x.isReactedByThisUser = false;
+            x.reactionCount--;
+          }
+        });
+        this.comments = this.comments;
+      },
+      error: error => {
+        console.log(error);
+      }
     });
   }
 
@@ -88,10 +106,10 @@ export class ReplyCommentPage implements OnInit {
         text: 'Chỉnh sửa',
         icon: 'create-outline',
         handler: () => {
-          console.log('Edit clicked');
+          console.log('Edit clicked' + commentId);
           this.onEditComment = true;
           this.editCommentId = commentId;
-          this.editReplyCommentId.emit(commentId);
+          this.editReplyCommentId.emit(this.commentId);
           this.editReplyCommentId.emit(content);
         }
       },{

@@ -47,6 +47,14 @@ export class PostService {
     return this.http.get<Post[]>(`${baseUrl}/User/${id}`);
   }
 
+  getAllPrivatePost(): Observable<Post[]> {
+    return this.http.get<Post[]>(`${baseUrl}/UserPrivatePost`);
+  }
+
+  getAllLikePost(): Observable<Post[]> {
+    return this.http.get<Post[]>(`${baseUrl}/UserLikedPost`);
+  }
+
     // get đề xuất phổ biến
   getSuggestion(): Observable<Post[]> {
     return this.http.get<Post[]>(`${baseUrl}/GetSuggestion`);

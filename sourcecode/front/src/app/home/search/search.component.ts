@@ -57,10 +57,18 @@ export class SearchComponent implements OnInit{
     console.log(query);
 
     this.activeModal.close();
-    this.router.navigate(['user/search/'+ query]);
-    localStorage.removeItem('path');
-    this.path = 'user/search/'+ query;
-    localStorage.setItem('path', this.path);
+
+    if(this.maccount.role == 'User'){
+      this.router.navigate(['user/search/'+ query]);
+      localStorage.removeItem('path');
+      this.path = 'user/search/'+ query;
+      localStorage.setItem('path', this.path);
+    } else if(this.maccount.role == 'Admin'){
+      this.router.navigate(['admin/user/search/'+ query]);
+      localStorage.removeItem('path');
+      this.path = 'admin/user/search/'+ query;
+      localStorage.setItem('path', this.path);
+    }
   }
 
 }

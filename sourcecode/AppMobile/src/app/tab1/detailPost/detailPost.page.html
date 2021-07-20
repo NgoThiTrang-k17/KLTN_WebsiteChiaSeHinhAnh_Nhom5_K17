@@ -34,7 +34,11 @@
             {{post.commentCount}} bình luận
           </span>
         </div>
+        <ion-icon *ngIf="post.status===6" name="people"></ion-icon>
+        <ion-icon *ngIf="post.status===7" name="lock-closed"></ion-icon>
       </div>
+      <!-- <div style="text-align: center;">
+      </div> -->
       <ion-row class="action">
         <!-- Tim -->
         <ion-col>
@@ -50,15 +54,15 @@
           <ion-icon class="icon-action" name="share-social-outline"></ion-icon>
         </ion-col> -->
         <!-- Tải xuống -->
-        <ion-col>
+        <!-- <ion-col>
           <a style="color: #747474;" href="post.path" download="{{post.title}}.jpg">
             <span>
               <ion-icon class="icon-action" name="cloud-download-outline"></ion-icon>
             </span>
           </a>
-        </ion-col>
+        </ion-col> -->
         <!-- Báo cáo -->
-        <ion-col>
+        <ion-col *ngIf="post.ownerId!==maccount.id">
           <ion-icon (click)="openReport(post.id)" class="icon-action" name="alert-circle-outline"></ion-icon>
         </ion-col>
         <!-- Tuỳ chọn -->

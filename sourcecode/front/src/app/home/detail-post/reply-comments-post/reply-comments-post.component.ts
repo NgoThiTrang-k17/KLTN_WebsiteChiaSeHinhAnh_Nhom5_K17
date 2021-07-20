@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Account, Comment, commentToCreateForCmt, CommentToUpdate, ReactionCmtToCreate } from '../../../_models';
 import { AccountService, PresenceService, CommentService, ReactionService } from '../../../_services';
 import { ReportComponent } from '../../report/report.component';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-reply-comments-post',
@@ -142,22 +143,40 @@ export class ReplyCommentsPostComponent implements OnInit {
       targetId: cmtId,
     }
     this.reactionService.createReaction(this.reactionCmt)
-    .subscribe(res => {
-      this.commentService.getAllByCommentId(this.commentId)
-      .subscribe(res => {
-        this.comments = res as Comment[];
-      })
+    .pipe(first())
+    .subscribe({
+      next: () => {
+        const comment = this.comments.find((x: Comment) => {
+          if(x.id == cmtId){
+            x.isReactedByThisUser = true;
+            x.reactionCount++;
+          }
+        });
+        this.comments = this.comments;
+      },
+      error: error => {
+        console.log(error);
+      }
     });
 
   }
 
   unCreateReactionCmt(cmtId: number) {
     this.reactionService.deleteCmt(cmtId)
-    .subscribe(() => {
-      this.commentService.getAllByCommentId(this.commentId)
-      .subscribe(res => {
-        this.comments = res as Comment[];
-      })
+    .pipe(first())
+    .subscribe({
+      next: () => {
+        const comment = this.comments.find((x: Comment) => {
+          if(x.id == cmtId){
+            x.isReactedByThisUser = false;
+            x.reactionCount--;
+          }
+        });
+        this.comments = this.comments;
+      },
+      error: error => {
+        console.log(error);
+      }
     });
   }
 

@@ -16,7 +16,7 @@
     <div class="body">
       <!-- ----------Khi chưa search---------- -->
       <div *ngIf="!searchMess">
-        <input (click)="onSearchForMessage()" class="form-control py-2 border" placeholder="Tìm kiếm bằng tên" style="border-radius: 20px;">
+        <input #input (click)="onSearchForMessage()" class="form-control py-2 border" placeholder="Tìm kiếm bằng tên" style="border-radius: 20px;" >
         <div *ngFor="let message of (presenceService.userMessages$ | async).slice().reverse()">
           <!-- -------------Tin nhắn tới--------------- -->
           <div *ngIf="message.senderId != maccount.id" (click)="updateStatus(message.id)">
@@ -98,22 +98,25 @@
       <!-- ----------Khi search---------- -->
       <div *ngIf="searchMess">
         <input #searchInput (keyup)="searchForMessage($event)" class="form-control py-2 border" placeholder="Tìm kiếm bằng tên" id="example-search-input" style="border-radius: 20px;">
-        <div id="1" *ngFor="let account of accounts">
-          <div (click)="openChat(account.id)" id="1" class="row" style="margin: 10px 0 10px 0;">
-            <div class="col-2 text-center" style="padding: 0;">
-              <img
-                  *ngIf="account.avatarPath==null"
-                  src="../../assets/images/default-profile.png"
-                  style="height: 40px; width: 41px;" class="img-fluid rounded-circle" alt="">
-              <img
-                  *ngIf="account.avatarPath!=null"
-                  [src]="account.avatarPath"
-                  style="height: 40px; width: 41px;" class="img-fluid rounded-circle" alt="">
-            </div>
-            <div class="col" style="padding: 0; align-items: center; display: flex;">
-              <label style="margin: 0;">{{account.name}}</label>
-            </div>
+        <div *ngIf="onSearch">
+          <div *ngIf="accounts.length==0" class="text-center" style="padding-top: 10px;">Không có kết quả phù hợp</div>
+          <div id="1" *ngFor="let account of accounts">
+            <div (click)="openChat(account.id)" id="1" class="row" style="margin: 10px 0 10px 0;">
+              <div class="col-2 text-center" style="padding: 0;">
+                <img
+                    *ngIf="account.avatarPath==null"
+                    src="../../assets/images/default-profile.png"
+                    style="height: 40px; width: 41px;" class="img-fluid rounded-circle" alt="">
+                <img
+                    *ngIf="account.avatarPath!=null"
+                    [src]="account.avatarPath"
+                    style="height: 40px; width: 41px;" class="img-fluid rounded-circle" alt="">
+              </div>
+              <div class="col" style="padding: 0; align-items: center; display: flex;">
+                <label style="margin: 0;">{{account.name}}</label>
+              </div>
 
+            </div>
           </div>
         </div>
       </div>

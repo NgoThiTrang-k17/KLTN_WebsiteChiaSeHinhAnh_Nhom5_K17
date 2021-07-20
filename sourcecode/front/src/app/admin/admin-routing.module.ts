@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { LayoutComponent } from './layout.component';
+import { DetailPostComponent } from '../home/detail-post/detail-post.component';
 
 const accountsModule = () => import('./accounts/accounts.module').then(x => x.AccountsModule);
 const postsModule = () => import('./posts/posts.module').then(x => x.PostsModule);
@@ -22,6 +23,7 @@ const routes: Routes = [
     ]
   },
   { path: 'user', loadChildren: userModule},
+  { path: 'user/detail-post/:id/:ownerId', component: DetailPostComponent},
 ];
 
 @NgModule({

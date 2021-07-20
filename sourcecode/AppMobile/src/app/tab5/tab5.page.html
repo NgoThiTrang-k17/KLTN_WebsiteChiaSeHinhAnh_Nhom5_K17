@@ -3,6 +3,22 @@
 </ion-header> -->
 
 <ion-content>
+  <ion-fab *ngIf="id===undefined" horizontal="end" vertical="top" slot="fixed">
+    <ion-fab-button color="light">
+      <ion-icon md="caret-down" ios="chevron-forward-circle-outline"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="down">
+      <ion-fab-button (click)="openPublic()" color="light">
+        <ion-icon name="people"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button (click)="openPrivate()" color="light">
+        <ion-icon name="lock-closed"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button (click)="openLike()" color="light">
+        <ion-icon name="heart"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
   <ion-avatar *ngIf="id!==undefined" (click)="back()" class="btn-back">
     <ion-icon name="chevron-back-outline"></ion-icon>
   </ion-avatar>
@@ -41,8 +57,54 @@
   </div>
 
   <div>
-    <ion-list class="card-columns listPost">
+    <ion-list *ngIf="!isPrivate && !isLike" class="card-columns listPost">
       <div *ngFor="let post of posts">
+        <ion-card class="card" slot="start">
+          <ion-img *ngIf="id===undefined" class="img" [src]="post.path" routerLink="detail/{{post.id}}/{{post.ownerId}}"></ion-img>
+          <ion-img *ngIf="id!==undefined" class="img" [src]="post.path" routerLink="../../../detail/{{post.id}}/{{post.ownerId}}"></ion-img>
+          <ion-row style="height: 25px;">
+            <ion-col size="9" style="text-align: left; justify-self: center; display: flex;">
+              <ion-icon class="iconPost" *ngIf="post.isReactedByThisUser===false" (click)="onCreateReaction(post.id)" name="heart-outline"></ion-icon>
+              <ion-icon class="iconPost" *ngIf="post.isReactedByThisUser===true && post.reactionCount!==0" (click)="unReaction(post.id)" name="heart" style="color: rgba(255, 0, 0, 0.788);"></ion-icon>
+              <span *ngIf="post.reactionCount!==0" style="margin-left: 1px; color: black;">{{post.reactionCount}}</span>
+            </ion-col>
+            <ion-col size="3" class="centerColumn" style="text-align: right;">
+              <ion-icon name="people" style="margin-right: 5px;"></ion-icon>
+              <ion-icon class="iconPost" *ngIf="accountId===maccount.id" (click)="openOptinalMyPost(post.path, post.id)" name="ellipsis-horizontal" style="color: black;"></ion-icon>
+              <ion-icon class="iconPost" *ngIf="accountId!==maccount.id" (click)="openOptinal(post.path, post.id)" name="ellipsis-horizontal" style="color: black;"></ion-icon>
+            </ion-col>
+          </ion-row>
+          <ion-label *ngIf="id===undefined" routerLink="detail/{{post.id}}/{{post.ownerId}}" class="labelPost">{{post.title}}</ion-label>
+          <ion-label *ngIf="id!==undefined" routerLink="../../../detail/{{post.id}}/{{post.ownerId}}" class="labelPost">{{post.title}}</ion-label>
+        </ion-card>
+      </div>
+    </ion-list>
+
+    <ion-list *ngIf="isPrivate" class="card-columns listPost">
+      <div *ngFor="let post of privatePosts">
+        <ion-card class="card" slot="start">
+          <ion-img *ngIf="id===undefined" class="img" [src]="post.path" routerLink="detail/{{post.id}}/{{post.ownerId}}"></ion-img>
+          <ion-img *ngIf="id!==undefined" class="img" [src]="post.path" routerLink="../../../detail/{{post.id}}/{{post.ownerId}}"></ion-img>
+          <ion-row style="height: 25px;">
+            <ion-col size="9" style="text-align: left; justify-self: center; display: flex;">
+              <ion-icon class="iconPost" *ngIf="post.isReactedByThisUser===false" (click)="onCreateReaction(post.id)" name="heart-outline"></ion-icon>
+              <ion-icon class="iconPost" *ngIf="post.isReactedByThisUser===true && post.reactionCount!==0" (click)="unReaction(post.id)" name="heart" style="color: rgba(255, 0, 0, 0.788);"></ion-icon>
+              <span *ngIf="post.reactionCount!==0" style="margin-left: 1px; color: black;">{{post.reactionCount}}</span>
+            </ion-col>
+            <ion-col size="3" class="centerColumn" style="text-align: right;">
+              <ion-icon name="lock-closed" style="margin-right: 5px;"></ion-icon>
+              <ion-icon class="iconPost" *ngIf="accountId===maccount.id" (click)="openOptinalMyPost(post.path, post.id)" name="ellipsis-horizontal" style="color: black;"></ion-icon>
+              <ion-icon class="iconPost" *ngIf="accountId!==maccount.id" (click)="openOptinal(post.path, post.id)" name="ellipsis-horizontal" style="color: black;"></ion-icon>
+            </ion-col>
+          </ion-row>
+          <ion-label *ngIf="id===undefined" routerLink="detail/{{post.id}}/{{post.ownerId}}" class="labelPost">{{post.title}}</ion-label>
+          <ion-label *ngIf="id!==undefined" routerLink="../../../detail/{{post.id}}/{{post.ownerId}}" class="labelPost">{{post.title}}</ion-label>
+        </ion-card>
+      </div>
+    </ion-list>
+
+    <ion-list *ngIf="isLike" class="card-columns listPost">
+      <div *ngFor="let post of likePosts">
         <ion-card class="card" slot="start">
           <ion-img *ngIf="id===undefined" class="img" [src]="post.path" routerLink="detail/{{post.id}}/{{post.ownerId}}"></ion-img>
           <ion-img *ngIf="id!==undefined" class="img" [src]="post.path" routerLink="../../../detail/{{post.id}}/{{post.ownerId}}"></ion-img>

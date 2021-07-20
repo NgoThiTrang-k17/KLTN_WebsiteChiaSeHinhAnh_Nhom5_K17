@@ -14,11 +14,12 @@ import { ChatComponent } from './chat/chat.component';
 export class MessageComponent implements OnInit {
 
   @ViewChild('searchInput') searchElement: ElementRef;
+  @ViewChild('input') inputElement: ElementRef;
 
   modalChatRef :any;
-  public live: boolean;
 
   public searchMess: boolean;
+  public onSearch: boolean;
 
   public accounts: Account[] = [];
   public messages: Message[] = [];
@@ -39,14 +40,13 @@ export class MessageComponent implements OnInit {
 
   ngOnInit(): void {
     this.searchMess = false;
-    this.live = true;
+    this.onSearch = false;
 
     this.presenceService.userMessages$
     .pipe()
     .subscribe(res => {
       console.log(res);
     })
-
   }
 
   onSearchForMessage() {
@@ -61,6 +61,7 @@ export class MessageComponent implements OnInit {
   }
 
   searchForMessage(event) {
+    this.onSearch = true;
     var str = event.target.value;
     if(str=='') { return; }
     this.searchService.getAccountForMessage(str)
@@ -81,6 +82,7 @@ export class MessageComponent implements OnInit {
       // on close
     }, (reason) => {
       this.messageService.stopHubConnection();
+      this.presenceService.countNewMessage();
     });
   }
 }

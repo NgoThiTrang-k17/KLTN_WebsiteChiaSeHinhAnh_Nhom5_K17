@@ -5,6 +5,7 @@ export class Post {
   created: string;
   categories: string;
   imageName: string;
+  status: number;
   path: string;
   ownerId: number;
   isReactedByThisUser: boolean;

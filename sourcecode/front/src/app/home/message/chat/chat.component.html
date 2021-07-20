@@ -25,7 +25,30 @@
     <div *ngFor="let message of (messageService.messageThread$|async)">
       <div *ngIf="message.senderId == maccount.id">
         <div class="right">
-          <label class="text-mMess">{{message.content}}</label>
+          <div class="row">
+            <div class="col" style="padding: 0;">
+              <label class="text-mMess">{{message.content}}</label>
+            </div>
+            <div class="col-1" style="padding-top: 15px; padding-right: 17px;">
+              <span style="position: absolute; right: 16px;">
+                <!-- ---------Tin nhắn đã gửi khi đối phương không onl--------- -->
+                <i *ngIf="!(presenceService.onlineUsers$ | async).includes(message.recipientId) && message.read == null" class="far fa-check-circle" style="font-size: small;"></i>
+                <!-- ---------Tin nhắn đã gửi khi đối phương onl--------- -->
+                <i *ngIf="(presenceService.onlineUsers$ | async).includes(message.recipientId) && message.read == null" class="fas fa-check-circle" style="font-size: small;"></i>
+                <!-- ---------Tin nhắn đã gửi khi đối phương đã xem--------- -->
+                <div *ngIf="message.read != null">
+                  <img
+                  *ngIf="message.recipientAvatarPath==null"
+                  src="../../assets/images/default-profile.png"
+                  style="height: 14px; width: 14px;" class="img-fluid rounded-circle" alt="">
+                  <img
+                  *ngIf="message.recipientAvatarPath!=null"
+                  [src]="message.recipientAvatarPath"
+                  style="height: 14px; width: 14px;" class="img-fluid rounded-circle" alt="">
+                </div>
+              </span>
+            </div>
+          </div>
         </div>
       </div>
       <div *ngIf="message.senderId != maccount.id">

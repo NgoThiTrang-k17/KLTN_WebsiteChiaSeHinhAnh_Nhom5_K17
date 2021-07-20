@@ -4,7 +4,8 @@
     <div class="collapse navbar-collapse">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-          <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link bold btn btn-dark text-white nav-btn" href="#">Trang chủ<span class="sr-only">(current)</span></a>
+          <a *ngIf="maccount.role=='User'" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link bold btn btn-dark text-white nav-btn" href="#">Trang chủ<span class="sr-only">(current)</span></a>
+          <a *ngIf="maccount.role=='Admin'" (click)="goHomeUser()" class="nav-link bold btn btn-dark text-white nav-btn">Trang chủ<span class="sr-only">(current)</span></a>
         </li>
         <!-- -------------------Search---------------------- -->
         <li class="ml-3 mr-3 nav-item mt-1">
@@ -131,7 +132,7 @@
           <div class="nav-item dropdown br-xam text-center" style="width: 420px,">
             <a (click)="openMess()" class="nav-link dropdown-toggle" data-toggle="dropdown" dropdownToggle>
               <i class="fas fa-comment-dots mt-1" style="font-size:x-large; position: relative;"></i>
-              <span *ngIf="countMess!=0" class="badge rounded-pill bg-danger" style="position: absolute;">{{(presenceService.countNewMess|async).slice().reverse()}}</span>
+              <span *ngIf="countMess!=0" class="badge rounded-pill bg-danger" style="position: absolute;">{{countMess}}</span>
             </a>
 
           </div>
@@ -153,7 +154,7 @@
                   </a>
                   <ul class="dropdown-menu dropdown-menu-right" *dropdownMenu>
                       <li routerLink="detail/{{maccount.id}}" class="dropdown-item nav-link btn" style="text-align: left;">Trang cá nhân <!--<i class="fa fa-cogs"></i>--></li>
-                      <!-- <li *ngIf="account.role === admin" ></li> -->
+                      <li *ngIf="maccount.role == 'Admin'" (click)="goAdmin()" class="dropdown-item nav-link btn" style="text-align: left;" >Chuyển sang admin</li>
                       <li (click)="logout()" class="dropdown-item nav-link">Đăng xuất</li>
                   </ul>
               </div>

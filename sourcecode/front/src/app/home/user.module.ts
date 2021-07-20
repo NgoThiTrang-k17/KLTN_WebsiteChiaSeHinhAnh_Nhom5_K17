@@ -13,6 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 import { NavHomeComponent } from './navhome.component';
 import { UserRoutingModule } from './user-routing.module';
@@ -59,6 +60,7 @@ import { DateAgoExaple } from '../_shareModule/dateAgoExample';
     MatInputModule,
     MatButtonModule,
     MatRadioModule,
+    MatSlideToggleModule
   ],
   declarations: [
     HomeComponent,

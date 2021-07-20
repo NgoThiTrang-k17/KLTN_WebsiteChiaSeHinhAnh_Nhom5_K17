@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatTabsModule } from '@angular/material/tabs';
 
 import { ProfileRoutingModule } from './profile-routing.module';
 import { DetailsComponent } from './details.component';
@@ -18,6 +20,8 @@ import { UpdateAvatarComponent } from './update-avatar/update-avatar.component';
     ProfileRoutingModule,
     MatDialogModule,
     BsDropdownModule.forRoot(),
+    MatSlideToggleModule,
+    MatTabsModule
   ],
   declarations: [
     DetailsComponent,

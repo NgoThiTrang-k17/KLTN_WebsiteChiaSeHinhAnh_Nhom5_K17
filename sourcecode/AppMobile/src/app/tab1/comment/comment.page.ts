@@ -63,6 +63,7 @@ export class CommentPage implements OnInit {
     this.seenReplyComment = false;
     this.editComment = false;
     this.finishUpdate = false;
+    this.editCommentId = 0;
 
     this.commentService.getAllByPostId(this.postId)
     .subscribe(res=>{
@@ -188,11 +189,11 @@ export class CommentPage implements OnInit {
     });
   }
 
-  onEditReplyComment(commentId: number, content: string){
-    console.log(commentId);
+  onEditReplyComment($event, content: string){
+    console.log($event);
     this.onReplyComment = true;
     this.editComment = true;
-    this.editCommentId = commentId;
+    this.editCommentId = $event;
     console.log(this.editCommentId);
     this.replyCommentContent = content.toString();
     setTimeout(()=>{

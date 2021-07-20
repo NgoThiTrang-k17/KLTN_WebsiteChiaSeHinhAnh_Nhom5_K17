@@ -2,9 +2,11 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { BehaviorSubject } from 'rxjs';
+import { count } from 'rxjs-compat/operator/count';
 import { take } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { Account, Notification, Message } from '../_models';
+import { AccountService } from '../_services';
 
 @Injectable({
   providedIn: 'root'
@@ -20,10 +22,15 @@ export class PresenceService {
 
   private userMessageSource = new BehaviorSubject<Message[]>([]);
   userMessages$ = this.userMessageSource.asObservable();
+  unreadMessage$ = this.userMessageSource.asObservable();
 
   countNewMess = 0;
+  // maccount = this.accountService.accountValue;
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    // private accountService: AccountService,
+  ) { }
 
   createHubConnection(user: Account) {
     this.hubConnection = new HubConnectionBuilder()
@@ -70,10 +77,16 @@ export class PresenceService {
     this.hubConnection.on('NewMessageReceived', message=>{
       // Danh sanh nguoi dang nhan tin
       this.userMessages$.pipe(take(1)).subscribe(messages=>{
-        this.countNewMess = this.countNewMess + 1;
         this.userMessageSource.next([...messages.filter(m =>
           (m.recipientId + m.senderId ) !== (message.recipientId + message.senderId)), message]);
       })
+      this.unreadMessage$.pipe(take(1)).subscribe(messages=>{
+        this.userMessageSource.next([...messages.filter(m => m.read == null), message]);
+
+      })
+      this.countNewMessage();
+      console.log(this.userMessageSource);
+
     })
 
     // this.hubConnection.on('NewMessageReceived', ({userId, name})=>{
@@ -82,9 +95,6 @@ export class PresenceService {
     //   .pipe(take(1))
     //   .subscribe(() => this.router.navigateByUrl('/members/'+ userId +'?Tab=1'));
     // })
-    if(this.countNewMess != 0){
-      return this.countNewMess;
-    }
   }
 
   stopHubConnection(){
@@ -117,5 +127,13 @@ export class PresenceService {
 
   resetCountNewMess() {
     this.countNewMess = 0;
+  }
+
+  public countNewMessage(){
+    const newMess = this.userMessageSource.getValue().filter(m => m.read == null);
+    this.countNewMess = newMess.length;
+    console.log(newMess.length);
+
+    return this.countNewMess;
   }
 }

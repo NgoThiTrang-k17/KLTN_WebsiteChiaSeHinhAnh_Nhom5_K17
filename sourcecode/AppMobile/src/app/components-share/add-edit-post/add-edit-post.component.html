@@ -23,7 +23,6 @@
                   [(ngModel)]="file"
                   id="path"
                   type="file"
-                  accept=".png,.jpg,.jfif"
                   (change)="onFileChange($event)"/>
                   <ion-icon name="arrow-up-circle-outline" style="font-size: 40px;"></ion-icon>
                 </label>
@@ -67,6 +66,10 @@
         [(ngModel)]="desctription"
         type="text"
         placeholder="Nhập mô tả chi tiết cho hình ảnh..."></ion-textarea>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-label>Riêng tư</ion-label>
+        <ion-toggle slot="start" name="isPrivate" color="dark" [(ngModel)]="isPrivate"></ion-toggle>
       </ion-item>
     </form>
   </div>

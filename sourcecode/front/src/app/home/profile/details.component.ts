@@ -22,6 +22,9 @@ export class DetailsComponent implements OnInit{
   maccount = this.accountService.accountValue;
   public post: PostToCreate;
   public posts: Post[] = [];
+  public privatePosts: Post[] = [];
+  public likePosts: Post[] = [];
+
   id: number;
   account: Account;
   public follow: FollowToCreate;
@@ -58,6 +61,16 @@ export class DetailsComponent implements OnInit{
       this.posts = res as Post[];
     });
 
+    this.postService.getAllPrivatePost()
+    .subscribe(res => {
+      this.privatePosts = res as Post[];
+    });
+
+    this.postService.getAllLikePost()
+    .subscribe(res => {
+      this.likePosts = res as Post[];
+    });
+
     this.accountService.getById(this.id)
     .subscribe((res:any)=>{
       console.log(res);
@@ -66,8 +79,14 @@ export class DetailsComponent implements OnInit{
 
     this.getFollow(this.id);
     localStorage.removeItem('path');
-    this.path = 'user/detail/' + this.id;
-    localStorage.setItem('path',this.path);
+
+    if(this.maccount.role == 'User'){
+      this.path = 'user/detail/' + this.id;
+      localStorage.setItem('path',this.path);
+    } else if(this.maccount.role == 'Admin'){
+      this.path = 'admin/user/detail/' + this.id;
+      localStorage.setItem('path',this.path);
+    }
   }
 
   openListFollowerDialog(followerCount:number): void{
@@ -175,21 +194,6 @@ export class DetailsComponent implements OnInit{
     });
   }
 
-  deletePost(id: number) {
-    var r = confirm("Bạn có chắc chắn muốn xoá bài viết này?");
-    if(r)
-    {
-      try {
-          this.postService.delete(id)
-          .subscribe(() => {
-            this.router.navigate(['user']);
-          });
-        } catch (e) {
-          console.log(e);
-      }
-    }
-  }
-
   openReportDialog(accountId: number): void{
     let dialogRef1 = this.dialog.open(ReportComponent,{
       width: '500px',
@@ -260,4 +264,7 @@ export class DetailsComponent implements OnInit{
     this.modalChatRef.componentInstance.userId = userId;
   }
 
+  goDetail(postId: number, ownerId: number){
+    this.router.navigate(['admin/user/detail-post/' + postId + '/' + ownerId]);
+  }
 }
