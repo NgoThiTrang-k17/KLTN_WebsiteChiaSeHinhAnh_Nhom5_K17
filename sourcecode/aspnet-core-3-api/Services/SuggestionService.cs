@@ -98,6 +98,11 @@ namespace WebApi.Services
             var userPreference = await GetUserPreference(userId);
             var posts = await _context.Posts.Where(p=>p.Status == Status.Public).ToListAsync();
             var responses = new List<Post>();
+            if (userPreference.Count < 5)
+            {
+                var allUserPreference = await GetUserPreference();
+                userPreference.AddRange(allUserPreference);
+            }
             foreach (var post in posts)
             {
                 var postCategories = post.Categories.Split('-').ToList();

@@ -216,7 +216,7 @@ namespace WebApi.Services
 
             }
 
-            return response.Where(m => m.Read == null).Count();
+            return response.Where(m => m.Read == null && m.RecipientId == currentUserId).Count();
         }
 
         public async Task<bool> SaveAllAsync()
