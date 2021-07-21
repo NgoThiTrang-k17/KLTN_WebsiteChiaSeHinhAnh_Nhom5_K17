@@ -200,7 +200,7 @@ namespace WebApi.Services
         public async Task<int> NewMessageCount(int currentUserId)
         {
 
-            var query = await _context.Messages.Where(m => m.SenderId == currentUserId || m.RecipientId == currentUserId).ToListAsync();
+            var query = await _context.Messages.Where(m => m.Read == null && m.RecipientId == currentUserId).ToListAsync();
             var messages = _mapper.Map<IEnumerable<MessageResponse>>(query);
 
             List<MessageResponse> response = new List<MessageResponse>();
@@ -215,8 +215,8 @@ namespace WebApi.Services
                 }
 
             }
-
-            return response.Where(m => m.Read == null && m.RecipientId == currentUserId).Count();
+           
+            return response.Count();
         }
 
         public async Task<bool> SaveAllAsync()
