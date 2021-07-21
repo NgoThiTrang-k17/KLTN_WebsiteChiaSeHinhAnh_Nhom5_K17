@@ -35,7 +35,7 @@ namespace WebApi.Controllers
         //    return Ok(message);
         //}
 
-        
+
 
         //[HttpGet]
         //public ActionResult<MessageResponse> GetAll()
@@ -43,7 +43,12 @@ namespace WebApi.Controllers
         //    var messages = _messageService.GetAll();
         //    return Ok(messages);
         //}
-
+        [HttpGet("NewMessageCount")]
+        public async Task<ActionResult<IEnumerable<MessageResponse>>> NewNotificationCount()
+        {
+            var newMessageCount = await _messageService.NewMessageCount(User.GetUserId());
+            return Ok(newMessageCount);
+        }
         [HttpGet("GetByChatRoomId/{id:int}")]
         public ActionResult<MessageResponse> GetByChatRoomId(int id)
         {

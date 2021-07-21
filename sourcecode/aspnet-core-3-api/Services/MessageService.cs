@@ -27,6 +27,7 @@ namespace WebApi.Services
         Task<Message> GetMessage(int id);
         Task<IEnumerable<MessageResponse>> GetMessagesForUser(int currentUserId);
         Task<IEnumerable<MessageResponse>> GetMessageThread(int currentUserId, int recipientId);
+        Task<int> NewMessageCount(int currentUserId);
         Task<bool> SaveAllAsync();
     }
     public class MessageService : IMessageService
@@ -194,6 +195,28 @@ namespace WebApi.Services
             }
 
             return response;
+        }
+
+        public async Task<int> NewMessageCount(int currentUserId)
+        {
+
+            var query = await _context.Messages.Where(m => m.SenderId == currentUserId || m.RecipientId == currentUserId).ToListAsync();
+            var messages = _mapper.Map<IEnumerable<MessageResponse>>(query);
+
+            List<MessageResponse> response = new List<MessageResponse>();
+            foreach (var message in messages)
+            {
+                if (!response.Any(m => (m.SenderId == message.SenderId && m.RecipientId == message.RecipientId)))
+                {
+                    if (!response.Any(m => (m.SenderId == message.RecipientId && m.RecipientId == message.SenderId)))
+                    {
+                        response.Add(message);
+                    }
+                }
+
+            }
+
+            return response.Where(m => m.Read == null).Count();
         }
 
         public async Task<bool> SaveAllAsync()
