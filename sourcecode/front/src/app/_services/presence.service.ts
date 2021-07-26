@@ -6,7 +6,7 @@ import { count } from 'rxjs-compat/operator/count';
 import { take } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { Account, Notification, Message } from '../_models';
-import { AccountService } from '../_services';
+import { AccountService, MessageService } from '../_services';
 
 @Injectable({
   providedIn: 'root'
@@ -22,13 +22,15 @@ export class PresenceService {
 
   private userMessageSource = new BehaviorSubject<Message[]>([]);
   userMessages$ = this.userMessageSource.asObservable();
+  private unreadMessageSource = new BehaviorSubject<Message[]>([]);
   unreadMessage$ = this.userMessageSource.asObservable();
 
-  countNewMess = 0;
+  public countNewMess: number;
   // maccount = this.accountService.accountValue;
 
   constructor(
     private router: Router,
+    private messageService: MessageService,
     // private accountService: AccountService,
   ) { }
 
@@ -72,6 +74,11 @@ export class PresenceService {
     // Danh sanh nguoi dang nhan tin
     this.hubConnection.on('ReceiveUserMessages', messages =>{
       this.userMessageSource.next(messages);
+
+      this.messageService.getMessageCount()
+      .subscribe((res:any) =>{
+        this.countNewMess = res;
+      })
     })
 
     this.hubConnection.on('NewMessageReceived', message=>{
@@ -80,12 +87,11 @@ export class PresenceService {
         this.userMessageSource.next([...messages.filter(m =>
           (m.recipientId + m.senderId ) !== (message.recipientId + message.senderId)), message]);
       })
-      this.unreadMessage$.pipe(take(1)).subscribe(messages=>{
-        this.userMessageSource.next([...messages.filter(m => m.read == null), message]);
 
+      this.messageService.getMessageCount()
+      .subscribe((res:any) =>{
+        this.countNewMess = res;
       })
-      this.countNewMessage();
-      console.log(this.userMessageSource);
 
     })
 
@@ -113,6 +119,12 @@ export class PresenceService {
     }
 
     this.notificationThreadSource.next(menuItemsUpdated);
+  }
+
+  updateMessageCount(){
+    if(this.countNewMess>0){
+      this.countNewMess--;
+    }
   }
 
   updateMessageStatus(id: number) {

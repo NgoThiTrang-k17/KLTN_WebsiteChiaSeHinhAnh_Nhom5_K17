@@ -46,8 +46,8 @@ export class Tab2Page implements OnInit{
     });
   }
 
-  updateStatus(id: number){
-    this.presenceService.updateMessageStatus(id);
+  updateStatus(id: number, read: Date){
+    this.presenceService.updateMessageStatus(id,read);
   }
 
   async openModalChat(id: number) {

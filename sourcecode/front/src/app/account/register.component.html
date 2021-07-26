@@ -1,4 +1,4 @@
-﻿<div class="col-11">
+﻿<div class="col-12">
   <h3 class="text-center">Đăng ký</h3>
   <div class="mt-4">
       <form [formGroup]="form" (ngSubmit)="onSubmit()">
@@ -7,7 +7,7 @@
                   <label>Giới tính</label>
                   <select formControlName="title" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.title.errors }">
                       <option value=""></option>
-                      <option value="Nam">Name</option>
+                      <option value="Nam">Nam</option>
                       <option value="Nữ">Nữ</option>
                       <!-- <option value="Miss">Miss</option>
                       <option value="Ms">Ms</option> -->
@@ -16,7 +16,7 @@
                       <div *ngIf="f.title.errors.required">Vui lòng chọn giới tính.</div>
                   </div>
               </div>
-              <div class="form-group col-9">
+              <div class="form-group col-8">
                   <label>Tên</label>
                   <input type="text" formControlName="name" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.name.errors }" />
                   <div *ngIf="submitted && f.name.errors" class="invalid-feedback">

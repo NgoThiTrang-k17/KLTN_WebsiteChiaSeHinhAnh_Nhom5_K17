@@ -13,11 +13,12 @@
 
     <ion-tab-button tab="message">
       <ion-icon name="chatbubble-ellipses"></ion-icon>
+      <ion-badge *ngIf="presenceService.messageCount!==0" class="centerAll" color="danger">{{presenceService.messageCount}}</ion-badge>
     </ion-tab-button>
 
     <ion-tab-button tab="notification">
       <ion-icon name="notifications"></ion-icon>
-      <!-- <ion-label>Tab 2</ion-label> -->
+      <ion-badge *ngIf="presenceService.notificationCount!==0" class="centerAll" color="danger">{{presenceService.notificationCount}}</ion-badge>
     </ion-tab-button>
 
     <ion-tab-button tab="account">

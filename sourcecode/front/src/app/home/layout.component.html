@@ -132,7 +132,7 @@
           <div class="nav-item dropdown br-xam text-center" style="width: 420px,">
             <a (click)="openMess()" class="nav-link dropdown-toggle" data-toggle="dropdown" dropdownToggle>
               <i class="fas fa-comment-dots mt-1" style="font-size:x-large; position: relative;"></i>
-              <span *ngIf="countMess!=0" class="badge rounded-pill bg-danger" style="position: absolute;">{{countMess}}</span>
+              <span *ngIf="presenceService.countNewMess!=0" class="badge rounded-pill bg-danger" style="position: absolute;right: -3px;">{{presenceService.countNewMess}}</span>
             </a>
 
           </div>

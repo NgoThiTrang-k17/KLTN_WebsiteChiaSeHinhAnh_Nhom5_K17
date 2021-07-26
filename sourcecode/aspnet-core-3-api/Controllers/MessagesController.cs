@@ -44,7 +44,7 @@ namespace WebApi.Controllers
         //    return Ok(messages);
         //}
         [HttpGet("NewMessageCount")]
-        public async Task<ActionResult<IEnumerable<MessageResponse>>> NewNotificationCount()
+        public async Task<ActionResult<IEnumerable<MessageResponse>>> NewMessageCount()
         {
             var newMessageCount = await _messageService.NewMessageCount(User.GetUserId());
             return Ok(newMessageCount);

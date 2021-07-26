@@ -74,6 +74,11 @@ export class MessageComponent implements OnInit {
     this.presenceService.updateMessageStatus(id);
   }
 
+  updateCount(id: number){
+    this.presenceService.updateMessageStatus(id);
+    this.presenceService.updateMessageCount();
+  }
+
   openChat(userId: number) {
     this.modalChatRef = this.modalService.open(ChatComponent, { windowClass: 'modalMess', backdropClass: 'backdropModalMess'});
     this.modalChatRef.componentInstance.userId = userId;

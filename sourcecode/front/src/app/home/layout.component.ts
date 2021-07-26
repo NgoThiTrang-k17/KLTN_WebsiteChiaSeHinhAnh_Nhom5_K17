@@ -6,6 +6,7 @@ import { AccountService, NotificationService, SearchService, FollowService, Pres
 import { Account, Notification, NotificationToUpdate, Post, Follow, FollowToCreate, Message } from '../_models';
 import { SearchComponent } from './search/search.component';
 import { MessageComponent } from './message/message.component';
+import { first } from 'rxjs/operators';
 
 @Component({ templateUrl: 'layout.component.html' })
 export class LayoutComponent implements OnInit {
@@ -55,13 +56,15 @@ export class LayoutComponent implements OnInit {
       this.notificationCount = res;
     })
 
+    this.messageService.getMessageCount()
+    .subscribe((res:any) => {
+      this.countMess = res;
+    })
+
     this.presenceService.notificationThread$
     .pipe()
     .subscribe(notifications => {
     })
-
-    this.countMess = this.presenceService.countNewMessage();
-    console.log(this.countMess);
 
   }
 
@@ -109,20 +112,17 @@ export class LayoutComponent implements OnInit {
     }
 
     this.notificationService.update(id ,this.notification)
+    .pipe(first())
     .subscribe(res => {
-        console.log(res);
-        // alert('Xem thông báo thành công.');
-        this.notificationService.getNotificationCount(this.maccount.id)
-        .subscribe((res:any)=>{
-            this.notificationCount = res;
-        })
+      console.log(res);
+      this.notificationCount--;
     }, error => {
-        console.log(error);
+      console.log(error);
     })
   }
 
   logout() {
-      this.accountService.logout();
+    this.accountService.logout();
   }
 
   // SEARCH

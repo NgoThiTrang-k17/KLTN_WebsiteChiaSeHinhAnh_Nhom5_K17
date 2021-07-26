@@ -4,6 +4,7 @@ export class Notification {
     actionOwnerId: number;
     notificationType: number;
     postId: number;
+    commentId: number;
     reiceiverId: number;
     created: string;
     status: number;

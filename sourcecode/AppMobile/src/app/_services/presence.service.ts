@@ -1,3 +1,4 @@
+/* eslint-disable no-trailing-spaces */
 /* eslint-disable @typescript-eslint/member-ordering */
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
@@ -6,8 +7,8 @@ import { BehaviorSubject } from 'rxjs';
 import { take } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
-import { Account } from '../_models';
-import { Notification, Message } from '../_models';
+import { Account, Notification, Message } from '../_models';
+import { NotificationService, MessageService } from '../_services';
 
 @Injectable({ providedIn: 'root' })
 export class PresenceService {
@@ -22,8 +23,13 @@ export class PresenceService {
   private userMessageSource = new BehaviorSubject<Message[]>([]);
   userMessages$ = this.userMessageSource.asObservable();
 
+  public notificationCount: number;
+  public messageCount: number;
+
   constructor(
-    private router: Router
+    private router: Router,
+    private notificationService: NotificationService,
+    private messageService: MessageService,
   ){}
 
   createHubConnection(user: Account) {
@@ -57,17 +63,20 @@ export class PresenceService {
 
     this.hubConnection.on('ReceiveNotificationThread', notifications =>{
       this.notificationThreadSource.next(notifications);
+      this.getNotificationCount(user.id);
     });
 
     this.hubConnection.on('NewNotification', notification=>{
       this.notificationThread$.pipe(take(1)).subscribe(notifications=>{
        this.notificationThreadSource.next([...notifications, notification]);
       });
+      this.getNotificationCount(user.id);
     });
 
     // Danh sanh nguoi dang nhan tin
     this.hubConnection.on('ReceiveUserMessages', messages =>{
       this.userMessageSource.next(messages);
+      this.getMessageCount();
     });
 
     this.hubConnection.on('NewMessageReceived', message=>{
@@ -76,6 +85,7 @@ export class PresenceService {
         this.userMessageSource.next([...messages.filter(m =>
           (m.recipientId + m.senderId ) !== (message.recipientId + message.senderId)), message]);
       });
+      this.getMessageCount();
     });
     // this.hubConnection.on('NewMessageReceived', ({userId, name})=>{
     //   this.toastr.info(name+ 'has send you a message!')
@@ -85,25 +95,50 @@ export class PresenceService {
     // })
   }
 
-  updateNotificationStatus(id: number) {
-    const menuItemsUpdated = this.notificationThreadSource.getValue().map((item: Notification) => {
-      if(item.id === id) {
-        return {...item, status: 2};
-      }
-      return item;
+  getNotificationCount(accountId: number){
+    this.notificationService.getNotificationCount(accountId)
+    .subscribe((res: any)=>{
+      this.notificationCount = res;
     });
-
-    this.notificationThreadSource.next(menuItemsUpdated);
   }
 
-  updateMessageStatus(id: number) {
-    const menuItemsUpdated = this.userMessageSource.getValue().map((item: Message) => {
-      if(item.id === id) {
-        return {...item, read: new Date(Date.now())};
-      }
-      return item;
+  getMessageCount(){
+    this.messageService.getMessageCount()
+    .subscribe((res: any) => {
+      this.messageCount = res;
     });
-    this.userMessageSource.next(menuItemsUpdated);
+  }
+
+  updateNotificationStatus(id: number, status: number) {
+    if(status === 2){
+      return;
+    } else if(status === 0){
+      this.notificationCount--;
+      const menuItemsUpdated = this.notificationThreadSource.getValue().map((item: Notification) => {
+        if(item.id === id) {
+          return {...item, status: 2};
+        }
+        return item;
+      });
+
+      this.notificationThreadSource.next(menuItemsUpdated);
+    }
+
+  }
+
+  updateMessageStatus(id: number, read: Date) {
+    if(read!==null){
+      return;
+    } else if(read===null){
+      this.messageCount--;
+      const menuItemsUpdated = this.userMessageSource.getValue().map((item: Message) => {
+        if(item.id === id) {
+          return {...item, read: new Date(Date.now())};
+        }
+        return item;
+      });
+      this.userMessageSource.next(menuItemsUpdated);
+    }
   }
 
   stopHubConnection(){

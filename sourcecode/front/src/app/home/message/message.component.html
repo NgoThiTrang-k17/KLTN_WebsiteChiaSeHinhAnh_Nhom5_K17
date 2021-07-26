@@ -19,7 +19,8 @@
         <input #input (click)="onSearchForMessage()" class="form-control py-2 border" placeholder="Tìm kiếm bằng tên" style="border-radius: 20px;" >
         <div *ngFor="let message of (presenceService.userMessages$ | async).slice().reverse()">
           <!-- -------------Tin nhắn tới--------------- -->
-          <div *ngIf="message.senderId != maccount.id" (click)="updateStatus(message.id)">
+          <div *ngIf="message.senderId != maccount.id && message.read == null" (click)="updateCount(message.id)">
+            <!-- ---------Tin nhắn tới chưa xem (mới)--------- -->
             <div (click)="openChat(message.senderId)" class="row" style="margin: 15px 0 15px 0;">
               <div class="col-2" style="padding: 0; align-items: center; display: flex;">
                 <img *ngIf="message.senderAvatarPath == null" src="../../assets/images/default-profile.png" alt="" class="img-fluid rounded-circle" style="height: 55px;width: 55px;">
@@ -27,22 +28,33 @@
                 <span *ngIf = "(presenceService.onlineUsers$ | async).includes(message.senderId)" class="material-icons is-online">circle</span>
               </div>
               <div class="col" style="padding: 0; margin-left: 10px;">
-                <!-- ---------Tin nhắn tới chưa xem (mới)--------- -->
+                <label style="margin: 0; font-weight: 500;">{{message.senderName}}</label>
+                <p class="text-danger" style="margin: 0; font-weight: 500; font-size: 15px;">
+                  {{message.content}}
+                  <span style="font-size: 13px; color: #4e4e4e;">· {{message.created | dateAgoExample}}</span>
+                </p>
+              </div>
+              <div class="col-1" style="padding: 0; align-items: center; display: flex;">
                 <div *ngIf="message.read == null">
-                  <label style="margin: 0; font-weight: 500;">{{message.senderName}}</label>
-                  <p class="text-danger" style="margin: 0; font-weight: 500; font-size: 15px;">
-                    {{message.content}}
-                    <span style="font-size: 13px; color: #4e4e4e;">· {{message.created | dateAgoExample}}</span>
-                  </p>
+                  <button class="btn"><i class="fa fa-circle text-primary" style="font-size: small;"></i></button>
                 </div>
-                <!-- ------------Tin nhắn tới đã xem--------------- -->
-                <div *ngIf="message.read != null">
-                  <label style="margin: 0; font-weight: 400;">{{message.senderName}}</label>
-                  <p style="margin: 0; color: #4e4e4e; font-size: 15px;">
-                    {{message.content}}
-                    <span style="font-size: 13px;color: #4e4e4e;">· {{message.created | dateAgoExample}}</span>
-                  </p>
-                </div>
+              </div>
+            </div>
+          </div>
+          <!-- ------------Tin nhắn tới đã xem--------------- -->
+          <div *ngIf="message.senderId != maccount.id && message.read != null" (click)="updateStatus(message.id)">
+            <div (click)="openChat(message.senderId)" class="row" style="margin: 15px 0 15px 0;">
+              <div class="col-2" style="padding: 0; align-items: center; display: flex;">
+                <img *ngIf="message.senderAvatarPath == null" src="../../assets/images/default-profile.png" alt="" class="img-fluid rounded-circle" style="height: 55px;width: 55px;">
+                <img *ngIf="message.senderAvatarPath != null" [src]="message.senderAvatarPath" alt="" class="img-fluid rounded-circle" style="height: 55px;width: 55px;">
+                <span *ngIf = "(presenceService.onlineUsers$ | async).includes(message.senderId)" class="material-icons is-online">circle</span>
+              </div>
+              <div class="col" style="padding: 0; margin-left: 10px;">
+                <label style="margin: 0; font-weight: 400;">{{message.senderName}}</label>
+                <p style="margin: 0; color: #4e4e4e; font-size: 15px;">
+                  {{message.content}}
+                  <span style="font-size: 13px;color: #4e4e4e;">· {{message.created | dateAgoExample}}</span>
+                </p>
               </div>
               <div class="col-1" style="padding: 0; align-items: center; display: flex;">
                 <div *ngIf="message.read == null">
@@ -52,7 +64,7 @@
             </div>
           </div>
           <!-- -------------Tin nhắn gửi đi--------------- -->
-          <div *ngIf="message.senderId == maccount.id" (click)="updateStatus(message.id)">
+          <div *ngIf="message.senderId == maccount.id">
             <div (click)="openChat(message.recipientId)" class="row" style="margin: 15px 0 15px 0;">
               <div class="col-2" style="padding: 0; align-items: center; display: flex;">
                 <img

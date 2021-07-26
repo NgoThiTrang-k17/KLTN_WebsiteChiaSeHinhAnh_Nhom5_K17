@@ -10,7 +10,7 @@
   <div *ngIf="!search" class="body">
     <ion-list *ngFor="let message of (presenceService.userMessages$ | async).slice().reverse()">
       <!-- ------------Tin nhắn tới----------- -->
-      <div *ngIf="message.senderId !== account.id" (click)="updateStatus(message.id)">
+      <div *ngIf="message.senderId !== account.id" (click)="updateStatus(message.id, message.read)" >
         <ion-row>
           <ion-col size="2.5">
             <ion-avatar *ngIf="message.senderId===null"><img src="../../assets/images/default-profile.png"></ion-avatar>

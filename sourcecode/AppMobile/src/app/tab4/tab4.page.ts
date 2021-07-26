@@ -1,9 +1,10 @@
+/* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable no-trailing-spaces */
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { NotificationToUpdate } from '../_models';
+import { NotificationToUpdate, Notification } from '../_models';
 import { AccountService, PresenceService, NotificationService } from '../_services';
 
 @Component({
@@ -39,15 +40,15 @@ export class Tab4Page implements OnInit {
     });
   }
 
-  updateNotification(id: number, notificationType: number, postId: number, actionOwnerId: number){
+  updateNotification(notification: Notification){
 
-    this.presenceService.updateNotificationStatus(id);
+    this.presenceService.updateNotificationStatus(notification.id, notification.status);
 
     this.notification = {
       status: 2,
     };
 
-    this.notificationService.update(id ,this.notification)
+    this.notificationService.update(notification.id ,this.notification)
     .subscribe(res => {
       // console.log(res);
       // alert('Xem thông báo thành công.');
@@ -62,10 +63,12 @@ export class Tab4Page implements OnInit {
     const path = 'tab/tabs/notification';
     localStorage.setItem('path', path);
 
-    if(notificationType === 0 || notificationType === 1){
-      this.router.navigate(['detail/' + postId + '/' + actionOwnerId], { relativeTo: this.route });
-    } else if(notificationType === 3){
+    if(notification.notificationType === 0 || notification.notificationType === 1){
+      this.router.navigate(['detail/' + notification.postId + '/' + notification.actionOwnerId], { relativeTo: this.route });
+    } else if(notification.notificationType === 3){
       this.router.navigate(['account/' + this.maccount.id], { relativeTo: this.route });
+    } else if(notification.notificationType === 2 || notification.notificationType === 5){
+      this.router.navigate(['detail/' + notification.postId + '/' + notification.actionOwnerId + '/' + notification.commentId], { relativeTo: this.route });
     }
   }
 

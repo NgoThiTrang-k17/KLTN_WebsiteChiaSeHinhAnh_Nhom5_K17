@@ -1,3 +1,4 @@
+/* eslint-disable no-cond-assign */
 /* eslint-disable no-trailing-spaces */
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -145,13 +146,31 @@ export class Tab5Page implements OnInit {
     this.reactionService.createReaction(this.reaction)
     .pipe(first())
     .subscribe(res => {
-      const post = this.posts.find((x: Post) => {
-        if(x.id === id){
-          x.isReactedByThisUser = true;
-          x.reactionCount++;
-        }
-      });
-      this.posts = this.posts;
+      if(this.isPrivate === false && this.isLike === false){
+        const post = this.posts.find((x: Post) => {
+          if(x.id === id){
+            x.isReactedByThisUser = true;
+            x.reactionCount++;
+          }
+        });
+        this.posts = this.posts;
+      } else if(this.isPrivate === true){
+        const post = this.privatePosts.find((x: Post) => {
+          if(x.id === id){
+            x.isReactedByThisUser = true;
+            x.reactionCount++;
+          }
+        });
+        this.privatePosts = this.privatePosts;
+      } else if(this.isLike === true){
+        const post = this.likePosts.find((x: Post) => {
+          if(x.id === id){
+            x.isReactedByThisUser = true;
+            x.reactionCount++;
+          }
+        });
+        this.likePosts = this.likePosts;
+      }
     });
   }
 
@@ -159,13 +178,31 @@ export class Tab5Page implements OnInit {
     this.reactionService.deletePost(id)
     .pipe(first())
     .subscribe(() => {
-      const post = this.posts.find((x: Post) => {
-        if(x.id === id){
-          x.isReactedByThisUser = false;
-          x.reactionCount--;
-        }
-      });
-      this.posts = this.posts;
+      if(this.isPrivate === false && this.isLike === false){
+        const post = this.posts.find((x: Post) => {
+          if(x.id === id){
+            x.isReactedByThisUser = false;
+            x.reactionCount--;
+          }
+        });
+        this.posts = this.posts;
+      } else if(this.isPrivate === true){
+        const post = this.privatePosts.find((x: Post) => {
+          if(x.id === id){
+            x.isReactedByThisUser = false;
+            x.reactionCount--;
+          }
+        });
+        this.privatePosts = this.privatePosts;
+      } else if(this.isLike === true){
+        const post = this.likePosts.find((x: Post) => {
+          if(x.id === id){
+            x.isReactedByThisUser = false;
+            x.reactionCount--;
+          }
+        });
+        this.likePosts = this.likePosts;
+      }
     });
   }
 
@@ -294,10 +331,17 @@ export class Tab5Page implements OnInit {
     });
 
     modal.onDidDismiss().then(data => {
-      this.postService.getAllByUserId(this.accountId)
-      .subscribe(res => {
-        this.posts = res as Post[];
-      });
+      if(this.isPrivate === false && this.isLike === false){
+        this.postService.getAllByUserId(this.accountId)
+        .subscribe(res => {
+          this.posts = res as Post[];
+        });
+      } else if(this.isPrivate === true){
+        this.postService.getAllPrivatePost()
+        .subscribe(res => {
+          this.privatePosts = res as Post[];
+        });
+      }
     });
     return await modal.present();
   }

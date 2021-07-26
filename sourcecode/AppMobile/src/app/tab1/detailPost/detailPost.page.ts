@@ -21,6 +21,7 @@ export class DetailPostPage implements OnInit {
 
   postId: number;
   owner: number;
+  commentId: number;
   path: string;
 
   post = new Post();
@@ -52,6 +53,7 @@ export class DetailPostPage implements OnInit {
   ngOnInit() {
     this.postId = this.route.snapshot.params.postId;
     this.owner = this.route.snapshot.params.ownerId;
+    this.commentId = this.route.snapshot.params.commentId;
 
     this.postService.getPostById(this.postId)
     .subscribe((res: any)=>{
@@ -67,6 +69,10 @@ export class DetailPostPage implements OnInit {
     .subscribe((res: any)=>{
         this.mfollow = res;
     });
+
+    if(this.commentId!==undefined){
+      this.openComment();
+    }
   }
 
   onCreateFollow(id: any) {
@@ -180,7 +186,7 @@ export class DetailPostPage implements OnInit {
       component: CommentPage,
       cssClass: 'my-custom-class',
       componentProps: {
-        postId: this.post.id,
+        postId: this.postId,
       }
     });
     return await modal.present();

@@ -31,6 +31,12 @@
           [(ngModel)]="description"
           class="form-control py-2" value="{{post.description}}" placeholder="Desctription for your image..." style="border-radius: 20px;"></textarea>
         </div>
+        <div class="form-group">
+          <label for="setting">Cài đặt</label>
+          <div>
+            <mat-slide-toggle [(ngModel)]="isPrivate" name="isPrivate">Riêng tư</mat-slide-toggle>
+          </div>
+        </div>
       </div>
     </div>
   </div>

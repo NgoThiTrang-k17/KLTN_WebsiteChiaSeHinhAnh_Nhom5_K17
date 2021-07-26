@@ -70,6 +70,10 @@ export class MessageService {
     return this.http.get<Message[]>(`${baseUrl}/thread/${userId}`);
   }
 
+  getMessageCount():Observable<Message> {
+    return this.http.get<Message>(`${baseUrl}/NewMessageCount`);
+  }
+
   async sendMessage(userId: number, content: string){
     return this.hubConnection.invoke('SendMessage', {recipientId: userId,content})
     .catch(error=> console.log(error));

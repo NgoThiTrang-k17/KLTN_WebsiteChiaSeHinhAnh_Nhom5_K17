@@ -6,7 +6,7 @@
   <ion-list style="margin-top: -13px;">
     <div *ngFor="let notification of (presenceService.notificationThread$|async).slice().reverse()" >
       <div *ngIf="notification.actionOwnerId !== maccount.id" slot="start">
-        <ion-item lines="none" (click)="updateNotification(notification.id, notification.notificationType, notification.postId, notification.actionOwnerId)">
+        <ion-item lines="none" (click)="updateNotification(notification)">
           <ion-col size="2.5" class="centerAll">
             <ion-avatar *ngIf="notification.actionOwnerAvatarPath === null" style="height: 70px; width: 70px;"><img src="../../../assets/images/default-profile.png"></ion-avatar>
             <ion-avatar *ngIf="notification.actionOwnerAvatarPath !== null" style="height: 70px; width: 70px;"><img [src]="notification.actionOwnerAvatarPath"></ion-avatar>
