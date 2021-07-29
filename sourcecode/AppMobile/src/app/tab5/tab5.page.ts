@@ -248,6 +248,14 @@ export class Tab5Page implements OnInit {
     const actionSheet = await this.actionSheetController.create({
       cssClass: 'optinal',
       buttons: [
+        {
+          text: 'Báo cáo',
+          icon: 'alert-outline',
+          handler: () => {
+            console.log('Report clicked');
+            this.openReportPost(postId);
+          }
+        }
       //   {
       //   text: 'Tải ảnh xuống',
       //   icon: 'cloud-download-outline',
@@ -421,7 +429,19 @@ export class Tab5Page implements OnInit {
     return await modal.present();
   }
 
-  async openReport() {
+  async openReportPost(postId) {
+    const modal = await this.modalController.create({
+      component: ReportComponent,
+      cssClass: 'my-custom-class',
+      componentProps: {
+        targetId: postId,
+        targetType: 1,
+      }
+    });
+    return await modal.present();
+  }
+
+  async openReportUser() {
     const modal = await this.modalController.create({
       component: ReportComponent,
       cssClass: 'my-custom-class',

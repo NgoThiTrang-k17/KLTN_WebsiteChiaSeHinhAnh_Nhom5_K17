@@ -42,6 +42,17 @@ export class Tab4Page implements OnInit {
 
   updateNotification(notification: Notification){
 
+    const path = 'tab/tabs/notification';
+    localStorage.setItem('path', path);
+
+    if(notification.notificationType === 0 || notification.notificationType === 1){
+      this.router.navigate(['detail/' + notification.postId + '/' + notification.actionOwnerId], { relativeTo: this.route });
+    } else if(notification.notificationType === 3){
+      this.router.navigate(['account/' + notification.actionOwnerId], { relativeTo: this.route });
+    } else if(notification.notificationType === 2 || notification.notificationType === 5){
+      this.router.navigate(['detail/' + notification.postId + '/' + notification.actionOwnerId + '/' + notification.commentId], { relativeTo: this.route });
+    }
+
     this.presenceService.updateNotificationStatus(notification.id, notification.status);
 
     this.notification = {
@@ -60,16 +71,7 @@ export class Tab4Page implements OnInit {
       console.log(error);
     });
 
-    const path = 'tab/tabs/notification';
-    localStorage.setItem('path', path);
 
-    if(notification.notificationType === 0 || notification.notificationType === 1){
-      this.router.navigate(['detail/' + notification.postId + '/' + notification.actionOwnerId], { relativeTo: this.route });
-    } else if(notification.notificationType === 3){
-      this.router.navigate(['account/' + this.maccount.id], { relativeTo: this.route });
-    } else if(notification.notificationType === 2 || notification.notificationType === 5){
-      this.router.navigate(['detail/' + notification.postId + '/' + notification.actionOwnerId + '/' + notification.commentId], { relativeTo: this.route });
-    }
   }
 
 }

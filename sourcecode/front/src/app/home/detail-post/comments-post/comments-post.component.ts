@@ -24,6 +24,8 @@ export class CommentsPostComponent implements OnInit {
 
   public account = new Account;
 
+  public parentCmt: number;
+
   cmtCreate: CommentToCreate;
   cmtUpdate: CommentToUpdate;
   reactionCmt: ReactionCmtToCreate;
@@ -180,8 +182,9 @@ export class CommentsPostComponent implements OnInit {
     });
   }
 
-  showCommentReply() {
+  showCommentReply(commentId: number) {
     this.onShowCommentReply = true;
+    this.parentCmt = commentId;
   }
 
   closeShowCommentReply() {

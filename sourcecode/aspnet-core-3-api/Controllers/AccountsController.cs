@@ -45,7 +45,7 @@ namespace WebApi.Controllers
             GoogleJsonWebSignature.ValidationSettings settings = new GoogleJsonWebSignature.ValidationSettings
             {
                 // your google client ID
-                Audience = new List<string>() { "436549259873-fvlvlseej8bo4d9ro7uism91nkol8vc0.apps.googleusercontent.com" }
+                Audience = new List<string>() { "505653862664-h65g6rpnso3aiukv5i4fgd3o5f8okvm2.apps.googleusercontent.com" }
             };
 
             GoogleJsonWebSignature.Payload payload = GoogleJsonWebSignature.ValidateAsync(model.IdToken, settings).Result;

@@ -27,7 +27,7 @@
     </label>
   </div>
   <div *ngIf="posts.length!=0" class="row mt-3">
-    <div class="col-3 text-center">
+    <div class="col-2 text-center" style="position: fixed;">
       <div *ngIf="imageSrc==null">
         <img *ngIf="account.avatarPath==null" class="rounded-circle" style="height: 135px; width: 135px;" src="../../../../assets/images/default-profile.png">
         <img *ngIf="account.avatarPath!=null" class="rounded-circle" style="height: 135px; width: 135px;" [src]="account.avatarPath">
@@ -44,7 +44,7 @@
         Tải ảnh lên
       </label>
     </div>
-    <div class="col">
+    <div class="col-9" style="left: 218px;">
       <div class="form-group">
         <label>Hình của bạn</label>
         <div class="item card-columns">

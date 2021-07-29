@@ -103,9 +103,9 @@ export class LayoutComponent implements OnInit {
     });
   }
 
-  updateNotification(id:any){
+  updateNotification(id:any, status: number){
 
-    this.presenceService.updateNotificationStatus(id);
+    this.presenceService.updateNotificationStatus(id, status);
 
     this.notification = {
       status: 2,

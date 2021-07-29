@@ -26,12 +26,12 @@
               <div class="nav-item dropdown br-xam text-center" style="width: 500px,">
                   <a class="nav-link dropdown-toggle" data-toggle="dropdown" dropdownToggle>
                     <i class="fas fa-bell mt-1" style="position:relative; font-size:x-large;"></i>
-                    <span *ngIf="notificationCount!=0" class="badge rounded-pill badge-notification bg-danger" style="position: absolute; left: 23px;">{{notificationCount}}</span>
+                    <span *ngIf="notificationCount!=0" class="badge rounded-pill badge-notification bg-danger" style="position: absolute; left: 23px;">{{presenceService.notificationCount}}</span>
                   </a>
                   <ul class="dropdown-menu dropdownNotification dropdown-menu-right shadow-sm rounded-lg" *dropdownMenu>
                     <li class="text-center mb-3" style="font-weight: bold; font-size: 20px;">Thông báo</li>
                     <div id="1" *ngFor="let notification of (presenceService.notificationThread$|async).slice().reverse()">
-                      <li id="1" *ngIf="notification.notificationType==0 && notification.actionOwnerId!=maccount.id" (click)="updateNotification(notification.id)" class="dropdown-item" routerLink="detail-post/{{notification.postId}}/{{notification.actionOwnerId}}" style="padding: 0.55rem 1.5rem !important;">
+                      <li id="1" *ngIf="notification.notificationType==0 && notification.actionOwnerId!=maccount.id" (click)="updateNotification(notification.id, notification.status)" class="dropdown-item" routerLink="detail-post/{{notification.postId}}/{{notification.actionOwnerId}}" style="padding: 0.55rem 1.5rem !important; cursor: pointer;">
                         <div class="row" style="justify-content: center; align-items: center; display: flex;">
                           <div class="col-3">
                             <img *ngIf="notification.actionOwnerAvatarPath==null" class="card rounded-circle" style="height: 60px; width: 60px;" src="../../assets/images/default-profile.png">
@@ -45,11 +45,11 @@
                             <p *ngIf="notification.status==2" style="font-size: 13px; color: #9e9e9e; margin: 0;">{{notification.created | dateAgoExample}}</p>
                           </div>
                           <div class="col-1">
-                            <i *ngIf="notification.status==0" class="fa fa-circle text-primary" style="font-size:small;"></i>
+                            <i *ngIf="notification.status==0" (click)="updateNotification(notification.id, notification.status)" class="fa fa-circle text-primary" style="font-size:small; cursor: pointer;"></i>
                           </div>
                         </div>
                       </li>
-                      <li id="1" *ngIf="notification.notificationType==1 && notification.actionOwnerId!=maccount.id" (click)="updateNotification(notification.id)" class="dropdown-item" routerLink="detail-post/{{notification.postId}}/{{notification.actionOwnerId}}" style="padding: 0.55rem 1.5rem !important;">
+                      <li id="1" *ngIf="notification.notificationType==1 && notification.actionOwnerId!=maccount.id" (click)="updateNotification(notification.id, notification.status)" class="dropdown-item" routerLink="detail-post/{{notification.postId}}/{{notification.actionOwnerId}}" style="padding: 0.55rem 1.5rem !important; cursor: pointer;">
                         <div class="row" style="justify-content: center; align-items: center; display: flex;">
                           <div class="col-3">
                             <img *ngIf="notification.actionOwnerAvatarPath==null" class="card rounded-circle" style="height: 60px; width: 60px;" src="../../assets/images/default-profile.png">
@@ -63,11 +63,11 @@
                             <p *ngIf="notification.status==2" style="font-size: 13px; color: #9e9e9e; margin: 0;">{{notification.created | dateAgoExample}}</p>
                           </div>
                           <div class="col-1" style="padding-right: 0;">
-                            <i *ngIf="notification.status==0" class="fa fa-circle text-primary" style="font-size:small;"></i>
+                            <i *ngIf="notification.status==0" (click)="updateNotification(notification.id, notification.status)" class="fa fa-circle text-primary" style="font-size:small; cursor: pointer;"></i>
                           </div>
                         </div>
                       </li>
-                      <li id="1" *ngIf="notification.notificationType==2 && notification.actionOwnerId!=maccount.id" (click)="updateNotification(notification.id)" class="dropdown-item" routerLink="detail-post/{{notification.postId}}/{{notification.actionOwnerId}}" style="padding: 0.55rem 1.5rem !important;" >
+                      <li id="1" *ngIf="notification.notificationType==2 && notification.actionOwnerId!=maccount.id" (click)="updateNotification(notification.id, notification.status)" class="dropdown-item" routerLink="detail-post/{{notification.postId}}/{{notification.actionOwnerId}}" style="padding: 0.55rem 1.5rem !important; cursor: pointer;" >
                         <div class="row" style="justify-content: center; align-items: center; display: flex;">
                           <div class="col-3">
                             <img *ngIf="notification.actionOwnerAvatarPath==null" class="card rounded-circle" style="height: 60px; width: 60px;" src="../../assets/images/default-profile.png">
@@ -81,11 +81,11 @@
                             <p *ngIf="notification.status==2" style="font-size: 13px; color: #9e9e9e; margin: 0;">{{notification.created | dateAgoExample}}</p>
                           </div>
                           <div class="col-1">
-                            <i *ngIf="notification.status==0" class="fa fa-circle text-primary" style="font-size:small;"></i>
+                            <i *ngIf="notification.status==0" (click)="updateNotification(notification.id, notification.status)" class="fa fa-circle text-primary" style="font-size:small; cursor: pointer;"></i>
                           </div>
                         </div>
                       </li>
-                      <li id="1" *ngIf="notification.notificationType==3 && notification.actionOwnerId!=maccount.id" (click)="updateNotification(notification.id)" class="dropdown-item" routerLink="detail/{{notification.actionOwnerId}}" style="padding: 0.55rem 1.5rem !important;" >
+                      <li id="1" *ngIf="notification.notificationType==3 && notification.actionOwnerId!=maccount.id" (click)="updateNotification(notification.id, notification.status)" class="dropdown-item" routerLink="detail/{{notification.actionOwnerId}}" style="padding: 0.55rem 1.5rem !important; cursor: pointer;" >
                         <div class="row" style="justify-content: center; align-items: center; display: flex;">
                           <div class="col-3">
                             <img *ngIf="notification.actionOwnerAvatarPath==null" class="card rounded-circle" style="height: 60px; width: 60px;" src="../../assets/images/default-profile.png">
@@ -99,11 +99,11 @@
                             <p *ngIf="notification.status==2" style="font-size: 13px; color: #9e9e9e; margin: 0;">{{notification.created | dateAgoExample}}</p>
                           </div>
                           <div class="col-1">
-                            <i *ngIf="notification.status==0" class="fa fa-circle text-primary" style="font-size:small;"></i>
+                            <i *ngIf="notification.status==0" (click)="updateNotification(notification.id, notification.status)" class="fa fa-circle text-primary" style="font-size:small; cursor: pointer;"></i>
                           </div>
                         </div>
                       </li>
-                      <li id="1" *ngIf="notification.notificationType==5 && notification.actionOwnerId!=maccount.id" (click)="updateNotification(notification.id)" class="dropdown-item" routerLink="detail-post/{{notification.postId}}/{{notification.actionOwnerId}}" style="padding: 0.55rem 1.5rem !important;">
+                      <li id="1" *ngIf="notification.notificationType==5 && notification.actionOwnerId!=maccount.id" (click)="updateNotification(notification.id, notification.status)" class="dropdown-item" routerLink="detail-post/{{notification.postId}}/{{notification.actionOwnerId}}" style="padding: 0.55rem 1.5rem !important; cursor: pointer;">
                         <div class="row" style="justify-content: center; align-items: center; display: flex;">
                           <div class="col-3">
                             <img *ngIf="notification.actionOwnerAvatarPath==null" class="card rounded-circle" style="height: 60px; width: 60px;" src="../../assets/images/default-profile.png">
@@ -117,7 +117,7 @@
                             <p *ngIf="notification.status==2" style="font-size: 13px; color: #9e9e9e; margin: 0;">{{notification.created | dateAgoExample}}</p>
                           </div>
                           <div class="col-1">
-                            <i *ngIf="notification.status==0" class="fa fa-circle text-primary" style="font-size:small;"></i>
+                            <i *ngIf="notification.status==0" (click)="updateNotification(notification.id, notification.status)" class="fa fa-circle text-primary" style="font-size:small; cursor: pointer;"></i>
                           </div>
                         </div>
                       </li>

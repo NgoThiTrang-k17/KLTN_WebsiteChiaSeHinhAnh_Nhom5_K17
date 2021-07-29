@@ -31,6 +31,11 @@
           <ion-icon name="camera-outline" style="font-size: 20px;"></ion-icon>
         </ion-avatar>
       </span>
+      <!-- <span *ngIf="account.id!==maccount.id" (click)="openReportUser()">
+        <ion-avatar class="updateAvatar centerAll">
+          <ion-icon name="alert-circle-outline" style="font-size: 20px;"></ion-icon>
+        </ion-avatar>
+      </span> -->
       <span *ngIf="account.id!==maccount.id && (presenceService.onlineUsers$ | async).includes(account.id)">
         <ion-icon name="ellipse" class="is-online"></ion-icon>
       </span>
@@ -50,7 +55,7 @@
       </span>
     </div>
     <div *ngIf="accountId!==maccount.id" class="ion-text-center">
-      <ion-button (click)="openReport()" class="onFollow" shape="round">Báo cáo</ion-button>
+      <ion-button (click)="openReportUser()" class="onFollow" shape="round">Báo cáo</ion-button>
       <ion-button *ngIf="account.isFollowedByCurrentUser===0" (click)="onCreateFollow(account.id)" class="unFollow" shape="round">Theo dõi</ion-button>
       <ion-button *ngIf="account.isFollowedByCurrentUser!==0" (click)="unFollow(account.id)" class="onFollow" shape="round">Huỷ theo dõi</ion-button>
     </div>

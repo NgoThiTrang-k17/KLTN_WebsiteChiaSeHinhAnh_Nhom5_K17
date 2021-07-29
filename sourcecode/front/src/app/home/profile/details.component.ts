@@ -177,6 +177,20 @@ export class DetailsComponent implements OnInit{
         }
       });
       this.posts = this.posts;
+      const privatePost = this.privatePosts.find((x: Post) => {
+        if(x.id == postId){
+          x.isReactedByThisUser = true;
+          x.reactionCount++;
+        }
+      });
+      this.privatePosts = this.privatePosts;
+      const likePost = this.likePosts.find((x: Post) => {
+        if(x.id == postId){
+          x.isReactedByThisUser = true;
+          x.reactionCount++;
+        }
+      });
+      this.likePosts = this.likePosts;
     });
   }
 
@@ -191,6 +205,20 @@ export class DetailsComponent implements OnInit{
         }
       });
       this.posts = this.posts;
+      const privatePost = this.privatePosts.find((x: Post) => {
+        if(x.id == postId){
+          x.isReactedByThisUser = false;
+          x.reactionCount--;
+        }
+      });
+      this.privatePosts = this.privatePosts;
+      const likePost = this.likePosts.find((x: Post) => {
+        if(x.id == postId){
+          x.isReactedByThisUser = false;
+          x.reactionCount--;
+        }
+      });
+      this.likePosts = this.likePosts;
     });
   }
 
@@ -234,7 +262,10 @@ export class DetailsComponent implements OnInit{
       this.postService.getAllByUserId(this.id)
       .subscribe(res => {
         this.posts = res as Post[];
-        console.log(res);
+      });
+      this.postService.getAllPrivatePost()
+      .subscribe(res => {
+        this.privatePosts = res as Post[];
       });
     });
   }

@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first, finalize } from 'rxjs/operators';
 import { AngularFireStorage } from '@angular/fire/storage';
 
+import { AccountToUpdate } from '../../_models';
 import { AccountService, AlertService } from '@app/_services';
 import { MustMatch } from '@app/_helpers';
 
@@ -19,6 +20,7 @@ export class UpdateComponent implements OnInit {
     path: string;
     pathImg: string;
     public imagePath: string;
+    accountToUpdate: AccountToUpdate;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -56,7 +58,7 @@ export class UpdateComponent implements OnInit {
         const reader = new FileReader();
         if ($event.target.files && $event.target.files.length) {
             const [file] = $event.target.files;
-            console.log('1');               
+            console.log('1');
             // this.updateData.append("file",file);
             reader.readAsDataURL(file);
             reader.onload = () => {
@@ -67,49 +69,76 @@ export class UpdateComponent implements OnInit {
     }
 
     onSubmit() {
-        this.submitted = true;
+      this.submitted = true;
 
-        // reset alerts on submit
-        this.alertService.clear();
+      // reset alerts on submit
+      this.alertService.clear();
 
-        // stop here if form is invalid
-        if (this.form.invalid) {
-            return;
-        }
+      // stop here if form is invalid
+      // if (this.form.invalid) {
+      //   return;
+      // }
 
+      if(this.imageSrc != null){
         this.imagePath = "/files"+Math.random()+this.path;
         const fileRef = this.af.ref(this.imagePath);
         this.af.upload(this.imagePath,this.path).snapshotChanges().pipe(
             finalize(() => {
                 fileRef.getDownloadURL().subscribe((url) => {
                     this.pathImg = url.toString();
-                    console.log(this.pathImg);
-                    this.updateData.append('avatarPath', this.imagePath);
-                    this.updateData.append('title', this.form.get('title').value);
-                    this.updateData.append('name', this.form.get('name').value);
-                    this.updateData.append('email', this.form.get('email').value);
-                    this.updateData.append('password', this.form.get('password').value);
-                    console.log(this.updateData);
+                    // this.updateData.append('avatarPath', this.imagePath);
+                    // this.updateData.append('title', this.form.get('title').value);
+                    // this.updateData.append('name', this.form.get('name').value);
+                    // this.updateData.append('email', this.form.get('email').value);
+                    // this.updateData.append('password', this.form.get('password').value);
+
+                    this.accountToUpdate = {
+                      avatarPath: this.pathImg,
+                      title: this.form.get('title').value,
+                      name: this.form.get('name').value,
+                      email: this.form.get('email').value,
+                      password: this.form.get('password').value,
+                    }
 
                     this.loading = true;
-                    this.accountService.update(this.account.id, this.updateData)
-                        .pipe(first())
-                        .subscribe({
-                            next: () => {
-                                console.log(this.updateData.value);
-                                this.alertService.success('Chỉnh sửa thành công!', { keepAfterRouteChange: true });
-                                this.router.navigate(['../'], { relativeTo: this.route });
-                            },
-                            error: error => {
-                                this.alertService.error(error);
-                                this.loading = false;
-                            }
-                        });
+                    this.accountService.update(this.account.id, this.accountToUpdate)
+                    .pipe(first())
+                    .subscribe({
+                      next: () => {
+                        this.alertService.success('Chỉnh sửa thành công!', { keepAfterRouteChange: true });
+                        this.router.navigate(['../'], { relativeTo: this.route });
+                      },
+                      error: error => {
+                        this.alertService.error(error);
+                        this.loading = false;
+                      }
+                    });
                 })
             })
         ).subscribe();
+      } else if(this.imageSrc == null) {
+        this.accountToUpdate = {
+          avatarPath: '',
+          title: this.form.get('title').value,
+          name: this.form.get('name').value,
+          email: this.form.get('email').value,
+          password: this.form.get('password').value,
+        }
 
-        
+        this.accountService.update(this.account.id, this.accountToUpdate)
+        .pipe(first())
+        .subscribe({
+          next: (res) => {
+            console.log(res);
+            this.alertService.success('Chỉnh sửa thành công!', { keepAfterRouteChange: true });
+            this.router.navigate(['../'], { relativeTo: this.route });
+          },
+          error: error => {
+            this.alertService.error(error);
+            this.loading = false;
+          }
+        });
+      }
     }
 
     onDelete() {

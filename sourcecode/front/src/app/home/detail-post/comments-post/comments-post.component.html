@@ -82,7 +82,7 @@
           </div>
           <a *ngIf="comment.isReactedByThisUser==false" class="btn btn-sm ml-3" (click)="onCreateReactionCmt(comment.id)" ><span style="font-size:medium;"><i class="fa fa-heart unheart" style=" color: rgb(175, 173, 173);"></i><span style="font-size:small; color: rgb(148, 148, 148);"> {{comment.reactionCount}}</span></span></a>
           <a *ngIf="comment.isReactedByThisUser==true" class="btn btn-sm ml-3" (click)="unCreateReactionCmt(comment.id)"><span style="font-size:medium;"><i class="fa fa-heart heart" style=" color: rgba(212, 10, 10, 0.76);"></i><span style="font-size:small; color: rgb(148, 148, 148);"> {{comment.reactionCount}}</span></span></a>
-          <a *ngIf="!onShowCommentReply" (click)="showCommentReply()" class="btn btn-sm"><span style="font-size:medium;"><i class="fa fa-comment comment" style=" color: rgb(175, 173, 173);"></i><span style="font-size:small; color: rgb(148, 148, 148);"> {{comment.childCount}}</span></span></a>
+          <a *ngIf="!onShowCommentReply" (click)="showCommentReply(comment.id)" class="btn btn-sm"><span style="font-size:medium;"><i class="fa fa-comment comment" style=" color: rgb(175, 173, 173);"></i><span style="font-size:small; color: rgb(148, 148, 148);"> {{comment.childCount}}</span></span></a>
           <a *ngIf="onShowCommentReply" (click)="closeShowCommentReply()" class="btn btn-sm"><span style="font-size:medium;"><i class="fa fa-comment comment" style=" color: rgb(175, 173, 173);"></i><span style="font-size:small; color: rgb(148, 148, 148);"> {{comment.childCount}}</span></span></a>
         </div>
         <div *ngIf="editComment">
@@ -136,7 +136,7 @@
             </div>
             <a *ngIf="comment.isReactedByThisUser==false" class="btn btn-sm ml-3" (click)="onCreateReactionCmt(comment.id)" ><span style="font-size:medium;"><i class="fa fa-heart unheart" style=" color: rgb(175, 173, 173);"></i><span style="font-size:small; color: rgb(148, 148, 148);"> {{comment.reactionCount}}</span></span></a>
             <a *ngIf="comment.isReactedByThisUser==true" class="btn btn-sm ml-3" (click)="unCreateReactionCmt(comment.id)"><span style="font-size:medium;"><i class="fa fa-heart heart" style=" color: rgba(212, 10, 10, 0.76);"></i><span style="font-size:small; color: rgb(148, 148, 148);"> {{comment.reactionCount}}</span></span></a>
-            <a *ngIf="!onShowCommentReply" (click)="showCommentReply()" class="btn btn-sm"><span style="font-size:medium;"><i class="fa fa-comment comment" style=" color: rgb(175, 173, 173);"></i><span style="font-size:small; color: rgb(148, 148, 148);"> {{comment.childCount}}</span></span></a>
+            <a *ngIf="!onShowCommentReply" (click)="showCommentReply(comment.id)" class="btn btn-sm"><span style="font-size:medium;"><i class="fa fa-comment comment" style=" color: rgb(175, 173, 173);"></i><span style="font-size:small; color: rgb(148, 148, 148);"> {{comment.childCount}}</span></span></a>
             <a *ngIf="onShowCommentReply" (click)="closeShowCommentReply()" class="btn btn-sm"><span style="font-size:medium;"><i class="fa fa-comment comment" style=" color: rgb(175, 173, 173);"></i><span style="font-size:small; color: rgb(148, 148, 148);"> {{comment.childCount}}</span></span></a>
           </div>
           <div *ngIf="comment.id==editCommentId">
@@ -151,20 +151,30 @@
           </div>
         </div>
         <!-- ---------Comment Reply-------- -->
-        <div *ngIf="!onShowCommentReply" (click)="showCommentReply()" class="showReply">
-          <div *ngIf="comment.childCount>0">
-            <span>Xem {{comment.childCount}} câu trả lời</span>
-            <i class="fas fa-chevron-down ml-2 mb-2"></i>
-          </div>
-        </div>
-        <div *ngIf="onShowCommentReply">
-          <div (click)="closeShowCommentReply()" class="showReply">
+        <div *ngIf="comment.id==parentCmt">
+          <div *ngIf="!onShowCommentReply" (click)="showCommentReply(comment.id)" class="showReply">
             <div *ngIf="comment.childCount>0">
-              <span>Ẩn {{comment.childCount}} câu trả lời</span>
-              <i class="fas fa-chevron-up ml-2 mb-2"></i>
+              <span>Xem {{comment.childCount}} câu trả lời</span>
+              <i class="fas fa-chevron-down ml-2 mb-2"></i>
             </div>
           </div>
-          <app-reply-comments-post [postId]="postId" [commentId]="comment.id"></app-reply-comments-post>
+          <div *ngIf="onShowCommentReply">
+            <div (click)="closeShowCommentReply()" class="showReply">
+              <div *ngIf="comment.childCount>0">
+                <span>Ẩn {{comment.childCount}} câu trả lời</span>
+                <i class="fas fa-chevron-up ml-2 mb-2"></i>
+              </div>
+            </div>
+            <app-reply-comments-post [postId]="postId" [commentId]="comment.id"></app-reply-comments-post>
+          </div>
+        </div>
+        <div *ngIf="comment.id!=parentCmt">
+          <div (click)="showCommentReply(comment.id)" class="showReply">
+            <div *ngIf="comment.childCount>0">
+              <span>Xem {{comment.childCount}} câu trả lời</span>
+              <i class="fas fa-chevron-down ml-2 mb-2"></i>
+            </div>
+          </div>
         </div>
       </div>
     </div>

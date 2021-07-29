@@ -5,7 +5,7 @@
       <button (click)="search(history)" class="btn btn-light rounded-pill strong button-search">{{history}}</button>
     </div>
   </div>
-  <label class="mt-4">Gợi ý cho bạn</label>
+  <label *ngIf="posts.length!=0" class="mt-4">Gợi ý cho bạn</label>
   <div class="row">
     <div id="1" *ngFor="let post of posts">
       <div (click)="search(post.categories)" class="category mr-3 mb-3" style="background-image: url('{{post.path}}');">

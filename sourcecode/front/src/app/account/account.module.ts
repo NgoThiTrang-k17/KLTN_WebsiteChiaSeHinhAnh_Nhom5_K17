@@ -20,7 +20,7 @@ const fbLoginOptions = {
     // return_scopes: true,
     // enable_profile_selector: true
 }; // https://developers.facebook.com/docs/reference/javascript/FB.login/v2.11
-  
+
 const googleLoginOptions = {
     scope: 'profile email'
 };
@@ -29,8 +29,8 @@ const googleLoginOptions = {
         CommonModule,
         ReactiveFormsModule,
         AccountRoutingModule,
-        CarouselModule.forRoot(), 
-        SocialLoginModule
+        CarouselModule.forRoot(),
+        // SocialLoginModule
     ],
     declarations: [
         LayoutComponent,
@@ -42,24 +42,24 @@ const googleLoginOptions = {
         NavComponent
     ],
     providers: [
-        {
-          provide: 'SocialAuthServiceConfig',
-          useValue: {
-            autoLogin: false,
-            providers: [
-              {
-                id: GoogleLoginProvider.PROVIDER_ID,
-                provider: new GoogleLoginProvider(
-                  '436549259873-fvlvlseej8bo4d9ro7uism91nkol8vc0.apps.googleusercontent.com', googleLoginOptions
-                )
-              },
-              {
-                id: FacebookLoginProvider.PROVIDER_ID,
-                provider: new FacebookLoginProvider('158138146280361')
-              }
-            ]
-          } as SocialAuthServiceConfig,
-        }
+        // {
+        //   provide: 'SocialAuthServiceConfig',
+        //   useValue: {
+        //     autoLogin: false,
+        //     providers: [
+        //       {
+        //         id: GoogleLoginProvider.PROVIDER_ID,
+        //         provider: new GoogleLoginProvider(
+        //           '436549259873-fvlvlseej8bo4d9ro7uism91nkol8vc0.apps.googleusercontent.com', googleLoginOptions
+        //         )
+        //       },
+        //       {
+        //         id: FacebookLoginProvider.PROVIDER_ID,
+        //         provider: new FacebookLoginProvider('158138146280361')
+        //       }
+        //     ]
+        //   } as SocialAuthServiceConfig,
+        // }
     ],
 })
 export class AccountModule { }

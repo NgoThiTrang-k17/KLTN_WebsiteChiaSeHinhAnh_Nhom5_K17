@@ -24,7 +24,7 @@ export class CommentPage implements OnInit {
   @ViewChild('inputCommentReply') inputCommentReply;
   @ViewChild('inputEditComment') inputEditComment;
 
-  @Input() postId: number;
+  @Input() postId: any;
 
   commentContent: string;
   onReplyComment: boolean;
@@ -122,12 +122,13 @@ export class CommentPage implements OnInit {
 
   sendComment() {
     this.comment = {
-      postId: this.postId,
+      postId: parseInt(this.postId),
       content: this.commentContent
     };
+    console.log(this.comment);
 
     this.commentService.create(this.comment)
-    .subscribe(_res => {
+    .subscribe(res => {
       this.commentForm.reset();
       this.commentService.getAllByPostId(this.postId)
       .subscribe((res: any)=>{
@@ -173,7 +174,7 @@ export class CommentPage implements OnInit {
     this.replyComment = {
       content: this.replyCommentContent,
       parrentId: this.commentId,
-      postId: this.postId
+      postId: parseInt(this.postId),
     };
     console.log(this.replyComment);
     this.commentService.create(this.replyComment)

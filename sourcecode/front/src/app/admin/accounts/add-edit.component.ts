@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
+import { AccountToUpdate } from '../../_models';
 import { AccountService, AlertService } from '@app/_services';
 import { MustMatch } from '@app/_helpers';
 
@@ -13,6 +14,7 @@ export class AddEditComponent implements OnInit {
     isAddMode: boolean;
     loading = false;
     submitted = false;
+    accountToUpdate: AccountToUpdate;
 
     constructor(
       private formBuilder: FormBuilder,
@@ -82,12 +84,21 @@ export class AddEditComponent implements OnInit {
     }
 
     private updateAccount() {
-      this.accountService.update(this.id, this.form.value)
+      this.accountToUpdate = {
+        avatarPath: '',
+        title: this.form.get('title').value,
+        name: this.form.get('name').value,
+        email: this.form.get('email').value,
+        password: this.form.get('password').value,
+      }
+
+      this.accountService.update(this.id, this.accountToUpdate)
       .pipe(first())
       .subscribe({
-        next: () => {
-          this.alertService.success('Update successful', { keepAfterRouteChange: true });
-          this.router.navigate(['../../'], { relativeTo: this.route });
+        next: (res) => {
+          console.log(res);
+          this.alertService.success('Chỉnh sửa thành công!', { keepAfterRouteChange: true });
+          this.router.navigate(['../'], { relativeTo: this.route });
         },
         error: error => {
           this.alertService.error(error);

@@ -39,13 +39,22 @@ export class AccountService {
       }));
     }
 
-    loginGoogle(params) {
-      return this.http.post<any>(`${baseUrl}/google-login`, params, { withCredentials: true })
-      .pipe(map(account => {
-          this.accountSubject.next(account);
-          this.startRefreshTokenTimer();
-          return account;
-      }));
+    // loginGoogle(params) {
+    //   return this.http.post<any>(`${baseUrl}/google-login`, params, { withCredentials: true })
+    //   .pipe(map(account => {
+    //       this.accountSubject.next(account);
+    //       this.startRefreshTokenTimer();
+    //       return account;
+    //   }));
+    // }
+
+    googleLogin(model: any) {
+      console.log(model);
+      const user = model;
+      if(user){
+        this.accountSubject.next(user);
+        this.presenceService.createHubConnection(user);
+      }
     }
 
     logout() {

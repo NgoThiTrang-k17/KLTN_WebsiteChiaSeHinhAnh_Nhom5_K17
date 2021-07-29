@@ -36,7 +36,7 @@
               </div>
               <div class="col-1" style="padding: 0; align-items: center; display: flex;">
                 <div *ngIf="message.read == null">
-                  <button class="btn"><i class="fa fa-circle text-primary" style="font-size: small;"></i></button>
+                  <button (click)="updateCount(message.id)" class="btn"><i class="fa fa-circle text-primary" style="font-size: small;"></i></button>
                 </div>
               </div>
             </div>
